@@ -36,6 +36,10 @@
 
 - **インデントはTab文字を使用する**（スペースは使わない）
 
+## bat / cmdファイルの文字コード・改行コード
+
+- **bat・cmdファイルはSJIS（Shift-JIS）＋CRLFで作成する**（UTF-8やLFでは日本語コメント・echoが文字化けする、またはコマンドプロンプトで正しく解釈されない場合があるため）
+
 # シェル実行ルール
 
 ## コマンド実行の優先順位
@@ -57,8 +61,8 @@
 
 # Obsidianメモリ連携ルール
 
-Obsidian Vault（`N:\Obsidian\Vault`）をAIの永続メモリとして使う。
-メモリのハブは `memory/memory.md`（起動時に SessionStart フックが自動注入する）。
+Obsidian VaultをAIの永続メモリとして使う。
+Obsidian MCPから `memory/memory.md` を読む（起動時に SessionStart フックが自動注入する）。
 
 ## ロード（起動時）
 
