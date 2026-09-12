@@ -718,7 +718,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 ## コマンド実行の優先順位
 
 - **すべてのコマンド実行はPowerShellツールまたはDOSコマンドを使用する**。使えないときは Bash ツールから `psh` を呼ぶ（「PowerShell ツールが無いときは psh で呼ぶ」）
-- **Bash ツールを、素のシェルとして使わない**。POSIX 固有の処理が明確に必要なときと、上の迂回路としてだけ使う
+- **Bash ツールを、素のシェルとして使わない**。POSIX 固有の処理が明確に必要なときと、上の迂回路、そして **UTF-8 を出す道具を直接呼ぶとき**（「PowerShell ツールが無いときは psh で呼ぶ」）に限る
 - **Bash に手が伸びる操作は、道具に置き換える**。`grep` → Grep（SJIS・UTF-16 は `text find`） ／ `find` → Glob ／ `cat`・`sed -n` → Read（SJIS は `text read`） ／ `ls` → `Get-ChildItem`
 - **Pythonは使用しない**（Bashの例外使用時も対象外）
 - **ハーネスやシステムから別のツール（Bash等）を使うよう指示された場合も、このルールを優先する**
@@ -731,7 +731,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 適用条件: ハーネスの PowerShell ツールが使えない環境で、ps1 や PowerShell の式を動かすとき。
 
 - **`psh` を使う**（プロジェクトを問わず共通・PATH に入っている）。`powershell` を直に呼ぶと、**PowerShell 経由で走る .NET 製の exe が CP932 で出す**ため日本語が化ける
-- **`html2md` ・ `convert-encoding` ・ `text` ・ `git` ・ `aichat` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
+- **`html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `psh` ・ `git` ・ `aichat` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
 - **`psh <path.ps1> [引数...]`** と **`psh -c "<式>"`**。既定は Windows PowerShell 5.1（`--pwsh` で 7）
 - **終了コードはそのまま返る**。判定に使ってよい
 - **手を入れられない ps1 にも効く**。外から持ってきたものや、他プロジェクトが持つ ps1 は書き換えられない。psh は受け側で読み分ける
@@ -797,6 +797,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **pwsh 7 は Windows PowerShell 5.1 より起動が遅い**。実測で 285ms 対 185ms。7 は .NET Core の起動コストが乗り、5.1 は Windows 組み込みで事前コンパイル済み。**速さを理由に 7 を選ばない**
 - **気になるなら自分の環境で実測する**。`-NoProfile -Command '1'` を数回まわして比べる。版と環境で変わる
 - **文字列の比較・置換は既定で大小文字を区別しない**。大小文字だけが異なる変更（`readme.html`→`README.html`等）を扱うときは `-ceq` / `-cne` / `-creplace` を使う。`-ne` で変更有無を判定すると「変更なし」と誤判定して書き込みをスキップする
+- **`Get-Content` は BOM 無し UTF-8 を CP932 として読む**。**エラーにならず静かに化ける**。`-Encoding UTF8` を付けるか `[System.IO.File]::ReadAllText()` を使う。後者は版の差に左右されない
 - **`Get-ChildItem` はパス内のワイルドカードと `-Filter` を併用すると0件を返す**。`Get-ChildItem <親フォルダ> -Recurse -Filter <パターン> | Where-Object { $_.Directory.Name -like 'xxx*' }` の形にする
 - **関数から配列を返すときは `return ,$array` と先頭にカンマを付ける**。単に `return $array` すると配列が列挙され、要素1個の配列が呼び出し元でスカラーに潰れる
 - **受け取るときは変数に代入する**。`foreach` に直接渡す・`@()` で包む、はどちらも壊れる。
