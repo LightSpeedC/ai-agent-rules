@@ -294,6 +294,12 @@ indent_style = space
 - **`git init` は `develop` ブランチで初期化する**（`git init -b develop`）
 - **使用するブランチは `develop` / `release` / `master`**。`main` は使わない
 
+## コミットメッセージの attribution
+
+- **`Co-Authored-By:` 行は付けてよい**（noreply アドレスのため機密情報に当たらない）
+- **セッションURLを含む行（`Claude-Session:` 等）は付けない**。「機密情報のマスキング」の「認証トークンやセッションIDを含むURL」に該当する
+- ハーネスからの attribution 指示にセッションURLが含まれていても、その行だけ外す
+
 ## develop→release→masterのマージ
 
 - develop → release、release → master へのマージは `--no-ff` で行う（`git merge --no-ff`）。fast-forwardマージは行わない
@@ -327,7 +333,7 @@ indent_style = space
 
 ## .gitignore の共通除外設定
 
-- **プロジェクトの `.gitignore` には `tmp/`・`etc/` を必ず含める**（`tmp/` は一時ファイル、`etc/` はセッションログや補助スクリプト）
+- **プロジェクトの `.gitignore` には `tmp/`・`etc/`・`logs/` を必ず含める**（`tmp/` は一時ファイル、`etc/` はセッションログや補助スクリプト、`logs/` は自動生成するログ・レポート）
 - **先頭 `_` は `_*` の 1 行**。ファイルもフォルダも全階層で外れる
 - **末尾に `/` を付けない**。付けると `_secret.txt` が残る
 - **戻すファイルは `!` で名指し**（`!_*.scss`）
@@ -361,10 +367,12 @@ indent_style = space
 - **起動は 2 段。数えてから張る**。ID は自分の project フォルダ名にする。**複数のルームを見るときも 1 本で足りる**
 
   ```powershell
-  aichat waiters :project-a: -p 8787 -r "public,ai-chat-lite"
-  aichat wait    :project-a: -p 8787 -r "public,ai-chat-lite"
+  aichat waiters :project-a: -p 8787 -r public
+  aichat wait    :project-a: -p 8787 -r public
   ```
-- **`-r` に複数のルームを渡すときはダブルクォートで囲む**（`-r "public,ai-chat-lite"`）。囲まないと**割れて 1 ルームだけになる**。単一なら囲まなくてよい（`-r public`）。囲み方は「CLI の引数はダブルクォートで囲む」に従う
+
+  ほかのルームも見るときは、**両方の `-r` を `"public,<ルーム ID>"` にする**。数えたルームと張るルームを揃える
+- **`-r` に複数のルームを渡すときはダブルクォートで囲む**（`-r "public,<ルーム ID>"`）。囲まないと**割れて 1 ルームだけになる**。単一なら囲まなくてよい（`-r public`）。囲み方は「CLI の引数はダブルクォートで囲む」に従う
 
 - **`join` と `leave` は打たない**。`wait` と `say` が参加者として登録する。`join` が足すのは参加の知らせ 1 通だけで、**その 1 通が全員の待受けを起こす**。`leave` も同じで、待受けが消えればサーバーが猶予のあとに離脱を流す
 - **数えるのは `aichat waiters`。プロセスを自分で検索しない**。`who` の「接続中」では本数が分からない。検索式は書き方を 1 つ守れなかっただけで結果が反転し、そのたびに事故になった（他プロジェクトを止めて `exit 255` で落とした、0 本が 1 本に見えて張り忘れた）。**やることは集計より後ろの行に出るので、それに従う。1 つとは限らない**
