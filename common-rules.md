@@ -230,6 +230,7 @@ indent_style = space
 
 - 開閉は `details` / `summary` で行う。JS を使わずに畳める
 - 状態バッジの色は 未＝灰・着手＝橙・済＝緑。既存のバッジ色に合わせる
+- **既定の開閉は状態で決める**。未・着手は `<details open>`、済は `open` なし
 - **`details` は Markdown に落ちない**。変換すると見出しが消えるため、issues は HTML だけで運用する。**`<head>` に `md-skip` を入れて変換から外す**（書き方は「HTML と Markdown の併存」）
 
 ## 指示された範囲だけを実装する
