@@ -37,7 +37,7 @@
 - **「調査してよい」「見てよい」は読み取りの許可**。書き込み・修正・実行には別に許可を取る
 - **意図しない実行も同じ**。対象を渡し損ねたツールが探索範囲を広げ、外のファイルを走らせることがある（「対象を渡すコマンドは、渡ったことを確かめてから実行する」を参照）
 - **他プロジェクトのファイルは直さない**。直す必要が見つかったら、何をどう直すかを共通のルール文書に書き、そのプロジェクト側で直してもらう
-- 本ルールで用途を明示済みの共有環境（PlayWright・html2md・ai-chat-lite）と `~/.claude` 配下は、確認なしで参照してよい
+- 本ルールで用途を明示済みの共有環境（PlayWright・ai-agent-tools・ai-chat-lite）と `~/.claude` 配下は、確認なしで参照してよい
 
 # プロジェクトフォルダ構成
 
@@ -599,7 +599,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **手で組み立てない**。書き方がセッションごとに変わり、`WriteAllBytes` を使ってウイルス対策に検知された
 - **変換先で表現できない文字があれば、書き換えずに止まる**。その文字と行番号が出る
 - **変換後が元と同じならファイルに触らない**。何度実行してもよい
-- 利用方法の詳細は `N:/html2md/USAGE-FOR-PROJECTS.md` を参照
+- 利用方法の詳細は `N:/ai-agent-tools/USAGE-FOR-PROJECTS.md` を参照
 
 ### cmd・bat・reg を作る・直す・消す（Windows）
 
@@ -763,11 +763,11 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 適用条件: ハーネスの PowerShell ツールが使えない環境で、ps1 や PowerShell の式を動かすとき。
 
 - **`psh` を使う**（プロジェクトを問わず共通・PATH に入っている）。`powershell` を直に呼ぶと、**PowerShell 経由で走る .NET 製の exe が CP932 で出す**ため日本語が化ける
-- **`html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `psh` ・ `git` ・ `aichat` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
+- **`html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `psh` ・ `git` ・ `aichat` ・ `node` ・ `bun` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
 - **`psh <path.ps1> [引数...]`** と **`psh -c "<式>"`**。既定は Windows PowerShell 5.1（`--pwsh` で 7）
 - **終了コードはそのまま返る**。判定に使ってよい
 - **手を入れられない ps1 にも効く**。外から持ってきたものや、他プロジェクトが持つ ps1 は書き換えられない。psh は受け側で読み分ける
-- 利用方法の詳細は `N:/html2md/USAGE-FOR-PROJECTS.md` を参照
+- 利用方法の詳細は `N:/ai-agent-tools/USAGE-FOR-PROJECTS.md` を参照
 
 ## 実行ファイル名に .exe を付けない
 
@@ -1170,7 +1170,7 @@ html2md が読むクラス名。プロジェクトごとに違う名前を使わ
 - **変換は `html2md` を使う**（プロジェクトを問わず共通）。PATH に入っているのでパスの指定は要らず、プロジェクト側にランチャーを置く必要もない
 - 変換対象は root の `README.html` と `notes/` 配下の html。`docs/` など別のフォルダは `--dir`、root 直下の README 以外は `--extra` で渡す
 - **毎回すべての対象を渡す**。`--extra`・`--dir` を忘れて素で走らせると、渡さなかった html へのリンクが README 側で `.md` から `.html` に戻る（生成済みの .md が書き換わる）
-- 利用方法の詳細（コマンド・オプション・変換対象の外し方・検査の読み方）は `N:/html2md/USAGE-FOR-PROJECTS.md` を参照
+- 利用方法の詳細（コマンド・オプション・変換対象の外し方・検査の読み方）は `N:/ai-agent-tools/USAGE-FOR-PROJECTS.md` を参照
 - **変換に使うクラス名は「HTMLデザインルール」の「クラス名」に従う**。プロジェクトごとに違う名前を使わない
 - 内容を更新するときは HTML を直し、html2md を再実行して Markdown を作り直す。Markdown を直接編集しない（次の生成で上書きされる）
 - **ページ全体を変換対象から外すときは `<head>` に `<meta name="md-skip">` を入れる**。要素単位で外すときは `class="md-skip"` を使う
