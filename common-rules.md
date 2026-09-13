@@ -763,7 +763,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 適用条件: ハーネスの PowerShell ツールが使えない環境で、ps1 や PowerShell の式を動かすとき。
 
 - **`psh` を使う**（プロジェクトを問わず共通・PATH に入っている）。`powershell` を直に呼ぶと、**PowerShell 経由で走る .NET 製の exe が CP932 で出す**ため日本語が化ける
-- **`html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `psh` ・ `git` ・ `aichat` ・ `node` ・ `bun` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
+- **`git` ・ `gh` ・ `node` ・ `bun` ・ `psh` ・ `html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `aichat` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
 - **`psh <path.ps1> [引数...]`** と **`psh -c "<式>"`**。既定は Windows PowerShell 5.1（`--pwsh` で 7）
 - **終了コードはそのまま返る**。判定に使ってよい
 - **手を入れられない ps1 にも効く**。外から持ってきたものや、他プロジェクトが持つ ps1 は書き換えられない。psh は受け側で読み分ける
