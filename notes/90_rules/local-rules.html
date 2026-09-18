@@ -104,11 +104,6 @@
 		--accent2: hsl(280, 58%, 55%);
 		--soft: hsl(280, 28%, 95%);
 	}
-	section.ch02 {
-		--accent: hsl(0, 78%, 25%);
-		--accent2: hsl(0, 58%, 55%);
-		--soft: hsl(0, 28%, 95%);
-	}
 
 	section h1 {
 		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
@@ -190,7 +185,7 @@
 	<div class="inner">
 		<h1>ローカルルール</h1>
 		<p class="lead">このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-12</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-19</p>
 	</div>
 </div>
 
@@ -201,9 +196,10 @@
 <div class="minibar">運用</div>
 
 <section class="ch01" id="ch01">
-	<h1>chat 待受けの運用</h1>
+	<h1>chat 待受け・共通ルールの追随の点検</h1>
 
 	<p>このプロジェクトは public ルームを常時見る。手順は共通ルールの「ai-chat-lite（AI 間チャット）の利用」に従い、ここには<strong>値と頻度だけ</strong>を書く。</p>
+	<p>ホーム配下の原本が書き換わったら、root の <code>common-rules.md</code> をそれに合わせて履歴に残す。<strong>暫定運用のあいだだけの決めごと</strong>で、分割の仕組みができたら捨てる。</p>
 
 	<h2>値</h2>
 	<div class="tablewrap">
@@ -229,40 +225,11 @@
 				</tr>
 				<tr>
 					<td class="nowrap">点検の頻度</td>
-					<td class="nowrap"><code>50 */3 * * *</code></td>
-					<td>3 時間おき、毎時 50 分</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
-	<h2>決めごと</h2>
-	<ul class="plain">
-		<li><strong>待受けは常に 1 本張る</strong>。他プロジェクトの分には触らない</li>
-		<li><strong>cron はセッション限りで消える</strong>。セッションを開き直したら登録し直す</li>
-		<li><strong>cron の指示文に手順を書かない</strong>。共通ルールの見出し名で参照する</li>
-	</ul>
-</section>
-
-<section class="ch02" id="ch02">
-	<h1>共通ルールの追随</h1>
-
-	<p>ホーム配下の原本が書き換わったら、root の <code>common-rules.md</code> をそれに合わせて履歴に残す。<strong>暫定運用のあいだだけの決めごと</strong>で、分割の仕組みができたら捨てる。</p>
-
-	<h2>値</h2>
-	<div class="tablewrap">
-		<table>
-			<thead>
-				<tr><th class="nowrap">項目</th><th class="nowrap">値</th><th>備考</th></tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="nowrap">点検の頻度</td>
-					<td class="nowrap"><code>2 */3 * * *</code></td>
-					<td>3 時間おき、毎時 2 分</td>
+					<td class="nowrap"><code>5 */4 * * *</code></td>
+					<td>4 時間おき、毎時 5 分</td>
 				</tr>
 				<tr>
-					<td class="nowrap">対象</td>
+					<td class="nowrap">追随の対象</td>
 					<td class="nowrap"><code>common-rules.md</code></td>
 					<td>root の 1 ファイルだけ</td>
 				</tr>
@@ -277,19 +244,32 @@
 
 	<h2>引き金</h2>
 	<ul class="plain">
-		<li><strong>3 時間おきの定期点検</strong>（毎時 2 分、cron）</li>
-		<li><strong>ルール変更の通知を受けたとき</strong>。ai-chat-lite で共通ルールの変更を知らされたら、次の定期点検を待たずにその場で行う</li>
+		<li><strong>4 時間おきの定期点検</strong>（毎時 5 分、cron）</li>
+		<li><strong>ルール変更の通知を受けたとき</strong>。ai-chat-lite で共通ルールの変更を知らされたら、共通ルールの追随は次の定期点検を待たずにその場で行う</li>
 	</ul>
 
 	<h2>やること</h2>
 	<ul class="plain">
-		<li><strong>原本と突き合わせる</strong>。差が無ければ何もしない。報告もしない</li>
+		<li><strong>chat 待受け</strong>: <code>aichat waiters</code> で本数を確かめる。自分の分が 0 本なら <code>aichat wait</code> で張り直す。他プロジェクトの分には触らない</li>
+		<li><strong>共通ルールの追随</strong>: 原本と突き合わせる。差が無ければ何もしない。報告もしない</li>
 		<li><strong>差があればコピーして文字コードを揃える</strong></li>
 		<li><strong>公開チェックを通す</strong>。共通ルールの「コミット前の確認」に従う。1 件でも残れば commit せず報告する</li>
 		<li><strong>この 1 ファイルだけを stage して commit する</strong>。push はしない</li>
 	</ul>
 
+	<h2>決めごと</h2>
+	<ul class="plain">
+		<li><strong>待受けは常に 1 本張る</strong>。他プロジェクトの分には触らない</li>
+		<li><strong>cron の指示文に手順を書かない</strong>。共通ルールの見出し名で参照する</li>
+	</ul>
+
 	<h2>共通ルールと違うところ</h2>
+	<p>共通ルールの「cron はセッションの中だけで生きる」は <strong>無指示で作り直さない</strong>と決めている。ここはそれと違い、<strong>セッションを開き直したら登録し直す</strong>。</p>
+	<ul class="plain">
+		<li><strong>なぜ</strong>: 追随と待受けはこの cron だけが引き金。作り直さないと暫定運用が止まる</li>
+		<li><strong>どこまで</strong>: このプロジェクトの 1 本（chat 待受け・共通ルールの追随の点検）だけ</li>
+		<li><strong>いつまで</strong>: 暫定運用のあいだ</li>
+	</ul>
 	<p>共通ルールの「修正は1点ずつ、確認を重視」は <strong>commit を自動で行わない</strong>と決めている。ここはそれと違い、<strong>確認を取らずに commit する</strong>。</p>
 	<ul class="plain">
 		<li><strong>なぜ</strong>: 原本は別のセッションからも書き換わる。取りこぼすと、どの版で何が変わったかが履歴から読めなくなる</li>
