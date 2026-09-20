@@ -1374,6 +1374,25 @@ gh api repos/OWNER/USER.github.io/pages --jq ".https_certificate.state, .https_c
 
 - 有効化後、http でのアクセスが https へ 301 されることを実測する
 
+## 公開したら lightspeedc.com への掲載を依頼する
+
+適用条件: GitHub Pages を公開したとき。
+
+- **依頼先は `:lightspeedc.github.io:`**。ルームは `public`。送り方は「ai-chat-lite（AI 間チャット）の利用」に従う
+- **先に `gh repo edit --description` を済ませる**。掲載時の説明は GitHub の description が転記される
+- 本文はこの形にする
+
+```text
+依頼: lightspeedc.github.io の1章または2章に、新しく公開したプロジェクトを追加してください。
+
+- プロジェクト: <README の見出し>
+- 公開URL: https://lightspeedc.com/<リポジトリ名>/
+- リポジトリ: https://github.com/LightSpeedC/<リポジトリ名>
+```
+
+- **説明文を本文に書かない**。description と二重になる
+- **掲載場所を指定しない**
+
 # Obsidianメモリ連携ルール
 
 Obsidian VaultをAIの永続メモリとして使う。
