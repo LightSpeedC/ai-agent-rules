@@ -313,6 +313,14 @@ indent_style = space
 - 日本語ファイル名は `git ls-files` でエスケープされて grep が空振りする。`-c core.quotepath=false` を付ける
 - **メッセージに件数を書くなら、書く直前に数える**（`git diff --cached --name-only`）。**メッセージの誤りは、直すのに履歴の積み直しが要る**
 
+## 外部への投稿前にローカルパスを確認する
+
+適用条件: GitHub Issue・PR・コメントなど、社外・第三者の公開の場にターミナルログ等をそのまま貼るとき。
+
+- **貼る前に、ローカルのフルパス（プロジェクトフォルダ名等）が含まれていないか確認する。** 含まれていれば汎用的な表記（`C:\work` 等）に置き換える
+- **「コミット前の確認」と同じ観点だが、対象は git commit だけでなく外部サービスへの投稿全般**（Issue・PR・コメント等）に広げる
+- 理由: 実際にプロジェクトのパスを含んだまま Bun の Issue に投稿してしまい、事後に修正が必要になった
+
 ## gitブランチ
 
 - **`git init` は `develop` ブランチで初期化する**（`git init -b develop`）
@@ -380,6 +388,7 @@ indent_style = space
 
 - **他プロジェクトで PlayWright テストが必要な場合、自プロジェクトにインストールせず PlayWright 共有環境を使う**
 - 利用方法の詳細（フォルダ規約・実行コマンド等）は `N:/PlayWright/USAGE-FOR-PROJECTS.md` を参照
+- **待受けと違い、PlayWright の `[killed]` は後始末が要る**。残骸の調べ方は「残ったプロセスを調べるときは psls を使う」に従う
 
 ## ai-chat-lite（AI 間チャット）の利用
 
@@ -423,7 +432,7 @@ indent_style = space
   - 伝えるのは「共通ルールのどの見出しか」と「何がどう変わったか」の数行
   - 読み手は見出しを頼りに自分で本文を読みに行く
 - 理由: 貼った本文はその場で古くなる。あとから履歴を読んだ人が、更新後のルールではなく**貼られた古い本文を正しいものとして読む**。チャットの発言は消えずに残り続ける
-- 利用方法の詳細（コマンド・待受けの張り方・API）は `N:/ai-chat-lite/USAGE-FOR-PROJECTS.md` を参照。
+- 利用方法の詳細（コマンド・待受けの張り方・API）は `N:/ai-chat-lite/CHAT-USAGE.md` を参照。
 - サーバーは Windows サービスとして常駐しているため、起動の操作は要らない
 
 ## claude-in-chrome 拡張の利用
@@ -638,7 +647,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **手で組み立てない**。書き方がセッションごとに変わり、`WriteAllBytes` を使ってウイルス対策に検知された
 - **変換先で表現できない文字があれば、書き換えずに止まる**。その文字と行番号が出る
 - **変換後が元と同じならファイルに触らない**。何度実行してもよい
-- 利用方法の詳細は `N:/ai-agent-tools/USAGE-FOR-PROJECTS.md` を参照
+- 利用方法の詳細は `N:/ai-agent-tools/TOOLS-USAGE.md` を参照
 
 ### cmd・bat・reg を作る・直す・消す（Windows）
 
@@ -694,6 +703,14 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **ファイル自体の文字コードとは別の話**。そちらは「ps1（PowerShell）ファイルの文字コード・改行コード」に従う
 - **例外は、文字コードそのものを確かめるための材料**。CP932 で出ること自体が試験の対象になっているものは変えない。**外した理由をその場に書く**
 
+## SetConsoleOutputCP は成功を返しても実際には効かないことがある
+
+適用条件: Windows で `SetConsoleOutputCP` を使ってコンソールの出力コードページを変えようとするとき。
+
+- **実機で確認した事実**: `SetConsoleOutputCP` は戻り値としては成功（true/非0）を返すが、`chcp` で見える値は変わらないことがある。`bun:ffi` 経由・PowerShell の P/Invoke 経由のどちらで呼んでも同じ結果だった（呼び出し方法の問題ではない）
+- **関連する報告（未検証・参考情報）**: [microsoft/terminal #9174](https://github.com/microsoft/terminal/issues/9174) に、ConPTY（疑似コンソール）配下ではコードページの変換が疑似コンソール内部で行われ、外側には伝わらない、という報告がある。[PowerShell/PowerShell #14941](https://github.com/PowerShell/PowerShell/issues/14941) にも同様の報告がある。**自分の環境が実際にこれに該当するかどうかまでは確認していない**
+- 戻り値（成功）だけで「効いた」と判断しない。変わったかどうかは `chcp` 等で実際に確認する
+
 ## ps1作成時のcmdランチャー
 
 - **ps1ファイルを新規作成する際は、必ずそのメイン処理をダブルクリックで実行できる同名のcmdランチャーを同じフォルダに用意する**（例: `foo.ps1` を作ったら `foo.cmd` も作る）
@@ -712,6 +729,13 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **bun と node で使うライブラリが異なる**。bun は組み込みの `bun:ffi`、node は外部パッケージの `koffi` を使う（node に `bun:ffi` は無く、bun に `koffi` を入れる必要もない）
 - **`bun:ffi` の import は文字列を組み立ててから動的 import する**。直に `import 'bun:ffi'` と書くと、node の型定義には無いモジュールのため tsc の検査が止まる。実行時に解決すればよいので、`'bun' + ':ffi'` のように分けてから `await import(...)` する
 - **実行時に bun か node かを判定し、両方の実装を用意して使い分ける**。どちらも失敗したら、さらに緩い手段（外部コマンドの起動等）へフォールバックする
+
+## Bun 同士のパイプは文字化けすることがある（未解決）
+
+適用条件: Bun で実行しているプログラムの出力を、別の Bun プログラムへパイプで渡すとき。
+
+- **開始時のコンソールのコードページが UTF-8（65001）でないと、Bun ランタイム自体が文字化けを起こす**（実機で確認。bun:ffi 等、呼び出し側のコードは無関係）。`bun -e "console.log(...)" | bun -e "process.stdin.pipe(process.stdout)"` という、呼び出し側のコードを一切含まない最小構成でも再現し、実行後コードページが 65001 に変わる副作用を伴う。node が片方にでも入っていれば起きない
+- Bun 側の未解決バグとして報告済み（[oven-sh/bun#43660](https://github.com/oven-sh/bun/issues/43660)）。**回避策は、パイプの少なくとも片方を Bun 以外のランタイムにする**（node 等）
 
 ## 同期 API は、そのプロセスの非同期処理を止める
 
@@ -844,11 +868,11 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 
 - **`~/.claude/settings.json` の `env` に `CLAUDE_CODE_USE_POWERSHELL_TOOL: 1` を設定する**。次のセッションから PowerShell ツールが使える
 - **`psh` を使う**（プロジェクトを問わず共通・PATH に入っている）。`powershell` を直に呼ぶと、**PowerShell 経由で走る .NET 製の exe が CP932 で出す**ため日本語が化ける
-- **`git` ・ `gh` ・ `node` ・ `bun` ・ `psh` ・ `html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `aichat` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
+- **`git` ・ `gh` ・ `node` ・ `bun` ・ `psh` ・ `html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `aichat` ・ `psls` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
 - **`psh <path.ps1> [引数...]`** と **`psh -c "<式>"`**。既定は Windows PowerShell 5.1（`--pwsh` で 7）
 - **終了コードはそのまま返る**。判定に使ってよい
 - **手を入れられない ps1 にも効く**。外から持ってきたものや、他プロジェクトが持つ ps1 は書き換えられない。psh は受け側で読み分ける
-- 利用方法の詳細は `N:/ai-agent-tools/USAGE-FOR-PROJECTS.md` を参照
+- 利用方法の詳細は `N:/ai-agent-tools/TOOLS-USAGE.md` を参照
 
 ## 実行ファイル名に .exe を付けない
 
@@ -903,6 +927,12 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **定説と異なる挙動が出た場合、システム全体の設定ではなくこの検証環境固有の設定を疑う**
 - **実行ファイルの標準出力は処理系で文字コードが違う**。.NET 製は CP932、Node ・ Bun は UTF-8。PowerShell 5.1 は CP932 として読むため .NET 製とは打ち消し合い、Bash では同じ exe が化ける
 - **化けてもツールの不具合ではない**。受け手を揃えるなら 5.1 側に `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8` を置く
+- **`type file | more` 等でファイルの中身を確認する検証は、非 UTF-8 コンソールでは成立しない**。CP932 のコンソールでは、正しい UTF-8 ファイルでも `type` すれば必ず文字化けして見えるため、化けているかどうかの判定に使えない。文字コードを検証したいときは `type` を使わず、コードページに依存しない経路（`less` へのパイプ等）で確かめる
+
+## PowerShell の実行ポリシーで止まったら
+
+- 直すコマンド: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`（管理者不要。セキュリティ設定なので本人が実行する）
+- `psh` は毎回 `-ExecutionPolicy Bypass` を付けるため、この問題に当たらない
 
 ## PowerShellの落とし穴
 
@@ -915,6 +945,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **`Get-ChildItem` はパス内のワイルドカードと `-Filter` を併用すると0件を返す**。`Get-ChildItem <親フォルダ> -Recurse -Filter <パターン> | Where-Object { $_.Directory.Name -like 'xxx*' }` の形にする
 - **関数から配列を返すときは `return ,$array` と先頭にカンマを付ける**。単に `return $array` すると配列が列挙され、要素1個の配列が呼び出し元でスカラーに潰れる
 - **受け取るときは変数に代入する**。`foreach` に直接渡す・`@()` で包む、はどちらも壊れる。
+- **Windows PowerShell 5.1 はネイティブコマンド同士のパイプで、UTF-8 の非 ASCII 文字がランタイム・コードページに関係なく `?` に化ける**。`node→node` のような Bun を含まない組み合わせでも再現する（実測済み）。原因は未確認だが、pwsh 7・cmd.exe では起きない。5.1 でネイティブコマンドの出力を非 ASCII を含む形でパイプするときは、別の端末（pwsh 7・cmd.exe）で確かめる
 
 ## 検索・集計の結果が0件なら、まず検索式を疑う
 
@@ -930,6 +961,15 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **`Set-Location` で位置を合わせて相対パスを渡す形にしない**。呼び出し元の状態に左右される
 
 理由: 引数が渡らなくてもコマンドはエラーにならず、既定の動作をする。範囲が広がったことに気づけない。
+
+## 残ったプロセスを調べるときは psls を使う
+
+適用条件: バックグラウンドコマンドが `killed` 等で終わった後、子孫プロセスの残存を疑うとき。
+
+- **親を止めても子は道連れにならない。残っていないか `psls <キーワード>` で確認する**（親子関係をツリー表示し、コマンド行の部分一致で絞り込める）
+- 残っていたら `taskkill /PID <根の pid> /T /F` で止める（**`/T` が無いと子が残る**）
+
+理由: Claude Code はタスクを終了扱いにしても、`npm` → `cmd` → 子プロセスの階層が切り離されて生き残ることがある（実例: PlayWright 実行が killed 後も子孫プロセスが 20 時間残り、メモリを圧迫し続けた）。
 
 ## カレントの実行ファイルは明示パスで実行する
 
@@ -1252,7 +1292,7 @@ html2md が読むクラス名。プロジェクトごとに違う名前を使わ
 - **変換は `html2md` を使う**（プロジェクトを問わず共通）。PATH に入っているのでパスの指定は要らず、プロジェクト側にランチャーを置く必要もない
 - 変換対象は root の `README.html` と `notes/` 配下の html。`docs/` など別のフォルダは `--dir`、root 直下の README 以外は `--extra` で渡す
 - **毎回すべての対象を渡す**。`--extra`・`--dir` を忘れて素で走らせると、渡さなかった html へのリンクが README 側で `.md` から `.html` に戻る（生成済みの .md が書き換わる）
-- 利用方法の詳細（コマンド・オプション・変換対象の外し方・検査の読み方）は `N:/ai-agent-tools/USAGE-FOR-PROJECTS.md` を参照
+- 利用方法の詳細（コマンド・オプション・変換対象の外し方・検査の読み方）は `N:/ai-agent-tools/TOOLS-USAGE.md` を参照
 - **変換に使うクラス名は「HTMLデザインルール」の「クラス名」に従う**。プロジェクトごとに違う名前を使わない
 - 内容を更新するときは HTML を直し、html2md を再実行して Markdown を作り直す。Markdown を直接編集しない（次の生成で上書きされる）
 - **ページ全体を変換対象から外すときは `<head>` に `<meta name="md-skip">` を入れる**。要素単位で外すときは `class="md-skip"` を使う
