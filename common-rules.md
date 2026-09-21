@@ -705,6 +705,14 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
   pause
   ```
 
+## bun と node で FFI を使うとき
+
+適用条件: Windows API 等を JS/TS から直接呼ぶ実装を、bun と node の両方で動かすとき。
+
+- **bun と node で使うライブラリが異なる**。bun は組み込みの `bun:ffi`、node は外部パッケージの `koffi` を使う（node に `bun:ffi` は無く、bun に `koffi` を入れる必要もない）
+- **`bun:ffi` の import は文字列を組み立ててから動的 import する**。直に `import 'bun:ffi'` と書くと、node の型定義には無いモジュールのため tsc の検査が止まる。実行時に解決すればよいので、`'bun' + ':ffi'` のように分けてから `await import(...)` する
+- **実行時に bun か node かを判定し、両方の実装を用意して使い分ける**。どちらも失敗したら、さらに緩い手段（外部コマンドの起動等）へフォールバックする
+
 ## 同期 API は、そのプロセスの非同期処理を止める
 
 適用条件: node ・ bun で `〜Sync` の付く API を使うとき。
