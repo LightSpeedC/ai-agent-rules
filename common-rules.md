@@ -387,7 +387,7 @@ indent_style = space
 ## PlayWright テストの実行
 
 - **他プロジェクトで PlayWright テストが必要な場合、自プロジェクトにインストールせず PlayWright 共有環境を使う**
-- 利用方法の詳細（フォルダ規約・実行コマンド等）は `N:/PlayWright/USAGE-FOR-PROJECTS.md` を参照
+- 利用方法の詳細（フォルダ規約・実行コマンド等）は `N:/PlayWright/PLAYWRIGHT-USAGE.md` を参照
 - **待受けと違い、PlayWright の `[killed]` は後始末が要る**。残骸の調べ方は「残ったプロセスを調べるときは psls を使う」に従う
 
 ## ai-chat-lite（AI 間チャット）の利用
