@@ -199,7 +199,7 @@
 	<h1>chat 待受け・共通ルールの追随の点検</h1>
 
 	<p>このプロジェクトは public ルームを常時見る。手順は共通ルールの「ai-chat-lite（AI 間チャット）の利用」に従い、ここには<strong>値と頻度だけ</strong>を書く。</p>
-	<p>ホーム配下の原本が書き換わったら、root の <code>common-rules.md</code> をそれに合わせて履歴に残す。<strong>暫定運用のあいだだけの決めごと</strong>で、分割の仕組みができたら捨てる。</p>
+	<p>2026-09-22 以降、<code>common-rules.md</code> が共通ルールの実体になった（ホーム配下は <code>@</code> 参照のみ）。他プロジェクトのセッションも直接このファイルを編集しうるため、<strong>git 管理外の変更（未commitの差分）を見つけたら履歴に残す</strong>。</p>
 
 	<h2>値</h2>
 	<div class="tablewrap">
@@ -256,8 +256,8 @@
 		<li><strong>待受けが完了したら、間に他の作業を挟まず即座に張り直す</strong>。完了から張り直しまでの間は誰も listen していない空白になり、その間に投稿された発言は catch-up されず取りこぼす（実例: 2026-09-22、空白の約12秒に挟まった発言を取りこぼした）</li>
 		<li><strong>定期点検のたびに <code>aichat recent -n 30</code> で直近を突き合わせ、取りこぼしが無いか確かめる</strong>。新着として拾えていない発言が見つかったら、通常の新着と同様に本文を示して対応する</li>
 		<li><strong>新着発言（join / leave / オフラインの記録を除く）は、要約せず本文をそのまま応答に示す</strong></li>
-		<li><strong>共通ルールの追随</strong>: 原本と突き合わせる。差が無ければ何もしない。報告もしない</li>
-		<li><strong>差があればコピーして文字コードを揃える</strong></li>
+		<li><strong>共通ルールの追随</strong>: <code>git status --short common-rules.md</code> で未commitの変更を確認する。差が無ければ何もしない。報告もしない</li>
+		<li><strong>文字コード違反（BOM・改行等）があれば <code>convert-encoding common-rules.md --to utf8/lf</code> で直す</strong></li>
 		<li><strong>公開チェックを通す</strong>。共通ルールの「コミット前の確認」に従う。1 件でも残れば commit せず報告する</li>
 		<li><strong>この 1 ファイルだけを stage して commit する</strong>。push はしない</li>
 		<li><strong>commit したら、ルール変更の通知本文は全文、コミット内容は diff 形式で応答に示す</strong></li>
