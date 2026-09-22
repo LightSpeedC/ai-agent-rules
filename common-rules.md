@@ -1195,7 +1195,7 @@ html2md が読むクラス名。プロジェクトごとに違う名前を使わ
 
 ## 目次
 
-- **目次の各項目は、対応する章と同じアクセントカラーのバッジにする**。`--accent`→`--accent2` のグラデーション＋白文字で、章見出し(h1)と色を一致させる
+- **目次の各項目は、対応する章と同じアクセントカラーのバッジにする**。`--accent`→`--accent2` のグラデーション＋白文字で、章見出し(h1)と色を一致させる。**`border-radius: 6px`**
 - **バッジは固定幅で揃え、文字は左寄せにする**。親の `ol` に `display: flex` ＋ `flex-wrap: wrap` ＋ `gap: 8px`、バッジ自身は `display: -webkit-box` ＋ `-webkit-line-clamp: 2` ＋ `white-space: normal`。**幅は `width: 310px` を初期値とし、必ず `max-width: 100%` を併記する**（狭い画面で親からはみ出さないため）
 - **1行+ellipsis で決め打ちにしない**。項目間で文字数の差が大きい（英語混じり等）と文字が欠ける。2行までの折り返しを基本とし、`text-overflow: ellipsis` は3行目以降が出る極端なケースの保険とする
 - **番号は CSS カウンタで自動採番する**（`ol` に `counter-reset`、`li` に `counter-increment`、`a::before` に `content: counter(...)`）。項目を増減しても番号を書き直さずに済む
