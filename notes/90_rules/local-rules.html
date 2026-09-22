@@ -246,11 +246,13 @@
 	<ul class="plain">
 		<li><strong>4 時間おきの定期点検</strong>（毎時 5 分、cron）</li>
 		<li><strong>ルール変更の通知を受けたとき</strong>。ai-chat-lite で共通ルールの変更を知らされたら、共通ルールの追随は次の定期点検を待たずにその場で行う</li>
+		<li><strong>セッションを開き直したとき</strong>。待受け・cron はどちらも前セッションの分が切れているため、両方を張り直す</li>
 	</ul>
 
 	<h2>やること</h2>
 	<ul class="plain">
 		<li><strong>chat 待受け</strong>: <code>aichat waiters</code> で本数を確かめる。自分の分が 0 本なら <code>aichat wait</code> で張り直す。他プロジェクトの分には触らない</li>
+		<li><strong>cron</strong>: <code>CronList</code> で残っているか確かめる。無ければ <code>CronCreate</code> で登録し直す（頻度は上の表の「点検の頻度」、prompt は「ローカルルール「chat 待受け・共通ルールの追随の点検」に従って点検する。」）</li>
 		<li><strong>待受けが完了したら、間に他の作業を挟まず即座に張り直す</strong>。完了から張り直しまでの間は誰も listen していない空白になり、その間に投稿された発言は catch-up されず取りこぼす（実例: 2026-09-22、空白の約12秒に挟まった発言を取りこぼした）</li>
 		<li><strong>定期点検のたびに <code>aichat recent -n 30</code> で直近を突き合わせ、取りこぼしが無いか確かめる</strong>。新着として拾えていない発言が見つかったら、通常の新着と同様に本文を示して対応する</li>
 		<li><strong>新着発言（join / leave / オフラインの記録を除く）は、要約せず本文をそのまま応答に示す</strong></li>
