@@ -3,6 +3,7 @@
 ## ドキュメントの保存場所と形式
 
 - **ドキュメントは HTML で作成する。Markdown だけで作らない**（必要なら「# HTML→Markdown 変換ルール」に従って HTML から生成する）
+- **README も例外ではない**。世間では `README.md` を直接書くのが通例だが、ここでは他の資料と同じく `README.html` を正とし、`README.md` は html2md による生成物にする
 - **HTML は BOM 付き UTF-8 で保存する**。HTML5 は BOM を meta charset より優先するため、どのブラウザで開いても化けない。**Markdown は BOM 無し**（BOM が本文の先頭に混ざって見出しが崩れる処理系がある）
 - **置き場所は読み手で決める**。外部に配るものは `docs/`、自分たちの管理用は `notes/`
 - **複数ファイルに分ける読み物でなければ、root の `README.html` をそのまま公開の実体にしてよい**。`docs/` は作らない（公開の手順は「GitHub Pages 公開ルール」）
