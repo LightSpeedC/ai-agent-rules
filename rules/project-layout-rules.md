@@ -1,0 +1,177 @@
+# プロジェクトフォルダ構成
+
+適用条件: 新規プロジェクトを作成するとき、およびファイルの置き場を決めるとき。
+
+## トップレベル
+
+| フォルダ | 用途 | Git |
+|---|---|---|
+| docs/ | 公開資料（public なら GitHub Pages のソース）。**外部に配るもの** | 管理 |
+| notes/ | 管理ドキュメント（HTML で作成）。**自分たちのためのもの** | 管理 |
+| src/ | アプリ本体 | 管理 |
+| tools/ | 開発・運用の補助 | 管理 |
+| tests/ | テスト本体。実行ランチャーは tools/40_test/ に置く | 管理 |
+| deploy/ | デプロイ定義（Dockerfile / IaC / CI補助） | 管理 |
+| dist/ | ビルド出力 | 除外 |
+| _releases/ | 配布物の実体（GitHub Releases へ上げる） | 除外 |
+| tmp/ ・ etc/ | 一時ファイル、セッションログ | 除外 |
+
+## 新規プロジェクトの初期化
+
+適用条件: 新規プロジェクトを作成するとき。`git init` を指示されたときも含む。
+
+- **次の一式を、個別の指示を待たずに作る**
+  1. `git init -b develop`（「gitブランチ」）
+  2. `.gitignore`（「.gitignore の共通除外設定」）
+  3. `.editorconfig` ・ `.gitattributes` ・ `.vscode/settings.json`（「文字コードと改行の定義ファイル」）
+  4. `etc/c.bat`（「etc/c.bat 作成」）
+- **中身は各見出しに書いたものを使う**。ここには何を作るかだけを置く
+- **空フォルダは作らない**。`notes/` `src/` 等は必要になった時点で作る
+- **作ったものを一覧で報告する**。commit・add はしない
+
+## etc/c.bat 作成
+
+プロジェクトの開始時に以下の etc/c.bat ファイルを作成する
+
+```
+cd /d "%~dp0.."
+claude --dangerously-skip-permissions -c
+```
+
+## ローカルルール（プロジェクトルール）
+
+適用条件: そのプロジェクトでだけ通る決めごとを残すとき。
+
+- **食い違ったらローカルルールが優先する**。そのプロジェクトでは共通ルールを上書きする
+- **上書きが効くのは、どの見出しと、どう違い、なぜかを書いたものだけ**。書いていない食い違いは写しがずれただけで、共通ルールが正
+- **`notes/90_rules/local-rules.html` に書く**。人も読むので、ほかの資料と同じ HTML で作る
+- **`local-rules.md` は html2md が生成する**。直接編集しない（次の変換で上書きされる）
+- **root の `AGENTS.md` は次の形にする**。`@` で取り込むので、セッションには本文が読み込まれる。`@` を解釈しないエージェント（Codex 等）は直後の日本語コメントを読んで自分で開く
+
+  ```markdown
+  @notes/90_rules/local-rules.md
+  <!-- 作業開始前に `notes/90_rules/local-rules.md` を読み、現在の作業に適用される指示に従うこと。読み込めなかった場合は、その旨を報告すること。 -->
+  ```
+
+- **`AGENTS.md` に中身を書かない**。置き場を 2 つにしない
+- **`CLAUDE.md` は今後使用しない。`AGENTS.md` に統一する**
+- **ここに書くのは、そのプロジェクトでしか言えないことだけ**。全プロジェクトに通ることは共通ルールに書く。同じ文を両方に書かない
+- **共通ルールと違う運用にするときは、どの見出しと、どう違い、なぜかを書く**
+- **踏んだ落とし穴を書く**。次のセッションが同じ順路を辿らないようにするのが目的で、一般論を並べる場所ではない
+
+## 非公開フォルダは先頭 _
+
+- **先頭 _ のフォルダは全階層で Git 管理外**（除外の書き方は「.gitignore の共通除外設定」を参照）
+- **除外フォルダの中は `!` で戻せない**。共有したいものは _ の外に置く
+- **親だけ戻すと中身が全部出る**。選ぶには 3 段（親を戻す → 中身を除外 → 名指しで戻す）
+- **秘密のフォルダに `!` を書かない**
+
+## 番号付きフォルダ
+
+2桁番号を10刻みで付ける。01〜09 は準備・前段階、10〜80 は本編、90 はフェーズに属さず常に参照するもの。
+
+```
+notes/        01_research 10_plan 20_todo 30_status 40_issues 60_releases 80_quality_review 90_rules
+tools/        10_setup 20_build 30_html2md 40_test 50_run 60_release 70_deploy 80_ops 90_misc
+src/scripts/  10_setup 20_migrate 30_batch 40_job 50_run 60_data 80_ops 90_misc
+```
+
+- 40_issues はこれから解決する課題
+- **空フォルダは作らない**。必要になった時点で作る
+
+## 配布物を作る
+
+適用条件: 実行に必要なファイルだけを配布用にまとめるとき。
+
+- **生成スクリプトは `tools/60_release/` に置く**。出力先は `_releases/`
+- **含める基準は「実行に要るかどうか」**。テスト・開発時だけ要るものは入れない
+
+## スクリプトの置き場
+
+- **判断基準は外部に渡るかどうか**。渡るなら src/scripts/、渡らないなら tools/
+- 開発時の実行（別バージョン検証等）は tools/50_run/、本番・現地での実行は src/scripts/50_run/。**テストは「置き場と実行」に従う**
+- **資料に載せるサンプルコードは、資料と同じ側に置く**。`docs/` の資料に対応するものは `docs/samples/`、`notes/` の資料に対応するものは `notes/samples/`
+
+## 共有ツールの置き場とPATH
+
+適用条件: 他プロジェクトから呼ばれる共有CLIツールを用意するとき。
+
+- **他プロジェクトから名前で呼ばれる公開インターフェースだけを `<project>/bin/` に置く**。プロジェクトルート自体はPATHに追加しない
+- **PATHに追加するのは `<project>/bin/` フォルダのみ**
+- **そのプロジェクトの開発者だけが使う補助スクリプトは対象外**。従来どおり `tools/`・`src/scripts/` に置き、`bin/`・PATHには入れない（判断基準は「スクリプトの置き場」の「外部に渡るかどうか」と同じで、ここでの外部は「他プロジェクトのセッションから呼ばれるか」）
+
+## ファイル名
+
+- 1件1ファイルで蓄積するフォルダ（01_research 等）は **種別1文字＋yymmdd-nn-件名** を付ける（計画 `p260830-01-バックアップ.html`、調査 `r260830-01-…`、品質レビュー `q260830-01-…`）
+- **issue に紐づく調査・計画は例外**。issue の `i` 番号を流用する（「課題の管理」を参照）
+- **`nn` は 36 進数 2 桁**（`01`〜`09` `0a`〜`0z` `10`〜`1z` … `zz`）。小文字だけを使う（Windows のファイル名は大小を区別しないため `aA` と `aa` が衝突する）。1 日 1295 件まで採れる
+- プロジェクトフォルダ名は yyyymmdd-名前。リポジトリ名も同じにする
+
+## 大小だけが違う名前を作らない
+
+適用条件: フォルダ・ファイルの名前を決めるとき。
+
+- **Windows は大小を区別しない**。`src/Text/` と `src/text/` は同じフォルダになる
+- **処理系や版で分けるなら接尾辞を付ける**（`Text` と `TextCs`）
+- **大小だけを変えるリネームは 2 段**（`mv A tmp && mv tmp a`）
+
+## ファイル・フォルダの名前に使ってよい文字
+
+- **使ってよいのは英数字・ハイフン・下線・ピリオドと日本語だけ**
+- **空白は半角も全角も入れない**
+- **迷ったら、コマンドに書いてダブルクォートが要るかで決める**
+
+## 文字コードと改行の定義ファイル
+
+適用条件: 新規プロジェクトを作成するとき。
+
+- **`.editorconfig` を置く**。VS Code 以外も読むので、これを主にする
+- **`.gitattributes` を置く**。`* text=auto eol=lf` を既定にし、ps1 と cmd だけ `eol=crlf` にする
+- **cmd の文字コードは Git でも EditorConfig でも指定できない**。SJIS は `.vscode/settings.json` の `[bat]` で補う
+- Git は文字コードを変換しない（`working-tree-encoding` を書かない限り）。`-text` にしなくても SJIS は保たれるため、差分が見える `text eol=crlf` を使う
+
+`.editorconfig`
+
+```ini
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = tab
+
+[*.ps1]
+charset = utf-8-bom
+end_of_line = crlf
+
+[*.{cmd,bat}]
+end_of_line = crlf
+
+[*.html]
+charset = utf-8-bom
+
+[*.md]
+indent_style = space
+```
+
+`.gitattributes`
+
+```gitattributes
+* text=auto eol=lf
+
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+```
+
+`.vscode/settings.json`
+
+```json
+{
+	"files.encoding": "utf8",
+	"[bat]": { "files.encoding": "shiftjis", "files.eol": "\r\n" },
+	"[powershell]": { "files.encoding": "utf8bom", "files.eol": "\r\n" },
+	"[html]": { "files.encoding": "utf8bom" }
+}
+```
