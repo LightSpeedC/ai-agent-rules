@@ -104,6 +104,16 @@
 		--accent2: hsl(280, 58%, 55%);
 		--soft: hsl(280, 28%, 95%);
 	}
+	section.ch02 {
+		--accent: hsl(140, 78%, 25%);
+		--accent2: hsl(140, 58%, 55%);
+		--soft: hsl(140, 28%, 95%);
+	}
+	section.ch03 {
+		--accent: hsl(0, 78%, 25%);
+		--accent2: hsl(0, 58%, 55%);
+		--soft: hsl(0, 28%, 95%);
+	}
 
 	section h1 {
 		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
@@ -123,6 +133,15 @@
 		font-size: 1.18em;
 		padding: 6px 12px;
 		margin: 30px 0 12px;
+	}
+
+	pre {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border-left: 5px solid var(--accent2, #2f5fbf);
+		border-radius: 0 6px 6px 0;
+		padding: 13px 16px;
+		overflow-x: auto;
 	}
 
 	code {
@@ -185,7 +204,7 @@
 	<div class="inner">
 		<h1>ローカルルール</h1>
 		<p class="lead">このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-22</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-23</p>
 	</div>
 </div>
 
@@ -257,6 +276,7 @@
 		<li><strong>定期点検のたびに <code>aichat recent -n 30</code> で直近を突き合わせ、取りこぼしが無いか確かめる</strong>。新着として拾えていない発言が見つかったら、通常の新着と同様に本文を示して対応する</li>
 		<li><strong>新着発言（join / leave / オフラインの記録を除く）は、要約せず本文をそのまま応答に示す</strong></li>
 		<li><strong>共通ルールの追随</strong>: <code>git status --short common-rules.md</code> で未commitの変更を確認する。差が無ければ何もしない。報告もしない</li>
+		<li><strong>差分が通知内容と一致するか確かめるときは、対応する発言の <code>#</code> 番号を応答に書く</strong>（例:「#998の内容と一致」）</li>
 		<li><strong>文字コード違反（BOM・改行等）があれば <code>convert-encoding common-rules.md --to utf8/lf</code> で直す</strong></li>
 		<li><strong>公開チェックを通す</strong>。共通ルールの「コミット前の確認」に従う。1 件でも残れば commit せず報告する</li>
 		<li><strong>この 1 ファイルだけを stage して commit する</strong>。push はしない</li>
@@ -282,6 +302,40 @@
 		<li><strong>どこまで</strong>: <code>common-rules.md</code> の 1 ファイルだけ。ほかのファイルは stage しない。push もしない</li>
 		<li><strong>いつまで</strong>: 暫定運用のあいだ。終えるときにこの章ごと捨てる</li>
 	</ul>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>Codex への共通ルール配布</h1>
+
+	<p>Codex は <code>@path</code> の取り込み記法を持たない（<code>p260904-01</code> ch06 参照）。代わりに <code>@path</code> の直後へ日本語コメントで指示を書き、Codex 自身に読みに行かせる形にした。</p>
+
+	<ul class="plain">
+		<li><strong>パスは <code>N:</code>（subst）ではなく <code>C:\work</code> を直接使う</strong>。Codex では <code>N:</code> の subst が正しく解決できなかった</li>
+		<li><strong>1 ファイルのときの書き方</strong>（下記コード例）</li>
+		<li><strong>分割したときの書き方</strong>: <code>@path</code> の直後に「◯◯の場合は <code>C:\work\...\xx-rules.md</code> を読む。」という日本語コメントを添える</li>
+	</ul>
+
+	<pre><code class="language-markdown">以下のルールを読んで。
+@C:/work/ai-agent-rules/common-rules.md
+&lt;!-- 作業開始前に `C:/work/ai-agent-rules/common-rules.md` を読み、現在の作業に適用される指示に従うこと。読み込めなかった場合は、その旨を報告すること。 --&gt;</code></pre>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>章の切り出しルール</h1>
+
+	<p><code>common-rules.md</code> の大見出し（<code>#</code>）1 章を <code>rules/</code> へ切り出すとき、<strong>両側に同じ見出しを残す</strong>。</p>
+
+	<ul class="plain">
+		<li><strong><code>common-rules.md</code> 側</strong>: 見出し（<code>#</code>）を残し、本文を <code>@rules/xxx-rules.md</code> 参照＋Codex 用コメントの1ブロックに置き換える</li>
+		<li><strong>切り出し先（<code>rules/xxx-rules.md</code>）側</strong>: 同じ見出しをファイル先頭に置く</li>
+	</ul>
+
+	<pre><code class="language-markdown"># 見出し名
+
+@rules/xxx-rules.md
+&lt;!-- ◯◯を作成・編集するときは `rules/xxx-rules.md` を読み、その指示に従うこと。 --&gt;</code></pre>
+
+	<p><strong>なぜ</strong>: 見出しを消すと、<code>common-rules.md</code> を読んだときにその章が存在すること自体が分からなくなる。両側に残すことで、どちらを読んでも章の所在が分かる。</p>
 </section>
 
 </div>
