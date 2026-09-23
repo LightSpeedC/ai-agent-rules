@@ -1,0 +1,16 @@
+# 一時ファイル・セッションログ
+tmp/
+etc/
+
+# ビルド出力
+dist/
+
+# 先頭 _ はファイルもフォルダも全階層で管理外
+_*
+
+# .claude は直下をすべて除外し、共有するものだけ許可する
+.claude/*
+!.claude/settings.json
+!.claude/commands/
+!.claude/agents/
+!.claude/skills/
