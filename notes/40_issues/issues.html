@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="md-skip">
-<title>課題</title>
+<title>ai-agent-rules 課題</title>
 <style>
 	:root {
 		--navy1: #12224d;
@@ -20,7 +19,6 @@
 	}
 
 	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
-	.ch02 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
 
 	* { box-sizing: border-box; }
 
@@ -130,26 +128,27 @@
 	}
 
 	details {
-		background: #ffffff;
+		background: transparent;
 		color: var(--ink, #1c2330);
-		border: 1px solid var(--line, #d9dfe8);
-		border-radius: 8px;
-		padding: 0 16px;
-		margin: 14px 0;
+		border: none;
+		padding: 0;
+		margin: 0;
 	}
-	details[open] { padding-bottom: 14px; }
 	summary {
 		background: transparent;
 		color: var(--accent, #12224d);
 		cursor: pointer;
-		padding: 12px 0;
-		font-weight: 600;
+		list-style: none;
+		padding: 0;
 	}
-	summary code {
-		background: var(--code-bg, #f4f6fa);
-		color: #17335f;
-		border: 1px solid var(--line, #d9dfe8);
+	summary::-webkit-details-marker { display: none; }
+	summary h1::after {
+		content: " ▾";
+		background: transparent;
+		color: #ffffff;
 	}
+	details:not([open]) summary h1::after { content: " ▸"; }
+	section:has(details:not([open])) { padding-bottom: 4px; }
 
 	.tablewrap { overflow-x: auto; margin: 14px 0; }
 
@@ -253,9 +252,9 @@
 
 <div class="titlebar">
 	<div class="inner">
-		<h1>課題</h1>
+		<h1>ai-agent-rules 課題</h1>
 		<p class="lead">これから解決することを記録する。いまどうなっているかは status に置く。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-10</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-23</p>
 	</div>
 </div>
 
@@ -264,60 +263,13 @@
 <p class="navwrap"><a class="backlink" href="../../README.html">トップへ戻る</a></p>
 
 <div class="groupbar">
-	<h2>配布と共通ツール</h2>
-	<p class="count">2 件 / 未 1 / 着手 1 / 済 0</p>
+	<h2>共通ツール</h2>
+	<p class="count">1 件 / 未 0 / 着手 1 / 済 0</p>
 </div>
 
 <section class="ch01">
-	<h1><code>i260910-01</code> Codex と GitHub Copilot への配布 <span class="badge b-none">未</span></h1>
-
-	<p>配布の対象に含めたいが、当面は着手しない。まず Claude Code と Gemini 系の 3 ツールで運用を始め、この 2 つは後から足す。</p>
-
-	<h2>なぜ後回しにするか</h2>
-	<ul class="plain">
-		<li><strong>この 2 つだけ取り込み記法が無い</strong>。他の 4 ツールは <code>@path</code> で分割ファイルを参照できるが、Codex と Copilot には手段がない。<strong>連結して 1 本を生成する処理が要る</strong></li>
-		<li>取り込み記法を使う案（案 C）なら生成処理そのものが不要になる。<strong>3 ツールで始めれば、生成処理を作らずに運用を開始できる</strong></li>
-		<li>Cursor と Copilot は<strong>プロジェクト単位の配置</strong>になり、ユーザー全体設定を持つ他ツールと性質が違う</li>
-	</ul>
-
-	<h2>やること</h2>
-	<div class="tablewrap">
-		<table>
-			<thead>
-				<tr><th class="nowrap">状態</th><th>内容</th></tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="nowrap"><span class="badge b-none">未</span></td>
-					<td>Codex の設定フォルダを調べる（プロジェクト直下に持つかどうかが未調査）</td>
-				</tr>
-				<tr>
-					<td class="nowrap"><span class="badge b-none">未</span></td>
-					<td>Gemini CLI の設定フォルダを調べる（同じく未調査）</td>
-				</tr>
-				<tr>
-					<td class="nowrap"><span class="badge b-none">未</span></td>
-					<td>分割ファイルを 1 本に連結して出力する処理を作る</td>
-				</tr>
-				<tr>
-					<td class="nowrap"><span class="badge b-none">未</span></td>
-					<td>Codex の <code>project_doc_max_bytes</code> を引き上げる（既定 32 KiB では入らない）</td>
-				</tr>
-				<tr>
-					<td class="nowrap"><span class="badge b-none">未</span></td>
-					<td>Copilot の「2 ページ以内」が何文字かを確かめる（記述が無い）</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
-	<div class="callout callout-important">
-		<p><strong>この 2 つを足す判断は、案 C から案 D への拡張にあたる</strong>。参照している 4 ツールの設定には触らず、生成処理を追加するだけで済む。既存を壊さないため、着手の時期を選べる。</p>
-	</div>
-</section>
-
-<section class="ch02">
-	<h1><code>i260910-02</code> html2md へ公開前検査の組み込みを依頼する <span class="badge b-warn">着手</span></h1>
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i260910-02</code> html2md へ公開前検査の組み込みを依頼する <span class="badge b-warn">着手</span></h1></summary>
 
 	<p>public のリポジトリへ公開する前に、個人名・実体パス・認証情報・顧客名が混ざっていないかを機械で止めたい。<strong>html2md は共有ツールで他プロジェクトのものなので、こちらでは直せない</strong>。何をどう直すかを伝えて、向こうで対応してもらう。</p>
 
@@ -384,10 +336,6 @@
 					<td class="nowrap"><span class="badge b-ok">済</span></td>
 					<td>ai-chat-lite で html2md に送る</td>
 				</tr>
-				<tr>
-					<td class="nowrap"><span class="badge b-none">未</span></td>
-					<td>ルールの生成処理側にも同じ検査を組み込む（このプロジェクトの実装で行う）</td>
-				</tr>
 			</tbody>
 		</table>
 	</div>
@@ -395,6 +343,7 @@
 	<div class="callout callout-caution">
 		<p><strong>除外語のリスト自体は Git 管理外にする</strong>。顧客名や案件名を並べたファイルが公開されては本末転倒になる。<strong>先頭 <code>_</code> のファイル</strong>にすれば全階層で管理外になる。リストが無いときは除外語の検査だけを飛ばす形にする。</p>
 	</div>
+	</details>
 </section>
 
 </div>
