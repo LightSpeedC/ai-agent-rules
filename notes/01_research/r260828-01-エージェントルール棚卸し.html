@@ -1,0 +1,748 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>エージェントルール棚卸し</title>
+<style>
+	:root {
+		--navy1: #12224d;
+		--navy2: #2f5fbf;
+		--ink: #1c2330;
+		--ink-soft: #4a5568;
+		--line: #d9dfe8;
+		--code-bg: #f4f6fa;
+		--link: #1a4fa0;
+		--accent: #12224d;
+		--accent2: #2f5fbf;
+		--soft: #f2f5fb;
+	}
+
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(240, 78%, 25%); --accent2: hsl(240, 58%, 55%); --soft: hsl(240, 28%, 95%); }
+	.ch03 { --accent: hsl(200, 78%, 25%); --accent2: hsl(200, 58%, 55%); --soft: hsl(200, 28%, 95%); }
+	.ch04 { --accent: hsl(160, 78%, 25%); --accent2: hsl(160, 58%, 55%); --soft: hsl(160, 28%, 95%); }
+	.ch05 { --accent: hsl(120, 78%, 25%); --accent2: hsl(120, 58%, 55%); --soft: hsl(120, 28%, 95%); }
+	.ch06 { --accent: hsl(80, 78%, 25%);  --accent2: hsl(80, 58%, 55%);  --soft: hsl(80, 28%, 95%); }
+	.ch07 { --accent: hsl(40, 78%, 25%);  --accent2: hsl(40, 58%, 55%);  --soft: hsl(40, 28%, 95%); }
+	.ch08 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+		font-size: 15.5px;
+		line-height: 1.85;
+	}
+
+	a { color: var(--link, #1a4fa0); background: transparent; }
+
+	.titlebar {
+		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+	}
+	.titlebar .inner {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 34px 30px 30px;
+	}
+	.titlebar h1 {
+		font-size: 2em;
+		margin: 0 0 8px;
+		color: #ffffff;
+	}
+	.titlebar .lead {
+		color: #e2ebfb;
+		background: transparent;
+		margin: 0 0 10px;
+		font-size: .95em;
+		max-width: 1100px;
+	}
+	.titlebar .date {
+		color: #d3e1fb;
+		background: transparent;
+		font-size: .85em;
+	}
+	.titlebar code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	.wrap {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 0 30px;
+	}
+
+	section {
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 4px 26px 26px;
+		margin: 34px 0;
+	}
+
+	section h1 {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		font-size: 1.5em;
+		padding: 14px 20px;
+		margin: 26px 0 20px;
+		border-radius: 8px;
+		box-shadow: 0 3px 10px rgba(18, 34, 77, 0.22);
+	}
+	section h1 code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	h2 {
+		background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--accent, #12224d);
+		border-left: 6px solid var(--accent, #12224d);
+		border-radius: 0 6px 6px 0;
+		font-size: 1.18em;
+		padding: 6px 12px;
+		margin: 30px 0 12px;
+	}
+
+	h3 {
+		color: var(--accent, #12224d);
+		background: transparent;
+		border-bottom: 2px dotted var(--accent2, #2f5fbf);
+		display: inline-block;
+		font-size: 1.03em;
+		padding-bottom: 3px;
+		margin: 20px 0 8px;
+	}
+
+	.tablewrap { overflow-x: auto; margin: 14px 0; }
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
+	}
+	th {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-align: left;
+		font-weight: 600;
+		padding: 9px 12px;
+	}
+	th code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+	td {
+		background: transparent;
+		color: var(--ink, #1c2330);
+		border-bottom: 1px solid var(--line, #d9dfe8);
+		vertical-align: top;
+		padding: 9px 12px;
+	}
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; white-space: nowrap; }
+	th.num { text-align: right; }
+	td.nowrap, th.nowrap { white-space: nowrap; }
+	td.c { text-align: center; }
+
+	pre {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border-left: 5px solid var(--accent2, #2f5fbf);
+		border-radius: 0 6px 6px 0;
+		padding: 13px 16px;
+		overflow-x: auto;
+	}
+
+	code {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-size: .92em;
+	}
+
+	.callout {
+		border-left: 6px solid var(--accent, #12224d);
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--ink, #1c2330);
+		border-radius: 0 8px 8px 0;
+		padding: 12px 18px;
+		margin: 18px 0;
+	}
+	.callout strong { color: var(--accent, #12224d); background: transparent; }
+
+	.badge {
+		display: inline-block;
+		padding: 2px 9px;
+		border-radius: 999px;
+		font-size: .82em;
+		font-weight: 600;
+		color: #ffffff;
+		white-space: nowrap;
+	}
+	.b-ok   { background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-ng   { background: linear-gradient(100deg, #a51f22, #e05a5c); }
+	.b-warn { background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+	.toc {
+		background: linear-gradient(180deg, #f2f5fb, #ffffff);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 16px 24px 24px;
+		margin: 34px 0;
+	}
+	.toc h2 {
+		background: linear-gradient(90deg, #f2f5fb, #ffffff);
+		color: var(--navy1, #12224d);
+		border-left: 6px solid var(--navy1, #12224d);
+	}
+	.toc ol {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		counter-reset: toc;
+	}
+	.toc li { counter-increment: toc; }
+	.toc ol a {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		width: 310px;
+		max-width: 100%;
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 8px 12px;
+		border-radius: 6px;
+		font-size: .9em;
+		line-height: 1.4;
+	}
+	.toc ol a::before { content: counter(toc) ". "; font-weight: 700; }
+
+	svg { max-width: 100%; height: auto; margin: 12px 0; }
+
+	ul.plain { margin: 10px 0; padding-left: 1.4em; }
+	ul.plain li { margin: 4px 0; }
+	.navwrap { margin: 20px 0; }
+	.backlink {
+		display: inline-block;
+		background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 4px 12px;
+		border-radius: 6px;
+		font-size: .9em;
+		font-weight: 700;
+	}
+	footer {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 18px 30px 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+	}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>エージェントルール棚卸し</h1>
+		<p class="lead">複数の AI コーディングエージェント（Claude Code / Codex / Gemini CLI / Antigravity 等）へ同一のルールを配れるようにするため、共通ルールの内容を分類した棚卸し資料。この時点では移設・生成の仕組みは作らず、分類と論点の洗い出しのみを行う。</p>
+		<p class="date">📅 作成: 2026-08-28 / 更新: 2026-09-10</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html">トップへ戻る</a></p>
+
+<nav class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">棚卸しの対象</a></li>
+		<li class="ch02"><a href="#ch02">区分の定義</a></li>
+		<li class="ch03"><a href="#ch03">ルール一覧</a></li>
+		<li class="ch04"><a href="#ch04">集計</a></li>
+		<li class="ch05"><a href="#ch05">一元管理にするうえでの論点</a></li>
+		<li class="ch06"><a href="#ch06">配布先のルールファイル規格</a></li>
+		<li class="ch07"><a href="#ch07">未確認事項</a></li>
+		<li class="ch08"><a href="#ch08">調査に使った一次情報</a></li>
+	</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+	<h1>棚卸しの対象</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th>項目</th><th class="num">値</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap">対象</td><td class="num">共通ルール</td></tr>
+				<tr><td class="nowrap">行数</td><td class="num">465</td></tr>
+				<tr><td class="nowrap">文字数</td><td class="num">19,669</td></tr>
+				<tr><td class="nowrap">バイト数</td><td class="num">41,281</td></tr>
+				<tr><td class="nowrap">大見出し（h1）</td><td class="num">8</td></tr>
+				<tr><td class="nowrap">ルール項目（h2）</td><td class="num">62</td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>区分の定義</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">区分</th><th>意味</th><th>一元管理での扱い</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="nowrap"><span class="badge b-ok">共通</span></td>
+					<td>ツールにも OS にも依存しない。文面をそのまま他エージェントへ配れる</td>
+					<td>共通ソースにそのまま置く</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><span class="badge b-warn">環境</span></td>
+					<td>Windows / PowerShell / ローカル共有フォルダに依存する。エージェントは問わない</td>
+					<td>共通ソースに置くが、環境が違うエージェントには配らない</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><span class="badge b-ng">固有</span></td>
+					<td>Claude Code 固有の機能名・ファイル名・ツール名に依存する</td>
+					<td>エージェント別セクションに分離、または語を抽象化して共通化</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>ルール一覧</h1>
+
+	<h2>セキュリティルール</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>ルール</th><th class="nowrap">区分</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">1</td><td>機密情報のマスキング</td><td><span class="badge b-ok">共通</span></td><td>そのまま流用可</td></tr>
+				<tr><td class="num">2</td><td>.gitignore で除外されたファイルの取り扱い</td><td><span class="badge b-ok">共通</span></td><td>そのまま流用可</td></tr>
+				<tr><td class="num">3</td><td>プロジェクトフォルダ外へのアクセス</td><td><span class="badge b-warn">環境</span></td><td>例外パスに <code>N:/PlayWright</code>・<code>N:/html2md</code>・<code>~/.claude</code> を列挙。<code>~/.claude</code> は Claude 固有なので、エージェントごとに設定フォルダを差し替える必要がある</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>ワークフロールール</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>ルール</th><th class="nowrap">区分</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">4</td><td>修正は1点ずつ、確認を重視</td><td><span class="badge b-ok">共通</span></td><td>中核ルール。最優先で共通化したい</td></tr>
+				<tr><td class="num">5</td><td>複数の解決案がある場合の対応</td><td><span class="badge b-ok">共通</span></td><td>同上</td></tr>
+				<tr><td class="num">6</td><td>ファイルの移動・分割・置き換え時の順序</td><td><span class="badge b-ok">共通</span></td><td>同上</td></tr>
+				<tr><td class="num">7</td><td>git ブランチ</td><td><span class="badge b-ok">共通</span></td><td><code>develop</code> / <code>release</code> / <code>master</code></td></tr>
+				<tr><td class="num">8</td><td>develop→release→master のマージ</td><td><span class="badge b-ok">共通</span></td><td><code>--no-ff</code></td></tr>
+				<tr><td class="num">9</td><td>リモートリポジトリの作成・push</td><td><span class="badge b-ok">共通</span></td><td>gh CLI 前提だが OS 非依存</td></tr>
+				<tr><td class="num">10</td><td>.gitignore の共通除外設定</td><td><span class="badge b-ng">固有</span></td><td><code>.claude/</code> を含めよ、という指定。他エージェントでは <code>.cursor/</code>・<code>.gemini/</code> 等に相当。「各エージェントの設定フォルダを除外する」へ一般化すれば共通になる</td></tr>
+				<tr><td class="num">11</td><td>PlayWright テストの実行</td><td><span class="badge b-warn">環境</span></td><td>共有環境 <code>N:/PlayWright</code> のパス依存</td></tr>
+				<tr><td class="num">12</td><td>claude-in-chrome 拡張の利用</td><td><span class="badge b-ng">固有</span></td><td>拡張・MCP ツール名に完全依存。他エージェントには配れない</td></tr>
+				<tr><td class="num">13</td><td>URLへのアクセス手段の選択</td><td><span class="badge b-ng">固有</span></td><td>候補が WebFetch / claude-in-chrome / PlayWright。「手段はタスク最初に確認し、切替時も報告する」という骨格は共通化でき、候補リストだけエージェント別にできる</td></tr>
+				<tr><td class="num">14</td><td>セッション制限報告時の確認</td><td><span class="badge b-ng">固有</span></td><td>JSONL 会話ログの構造に依存</td></tr>
+				<tr><td class="num">15</td><td>セッションログの自動保存</td><td><span class="badge b-ng">固有</span></td><td>SessionStart / Stop フック、<code>~/.claude/settings.json</code> 依存</td></tr>
+				<tr><td class="num">16</td><td>ルールの更新タイミング</td><td><span class="badge b-ng">固有</span></td><td>「ルールファイル自体の更新は明示指示まで待つ」へ一般化すれば共通。ただし一元管理後は<strong>更新先が共通ソースに変わる</strong>ため、文面の書き換えが必要</td></tr>
+				<tr><td class="num">17</td><td>重大な操作の確認方法（うっかり肯定防止）</td><td><span class="badge b-ng">固有</span></td><td>骨格は共通。ただし語の対応表に SendUserFile が出るため、その一行だけ固有</td></tr>
+				<tr><td class="num">18</td><td>不具合・懸念について質問された時の対応</td><td><span class="badge b-ok">共通</span></td><td>そのまま流用可</td></tr>
+				<tr><td class="num">19</td><td>生成する文言の言語</td><td><span class="badge b-ok">共通</span></td><td>そのまま流用可</td></tr>
+				<tr><td class="num">20</td><td>Claude Code応答の言語</td><td><span class="badge b-ng">固有</span></td><td>内容は共通だが見出しに製品名が入る。「エージェント自身の応答の言語」へ改題すれば共通</td></tr>
+				<tr><td class="num">21</td><td>文章中のURLの書き方</td><td><span class="badge b-ok">共通</span></td><td>そのまま流用可</td></tr>
+				<tr><td class="num">22</td><td>ファイル出力・公開のルール</td><td><span class="badge b-ng">固有</span></td><td>SendUserFile / Artifact / Start-Process に依存。語と操作の対応が Claude Code の機能そのもの。他エージェントでは「開く／保存する」しか対応先がない</td></tr>
+				<tr><td class="num">23</td><td>フィードバックの記録先</td><td><span class="badge b-ng">固有</span></td><td>記録先が共通ルール。一元管理後は共通ソースを指すよう<strong>要書き換え</strong></td></tr>
+				<tr><td class="num">24</td><td>ルールの記述規則</td><td><span class="badge b-ok">共通</span></td><td>メタルール。共通ソースの編集規約としてそのまま使える</td></tr>
+				<tr><td class="num">25</td><td>etc/c.bat 作成</td><td><span class="badge b-ng">固有</span></td><td><code>claude --dangerously-skip-permissions -c</code> を書く指示。エージェントごとに起動コマンドが異なる</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>コーディングルール</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>ルール</th><th class="nowrap">区分</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">26</td><td>インデント</td><td><span class="badge b-ok">共通</span></td><td>Tab 文字</td></tr>
+				<tr><td class="num">27</td><td>bat / cmd ファイルの文字コード・改行コード</td><td><span class="badge b-warn">環境</span></td><td>Windows 限定</td></tr>
+				<tr><td class="num">28</td><td>文字コード変換は1回だけ行う</td><td><span class="badge b-warn">環境</span></td><td>同上</td></tr>
+				<tr><td class="num">29</td><td>ps1 ファイルの文字コード・改行コード</td><td><span class="badge b-warn">環境</span></td><td>同上</td></tr>
+				<tr><td class="num">30</td><td>スクリプト内の表示メッセージ</td><td><span class="badge b-ok">共通</span></td><td>言語の指定のみ</td></tr>
+				<tr><td class="num">31</td><td>ps1 作成時の cmd ランチャー</td><td><span class="badge b-warn">環境</span></td><td>Windows 限定</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>シェル実行ルール</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>ルール</th><th class="nowrap">区分</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">32</td><td>コマンド実行の優先順位</td><td><span class="badge b-ng">固有</span></td><td>「PowerShell ツール優先・Bash ツール回避」がツール名依存。「PowerShell を使う／Python を使わない」だけなら環境区分に落ちる</td></tr>
+				<tr><td class="num">33</td><td>検証環境の状態を過信しない</td><td><span class="badge b-ng">固有</span></td><td>「ツールの1回の呼び出しは使い捨てプロセス」がハーネス仕様依存。ただし同じ性質は他エージェントにもあるため一般化しやすい</td></tr>
+				<tr><td class="num">34</td><td>PowerShell の落とし穴</td><td><span class="badge b-warn">環境</span></td><td>具体的な罠3件。価値が高く、そのまま他エージェントにも配りたい</td></tr>
+				<tr><td class="num">35</td><td>検索・集計の結果が0件なら、まず検索式を疑う</td><td><span class="badge b-ok">共通</span></td><td>そのまま流用可</td></tr>
+				<tr><td class="num">36</td><td>カレントの実行ファイルは明示パスで実行する</td><td><span class="badge b-warn">環境</span></td><td>Windows 前提</td></tr>
+				<tr><td class="num">37</td><td>「見つからない/動かない」失敗は環境要因を先に切り分ける</td><td><span class="badge b-ng">固有</span></td><td>前半は共通。後半のハーネスによるブロック判定は Claude Code 固有</td></tr>
+				<tr><td class="num">38</td><td>一時ファイルの保存先</td><td><span class="badge b-ng">固有</span></td><td>ハーネスの scratchpad 指定を上書きする、という形で書かれている。「プロジェクト直下の <code>tmp/</code> を使う」だけなら共通</td></tr>
+				<tr><td class="num">39</td><td>一時ファイルの削除</td><td><span class="badge b-ng">固有</span></td><td><code>Remove-Item</code> の注意は環境。ハーネスの誤検知回避は固有</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>HTMLデザインルール</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>ルール</th><th class="nowrap">区分</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">40</td><td>絶対ルール: 背景は淡い色のみ</td><td><span class="badge b-ok">共通</span></td><td>以下 51 まで成果物の見た目の規約であり、全て流用可</td></tr>
+				<tr><td class="num">41</td><td>絶対ルール: 文字色と背景色は必ずペアで成立させる</td><td><span class="badge b-ok">共通</span></td><td><code>var()</code> のフォールバック規約を含む</td></tr>
+				<tr><td class="num">42</td><td>生成した HTML はコントラスト比を実測して検証する</td><td><span class="badge b-warn">環境</span></td><td>検証を <code>N:/PlayWright</code> の共有環境で行うためパス依存</td></tr>
+				<tr><td class="num">43</td><td>レイアウトの基本寸法</td><td><span class="badge b-ok">共通</span></td><td>具体値（1600px・15.5px 等）は圧縮せずそのまま持ち出す</td></tr>
+				<tr><td class="num">44</td><td>作成日・更新日</td><td><span class="badge b-ok">共通</span></td><td>53 への参照のみ</td></tr>
+				<tr><td class="num">45</td><td>root の README.html と docs/ 配下の html は相互リンクする</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">46</td><td>タイトル・見出し</td><td><span class="badge b-ok">共通</span></td><td>最大の項目。色相表・章クラス規約を含む</td></tr>
+				<tr><td class="num">47</td><td>SVG図</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">48</td><td>目次</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">49</td><td>章を増減したときの色相の振り直し</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">50</td><td>はみ出す要素は横スクロールさせる</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">51</td><td>章(h1)が2個以下の場合</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">52</td><td>その他</td><td><span class="badge b-ok">共通</span></td><td>色変数・バッジ・callout</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>ドキュメントの作成日・更新日</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>ルール</th><th class="nowrap">区分</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">53</td><td>ドキュメントの作成日・更新日</td><td><span class="badge b-ok">共通</span></td><td>書式と更新条件。そのまま流用可</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>HTML→Markdown 変換ルール</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>ルール</th><th class="nowrap">区分</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">54</td><td>HTML と Markdown の併存</td><td><span class="badge b-ok">共通</span></td><td>変換スクリプトの置き場所 <code>src/scripts/70_html2md/</code> を含む</td></tr>
+				<tr><td class="num">55</td><td>SVG図の扱い</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">56</td><td>文言の同一性</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">57</td><td>色分けの代替</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">58</td><td>記法の対応</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">59</td><td>日本語の強調は <code>**</code> では効かないことがある</td><td><span class="badge b-ok">共通</span></td><td>実測した文字の表を含む。価値が高い</td></tr>
+				<tr><td class="num">60</td><td>相互リンク</td><td><span class="badge b-ok">共通</span></td><td></td></tr>
+				<tr><td class="num">61</td><td>生成した Markdown は GitHub のレンダラで検証する</td><td><span class="badge b-warn">環境</span></td><td><code>check-markdown</code>（PATH 上の共通コマンド）に依存</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Obsidianメモリ連携ルール</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>ルール</th><th class="nowrap">区分</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">62</td><td>ロード（起動時）</td><td><span class="badge b-ng">固有</span></td><td>SessionStart フックの自動注入と obsidian-mcp に依存</td></tr>
+				<tr><td class="num">63</td><td>保存（作業完了時）</td><td><span class="badge b-ng">固有</span></td><td>MCP 経由の書き込み前提。MCP を持つエージェントには移植可、持たないものには不可</td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>集計</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">区分</th><th class="num">件数</th><th class="num">割合</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap"><span class="badge b-ok">共通</span></td><td class="num">38</td><td class="num">60%</td></tr>
+				<tr><td class="nowrap"><span class="badge b-warn">環境</span></td><td class="num">9</td><td class="num">14%</td></tr>
+				<tr><td class="nowrap"><span class="badge b-ng">固有</span></td><td class="num">16</td><td class="num">25%</td></tr>
+				<tr><td class="nowrap">合計</td><td class="num">63</td><td class="num">100%</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p>大見出し単位で見ると、<code>HTMLデザインルール</code>（13件）・<code>HTML→Markdown 変換ルール</code>（8件）・<code>ドキュメントの作成日・更新日</code>（1件）はほぼ丸ごと共通で、合計 20 件が無条件に持ち出せる。逆に <code>シェル実行ルール</code>（8件中5件が固有）と <code>Obsidianメモリ連携ルール</code>（2件とも固有）はハーネス依存が濃い。</p>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>一元管理にするうえでの論点</h1>
+
+	<h2>固有ルールの扱いが3種類に分かれる</h2>
+	<p>固有 16 件は、性質が同じではない。</p>
+	<ul class="plain">
+		<li><strong>抽象化すれば共通になるもの</strong>（10, 13, 16, 17, 20, 32, 33, 37, 38, 39）— 骨格は残し、ツール名・パスだけをエージェント別に差し替える。共通ソース側にプレースホルダを持たせるか、エージェント別の追記ブロックを持たせるかの設計が必要</li>
+		<li><strong>そのエージェントにしか存在しないもの</strong>（12, 14, 15, 25, 62, 63）— 共有せず、エージェント別ファイルに置く</li>
+		<li><strong>一元管理そのものによって内容が変わるもの</strong>（16, 23）— ルールの更新先・フィードバックの記録先が共通ルールを指しているため、共通ソースへ向け直す書き換えが必須</li>
+	</ul>
+
+	<h2>生成先の共通ルールをどう扱うか</h2>
+	<p>共通ルールはユーザー全体設定（グローバル）で、全プロジェクトに効いている。一元管理のソースをこのプロジェクト（<code>N:/ai-agent-rules</code>）に置くと、グローバル設定がプロジェクトフォルダ配下のファイルから生成される構造になる。ルール 3（プロジェクトフォルダ外へのアクセス）と組み合わせると、他プロジェクトで作業中に共通ソースを読めない、という状態が起こりうる。</p>
+
+	<h2>分量が半数のエージェントで上限を超えている</h2>
+	<p>棚卸し時点の共通ルールは 19,669 文字 / 41,281 バイト / 465 行。調査した上限と突き合わせると、<strong>現状のままでは6ツールのうち3つで全文が渡らず、1つは判定できない</strong>。</p>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">エージェント</th><th>上限</th><th class="num">現行の値</th><th class="nowrap">判定</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap">Antigravity</td><td>1ファイル 12,000 文字（ハード。グローバルにも適用）</td><td class="num">19,669 文字</td><td class="nowrap"><span class="badge b-ng">超過 1.64倍</span></td></tr>
+				<tr><td class="nowrap">Codex</td><td><code>project_doc_max_bytes</code> 既定 32 KiB</td><td class="num">41,281 バイト</td><td class="nowrap"><span class="badge b-ng">超過 1.26倍</span></td></tr>
+				<tr><td class="nowrap">GitHub Copilot</td><td>「2ページ以内」（文字数の明示なし）</td><td class="num">19,669 文字</td><td class="nowrap"><span class="badge b-ng">超過</span></td></tr>
+				<tr><td class="nowrap">Claude Code</td><td>200 行推奨（4 MiB でスキップ）</td><td class="num">465 行</td><td class="nowrap"><span class="badge b-warn">推奨超過 2.3倍</span></td></tr>
+				<tr><td class="nowrap">Cursor</td><td>500 行以内を推奨</td><td class="num">465 行</td><td class="nowrap"><span class="badge b-ok">収まる</span></td></tr>
+				<tr><td class="nowrap">Gemini CLI</td><td>上限の記述なし</td><td class="num">—</td><td class="nowrap"><span class="badge b-ok">制約なし</span></td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p>上限の性質が異なる点が重要。Antigravity は 1 ファイルあたりのハード制限で、<strong>グローバルの <code>~/.gemini/GEMINI.md</code> にも適用される</strong>ため<strong>分割が必須</strong>。Codex は設定値なので <code>project_doc_max_bytes</code> の引き上げで回避でき、Claude Code と Cursor は推奨値なので読み込み自体は成功する。Copilot の「2ページ」は基準が曖昧だが、19,669 文字が収まるとは考えにくい。つまり最も厳しい Antigravity の 12,000 文字が実質的な分割単位を決める。</p>
+	<p>Cursor だけは現行の 465 行が 500 行の推奨内に収まる。ただし<strong>これは棚卸し時点の行数</strong>で、ルールは増え続けているため余裕はない。</p>
+	<p>これは「毎セッションのコンテキスト消費」以前の問題で、ソースを最初から複数ファイルに分ける前提で設計する必要がある。</p>
+</section>
+
+<section class="ch06" id="ch06">
+	<h1>配布先のルールファイル規格</h1>
+	<p>WebFetch で一次情報を確認した結果。</p>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">エージェント</th><th>ユーザー全体</th><th>プロジェクト</th><th>取り込み記法</th><th>適用範囲の指定</th><th>サイズ上限</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="nowrap">Claude Code</td>
+					<td><code>~/.claude/CLAUDE.md</code>, <code>~/.claude/rules/*.md</code></td>
+					<td><code>./CLAUDE.md</code>, <code>./.claude/CLAUDE.md</code>, <code>./CLAUDE.local.md</code>, <code>.claude/rules/*.md</code></td>
+					<td><code>@path</code>（相対・絶対・<code>~/</code> 可、最大4ホップ）</td>
+					<td><code>.claude/rules/</code> の <code>paths:</code> frontmatter で glob 指定</td>
+					<td>200行推奨 / 4 MiB でスキップ</td>
+				</tr>
+				<tr>
+					<td class="nowrap">Codex</td>
+					<td><code>~/.codex/AGENTS.override.md</code> → <code>~/.codex/AGENTS.md</code></td>
+					<td>ルートから現ディレクトリまで各階層の <code>AGENTS.override.md</code> → <code>AGENTS.md</code> → <code>project_doc_fallback_filenames</code></td>
+					<td><strong>なし</strong>（物理的な連結のみ）</td>
+					<td>なし（階層で分けるだけ）</td>
+					<td><code>project_doc_max_bytes</code> 既定 32 KiB</td>
+				</tr>
+				<tr>
+					<td class="nowrap">Gemini CLI</td>
+					<td><code>~/.gemini/GEMINI.md</code></td>
+					<td><code>./GEMINI.md</code>（親をたどる。ツールが触ったフォルダを随時追加）</td>
+					<td><code>@path</code>（相対・絶対）</td>
+					<td>なし</td>
+					<td>記述なし</td>
+				</tr>
+				<tr>
+					<td class="nowrap">Antigravity</td>
+					<td><code>~/.gemini/GEMINI.md</code></td>
+					<td><code>.agents/rules/</code>（旧 <code>.agent/rules/</code> も可）</td>
+					<td><code>@filename</code>（相対・絶対）</td>
+					<td>Manual / Always On / Model Decision / Glob の4種</td>
+					<td><strong>1ファイル 12,000 文字</strong></td>
+				</tr>
+				<tr>
+					<td class="nowrap">Cursor</td>
+					<td>アプリ設定内の User Rules（ファイルではなく設定値）</td>
+					<td><code>.cursor/rules/*.mdc</code>。ルートの <code>AGENTS.md</code> も代替として読む</td>
+					<td><code>@filename.ext</code></td>
+					<td>frontmatter の <code>alwaysApply</code> / <code>description</code> / <code>globs</code> で4モード</td>
+					<td>500行以内を推奨</td>
+				</tr>
+				<tr>
+					<td class="nowrap">GitHub Copilot</td>
+					<td>Personal instructions（優先度は最上位）</td>
+					<td><code>.github/copilot-instructions.md</code>, <code>.github/instructions/*.instructions.md</code>。ルートの <code>AGENTS.md</code>・<code>CLAUDE.md</code>・<code>GEMINI.md</code> も読む</td>
+					<td><strong>なし</strong></td>
+					<td>frontmatter の <code>applyTo</code>（カンマ区切りで複数 glob）</td>
+					<td>「2ページ以内」</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<p>Cursor はプレーンな <code>.md</code> を frontmatter が無いため無視する（<code>.mdc</code> が必須）。Copilot の優先順位は Personal → Repository → Organization で、複数が該当するときは<strong>すべてが渡される</strong>（どれか1つが選ばれるのではない）。</p>
+
+	<h2>配布経路</h2>
+	<svg viewBox="0 0 1000 330" role="img" aria-label="共通ソースから各エージェントのルールファイルへの配布経路">
+		<defs>
+			<linearGradient id="g-06-1" x1="0" y1="1" x2="0" y2="0">
+				<stop offset="0" stop-color="hsl(280, 78%, 25%)"/>
+				<stop offset="1" stop-color="hsl(280, 58%, 55%)"/>
+			</linearGradient>
+			<linearGradient id="g-06-2" x1="0" y1="1" x2="0" y2="0">
+				<stop offset="0" stop-color="hsl(210, 78%, 25%)"/>
+				<stop offset="1" stop-color="hsl(210, 58%, 55%)"/>
+			</linearGradient>
+			<linearGradient id="g-06-3" x1="0" y1="1" x2="0" y2="0">
+				<stop offset="0" stop-color="hsl(140, 78%, 25%)"/>
+				<stop offset="1" stop-color="hsl(140, 58%, 55%)"/>
+			</linearGradient>
+			<linearGradient id="g-06-4" x1="0" y1="1" x2="0" y2="0">
+				<stop offset="0" stop-color="hsl(70, 78%, 25%)"/>
+				<stop offset="1" stop-color="hsl(70, 58%, 55%)"/>
+			</linearGradient>
+			<linearGradient id="g-06-5" x1="0" y1="1" x2="0" y2="0">
+				<stop offset="0" stop-color="hsl(0, 78%, 25%)"/>
+				<stop offset="1" stop-color="hsl(0, 58%, 55%)"/>
+			</linearGradient>
+			<marker id="g-06-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+				<path d="M 0 0 L 10 5 L 0 10 z" fill="#4a5568"/>
+			</marker>
+		</defs>
+
+		<rect width="100%" height="100%" fill="#ffffff"/>
+
+		<rect x="14" y="120" width="196" height="90" rx="8" fill="url(#g-06-1)"/>
+		<text x="112" y="152" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="600" font-family="sans-serif">共通ソース</text>
+		<text x="112" y="175" text-anchor="middle" fill="#ffffff" font-size="13" font-family="sans-serif">12,000 文字以下に</text>
+		<text x="112" y="193" text-anchor="middle" fill="#ffffff" font-size="13" font-family="sans-serif">分割したファイル群</text>
+
+		<line x1="210" y1="165" x2="272" y2="165" stroke="#4a5568" stroke-width="2" marker-end="url(#g-06-ar)"/>
+
+		<rect x="278" y="120" width="176" height="90" rx="8" fill="url(#g-06-2)"/>
+		<text x="366" y="152" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="600" font-family="sans-serif">生成処理</text>
+		<text x="366" y="175" text-anchor="middle" fill="#ffffff" font-size="13" font-family="sans-serif">結合と出力先の</text>
+		<text x="366" y="193" text-anchor="middle" fill="#ffffff" font-size="13" font-family="sans-serif">振り分け</text>
+
+		<path d="M 454 165 L 500 165 L 500 52 L 552 52" fill="none" stroke="#4a5568" stroke-width="2" marker-end="url(#g-06-ar)"/>
+		<path d="M 454 165 L 500 165 L 552 165" fill="none" stroke="#4a5568" stroke-width="2" marker-end="url(#g-06-ar)"/>
+		<path d="M 454 165 L 500 165 L 500 278 L 552 278" fill="none" stroke="#4a5568" stroke-width="2" marker-end="url(#g-06-ar)"/>
+
+		<rect x="558" y="20" width="190" height="64" rx="8" fill="url(#g-06-3)"/>
+		<text x="653" y="46" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="600" font-family="sans-serif">CLAUDE.md</text>
+		<text x="653" y="66" text-anchor="middle" fill="#ffffff" font-size="12" font-family="sans-serif">Claude Code</text>
+
+		<rect x="558" y="133" width="190" height="64" rx="8" fill="url(#g-06-4)"/>
+		<text x="653" y="159" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="600" font-family="sans-serif">AGENTS.md</text>
+		<text x="653" y="179" text-anchor="middle" fill="#ffffff" font-size="12" font-family="sans-serif">Codex</text>
+
+		<rect x="558" y="246" width="190" height="64" rx="8" fill="url(#g-06-5)"/>
+		<text x="653" y="272" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="600" font-family="sans-serif">GEMINI.md</text>
+		<text x="653" y="292" text-anchor="middle" fill="#ffffff" font-size="12" font-family="sans-serif">Gemini CLI / Antigravity</text>
+
+		<text x="762" y="45" fill="#1c2330" font-size="12.5" font-family="sans-serif">@ で分割ファイルを参照可</text>
+		<text x="762" y="65" fill="#1c2330" font-size="12.5" font-family="sans-serif">200 行推奨</text>
+
+		<text x="762" y="158" fill="#1c2330" font-size="12.5" font-family="sans-serif">取り込み記法なし</text>
+		<text x="762" y="178" fill="#1c2330" font-size="12.5" font-family="sans-serif">全文を結合して出力する必要</text>
+
+		<text x="762" y="271" fill="#1c2330" font-size="12.5" font-family="sans-serif">@ で分割ファイルを参照可</text>
+		<text x="762" y="291" fill="#1c2330" font-size="12.5" font-family="sans-serif">Antigravity は 1ファイル 12,000 文字</text>
+	</svg>
+
+	<h2>調査で分かった有利な点</h2>
+	<ul class="plain">
+		<li><strong>6ツールのうち4つが AGENTS.md をそのまま読む</strong>（Codex・Cursor・GitHub Copilot、および <code>context.fileName</code> を設定した Gemini CLI）。Copilot はさらに <code>CLAUDE.md</code> と <code>GEMINI.md</code> もルートに置けば読む。<strong>AGENTS.md を共通ソースの中心に据える案の裏付けになる</strong></li>
+		<li><strong>Antigravity と Gemini CLI はグローバル設定が同一ファイル</strong>（<code>~/.gemini/GEMINI.md</code>）。1本用意すれば2ツールに効く</li>
+		<li><strong>Claude Code は AGENTS.md を読まない</strong>が、公式ドキュメントが <code>CLAUDE.md</code> の先頭に <code>@AGENTS.md</code> と書いて取り込む方法を推奨している。重複を持たずに共通ソースを共有できる。<strong>AGENTS.md を読まないのは6ツール中このツールだけ</strong>で、しかも公式の回避策がある</li>
+		<li><strong>Gemini CLI はコンテキストファイル名を変更できる</strong>。<code>settings.json</code> の <code>context.fileName</code> に <code>["AGENTS.md", "GEMINI.md"]</code> のような配列を渡せば、AGENTS.md をそのまま読ませられる</li>
+		<li><strong>Codex もファイル名を追加できる</strong>。<code>~/.codex/config.toml</code> の <code>project_doc_fallback_filenames</code> に任意の名前を並べられる</li>
+		<li>Claude Code の <code>.claude/rules/</code> はシンボリックリンクを解決する。共有ルール群をリンクで持ち込める</li>
+		<li>Claude Code には <code>/import</code> コマンドがあり、AGENTS.md 等を CLAUDE.md へ取り込める（v2.1.213 以降）</li>
+	</ul>
+
+	<h2>調査で分かった不利な点</h2>
+	<ul class="plain">
+		<li><strong>Codex と GitHub Copilot に取り込み記法がない</strong>。他の4ツールは <code>@path</code> で分割ソースを参照できるが、この2つには手段がない（Codex は階層をたどった物理的な連結のみ）。共通ソースを分割して持つなら、この2つ向けには<strong>1本に結合したファイルを生成する処理が必要</strong></li>
+		<li><strong>Codex のグローバル AGENTS.md はプロジェクト側と別扱い</strong>。プロジェクトの階層探索とは独立に <code>~/.codex/AGENTS.md</code> が読まれる</li>
+		<li><strong>Antigravity のプロジェクトルールはフォルダ形式</strong>（<code>.agents/rules/</code>）で、単一ファイルではない。他ツールと出力の形が揃わない</li>
+		<li>適用範囲の指定方法が3通りに分かれる（Claude Code は <code>paths:</code> frontmatter、Antigravity は4種のモード、Codex は指定不可）。ルールを「必要なときだけ読ませる」設計は共通化できない</li>
+	</ul>
+
+	<div class="callout callout-warning">
+		<p><strong>@ を含む文面は意図せず取り込まれる</strong>。Claude Code・Gemini CLI・Antigravity・Cursor はいずれも <code>@</code> で始まるパスをインポート指示として解釈する。ルールの文面中に <code>@</code> を書くと、そのパスのファイルが読み込まれてしまう。Claude Code はバッククォートで囲んだコードスパンとコードブロックを解釈対象から除くと明記しているが、<strong>他の3ツールは除外を明記していない</strong>。共通ソースでは <code>@</code> を含む文面をコードスパンに入れ、そのうえで各ツールでの実挙動を確かめる必要がある。</p>
+	</div>
+</section>
+
+<section class="ch07" id="ch07">
+	<h1>未確認事項</h1>
+	<p>調査で判明した分を除いた残り。<strong>いずれも公式ドキュメントに記述が無く、実挙動を試さないと分からないもの</strong>である。</p>
+	<ul class="plain">
+		<li>Gemini CLI・Antigravity・Cursor が <code>@</code> を含む文面をコードスパン内で除外するかどうか（3ツールとも記述なし）</li>
+		<li>Antigravity で 12,000 文字を超えたときの挙動（切り捨て・エラー・警告のいずれか。記述なし）</li>
+		<li>Gemini CLI のインポートのネストの深さ制限と循環参照の扱い（記述なし。Claude Code は最大4ホップと明記）</li>
+		<li>GitHub Copilot の「2ページ以内」が具体的に何文字か（記述なし）</li>
+		<li>Copilot の Personal instructions の設定場所（リポジトリ・組織の説明のみで、個人設定の置き場所は記述なし）</li>
+		<li>各エージェントがこの PC に実際にインストールされているか（<code>~/.codex</code>・<code>~/.gemini</code> 等の実在確認は未実施）</li>
+	</ul>
+</section>
+
+<section class="ch08" id="ch08">
+	<h1>調査に使った一次情報</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">対象</th><th>URL</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap">AGENTS.md 規格</td><td><a href="https://agents.md/">https://agents.md/</a></td></tr>
+				<tr><td class="nowrap">Claude Code メモリ</td><td><a href="https://code.claude.com/docs/en/memory">https://code.claude.com/docs/en/memory</a></td></tr>
+				<tr><td class="nowrap">Codex AGENTS.md</td><td><a href="https://learn.chatgpt.com/codex/agent-configuration/agents-md">https://learn.chatgpt.com/codex/agent-configuration/agents-md</a></td></tr>
+				<tr><td class="nowrap">Gemini CLI GEMINI.md</td><td><a href="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/gemini-md.md">https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/gemini-md.md</a></td></tr>
+				<tr><td class="nowrap">Antigravity Rules</td><td><a href="https://antigravity.google/docs/rules-workflows/">https://antigravity.google/docs/rules-workflows/</a></td></tr>
+				<tr><td class="nowrap">Antigravity Rules（IDE）</td><td><a href="https://antigravity.google/docs/ide/rules/">https://antigravity.google/docs/ide/rules/</a></td></tr>
+				<tr><td class="nowrap">Cursor Rules</td><td><a href="https://cursor.com/docs/context/rules">https://cursor.com/docs/context/rules</a></td></tr>
+				<tr><td class="nowrap">GitHub Copilot カスタム指示</td><td><a href="https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot">https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot</a></td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html">トップへ戻る</a></p>
+</footer>
+
+</body>
+</html>
