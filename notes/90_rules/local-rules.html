@@ -204,7 +204,7 @@
 	<div class="inner">
 		<h1>ローカルルール</h1>
 		<p class="lead">このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-23</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-24</p>
 	</div>
 </div>
 
@@ -218,7 +218,7 @@
 	<h1>chat 待受け・共通ルールの追随の点検</h1>
 
 	<p>このプロジェクトは public ルームを常時見る。手順は共通ルールの「ai-chat-lite（AI 間チャット）の利用」に従い、ここには<strong>値と頻度だけ</strong>を書く。</p>
-	<p>2026-09-22 以降、<code>common-rules.md</code> が共通ルールの実体になった（ホーム配下は <code>@</code> 参照のみ）。他プロジェクトのセッションも直接このファイルを編集しうるため、<strong>git 管理外の変更（未commitの差分）を見つけたら履歴に残す</strong>。</p>
+	<p>2026-09-22 以降、<code>common-rules.md</code> が共通ルールの実体になった（ホーム配下は <code>@</code> 参照のみ）。2026-09-24 に全19章を <code>rules/</code> へ切り出したため、実体は <code>common-rules.md</code> と <code>rules/</code> 配下に分かれている。他プロジェクトのセッションも直接これらのファイルを編集しうるため、<strong>git 管理外の変更（未commitの差分）を見つけたら履歴に残す</strong>。</p>
 
 	<h2>値</h2>
 	<div class="tablewrap">
@@ -244,13 +244,13 @@
 				</tr>
 				<tr>
 					<td class="nowrap">点検の頻度</td>
-					<td class="nowrap"><code>5 */4 * * *</code></td>
-					<td>4 時間おき、毎時 5 分</td>
+					<td class="nowrap"><code>5 6-22/2,0 * * *</code></td>
+					<td>6 時〜24 時の間、2 時間おき、毎時 5 分</td>
 				</tr>
 				<tr>
 					<td class="nowrap">追随の対象</td>
-					<td class="nowrap"><code>common-rules.md</code></td>
-					<td>root の 1 ファイルだけ</td>
+					<td class="nowrap"><code>common-rules.md</code>・<code>rules/</code></td>
+					<td>root の1ファイルと、切り出し先の全ファイル</td>
 				</tr>
 				<tr>
 					<td class="nowrap">文字コード</td>
@@ -263,7 +263,7 @@
 
 	<h2>引き金</h2>
 	<ul class="plain">
-		<li><strong>4 時間おきの定期点検</strong>（毎時 5 分、cron）</li>
+		<li><strong>6 時〜24 時の間、2 時間おきの定期点検</strong>（毎時 5 分、cron）</li>
 		<li><strong>ルール変更の通知を受けたとき</strong>。ai-chat-lite で共通ルールの変更を知らされたら、共通ルールの追随は次の定期点検を待たずにその場で行う</li>
 		<li><strong>セッションを開き直したとき</strong>。待受け・cron はどちらも前セッションの分が切れているため、両方を張り直す</li>
 	</ul>
@@ -275,11 +275,11 @@
 		<li><strong>待受けが完了したら、間に他の作業を挟まず即座に張り直す</strong>。完了から張り直しまでの間は誰も listen していない空白になり、その間に投稿された発言は catch-up されず取りこぼす（実例: 2026-09-22、空白の約12秒に挟まった発言を取りこぼした）</li>
 		<li><strong>定期点検のたびに <code>aichat recent -n 30</code> で直近を突き合わせ、取りこぼしが無いか確かめる</strong>。新着として拾えていない発言が見つかったら、通常の新着と同様に本文を示して対応する</li>
 		<li><strong>新着発言（join / leave / オフラインの記録を除く）は、要約せず本文をそのまま応答に示す</strong></li>
-		<li><strong>共通ルールの追随</strong>: <code>git status --short common-rules.md</code> で未commitの変更を確認する。差が無ければ何もしない。報告もしない</li>
+		<li><strong>共通ルールの追随</strong>: <code>git status --short common-rules.md rules/</code> で未commitの変更を確認する。差が無ければ何もしない。報告もしない</li>
 		<li><strong>差分が通知内容と一致するか確かめるときは、対応する発言の <code>#</code> 番号を応答に書く</strong>（例:「#998の内容と一致」）</li>
-		<li><strong>文字コード違反（BOM・改行等）があれば <code>convert-encoding common-rules.md --to utf8/lf</code> で直す</strong></li>
+		<li><strong>文字コード違反（BOM・改行等）があれば、変更が見つかったファイルに <code>convert-encoding &lt;path&gt; --to utf8/lf</code> で直す</strong></li>
 		<li><strong>公開チェックを通す</strong>。共通ルールの「コミット前の確認」に従う。1 件でも残れば commit せず報告する</li>
-		<li><strong>この 1 ファイルだけを stage して commit する</strong>。push はしない</li>
+		<li><strong><code>common-rules.md</code> と <code>rules/</code> 配下の変更ファイルだけを stage して commit する</strong>。ほかのファイルは含めない。push はしない</li>
 		<li><strong>commit したら、ルール変更の通知本文は全文、コミット内容は diff 形式で応答に示す</strong></li>
 	</ul>
 
@@ -298,8 +298,8 @@
 	</ul>
 	<p>共通ルールの「修正は1点ずつ、確認を重視」は <strong>commit を自動で行わない</strong>と決めている。ここはそれと違い、<strong>確認を取らずに commit する</strong>。</p>
 	<ul class="plain">
-		<li><strong>なぜ</strong>: 原本は別のセッションからも書き換わる。取りこぼすと、どの版で何が変わったかが履歴から読めなくなる</li>
-		<li><strong>どこまで</strong>: <code>common-rules.md</code> の 1 ファイルだけ。ほかのファイルは stage しない。push もしない</li>
+		<li><strong>なぜ</strong>: 原本は別のセッションからも書き換わる。取りこぼすと、どの版で何が変わったかが履歴から読めなくなる。全19章が <code>rules/</code> へ切り出し済みのため、書き換わるのは <code>common-rules.md</code> 側だけではない</li>
+		<li><strong>どこまで</strong>: <code>common-rules.md</code> と <code>rules/</code> 配下だけ。ほかのファイルは stage しない。push もしない</li>
 		<li><strong>いつまで</strong>: 暫定運用のあいだ。終えるときにこの章ごと捨てる</li>
 	</ul>
 </section>
@@ -307,7 +307,7 @@
 <section class="ch02" id="ch02">
 	<h1>Codex への共通ルール配布</h1>
 
-	<p>Codex は <code>@path</code> の取り込み記法を持たない（<code>p260904-01</code> ch06 参照）。代わりに <code>@path</code> の直後へ日本語コメントで指示を書き、Codex 自身に読みに行かせる形にした。</p>
+	<p>Codex は <code>@path</code> の取り込み記法を持たない。代わりに <code>@path</code> の直後へ日本語コメントで指示を書き、Codex 自身に読みに行かせる形にした。</p>
 
 	<ul class="plain">
 		<li><strong>パスは <code>N:</code>（subst）ではなく <code>C:\work</code> を直接使う</strong>。Codex では <code>N:</code> の subst が正しく解決できなかった</li>
