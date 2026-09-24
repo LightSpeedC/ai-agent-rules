@@ -1,6 +1,6 @@
 # ai-agent-rules
 
-複数の AI コーディングエージェント（Claude Code / Codex / Gemini CLI / Antigravity 等）へ同一のルールを配るための検討を置くプロジェクト。
+AIエージェント（Claude Code・Codex 等）が参照する共通ルール。
 
 > 📅 作成: 2026-09-02 / 更新: 2026-09-24
 

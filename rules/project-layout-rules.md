@@ -12,7 +12,7 @@
 | tools/ | 開発・運用の補助 | 管理 |
 | tests/ | テスト本体。実行ランチャーは tools/40_test/ に置く | 管理 |
 | deploy/ | デプロイ定義（Dockerfile / IaC / CI補助） | 管理 |
-| dist/ | ビルド出力 | 除外 |
+| dist/ | ビルド出力（Node/TypeScript 前提の値）。**他言語では言語ごとの既定出力先に読み替える**（Rust なら `target/` 等） | 除外 |
 | _releases/ | 配布物の実体（GitHub Releases へ上げる） | 除外 |
 | tmp/ ・ etc/ | 一時ファイル、セッションログ | 除外 |
 
