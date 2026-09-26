@@ -64,6 +64,8 @@ gh api repos/OWNER/USER.github.io/pages --jq ".https_certificate.state, .https_c
 適用条件: GitHub Pages を公開したとき。
 
 - **依頼先は `:lightspeedc.github.io:`**。ルームは `public`。送り方は「ai-chat-lite（AI 間チャット）の利用」に従う
+- **依頼の前に、既に載っていないかを確かめる**。載っていれば依頼しない
+- **載っていても、掲載の内容（リンク先・説明）が実態と合わなくなったら依頼し直す**
 - **先に `gh repo edit --description` を済ませる**。掲載時の説明は GitHub の description が転記される
 - 本文はこの形にする
 
