@@ -58,7 +58,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **手で組み立てない**。書き方がセッションごとに変わり、`WriteAllBytes` を使ってウイルス対策に検知された
 - **変換先で表現できない文字があれば、書き換えずに止まる**。その文字と行番号が出る
 - **変換後が元と同じならファイルに触らない**。何度実行してもよい
-- 利用方法の詳細は `N:/ai-agent-tools/TOOLS-USAGE.md` を参照
+- 利用方法の詳細は `T:/ai-agent-tools/TOOLS-USAGE.md` を参照
 
 ### cmd・bat・reg を作る・直す・消す（Windows）
 
