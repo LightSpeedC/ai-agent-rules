@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>コンソールのコードページ問題の調査</title>
+<style>
+:root {
+	--navy1: #12224d; --navy2: #2f5fbf;
+	--ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa; --link: #1a4fa0;
+	--accent: var(--navy1); --accent2: var(--navy2); --soft: #f2f5fb;
+}
+.ch01 { --accent: hsl(280 78% 25%); --accent2: hsl(280 58% 55%); --soft: hsl(280 28% 95%); }
+.ch02 { --accent: hsl(210 78% 25%); --accent2: hsl(210 58% 55%); --soft: hsl(210 28% 95%); }
+.ch03 { --accent: hsl(140 78% 25%); --accent2: hsl(140 58% 55%); --soft: hsl(140 28% 95%); }
+.ch04 { --accent: hsl(70 78% 25%); --accent2: hsl(70 58% 55%); --soft: hsl(70 28% 95%); }
+.ch05 { --accent: hsl(0 78% 25%); --accent2: hsl(0 58% 55%); --soft: hsl(0 28% 95%); }
+body { margin: 0; background: #fff; color: var(--ink); font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif; font-size: 15.5px; line-height: 1.85; }
+.titlebar { background: linear-gradient(135deg, var(--navy1), var(--navy2)); color: #fff; padding: 34px 30px 30px; }
+.titlebar .inner { max-width: 1600px; margin: 0 auto; }
+.titlebar h1 { font-size: 1.8em; margin: 0 0 6px; color: #fff; }
+.titlebar .lead { background: transparent; color: #e3eaf8; margin: 0; }
+.titlebar .date { background: transparent; color: #cdd8f0; font-size: 0.9em; margin: 6px 0 0; }
+.wrap { max-width: 1600px; margin: 0 auto; padding: 0 30px; }
+a { color: var(--link, #1a4fa0); background: transparent; }
+a.back { display: inline-block; margin-top: 18px; padding: 2px 12px; border-radius: 6px; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #fff; text-decoration: none; font-weight: 700; }
+.toc ol { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; counter-reset: tocnum; }
+.toc ol li { counter-increment: tocnum; }
+.toc ol li a { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: normal; width: 310px; max-width: 100%; padding: 6px 12px; border-radius: 6px; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #fff; text-decoration: none; font-weight: 700; }
+.toc ol li a::before { content: counter(tocnum) ". "; }
+section { background: linear-gradient(180deg, var(--soft, #f2f5fb), #fff); color: var(--ink); padding: 4px 26px 26px; margin: 34px 0; border-radius: 8px; }
+section h1 { background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #fff; padding: 14px 20px; margin: 26px 0 20px; border-radius: 8px; font-size: 1.45em; box-shadow: 0 3px 10px rgba(0,0,0,0.18); }
+section h2 { background: linear-gradient(90deg, var(--soft, #f2f5fb), #fff); color: var(--accent, #12224d); border-left: 6px solid var(--accent, #12224d); padding: 6px 12px; margin: 30px 0 12px; font-size: 1.15em; }
+code { background: var(--code-bg, #f4f6fa); color: #17335f; border: 1px solid var(--line, #d9dfe8); border-radius: 4px; padding: 0 4px; font-size: 0.92em; }
+pre { background: linear-gradient(180deg, var(--soft, #f2f5fb), #fff); color: var(--ink); border-left: 5px solid var(--accent2, #2f5fbf); padding: 13px 16px; overflow-x: auto; }
+pre code { background: transparent; color: var(--ink); border: none; padding: 0; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin: 10px 0; }
+th { background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #fff; padding: 9px 12px; text-align: left; }
+td { background: #fff; color: var(--ink); padding: 9px 12px; border-bottom: 1px solid var(--line, #d9dfe8); vertical-align: top; }
+tr:nth-child(even) td { background: #fafbfe; color: var(--ink); }
+td.nowrap { white-space: nowrap; }
+.callout { border-left: 6px solid var(--accent, #12224d); background: linear-gradient(180deg, var(--soft, #f2f5fb), #fff); color: var(--ink); border-radius: 0 8px 8px 0; padding: 10px 16px; margin: 14px 0; }
+.callout strong { color: var(--accent, #12224d); background: transparent; }
+footer { max-width: 1600px; margin: 0 auto; padding: 18px 30px 30px; }
+</style>
+</head>
+<body>
+<div class="titlebar"><div class="inner">
+<h1>コンソールのコードページ問題の調査</h1>
+<p class="lead">C# ・ PowerShell で出力エンコーディングを変えると、同じ窓の cmd が化ける問題の実測と外部情報</p>
+<p class="date">📅 作成: 2026-09-27 / 更新: 2026-09-27</p>
+</div></div>
+
+<div class="wrap">
+<a class="back" href="../../README.html">⌂</a>
+
+<nav class="toc">
+<ol>
+<li class="ch01"><a href="#ch01">実測の結果</a></li>
+<li class="ch02"><a href="#ch02">外部の情報</a></li>
+<li class="ch03"><a href="#ch03">結論と方針案</a></li>
+<li class="ch04"><a href="#ch04">対処案の比較と追加検証</a></li>
+<li class="ch05"><a href="#ch05">検証に使ったもの</a></li>
+</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+<h1>実測の結果</h1>
+
+<h2>発端</h2>
+<p>ps1 の先頭に <code>[Console]::OutputEncoding = [System.Text.Encoding]::UTF8</code> を置いたスクリプトを cmd ランチャーから実行したところ、同じ窓で 2 回目以降に実行した SJIS の cmd の <code>echo</code> が化けた。新しい窓の 1 回目は化けない。引数なしの <code>chcp</code> は 932 と表示したまま、メッセージが英語（<code>Active code page</code>）になっていた。<code>chcp 932</code> を実行すると直った。</p>
+
+<h2>窓での検証（Windows 11 ・ 日本語表示 ・ cmd）</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>段</th><th>操作</th><th>実行後の窓（入力 / 出力）</th><th>引数なしの chcp</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">1</td><td>初期状態</td><td class="nowrap">932 / 932</td><td>日本語で 932</td></tr>
+<tr><td class="nowrap">2</td><td>C# の <code>Console.OutputEncoding = UTF8</code></td><td class="nowrap">932 / <strong>65001</strong></td><td>英語で 932</td></tr>
+<tr><td class="nowrap">3</td><td><code>chcp 932</code></td><td class="nowrap">932 / 932</td><td>日本語で 932</td></tr>
+<tr><td class="nowrap">4</td><td>pwsh の <code>[Console]::OutputEncoding = UTF8</code></td><td class="nowrap">932 / <strong>65001</strong></td><td>英語で 932</td></tr>
+<tr><td class="nowrap">5</td><td>C# でリダイレクト時だけ <code>SetOut</code>（窓に直接出す）</td><td class="nowrap">932 / 932</td><td>日本語で 932</td></tr>
+<tr><td class="nowrap">6</td><td>同上をパイプ（<code>| more</code>）に流す</td><td class="nowrap">932 / 932</td><td>日本語で 932（<code>more</code> の表示は化ける）</td></tr>
+</tbody>
+</table></div>
+
+<ul>
+<li><strong>出力エンコーディングの設定は、プロセスが終わっても窓に残る</strong>。C# も pwsh も同じ</li>
+<li><strong>変わるのは出力側だけ</strong>。入力側は 932 のまま</li>
+<li><strong>引数なしの <code>chcp</code> は入力側を表示する</strong>。出力側が 65001 でも 932 と出る。見分けられるのはメッセージの言語だけ</li>
+<li><strong><code>chcp 932</code> は入力・出力の両方を戻す</strong></li>
+<li>段 2 の直後、cmd の <code>echo</code>（SJIS）が化けた</li>
+</ul>
+
+<h2>Bash から呼んだときの検証</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>実行のしかた</th><th>日本語</th></tr></thead>
+<tbody>
+<tr><td>cmd の窓 ・ PowerShell から ps1 を実行</td><td>化けない</td></tr>
+<tr><td>Bash から <code>pwsh -File</code> ・ <code>powershell -Command</code> を直接</td><td>化ける（CP932 で出る）</td></tr>
+<tr><td>Bash から <code>psh</code></td><td>化けない</td></tr>
+<tr><td>Bash から C# の exe（設定なし）</td><td>化ける</td></tr>
+<tr><td>Bash から C# の exe（<code>Console.OutputEncoding = UTF8</code>）</td><td>化けない（ただし窓に残る）</td></tr>
+<tr><td>Bash から C# の exe（リダイレクト時だけ <code>SetOut</code>）</td><td>化けない（窓の出力は 932 のまま）</td></tr>
+</tbody>
+</table></div>
+<p>SJIS の cmd も BOM 付き UTF-8 の ps1 も、ファイル自体は正しい。化けるのは受け手が UTF-8（Bash）のときだけ。</p>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>外部の情報</h1>
+
+<h2>.NET SDK も同じ問題をバグとして直した</h2>
+<ul>
+<li>.NET 7.0.3xx の SDK は、UI 言語が英語以外のとき CLI の出力のためにコンソールのエンコーディングを UTF-8 に変えるようにした（<a href="https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/console-encoding">CLI console output uses UTF-8</a>）</li>
+<li>その結果、<code>dotnet build</code> の後も窓が UTF-8 のまま残り、同じ窓で後から実行するプログラムに影響した。Microsoft はこれを「バグ」と明言している</li>
+<li>.NET 8 ・ .NET 7.0.300 SDK で修正され、終了後は窓のエンコーディングを変えない（<a href="https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/console-encoding-fix">SDK no longer changes console encoding after completion</a>）。戻し方の仕組みは書かれていない</li>
+<li>推奨対処は「コードページを変えたいならアプリ自身が <code>chcp</code> を実行する。SDK に頼らない」</li>
+</ul>
+
+<h2>PowerShell #25698（more へのパイプ）</h2>
+<ul>
+<li><code>echo 中文文本 | more</code> が化ける。PowerShell 7 の <code>$OutputEncoding</code> の既定が UTF-8 で、<code>more</code> は窓のコードページで読むため</li>
+<li>提案は <code>$OutputEncoding = [Console]::OutputEncoding</code> を既定にすること。トリアージ待ちで、メンテナの回答はない（<a href="https://github.com/PowerShell/PowerShell/issues/25698">PowerShell/PowerShell #25698</a>）</li>
+</ul>
+
+<h2>Claude Code #81187</h2>
+<ul>
+<li>PowerShell ツールで <code>chcp</code> を実行すると、以降の出力がセッションの終わりまで化ける</li>
+<li>原因の説明は「コンソールのコードページは OS の共有かつ永続の状態で、後から起動する全プロセスが引き継ぐ」</li>
+<li>提案は、ハーネスが毎回 <code>[Console]::OutputEncoding = UTF8</code> を設定すること。受け手が毎回揃える考え方（<a href="https://github.com/anthropics/claude-code/issues/81187">anthropics/claude-code #81187</a>）</li>
+</ul>
+
+<h2>一般に紹介されている対処</h2>
+<ul>
+<li><code>[Console]::OutputEncoding</code> と <code>$OutputEncoding</code> の両方を UTF-8 にし、プロファイルに書く（<a href="https://hy2k.dev/en/blog/2025/11-20-fix-powershell-mojibake-on-windows/">hy2k.dev</a>）。窓を常に UTF-8 にする割り切りで、SJIS の cmd とは相性が悪い</li>
+<li>リダイレクト時だけ <code>SetOut</code> で差し替える方法は、<a href="https://learn.microsoft.com/en-us/dotnet/fundamentals/runtime-libraries/system-console">System.Console</a> の API の使い方としては載っているが、この文字化けの対処としてまとまった紹介は見つからなかった</li>
+</ul>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>結論と方針案</h1>
+<div class="tablewrap"><table>
+<thead><tr><th>論点</th><th>外部の情報</th><th>方針案</th></tr></thead>
+<tbody>
+<tr><td>窓の設定が残るのは問題か</td><td>.NET SDK はバグとして修正</td><td>窓に触らない</td></tr>
+<tr><td>誰が揃えるか</td><td>受け手が毎回揃える（#81187）</td><td>Bash からは psh 。C# はリダイレクト時だけ <code>SetOut</code></td></tr>
+<tr><td>cmd 系ツールへのパイプ</td><td>窓のコードページで読むので化ける（#25698 ・ 未解決）</td><td>受け入れる。UTF-8 の受け手を前提にする</td></tr>
+</tbody>
+</table></div>
+
+<h2>C# の書き方</h2>
+<pre><code class="language-csharp">if (Console.IsOutputRedirected)
+	Console.SetOut(new StreamWriter(Console.OpenStandardOutput(), new UTF8Encoding(false)) { AutoFlush = true });</code></pre>
+<ul>
+<li><code>Main</code> の先頭に置く。これより前に書いた行は CP932 で出る</li>
+<li>窓に直接出すときは何もしない。窓を誰も変えなければ化けない（段 5）。ほかのプロセスが途中で窓を変えると化ける（第 4 章）</li>
+<li>受け手が cmd（<code>more</code> ・ <code>findstr</code> ・ <code>for /f</code>）だと化ける（段 6）</li>
+</ul>
+
+<div class="callout"><strong>finally で戻す形を採らない理由</strong>: 強制終了すると戻らず、窓に残る。</div>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>対処案の比較と追加検証</h1>
+
+<h2>一時的に変えて、終了時に元の値へ戻す</h2>
+<p>ps1（5.1 ・ 7）でも C# でも同じ Win32 の出力コードページを変えるため、戻せば窓に残らない。戻すのは 932 ではなく、開始時に控えた値。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>終わり方</th><th>C#（finally のみ）</th><th>C#（finally ＋ CancelKeyPress）</th><th>ps1 5.1 ・ 7（finally）</th></tr></thead>
+<tbody>
+<tr><td>正常終了 ・ 例外</td><td>戻る</td><td>戻る</td><td>戻る</td></tr>
+<tr><td>Ctrl+C</td><td><strong>戻らない</strong>（実測）</td><td>戻る（実測）</td><td>戻る（実測。PowerShell が Ctrl+C でも finally を実行する）</td></tr>
+<tr><td>窓を閉じる</td><td colspan="3">戻らない。Win32 の <code>SetConsoleCtrlHandler</code> で捕まえられるが数秒で強制終了される（未検証）</td></tr>
+<tr><td><code>taskkill /F</code></td><td colspan="3">捕まえられず、戻らない（未検証）</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li>C# で <code>CancelKeyPress</code> から戻したとき、finally の表示は出なかった。ハンドラの後にプロセスが終わるため</li>
+</ul>
+
+<h2>パイプでつないで同時に動かしたとき（実測）</h2>
+<p>「一時的に変えて元へ戻す」処理（C#）を <code>左 | 右</code> で同時に動かした。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>段</th><th>動かし方</th><th>控えた元の値</th><th>最後の窓（出力）</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">1</td><td>左: すぐ変えて 3 秒 ／ 右: 1 秒後に変えて 5 秒（左が先に終わる）</td><td class="nowrap">左 932 ／ 右 65001</td><td><strong>65001 のまま残る</strong></td></tr>
+<tr><td class="nowrap">2</td><td>左: すぐ変えて 5 秒 ／ 右: 1 秒後に変えて 1 秒（右が先に終わる）</td><td class="nowrap">左 932 ／ 右 65001</td><td>932 に戻る</td></tr>
+<tr><td class="nowrap">3</td><td>窓に触らない pipe 方式どうし</td><td class="nowrap">—</td><td>932 のまま</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>後から始めた側は、先の側が変えた 65001 を「元の値」として控える</strong>。後から始めた側が最後に終わると、窓は 65001 のまま残る</li>
+<li>どちらが先に終わるかは処理時間で決まり、書き手には制御できない。<strong>パイプでつながれうる限り、元へ戻す方式では確実に戻せない</strong></li>
+<li>窓に触らない方式（案 A）は、つないでも影響がない</li>
+</ul>
+
+<h2>パイプされているかの検知</h2>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>検知</th><th>書き出しを UTF-8 に差し替え</th></tr></thead>
+<tbody>
+<tr><td>C#</td><td><code>Console.IsOutputRedirected</code>（実測）</td><td><code>Console.SetOut</code> で可（実測）</td></tr>
+<tr><td>ps1 5.1 ・ 7</td><td><code>[Console]::IsOutputRedirected</code>（実測。Bash から呼ぶと True）</td><td><code>[Console]::SetOut</code> で可。<code>Console.Out</code> だけでなく <code>Write-Output</code> ・ <code>Write-Host</code> も UTF-8 で出た（Bash から実測。窓での確認はまだ）</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>後続が <code>more</code> か別の exe かは分からない</strong>。分かるのはパイプかファイルにつながっていることだけ</li>
+<li>PowerShell の中の <code>.\a.ps1 | more</code> は、ps1 が出すのはオブジェクトで、<code>more</code> へ渡す文字コードは PowerShell の <code>$OutputEncoding</code> が決める</li>
+</ul>
+
+<h2>パイプの左右が標準エラーを窓に出すとき（実測）</h2>
+<p>左が窓を 65001 に 3 秒変える（案 E）間、右は窓に触らずに標準エラーへ日本語を出し続けた。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>段</th><th>右</th><th>左が 65001 にしている間</th><th>左が 932 に戻した後</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">1</td><td>窓に触らない C#（.NET Framework）</td><td>化けない</td><td><strong>化ける</strong></td></tr>
+<tr><td class="nowrap">2</td><td>SJIS の cmd の <code>echo</code>（for のブロック内）</td><td><strong>化ける</strong></td><td><strong>化けたまま</strong></td></tr>
+<tr><td class="nowrap">3</td><td>同上。左は窓に触らない pipe 方式</td><td colspan="2">化けない</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>.NET Framework の Console は、最初に書いた時点の出力コードページでエンコーダを決め、以後変えない</strong>と考えられる。段 1 の右は 65001 の間に書き始めたため UTF-8 のバイト列を出し続け、窓が 932 に戻ると化けた。窓に直接出すときに Unicode で書くという当初の予想は誤り（.NET 7 以降は未検証）</li>
+<li><strong>cmd はバッチの行を、読んだ時点の窓のコードページで解釈する</strong>と考えられる。段 2 は for のブロック全体を 65001 の間に 1 度で読んだため、SJIS の日本語が壊れたまま最後まで出た</li>
+<li><strong>窓を変える方式は、窓に触らない隣のプロセスまで壊す</strong>。化けるかどうかは相手が書き始めた ・ 読んだタイミングで決まり、変えた側が戻しても直らない</li>
+<li>窓に触らない方式（段 3）では、時間に関係なく化けない</li>
+</ul>
+
+<h2>標準入力 ・ 標準出力 ・ 標準エラーの 3 本（Bash から実測）</h2>
+<p>stdin に <code>入力あいう</code> を流し、stdout と stderr を両方 Bash で受けた。</p>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>差し替えない</th><th>リダイレクトされている分だけ差し替える</th></tr></thead>
+<tbody>
+<tr><td>C#</td><td>3 本とも化ける</td><td>3 本とも化けない</td></tr>
+<tr><td>ps1 5.1</td><td>3 本とも化ける</td><td>3 本とも化けない</td></tr>
+<tr><td>ps1 7</td><td>3 本とも化ける</td><td>3 本とも化けない</td></tr>
+</tbody>
+</table></div>
+<div class="tablewrap"><table>
+<thead><tr><th></th><th>検知</th><th>差し替え（窓に触らない）</th><th>窓ごと変える API（使わない）</th></tr></thead>
+<tbody>
+<tr><td>標準出力</td><td><code>IsOutputRedirected</code></td><td><code>SetOut</code></td><td><code>OutputEncoding</code></td></tr>
+<tr><td>標準エラー</td><td><code>IsErrorRedirected</code></td><td><code>SetError</code></td><td><code>OutputEncoding</code>（出力と共通）</td></tr>
+<tr><td>標準入力</td><td><code>IsInputRedirected</code></td><td><code>SetIn</code></td><td><code>InputEncoding</code></td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>標準エラーは別に差し替える</strong>。<code>SetOut</code> だけでは CP932 のままで、Bash の <code>2&gt;&amp;1</code> で化ける</li>
+<li><strong>標準入力は UTF-8 を受け取るときに差し替える</strong>。差し替えないと <code>入力あいう</code> が <code>入力あぁE��</code> のように壊れて届いた</li>
+<li><code>InputEncoding</code> は窓の入力コードページを変える。窓に残り、引数なしの <code>chcp</code> にはこちらが表示されるはず（未検証）</li>
+<li>差し替えた後も、窓の入力 ・ 出力は 932 のまま</li>
+</ul>
+<pre><code class="language-csharp">var utf8 = new UTF8Encoding(false);
+if (Console.IsOutputRedirected) Console.SetOut(new StreamWriter(Console.OpenStandardOutput(), utf8) { AutoFlush = true });
+if (Console.IsErrorRedirected)  Console.SetError(new StreamWriter(Console.OpenStandardError(), utf8) { AutoFlush = true });
+if (Console.IsInputRedirected)  Console.SetIn(new StreamReader(Console.OpenStandardInput(), utf8));</code></pre>
+<p>ps1（5.1 ・ 7）も同じ API で書ける（<code>[Console]::SetOut</code> 等）。</p>
+
+<h2>受け手を less ・ psh にしたとき（実測）</h2>
+<p>ai-agent-tools の <code>less</code>（node で動く）と <code>psh</code>（bun を優先し、無ければ node で動く）を試した。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>入力</th><th>less の表示（Bash ・ 窓とも）</th></tr></thead>
+<tbody>
+<tr><td>CP932 で出す C#</td><td>化けない（SJIS と判定して UTF-8 に直す）</td></tr>
+<tr><td>UTF-8 で出す C#</td><td>化けない</td></tr>
+<tr><td>SJIS のファイル</td><td>化けない</td></tr>
+<tr><td>psh の出力</td><td>化けない</td></tr>
+<tr><td>CP932 と UTF-8 が混ざったもの</td><td>少ない側の行が化ける（全体を 1 つの文字コードと判定するため）</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Bash で <code>less</code> と打つと Git 付属の GNU less（<code>/usr/bin/less</code>）が動く</strong>。ai-agent-tools の less はパスを明示する。cmd ・ PowerShell では <code>less.cmd</code> が先に見つかる</li>
+<li>窓で less を使うと、画面を書き換えるため、前後の表示が消えることがある</li>
+</ul>
+
+<h2>bun は動いている間だけ窓を 65001 にする（実測）</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>段</th><th>窓（入力 / 出力）</th></tr></thead>
+<tbody>
+<tr><td>初期状態</td><td class="nowrap">932 / 932</td></tr>
+<tr><td>bun の中から実行した子</td><td class="nowrap"><strong>65001 / 65001</strong></td></tr>
+<tr><td>bun の終了後</td><td class="nowrap">932 / 932</td></tr>
+<tr><td>node の中から実行した子</td><td class="nowrap">932 / 932</td></tr>
+<tr><td>node の終了後</td><td class="nowrap">932 / 932</td></tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>bun は入力 ・ 出力の両方を変え、終了時に戻す</strong>。案 E と同じ動きで、パイプで同時に動く ・ 強制終了で窓に 65001 が残りうる。隣の SJIS の cmd ・ .NET Framework の exe が化けうる（bun を使った組み合わせでの確認はまだ）</li>
+<li><strong>node は窓に触らない</strong></li>
+<li>psh のソースは窓に触らない。psh 経由の PowerShell が 65001 を見るのは、ランチャーが bun を優先するため</li>
+<li>less は node で動くので窓に触らない</li>
+</ul>
+<div class="tablewrap"><table>
+<thead><tr><th>案</th><th>解決するか</th><th>窓への副作用</th></tr></thead>
+<tbody>
+<tr><td>less（node）</td><td>する</td><td>ない</td></tr>
+<tr><td>psh（bun で動く場合）</td><td>する</td><td><strong>ある</strong></td></tr>
+<tr><td>psh（node で動く場合）</td><td>するはず（CP932 の行も読み分けるため。未検証）</td><td>ないはず</td></tr>
+</tbody>
+</table></div>
+
+<h2>常に chcp 65001 を前提にしたとき</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>対象</th><th>どうなるか</th></tr></thead>
+<tbody>
+<tr><td>SJIS の bat ・ cmd</td><td><code>echo</code> の日本語が化ける。全部 UTF-8 に書き換える必要がある</td></tr>
+<tr><td>普通の C#（.NET）</td><td>窓のコードページに合わせて UTF-8 で出すため、化けないはず（未検証）</td></tr>
+<tr><td>普通の ps1（7）</td><td>表示は化けない。ネイティブへのパイプも既定が UTF-8 で揃う（未検証）</td></tr>
+<tr><td>普通の ps1（5.1）</td><td>表示は化けない。<strong>ネイティブへのパイプは <code>$OutputEncoding</code> の既定が ASCII で <code>?</code> になる</strong>。これは 65001 でなくても起きる（Bash から <code>'日本語' | findstr .</code> で実測。7 では化けない）</td></tr>
+<tr><td>CP932 で書き出す古い exe</td><td>化ける</td></tr>
+<tr><td><code>more</code> ・ <code>findstr</code> 等</td><td>窓が 65001 なら揃う。古い Windows では 65001 の <code>more</code> に不具合があったという話もある（未検証）</td></tr>
+</tbody>
+</table></div>
+
+<h2>対処案の一覧</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>案</th><th>内容</th><th>評価</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">A</td><td>窓に触らず、受け手が揃える。ps1 は psh で呼ぶ、または C# と同じくリダイレクト時だけ <code>SetOut</code></td><td>副作用がない。cmd 系の受け手では化ける</td></tr>
+<tr><td class="nowrap">B</td><td>環境変数があるときだけ UTF-8 で出す（<code>PYTHONIOENCODING</code> ・ <code>DOTNET_CLI_FORCE_UTF8_ENCODING</code> と同じ考え方）</td><td>cmd の受け手でも化けない。呼ぶ側が毎回指定する</td></tr>
+<tr><td class="nowrap">C</td><td>Windows 全体を UTF-8 にする（ベータ: Unicode UTF-8 を使用）</td><td>根本的に揃うが、古いアプリへの影響が最大</td></tr>
+<tr><td class="nowrap">D</td><td>標準出力に日本語を出さず、結果は UTF-8 のファイルに書く</td><td>確実だが、表示を日本語にする方針と食い違う</td></tr>
+<tr><td class="nowrap">E</td><td>一時的に変えて元の値へ戻す</td><td>C# は <code>CancelKeyPress</code> が要る。窓を閉じる ・ 強制終了で戻らない。<strong>パイプで同時に動くと 65001 が残る（実測）</strong></td></tr>
+</tbody>
+</table></div>
+<div class="callout"><strong>推奨は A</strong>: 副作用が出ず、「受け手が揃える」外部の情報とも合う。cmd 系の受け手にも渡したい C# だけ B を足す。</div>
+</section>
+
+<section class="ch05" id="ch05">
+<h1>検証に使ったもの</h1>
+<ul>
+<li><code>tests/console-cp/CpProbe.cs</code>: 入力・出力のコードページを表示する。<code>show</code> ・ <code>set</code> ・ <code>pipe</code> ・ <code>restore</code> ・ <code>restore-cancel</code> の 5 モード</li>
+<li><code>tests/console-cp/ps-probe.ps1</code>: ps1 版。<code>restore</code>（finally で戻す）・ <code>redirect</code>（リダイレクト時だけ <code>SetOut</code>）</li>
+<li><code>tests/console-cp/check-console-cp.cmd</code>: 新しい cmd の窓で実行すると、第 1 章の段 1〜6 を順に表示する。終了時に <code>chcp 932</code> で戻す</li>
+<li><code>tests/console-cp/check-ctrl-c.cmd</code>: Ctrl+C で止めたときに元へ戻るかを 4 段で確かめる（C# finally ・ C# CancelKeyPress ・ ps1 5.1 ・ ps1 7）</li>
+<li><code>tests/console-cp/check-pipe-race.cmd</code>: 元へ戻す処理を 2 つパイプでつないだときの窓を確かめる（<code>CpProbe race</code> を使う）</li>
+<li><code>CpProbe io</code> ・ <code>ps-probe.ps1 io</code>: 3 本をリダイレクトされている分だけ差し替える（<code>io-none</code> は差し替えない）</li>
+<li><code>tests/console-cp/check-pipe-stderr.cmd</code>: パイプの左右が標準エラーに日本語を出すとき、相手が窓を変えるタイミングで化けるかを確かめる（<code>echo-loop.cmd</code> を使う）</li>
+<li><code>tests/console-cp/check-less-psh.cmd</code>: 受け手を less ・ psh にしたときの窓での表示</li>
+<li><code>tests/console-cp/check-bun-node.cmd</code>: bun ・ node が動いている間と終了後の窓</li>
+<li>ビルドは .NET Framework の <code>csc</code>。.NET 7 以降での挙動は未確認</li>
+</ul>
+</section>
+</div>
+
+<footer><a class="back" href="../../README.html">⌂</a></footer>
+</body>
+</html>
