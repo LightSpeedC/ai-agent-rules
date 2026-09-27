@@ -94,25 +94,30 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **日時はJST（日本標準時）とし、`yyyy/mm/dd hh:mm:ss.ccc`（cccはミリ秒3桁）で書く**。実行環境のタイムゾーン設定に関係なく常にJSTで出力する
 - **日時部分を `[]` で囲まない**
 
-## 標準出力は UTF-8 に揃える
+## コンソールのコードページを変更しない
 
-適用条件: ps1 を書くとき、C# のコンソールアプリを書くとき。
+適用条件: スクリプト ・ プログラムを書くとき（cmd ・ bat ・ ps1 ・ C# ・ Node ・ Bun）。
 
-- **先頭の 1 行で UTF-8 にする**。**どのシェルから呼ばれるか書き手には決められない**（「パスの区切り」と同じ理屈）。既定のままだと CP932 で出るため、Bash から呼んだときに日本語が化ける
-
-  ```powershell
-  [Console]::OutputEncoding = [System.Text.Encoding]::UTF8   # ps1 は param の直後に置く
-  ```
+- **コードページの変更は禁止**。次のどれも書かない
+  - `chcp`（cmd ・ bat ・ ps1 の中）
+  - `[Console]::OutputEncoding` ・ `[Console]::InputEncoding`（ps1）
+  - `Console.OutputEncoding` ・ `Console.InputEncoding`（C#）
+  - `SetConsoleOutputCP` ・ `SetConsoleCP`（Win32 API。FFI ・ P/Invoke 経由も含む）
+- **一時的に変えて戻す形も禁止**。パイプで同時に動くと後の側が 65001 を元の値として控え、窓に残る。隣のプロセスは戻した後も化けたまま。C# は Ctrl+C で `finally` が走らない
+- **理由は、窓のコードページが同じ窓の全プロセスで共有され、終わっても戻らないため**。同じ窓の SJIS の cmd ・ .NET Framework の exe が化ける
+- **化けるのは受け手が UTF-8 のときだけ**。窓や PowerShell から実行すれば化けない
+- **UTF-8 で渡すときは、リダイレクトされている分だけ自分の読み書きを差し替える**。3 本とも別に差し替える（ps1 も同じ API で書ける）
 
   ```csharp
-  Console.OutputEncoding = Encoding.UTF8;                    // C# は Main の先頭に置く
+  var utf8 = new UTF8Encoding(false);
+  if (Console.IsOutputRedirected) Console.SetOut(new StreamWriter(Console.OpenStandardOutput(), utf8) { AutoFlush = true });
+  if (Console.IsErrorRedirected)  Console.SetError(new StreamWriter(Console.OpenStandardError(), utf8) { AutoFlush = true });
+  if (Console.IsInputRedirected)  Console.SetIn(new StreamReader(Console.OpenStandardInput(), utf8));
   ```
 
-- **標準エラーにも効く**。別に指定しなくてよい
-- **ps1 に置くと、そこから呼ぶ .NET 製の exe まで UTF-8 になる**。コンソールの出力コードページが子に継がれるため
-- **BOM は付かない**。`Encoding.UTF8` は BOM 付きの定義だが、標準出力には書かれない
-- **ファイル自体の文字コードとは別の話**。そちらは「ps1（PowerShell）ファイルの文字コード・改行コード」に従う
-- **例外は、文字コードそのものを確かめるための材料**。CP932 で出ること自体が試験の対象になっているものは変えない。**外した理由をその場に書く**
+- **受け手が cmd（`more` ・ `findstr` ・ `for /f`）だと化ける**。人が読むなら `more` の代わりに `less`（ai-agent-tools）を使う
+- **例外は 2 つ**。コードページそのものを確かめる検証の材料と、化けた窓を人が手で直す `chcp 932`。**検証の材料には外した理由をその場に書く**
+- **化けた窓の見分け方**: 引数なしの `chcp` は入力側を表示するので数字は 932 のまま。メッセージが英語（`Active code page`）になる
 
 ## SetConsoleOutputCP は成功を返しても実際には効かないことがある
 
@@ -121,6 +126,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 - **実機で確認した事実**: `SetConsoleOutputCP` は戻り値としては成功（true/非0）を返すが、`chcp` で見える値は変わらないことがある。`bun:ffi` 経由・PowerShell の P/Invoke 経由のどちらで呼んでも同じ結果だった（呼び出し方法の問題ではない）
 - **関連する報告（未検証・参考情報）**: [microsoft/terminal #9174](https://github.com/microsoft/terminal/issues/9174) に、ConPTY（疑似コンソール）配下ではコードページの変換が疑似コンソール内部で行われ、外側には伝わらない、という報告がある。[PowerShell/PowerShell #14941](https://github.com/PowerShell/PowerShell/issues/14941) にも同様の報告がある。**自分の環境が実際にこれに該当するかどうかまでは確認していない**
 - 戻り値（成功）だけで「効いた」と判断しない。変わったかどうかは `chcp` 等で実際に確認する
+- **`chcp` が変わらないように見えたのは、`chcp` が入力側を表示するためかもしれない**（未検証）。出力側だけを変えても `chcp` は元の数字を表示したことを実測している（「コンソールのコードページを変更しない」）
 
 ## ps1作成時のcmdランチャー
 
@@ -147,6 +153,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 
 - **開始時のコンソールのコードページが UTF-8（65001）でないと、Bun ランタイム自体が文字化けを起こす**（実機で確認。bun:ffi 等、呼び出し側のコードは無関係）。`bun -e "console.log(...)" | bun -e "process.stdin.pipe(process.stdout)"` という、呼び出し側のコードを一切含まない最小構成でも再現し、実行後コードページが 65001 に変わる副作用を伴う。node が片方にでも入っていれば起きない
 - Bun 側の未解決バグとして報告済み（[oven-sh/bun#43660](https://github.com/oven-sh/bun/issues/43660)）。**回避策は、パイプの少なくとも片方を Bun 以外のランタイムにする**（node 等）
+- **bun は動いている間だけ、窓の入力・出力を 65001 にして、終了時に戻す**（実測。node は触らない）。「コンソールのコードページを変更しない」で避けた形と同じで、パイプで同時に動く・強制終了で窓に 65001 が残りうる
 
 ## 同期 API は、そのプロセスの非同期処理を止める
 
