@@ -96,7 +96,7 @@ convert-encoding <path> --to html    # BOM 付き UTF-8 ＋ LF
 
 ## コンソールのコードページを変更しない
 
-適用条件: スクリプト ・ プログラムを書くとき（cmd ・ bat ・ ps1 ・ C# ・ Node ・ Bun）。
+適用条件: スクリプト ・ プログラムを書くとき（cmd ・ bat ・ ps1 ・ C# ・ Node ・ Bun 等）。
 
 - **コードページの変更は禁止**。次のどれも書かない
   - `chcp`（cmd ・ bat ・ ps1 の中）
