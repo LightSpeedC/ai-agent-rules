@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claudeフックの取り込み</title>
+<style>
+	:root {
+		--navy1: #12224d;
+		--navy2: #2f5fbf;
+		--ink: #1c2330;
+		--ink-soft: #4a5568;
+		--line: #d9dfe8;
+		--code-bg: #f4f6fa;
+		--link: #1a4fa0;
+		--accent: #12224d;
+		--accent2: #2f5fbf;
+		--soft: #f2f5fb;
+	}
+
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+	.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch04 { --accent: hsl(70, 78%, 25%);  --accent2: hsl(70, 58%, 55%);  --soft: hsl(70, 28%, 95%); }
+	.ch05 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+		font-size: 15.5px;
+		line-height: 1.85;
+	}
+
+	a { color: var(--link, #1a4fa0); background: transparent; }
+
+	.titlebar {
+		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+	}
+	.titlebar .inner {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 34px 30px 30px;
+	}
+	.titlebar h1 {
+		font-size: 2em;
+		margin: 0 0 8px;
+		color: #ffffff;
+	}
+	.titlebar .lead {
+		color: #e2ebfb;
+		background: transparent;
+		margin: 0 0 10px;
+		font-size: .95em;
+		max-width: 1100px;
+	}
+	.titlebar .date {
+		color: #d3e1fb;
+		background: transparent;
+		font-size: .85em;
+	}
+	.titlebar code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	.wrap {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 0 30px;
+	}
+
+	section {
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 4px 26px 26px;
+		margin: 34px 0;
+	}
+
+	section h1 {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		font-size: 1.5em;
+		padding: 14px 20px;
+		margin: 26px 0 20px;
+		border-radius: 8px;
+		box-shadow: 0 3px 10px rgba(18, 34, 77, 0.22);
+	}
+	section h1 code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	h2 {
+		background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--accent, #12224d);
+		border-left: 6px solid var(--accent, #12224d);
+		border-radius: 0 6px 6px 0;
+		font-size: 1.18em;
+		padding: 6px 12px;
+		margin: 30px 0 12px;
+	}
+
+	.tablewrap { overflow-x: auto; margin: 14px 0; }
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
+	}
+	th {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-align: left;
+		font-weight: 600;
+		padding: 9px 12px;
+	}
+	td {
+		background: transparent;
+		color: var(--ink, #1c2330);
+		border-bottom: 1px solid var(--line, #d9dfe8);
+		vertical-align: top;
+		padding: 9px 12px;
+	}
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; white-space: nowrap; }
+	th.num { text-align: right; }
+	td.nowrap, th.nowrap { white-space: nowrap; }
+
+	pre {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border-left: 5px solid var(--accent2, #2f5fbf);
+		border-radius: 0 6px 6px 0;
+		padding: 13px 16px;
+		overflow-x: auto;
+	}
+
+	code {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-size: .92em;
+	}
+
+	.callout {
+		border-left: 6px solid var(--accent, #12224d);
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--ink, #1c2330);
+		border-radius: 0 8px 8px 0;
+		padding: 12px 18px;
+		margin: 18px 0;
+	}
+	.callout strong { color: var(--accent, #12224d); background: transparent; }
+
+	.badge {
+		display: inline-block;
+		padding: 2px 9px;
+		border-radius: 999px;
+		font-size: .82em;
+		font-weight: 600;
+		color: #ffffff;
+		white-space: nowrap;
+	}
+	.b-ok   { background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-ng   { background: linear-gradient(100deg, #a51f22, #e05a5c); }
+	.b-warn { background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+	.toc {
+		background: linear-gradient(180deg, #f2f5fb, #ffffff);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 16px 24px 24px;
+		margin: 34px 0;
+	}
+	.toc h2 {
+		background: linear-gradient(90deg, #f2f5fb, #ffffff);
+		color: var(--navy1, #12224d);
+		border-left: 6px solid var(--navy1, #12224d);
+	}
+	.toc ol {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		counter-reset: toc;
+	}
+	.toc li { counter-increment: toc; }
+	.toc ol a {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		width: 310px;
+		max-width: 100%;
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 8px 12px;
+		border-radius: 6px;
+		font-size: .9em;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+	.toc ol a::before { content: counter(toc) ". "; font-weight: 700; }
+
+	ul.plain { margin: 10px 0; padding-left: 1.4em; }
+	ul.plain li { margin: 4px 0; }
+
+	.navwrap { margin: 20px 0; }
+	.backlink {
+		display: inline-flex;
+		align-items: center;
+		background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 4px 10px;
+		border-radius: 6px;
+		line-height: 0;
+	}
+	footer {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 18px 30px 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+	}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>Claudeフックの取り込み</h1>
+		<p class="lead">Mac・Linux でも動かす予定があるため、<strong>Windows専用の ps1 をそのまま持ってくる案は撤回</strong>。フック本体をこのプロジェクトで TypeScript として最初から書き直し、<code>~/.claude/settings.json</code> はこちらを直接参照する形にする。</p>
+		<p class="date">📅 作成: 2026-09-27 / 更新: 2026-09-27</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+
+<div class="callout">
+	<p><strong>前案からの変更点</strong>: 当初は既存の ps1 をそのままコピーし、コピー用コマンドをメンテする案だった。だが Mac・Linux でも動かす予定があると分かったため、<strong>Windows 専用（PowerShell）のまま持ち込む案は取り下げる</strong>。実装言語から選び直し、最初からクロスプラットフォームで書く。</p>
+</div>
+
+<nav class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">目的</a></li>
+		<li class="ch02"><a href="#ch02">現状</a></li>
+		<li class="ch03"><a href="#ch03">設計方針</a></li>
+		<li class="ch04"><a href="#ch04">手順</a></li>
+		<li class="ch05"><a href="#ch05">決めることの一覧</a></li>
+	</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+	<h1>目的</h1>
+	<p><code>~/.claude/hooks/</code> の ps1 は実体がホームディレクトリにあり、git 管理外・バックアップ対象外になっている。加えて Windows PowerShell 専用のため、Mac・Linux では動かない。<strong>このプロジェクトを実装の置き場とし、フック本体を最初からクロスプラットフォームな言語で書く</strong>ことで、OS を問わず同じソースが動く状態にする。</p>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>現状</h1>
+	<p><code>~/.claude/hooks/</code> に2本の ps1 があり、<code>~/.claude/settings.json</code> の <code>hooks</code> 設定から <code>pwsh -NoProfile -File</code> で呼ばれている。</p>
+
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">ファイル</th><th>役割</th><th class="nowrap">呼び出し元イベント</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap"><code>copy-session-jsonl.ps1</code></td><td>会話ログ（JSONL）をプロジェクト直下 <code>etc/history/jsonl/</code> へコピーする</td><td class="nowrap">SessionStart・Stop</td></tr>
+				<tr><td class="nowrap"><code>load-obsidian-memory.ps1</code></td><td>Obsidian Vault の <code>memory/!memory.md</code> をセッション開始時に読み込み、<code>additionalContext</code> として注入する</td><td class="nowrap">SessionStart</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="callout">
+		<p><strong>注意点</strong>: <code>load-obsidian-memory.ps1</code> には Vault の固定パス（<code>N:\Obsidian\Vault\memory\!memory.md</code>）が1箇所ある。<code>C:\Users\</code> 配下ではないためマスク対象外だが、別PC・別Vaultではこの行を書き換える必要がある。</p>
+	</div>
+
+	<h2>settings.json 側の登録</h2>
+	<p>ps1 本体だけでなく、<code>~/.claude/settings.json</code> の <code>hooks</code> ノード（呼び出しイベント・コマンド行・timeout）も同じく git 管理外。書き直し後は、このノードの中身自体を書き換える（後述）。</p>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>設計方針</h1>
+
+	<h2>実装言語</h2>
+	<p>コーディングルール「使用言語（Node / Bun）」の優先順位（<code>ts</code> &gt; <code>mjs</code> &gt; <code>cjs</code>）に従い、<strong>TypeScript（<code>.ts</code>）で書く</strong>。Node・Bun ともに Windows・Mac・Linux で動き、`.ts` を型チェックなしでそのまま実行できる。使うAPIは <code>node:fs</code>・<code>node:path</code>・<code>node:os</code> 等の標準モジュールのみで、OS 依存のコードは書かない。</p>
+
+	<h2>実行コマンド</h2>
+	<p><code>bun run &lt;path&gt;</code> で起動する。bun 自体が Win・Mac・Linux で動くため、OS ごとにコマンドを変える必要がない。<code>bun:ffi</code> 等は使わないため、「bun と node で FFI を使うとき」の使い分け実装（bun 優先・node フォールバック）は不要で、bun 前提で単純に書ける。</p>
+
+	<h2>置き場</h2>
+	<p><code>tools/80_ops/claude-hooks/</code> に置く。</p>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">ファイル</th><th>役割</th><th class="nowrap">呼び出し元イベント</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap"><code>copy-session-jsonl.ts</code></td><td>会話ログ（JSONL）をプロジェクト直下 <code>etc/history/jsonl/</code> へコピーする</td><td class="nowrap">SessionStart・Stop</td></tr>
+				<tr><td class="nowrap"><code>load-obsidian-memory.ts</code></td><td>Obsidian Vault の <code>memory/!memory.md</code> をセッション開始時に読み込み、<code>additionalContext</code> として注入する</td><td class="nowrap">SessionStart</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>設定は「コピー」ではなく「直接参照」にする</h2>
+	<p>ps1 のときのような「<code>~/.claude/hooks/</code> が正で、このプロジェクトへ手動コピーする」形はやめる。<strong>このプロジェクトの ts ファイルを正とし、<code>~/.claude/settings.json</code> の hooks コマンドがこのプロジェクトのパスを直接指す</strong>ようにする。同期の手間そのものが無くなる。</p>
+	<pre><code class="language-json">"command": "bun run \"W:/ai-agent-rules/tools/80_ops/claude-hooks/copy-session-jsonl.ts\""</code></pre>
+
+	<h2>Obsidian Vault のパス</h2>
+	<p>旧 ps1 はパスを1行に決め打ちしていた（<code>N:\Obsidian\Vault\memory\!memory.md</code>）。OS が変わるとこの形式のパスは使えないため、<strong>環境変数 <code>CLAUDE_OBSIDIAN_VAULT</code> から読む</strong>。未設定・パスが存在しないときは、旧実装と同じく何も注入せず正常終了する。</p>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>手順</h1>
+
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>作業</th><th>状態</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">1</td><td><code>tools/80_ops/claude-hooks/copy-session-jsonl.ts</code> を新規実装する（ps1 の挙動を移植）</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">2</td><td><code>tools/80_ops/claude-hooks/load-obsidian-memory.ts</code> を新規実装する（Vault パスを環境変数化）</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">3</td><td>Windows 上で <code>bun run</code> により動作確認する（既存 ps1 と同じ結果になることを確認）</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">4</td><td><code>~/.claude/settings.json</code> の <code>hooks</code> コマンドを ps1 呼び出しから <code>bun run "W:/ai-agent-rules/tools/80_ops/claude-hooks/*.ts"</code> に書き換える</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">5</td><td>旧 <code>~/.claude/hooks/*.ps1</code> を削除する（決めること2）</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">6</td><td><code>tools/80_ops/claude-hooks/README.html</code> を作り、設計方針・環境変数・実行方法を記載する</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">7</td><td>ローカルルールに「Claudeフックの置き場とメンテ」を追記する</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">8</td><td>Mac・Linux での動作確認は、該当環境が用意でき次第行う（今回は対象外）</td><td>―（保留）</td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>決めることの一覧</h1>
+
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>決めること</th><th>選択肢</th><th>推す案</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="num">1</td>
+					<td>bun が無い環境でのフォールバック</td>
+					<td>A. bun 前提にし、無ければエラーで気づける形にする<br>B. node にもフォールバックする仕組みを作る</td>
+					<td><strong>A</strong>。FFI 不使用でロジックは単純なため、フォールバック機構を作る複雑さに見合わない。bun 未導入はエラーメッセージで気づける</td>
+				</tr>
+				<tr>
+					<td class="num">2</td>
+					<td>旧 ps1（<code>~/.claude/hooks/*.ps1</code>）の扱い</td>
+					<td>A. 削除する<br>B. 残す（フォールバック用）</td>
+					<td><strong>A</strong>。二重管理を避ける。ts 版で置き換わるため、ps1 を残す理由がない</td>
+				</tr>
+				<tr>
+					<td class="num">3</td>
+					<td>Obsidian Vault パスの持ち方</td>
+					<td>A. 環境変数（<code>CLAUDE_OBSIDIAN_VAULT</code>）<br>B. 設定ファイル（json 等）を別途置く</td>
+					<td><strong>A</strong>。OS を問わず設定でき、1台につき1値で足りる用途に設定ファイルは過剰</td>
+				</tr>
+				<tr>
+					<td class="num">4</td>
+					<td><code>~/.claude/settings.json</code> の書き換え方</td>
+					<td>A. 手で <code>hooks</code> ノードを書き換える<br>B. 抜き出しスクリプトを作る</td>
+					<td><strong>A</strong>。書き換えは1回きりで、ノードは短い。スクリプト化は過剰</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="callout">
+		<p><strong>この計画の実装（ts の新規作成・settings.json の書き換え・ps1 の削除）は、明示的な指示（「作って」「反映して」等）を待つ</strong>。この計画書はあくまで案の提示であり、実装はまだ何も行っていない。</p>
+	</div>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+</footer>
+
+</body>
+</html>
