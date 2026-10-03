@@ -6,9 +6,9 @@
 
 ## セッションログの自動保存
 
-- **会話ログ（JSONL）は SessionStart / Stop フックで各プロジェクトルート直下の `etc/history/jsonl/` に自動コピーされる**。設定は `~/.claude/settings.json` の `hooks`、実体は `~/.claude/hooks/copy-session-jsonl.ps1`
+- **会話ログ（JSONL）は SessionStart / Stop フックで各プロジェクトルート直下の `etc/history/jsonl/` に自動コピーされる**。設定は `~/.claude/settings.json` の `hooks`、実体は共通ルールを管理するプロジェクト（ai-agent-rules）の `tools/80_ops/claude-hooks/copy-session-jsonl.ts`
 - **コピー対象はそのプロジェクトの全セッション**。サイズと更新日時が同じファイルはスキップする（Stopフックは応答ごとに走るため）
-- **フックスクリプト自体はユーザーが直接実行するものではないため、cmdランチャーは不要**（ps1作成時のcmdランチャー規則の対象外）
+- **フックスクリプト自体はユーザーが直接実行するものではないため、cmdランチャーは不要**
 
 ## 手順は 1 箇所に置く
 
