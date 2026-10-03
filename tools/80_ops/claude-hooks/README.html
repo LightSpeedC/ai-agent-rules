@@ -203,7 +203,7 @@
 	<div class="inner">
 		<h1>Claude フック</h1>
 		<p class="lead">Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。<code>~/.claude/settings.json</code> がこのフォルダのファイルを直接指すので、コピーは要らない。</p>
-		<p class="date">📅 作成: 2026-10-03 / 更新: 2026-10-03</p>
+		<p class="date">📅 作成: 2026-10-03 / 更新: 2026-10-04</p>
 	</div>
 </div>
 
@@ -229,6 +229,27 @@
 	</div>
 
 	<p>標準モジュール（<code>node:fs</code>・<code>node:path</code>）だけで書いてある。<code>node</code> でも <code>bun run</code> でも同じファイルが動き、切り替え用のラッパーは持たない。</p>
+
+	<h2>結果の表示</h2>
+	<p>フックの結果は、標準出力の JSON の <code>systemMessage</code> でユーザーに見せる（モデルへは渡らない）。SessionStart は結果を常に表示し、Stop は失敗したときだけ表示する（Stop は応答のたびに走るため）。失敗してもセッションは止めず、終了コードは常に 0。</p>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th>場面</th><th>表示</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>メモリの注入に成功</td><td>✅ Obsidian メモリを注入した</td></tr>
+				<tr><td>メモリを渡した（再開のみ。同じ内容が会話にあれば取り込まれない）</td><td>✅ Obsidian メモリを渡した（再開では、会話にあれば取り込まれない）</td></tr>
+				<tr><td>環境変数が未設定</td><td>⬜ Obsidian メモリ: 環境変数が未設定のため注入なし</td></tr>
+				<tr><td><code>memory/!memory.md</code> が無い</td><td>⬜ Obsidian メモリ: !memory.md が無いため注入なし</td></tr>
+				<tr><td>メモリの読み込みに失敗</td><td>❌ Obsidian メモリの読み込みに失敗した: &lt;理由&gt;</td></tr>
+				<tr><td>会話ログのコピーに成功（SessionStart のみ）</td><td>✅ 会話ログを N 件コピーした</td></tr>
+				<tr><td>コピーに失敗</td><td>❌ 会話ログのコピーに失敗した: &lt;理由&gt;</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p>失敗の理由に出るパスは、ホームを <code>~</code> に置き換える。</p>
+	<p>再開（<code>--continue</code> / <code>--resume</code>）では、<code>additionalContext</code> が会話にある分と同じだと、同じ回の <code>systemMessage</code> ごと捨てられる（Claude Code の重複排除。anthropics/claude-code の issue 96698）。そのため <code>copy-session-jsonl</code> は、SessionStart で、毎回違う開始時刻（<code>セッション開始: 2026/10/04 00:30:12.345 JST（source=resume）</code> の形）を <code>additionalContext</code> として一緒に渡し、同じ回に「新しい分」があるようにしている。Stop には付けない。</p>
 </section>
 
 <section class="ch02" id="ch02">

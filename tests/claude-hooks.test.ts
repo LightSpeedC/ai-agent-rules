@@ -104,6 +104,102 @@ describe('copy-session-jsonl', () => {
 	});
 });
 
+describe('copy-session-jsonl の結果表示', () => {
+	// 結果をユーザーに見せるため、標準出力の JSON の systemMessage を使う（モデルへは渡らない）
+	const prepare = (name: string, event: string) => {
+		const src = makeDir(name + '-src');
+		const cwd = makeDir(name + '-cwd');
+		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
+		writeFileSync(join(src, 'b.jsonl'), 'BBB\n');
+		return JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd, hook_event_name: event });
+	};
+
+	test('SessionStart では、コピーした件数を ✅ で表示する', () => {
+		const r = run(copyHook, prepare('show1', 'SessionStart'));
+		assert.equal(r.status, 0, r.stderr);
+		assert.equal(JSON.parse(r.stdout).systemMessage, '✅ 会話ログを 2 件コピーした');
+	});
+
+	test('SessionStart では、変わっていなければ 0 件と表示する', () => {
+		const input = prepare('show2', 'SessionStart');
+		run(copyHook, input);
+		const r = run(copyHook, input);
+		assert.equal(JSON.parse(r.stdout).systemMessage, '✅ 会話ログを 0 件コピーした');
+	});
+
+	// Stop は応答のたびに走る。成功を毎回出すと 1 行ずつ増え続ける
+	test('Stop では、成功しても何も表示しない', () => {
+		const r = run(copyHook, prepare('show3', 'Stop'));
+		assert.equal(r.status, 0, r.stderr);
+		assert.equal(r.stdout, '');
+	});
+
+	// cwd がファイルだと etc/history/jsonl を作れず、コピーに失敗する
+	const failing = (name: string, event: string) => {
+		const src = makeDir(name + '-src');
+		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
+		const notDir = join(work, name + '-notdir');
+		writeFileSync(notDir, 'ファイル');
+		return JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: notDir, hook_event_name: event });
+	};
+
+	for (const event of ['SessionStart', 'Stop']) {
+		test(`${event} で失敗したら、❌ と理由を表示し、フック自体は正常終了する`, () => {
+			const r = run(copyHook, failing('fail-' + event, event));
+			assert.equal(r.status, 0, 'フックの失敗でセッションを止めない');
+			const msg: string = JSON.parse(r.stdout).systemMessage;
+			assert.ok(msg.startsWith('❌ 会話ログのコピーに失敗した: '), msg);
+		});
+	}
+
+	// 再開では、additionalContext が会話にある分と同じだと、同じ回の systemMessage ごと捨てられる（Claude Code の重複排除。
+	// anthropics/claude-code の issue 96698）。毎回違う短い 1 行を渡し、同じ回に「新しい分」があるようにして、表示を残す
+	test('SessionStart では、開始時刻（JST）を additionalContext として渡す', () => {
+		const r = run(copyHook, prepare('ctx1', 'SessionStart'));
+		const out = JSON.parse(r.stdout);
+		assert.equal(out.hookSpecificOutput.hookEventName, 'SessionStart');
+		assert.match(out.hookSpecificOutput.additionalContext, /^セッション開始: \d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\.\d{3} JST/);
+		assert.equal(out.systemMessage, '✅ 会話ログを 2 件コピーした', '表示は変わらない');
+	});
+
+	test('source があれば、additionalContext に添える', () => {
+		const src = makeDir('ctx2-src');
+		const cwd = makeDir('ctx2-cwd');
+		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
+		const input = JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd, hook_event_name: 'SessionStart', source: 'resume' });
+		const out = JSON.parse(run(copyHook, input).stdout);
+		assert.ok(out.hookSpecificOutput.additionalContext.endsWith('（source=resume）'), out.hookSpecificOutput.additionalContext);
+	});
+
+	test('additionalContext は実行のたびに違う（同じだと重複排除されて、表示が捨てられるため）', () => {
+		const input = prepare('ctx3', 'SessionStart');
+		const a = JSON.parse(run(copyHook, input).stdout).hookSpecificOutput.additionalContext;
+		const b = JSON.parse(run(copyHook, input).stdout).hookSpecificOutput.additionalContext;
+		assert.notEqual(a, b);
+	});
+
+	test('SessionStart で失敗したときも、additionalContext を付ける（失敗の表示こそ捨てられたくない）', () => {
+		const r = run(copyHook, failing('ctx4', 'SessionStart'));
+		const out = JSON.parse(r.stdout);
+		assert.ok(out.systemMessage.startsWith('❌ '), out.systemMessage);
+		assert.match(out.hookSpecificOutput.additionalContext, /^セッション開始: /);
+	});
+
+	// additionalContext は SessionStart の仕組み。Stop には付けない
+	test('Stop で失敗したときは、additionalContext を付けない', () => {
+		const out = JSON.parse(run(copyHook, failing('ctx5', 'Stop')).stdout);
+		assert.ok(out.systemMessage.startsWith('❌ '), out.systemMessage);
+		assert.equal(out.hookSpecificOutput, undefined);
+	});
+
+	test('入力が JSON として読めなければ、❌ で表示して正常終了する', () => {
+		const r = run(copyHook, 'これは JSON ではない');
+		assert.equal(r.status, 0);
+		const msg: string = JSON.parse(r.stdout).systemMessage;
+		assert.ok(msg.startsWith('❌ 会話ログのコピーに失敗した: '), msg);
+	});
+});
+
 describe('load-obsidian-memory', () => {
 	const makeVault = (name: string, text: string) => {
 		const vault = makeDir(name);
@@ -124,16 +220,65 @@ describe('load-obsidian-memory', () => {
 		assert.ok(ctx.includes('----- !memory.md ここまで -----'));
 	});
 
-	// 連携していない PC でもフックが壊れないようにするため
-	test('環境変数が未設定なら、何も出力せず正常終了する', () => {
+	// 連携していない PC でもフックが壊れないようにするため、注入せずに正常終了する。ユーザーへの表示だけは出す
+	test('環境変数が未設定なら、何も注入せず正常終了し、⬜ で知らせる', () => {
 		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: undefined });
 		assert.equal(r.status, 0);
-		assert.equal(r.stdout, '');
+		const out = JSON.parse(r.stdout);
+		assert.equal(out.systemMessage, '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
+		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
 	});
 
-	test('環境変数のパスに !memory.md が無ければ、何も出力せず正常終了する', () => {
+	test('環境変数のパスに !memory.md が無ければ、何も注入せず正常終了し、⬜ で知らせる', () => {
 		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: join(work, 'no-such-vault') });
 		assert.equal(r.status, 0);
-		assert.equal(r.stdout, '');
+		const out = JSON.parse(r.stdout);
+		assert.equal(out.systemMessage, '⬜ Obsidian メモリ: !memory.md が無いため注入なし');
+		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
+	});
+
+	// systemMessage はユーザーにだけ見え、additionalContext（モデルへ渡す内容）とは別に出る
+	test('注入に成功したら、additionalContext と一緒に ✅ の systemMessage を出す', () => {
+		const vault = makeVault('mem2', '# メモリ\n');
+		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: vault });
+		const out = JSON.parse(r.stdout);
+		assert.equal(out.systemMessage, '✅ Obsidian メモリを注入した');
+		assert.ok(out.hookSpecificOutput.additionalContext.includes('# メモリ'));
+	});
+
+	// 再開では、同じ内容が会話にあると Claude Code が取り込まない（重複排除）。フックには取り込まれたかが分からないので、
+	// 「注入した」と言い切らず、「渡した」と書く
+	test('再開（source=resume）では、「渡した（会話にあれば取り込まれない）」と表示する。additionalContext は変わらない', () => {
+		const vault = makeVault('mem4', '# メモリ\n');
+		const input = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
+		const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout);
+		assert.equal(out.systemMessage, '✅ Obsidian メモリを渡した（再開では、会話にあれば取り込まれない）');
+		assert.ok(out.hookSpecificOutput.additionalContext.includes('# メモリ'), '渡す内容は変わらない');
+	});
+
+	for (const source of ['startup', 'compact', 'clear']) {
+		test(`${source} では、従来どおり「注入した」と表示する`, () => {
+			const vault = makeVault('mem5-' + source, '# メモリ\n');
+			const input = JSON.stringify({ hook_event_name: 'SessionStart', source });
+			const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout);
+			assert.equal(out.systemMessage, '✅ Obsidian メモリを注入した');
+		});
+	}
+
+	test('再開でも、環境変数が未設定のときの ⬜ の文言は変わらない', () => {
+		const input = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
+		const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: undefined }).stdout);
+		assert.equal(out.systemMessage, '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
+	});
+
+	// !memory.md という名前のフォルダがあると、存在はするが読めない
+	test('読み込みに失敗したら、❌ と理由を表示し、何も注入せず正常終了する', () => {
+		const vault = makeDir('mem3');
+		mkdirSync(join(vault, 'memory/!memory.md'), { recursive: true });
+		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: vault });
+		assert.equal(r.status, 0, 'フックの失敗でセッションを止めない');
+		const out = JSON.parse(r.stdout);
+		assert.ok(out.systemMessage.startsWith('❌ Obsidian メモリの読み込みに失敗した: '), out.systemMessage);
+		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
 	});
 });
