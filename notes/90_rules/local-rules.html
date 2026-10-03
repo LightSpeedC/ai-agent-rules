@@ -204,7 +204,7 @@
 	<div class="inner">
 		<h1>ローカルルール</h1>
 		<p class="lead">このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-28</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-03</p>
 	</div>
 </div>
 
@@ -279,8 +279,8 @@
 		<li><strong>差分が通知内容と一致するか確かめるときは、対応する発言の <code>#</code> 番号を応答に書く</strong>（例:「#998の内容と一致」）</li>
 		<li><strong>文字コード違反（BOM・改行等）があれば、変更が見つかったファイルに <code>convert-encoding &lt;path&gt; --to utf8/lf</code> で直す</strong></li>
 		<li><strong>公開チェックを通す</strong>。共通ルールの「コミット前の確認」に従う。1 件でも残れば commit せず報告する</li>
-		<li><strong><code>common-rules.md</code> と <code>rules/</code> 配下の変更ファイルだけを stage して commit する</strong>。ほかのファイルは含めない。push はしない</li>
-		<li><strong>commit したら、ルール変更の通知本文は全文、コミット内容は diff 形式で応答に示す</strong></li>
+		<li><strong><code>common-rules.md</code> と <code>rules/</code> 配下の変更ファイルだけを stage して commit し、続けて push する</strong>。ほかのファイルは含めない</li>
+		<li><strong>commit・push したら、ルール変更の通知本文は全文、コミット内容は diff 形式で応答に示す</strong></li>
 	</ul>
 
 	<h2>決めごと</h2>
@@ -296,10 +296,10 @@
 		<li><strong>どこまで</strong>: このプロジェクトの 1 本（chat 待受け・共通ルールの追随の点検）だけ</li>
 		<li><strong>いつまで</strong>: 暫定運用のあいだ</li>
 	</ul>
-	<p>共通ルールの「修正は1点ずつ、確認を重視」は <strong>commit を自動で行わない</strong>と決めている。ここはそれと違い、<strong>確認を取らずに commit する</strong>。</p>
+	<p>共通ルールの「修正は1点ずつ、確認を重視」は <strong>commit を自動で行わない</strong>、「重大な操作の確認方法」は <strong>push を別指示が要る操作</strong>と決めている。ここはそれと違い、<strong>確認を取らずに commit し、続けて push する</strong>。</p>
 	<ul class="plain">
-		<li><strong>なぜ</strong>: 原本は別のセッションからも書き換わる。取りこぼすと、どの版で何が変わったかが履歴から読めなくなる。全19章が <code>rules/</code> へ切り出し済みのため、書き換わるのは <code>common-rules.md</code> 側だけではない</li>
-		<li><strong>どこまで</strong>: <code>common-rules.md</code> と <code>rules/</code> 配下だけ。ほかのファイルは stage しない。push もしない</li>
+		<li><strong>なぜ</strong>: 原本は別のセッションからも書き換わる。取りこぼすと、どの版で何が変わったかが履歴から読めなくなる。全19章が <code>rules/</code> へ切り出し済みのため、書き換わるのは <code>common-rules.md</code> 側だけではない。commit だけで push しないと、他プロジェクトのセッションが見るのはリモート（GitHub）側になるため、ローカルに留めたままでは追随が伝わらない</li>
+		<li><strong>どこまで</strong>: <code>common-rules.md</code> と <code>rules/</code> 配下だけ。ほかのファイルは stage しない</li>
 		<li><strong>いつまで</strong>: 暫定運用のあいだ。終えるときにこの章ごと捨てる</li>
 	</ul>
 </section>
