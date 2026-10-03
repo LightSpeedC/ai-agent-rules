@@ -2,7 +2,7 @@
 
 このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。
 
-> 📅 作成: 2026-09-10 / 更新: 2026-10-03
+> 📅 作成: 2026-09-10 / 更新: 2026-10-04
 
 [README へ戻る](../../README.md)
 
@@ -93,5 +93,28 @@ Codex は `@path` の取り込み記法を持たない。代わりに `@path` �
 ```
 
 **なぜ**: 見出しを消すと、`common-rules.md` を読んだときにその章が存在すること自体が分からなくなる。両側に残すことで、どちらを読んでも章の所在が分かる。
+
+### 4. Claude フックの置き場とメンテ
+
+`~/.claude/settings.json` の hooks（SessionStart・Stop）が呼ぶフックの実体を、このプロジェクトに置く。コピーはしない。詳細は `tools/80_ops/claude-hooks/README.html` に書いてある。
+
+#### 値
+
+| 項目 | 値 | 備考 |
+|---|---|---|
+| 置き場 | `tools/80_ops/claude-hooks/` | ts の 2 本（`copy-session-jsonl.ts`・`load-obsidian-memory.ts`） |
+| 呼び方 | `node "W:/ai-agent-rules/tools/80_ops/claude-hooks/<名前>.ts"` | `settings.json` の hooks のコマンド。`W:` が見えない環境では動かない |
+| テスト | `tools/40_test/run-tests.cmd` | node と bun の全件 |
+| Vault の場所 | 環境変数 `AI_AGENT_OBSIDIAN_VAULT` | 未設定なら何も注入しない |
+
+#### やること
+
+- **フックを変えるときは、テストを先に書き、全件を通す**。通したあと、`settings.json` のコマンドそのままで試走する
+- **別の PC では、`settings.json` の hooks を、その PC のこのリポジトリの置き場に向けて書く**
+
+#### 落とし穴
+
+- **再開（`--continue` / `--resume`）では、`additionalContext` が会話にある分と同じだと、同じ回の `systemMessage` ごと捨てられる**（Claude Code の重複排除）。表示を出すフックは、毎回違う短い `additionalContext` を一緒に渡す
+- **`settings.json` を書き換えても、動いているセッションには効かない**。次の起動・再開から有効になる
 
 [README へ戻る](../../README.md)

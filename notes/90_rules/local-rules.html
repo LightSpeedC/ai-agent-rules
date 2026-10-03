@@ -105,11 +105,16 @@
 		--soft: hsl(280, 28%, 95%);
 	}
 	section.ch02 {
-		--accent: hsl(140, 78%, 25%);
-		--accent2: hsl(140, 58%, 55%);
-		--soft: hsl(140, 28%, 95%);
+		--accent: hsl(186.7, 78%, 25%);
+		--accent2: hsl(186.7, 58%, 55%);
+		--soft: hsl(186.7, 28%, 95%);
 	}
 	section.ch03 {
+		--accent: hsl(93.3, 78%, 25%);
+		--accent2: hsl(93.3, 58%, 55%);
+		--soft: hsl(93.3, 28%, 95%);
+	}
+	section.ch04 {
 		--accent: hsl(0, 78%, 25%);
 		--accent2: hsl(0, 58%, 55%);
 		--soft: hsl(0, 28%, 95%);
@@ -204,7 +209,7 @@
 	<div class="inner">
 		<h1>ローカルルール</h1>
 		<p class="lead">このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-03</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-04</p>
 	</div>
 </div>
 
@@ -336,6 +341,55 @@
 &lt;!-- ◯◯を作成・編集するときは `rules/xxx-rules.md` を読み、その指示に従うこと。 --&gt;</code></pre>
 
 	<p><strong>なぜ</strong>: 見出しを消すと、<code>common-rules.md</code> を読んだときにその章が存在すること自体が分からなくなる。両側に残すことで、どちらを読んでも章の所在が分かる。</p>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>Claude フックの置き場とメンテ</h1>
+
+	<p><code>~/.claude/settings.json</code> の hooks（SessionStart・Stop）が呼ぶフックの実体を、このプロジェクトに置く。コピーはしない。詳細は <code>tools/80_ops/claude-hooks/README.html</code> に書いてある。</p>
+
+	<h2>値</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">項目</th><th>値</th><th>備考</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="nowrap">置き場</td>
+					<td><code>tools/80_ops/claude-hooks/</code></td>
+					<td>ts の 2 本（<code>copy-session-jsonl.ts</code>・<code>load-obsidian-memory.ts</code>）</td>
+				</tr>
+				<tr>
+					<td class="nowrap">呼び方</td>
+					<td><code>node "W:/ai-agent-rules/tools/80_ops/claude-hooks/&lt;名前&gt;.ts"</code></td>
+					<td><code>settings.json</code> の hooks のコマンド。<code>W:</code> が見えない環境では動かない</td>
+				</tr>
+				<tr>
+					<td class="nowrap">テスト</td>
+					<td><code>tools/40_test/run-tests.cmd</code></td>
+					<td>node と bun の全件</td>
+				</tr>
+				<tr>
+					<td class="nowrap">Vault の場所</td>
+					<td>環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code></td>
+					<td>未設定なら何も注入しない</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>やること</h2>
+	<ul class="plain">
+		<li><strong>フックを変えるときは、テストを先に書き、全件を通す</strong>。通したあと、<code>settings.json</code> のコマンドそのままで試走する</li>
+		<li><strong>別の PC では、<code>settings.json</code> の hooks を、その PC のこのリポジトリの置き場に向けて書く</strong></li>
+	</ul>
+
+	<h2>落とし穴</h2>
+	<ul class="plain">
+		<li><strong>再開（<code>--continue</code> / <code>--resume</code>）では、<code>additionalContext</code> が会話にある分と同じだと、同じ回の <code>systemMessage</code> ごと捨てられる</strong>（Claude Code の重複排除）。表示を出すフックは、毎回違う短い <code>additionalContext</code> を一緒に渡す</li>
+		<li><strong><code>settings.json</code> を書き換えても、動いているセッションには効かない</strong>。次の起動・再開から有効になる</li>
+	</ul>
 </section>
 
 </div>
