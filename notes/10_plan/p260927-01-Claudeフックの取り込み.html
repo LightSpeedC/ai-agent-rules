@@ -253,7 +253,7 @@
 	<div class="inner">
 		<h1>Claudeフックの取り込み</h1>
 		<p class="lead">Mac・Linux でも動かす予定があるため、<strong>Windows専用の ps1 をそのまま持ってくる案は撤回</strong>。フック本体をこのプロジェクトで TypeScript として最初から書き直し、<code>~/.claude/settings.json</code> はこちらを直接参照する形にする。</p>
-		<p class="date">📅 作成: 2026-09-27 / 更新: 2026-09-27</p>
+		<p class="date">📅 作成: 2026-09-27 / 更新: 2026-10-03</p>
 	</div>
 </div>
 
@@ -312,7 +312,8 @@
 	<p>コーディングルール「使用言語（Node / Bun）」の優先順位（<code>ts</code> &gt; <code>mjs</code> &gt; <code>cjs</code>）に従い、<strong>TypeScript（<code>.ts</code>）で書く</strong>。Node・Bun ともに Windows・Mac・Linux で動き、`.ts` を型チェックなしでそのまま実行できる。使うAPIは <code>node:fs</code>・<code>node:path</code>・<code>node:os</code> 等の標準モジュールのみで、OS 依存のコードは書かない。</p>
 
 	<h2>実行コマンド</h2>
-	<p><code>bun run &lt;path&gt;</code> で起動する。bun 自体が Win・Mac・Linux で動くため、OS ごとにコマンドを変える必要がない。<code>bun:ffi</code> 等は使わないため、「bun と node で FFI を使うとき」の使い分け実装（bun 優先・node フォールバック）は不要で、bun 前提で単純に書ける。</p>
+	<p><code>node &lt;path&gt;</code> で起動する。bun が無い環境でも動かすため、<strong>node を標準にする</strong>。node は Win・Mac・Linux で動くため、OS ごとにコマンドを変える必要がない。標準モジュールだけで書くので、bun で <code>bun run &lt;path&gt;</code> と起動しても同じファイルが動く。<strong>切り替え用のラッパー（cmd・sh）は作らない</strong>。<code>bun:ffi</code> 等は使わないため、「bun と node で FFI を使うとき」の使い分け実装も不要。</p>
+	<p>手元（Windows）の node v26.10.0 で、型注釈つきの <code>.ts</code> を <code>node &lt;path&gt;</code> で直接実行できることを実測した。<strong>node が <code>.ts</code> を直接実行できる最低バージョンは未確認</strong>で、手順3で確認する。</p>
 
 	<h2>置き場</h2>
 	<p><code>tools/80_ops/claude-hooks/</code> に置く。</p>
@@ -330,10 +331,10 @@
 
 	<h2>設定は「コピー」ではなく「直接参照」にする</h2>
 	<p>ps1 のときのような「<code>~/.claude/hooks/</code> が正で、このプロジェクトへ手動コピーする」形はやめる。<strong>このプロジェクトの ts ファイルを正とし、<code>~/.claude/settings.json</code> の hooks コマンドがこのプロジェクトのパスを直接指す</strong>ようにする。同期の手間そのものが無くなる。</p>
-	<pre><code class="language-json">"command": "bun run \"W:/ai-agent-rules/tools/80_ops/claude-hooks/copy-session-jsonl.ts\""</code></pre>
+	<pre><code class="language-json">"command": "node \"W:/ai-agent-rules/tools/80_ops/claude-hooks/copy-session-jsonl.ts\""</code></pre>
 
 	<h2>Obsidian Vault のパス</h2>
-	<p>旧 ps1 はパスを1行に決め打ちしていた（<code>N:\Obsidian\Vault\memory\!memory.md</code>）。OS が変わるとこの形式のパスは使えないため、<strong>環境変数 <code>CLAUDE_OBSIDIAN_VAULT</code> から読む</strong>。未設定・パスが存在しないときは、旧実装と同じく何も注入せず正常終了する。</p>
+	<p>旧 ps1 はパスを1行に決め打ちしていた（<code>N:\Obsidian\Vault\memory\!memory.md</code>）。OS が変わるとこの形式のパスは使えないため、<strong>環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code> から読む</strong>。未設定・パスが存在しないときは、旧実装と同じく何も注入せず正常終了する。</p>
 </section>
 
 <section class="ch04" id="ch04">
@@ -345,12 +346,12 @@
 				<tr><th class="num">#</th><th>作業</th><th>状態</th></tr>
 			</thead>
 			<tbody>
-				<tr><td class="num">1</td><td><code>tools/80_ops/claude-hooks/copy-session-jsonl.ts</code> を新規実装する（ps1 の挙動を移植）</td><td><span class="badge b-none">未</span></td></tr>
-				<tr><td class="num">2</td><td><code>tools/80_ops/claude-hooks/load-obsidian-memory.ts</code> を新規実装する（Vault パスを環境変数化）</td><td><span class="badge b-none">未</span></td></tr>
-				<tr><td class="num">3</td><td>Windows 上で <code>bun run</code> により動作確認する（既存 ps1 と同じ結果になることを確認）</td><td><span class="badge b-none">未</span></td></tr>
-				<tr><td class="num">4</td><td><code>~/.claude/settings.json</code> の <code>hooks</code> コマンドを ps1 呼び出しから <code>bun run "W:/ai-agent-rules/tools/80_ops/claude-hooks/*.ts"</code> に書き換える</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">1</td><td><code>tools/80_ops/claude-hooks/copy-session-jsonl.ts</code> を新規実装する（ps1 の挙動を移植）</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">2</td><td><code>tools/80_ops/claude-hooks/load-obsidian-memory.ts</code> を新規実装する（Vault パスを環境変数化）</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">3</td><td>Windows 上で <code>node</code> と <code>bun run</code> の両方で動作確認する（既存 ps1 と同じ結果になることを確認）。あわせて node が <code>.ts</code> を直接実行できる最低バージョンを確認する。<br>済: テスト9件が node・bun とも通過。<code>bun run</code> でも両フックの実走を確認。最低バージョンは検索で v22.18.0 / v23.6.0 以降と確認（手元での実測は v26.10.0 のみ）。<br>未: 本番の Vault と既存 ps1 の出力の突き合わせ（プロジェクト外のため、許可を得てから行う）</td><td><span class="badge b-warn">着手</span></td></tr>
+				<tr><td class="num">4</td><td><code>~/.claude/settings.json</code> の <code>hooks</code> コマンドを ps1 呼び出しから <code>node "W:/ai-agent-rules/tools/80_ops/claude-hooks/*.ts"</code> に書き換える</td><td><span class="badge b-none">未</span></td></tr>
 				<tr><td class="num">5</td><td>旧 <code>~/.claude/hooks/*.ps1</code> を削除する（決めること2）</td><td><span class="badge b-none">未</span></td></tr>
-				<tr><td class="num">6</td><td><code>tools/80_ops/claude-hooks/README.html</code> を作り、設計方針・環境変数・実行方法を記載する</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">6</td><td><code>tools/80_ops/claude-hooks/README.html</code> を作り、設計方針・環境変数・実行方法を記載する</td><td><span class="badge b-ok">済</span></td></tr>
 				<tr><td class="num">7</td><td>ローカルルールに「Claudeフックの置き場とメンテ」を追記する</td><td><span class="badge b-none">未</span></td></tr>
 				<tr><td class="num">8</td><td>Mac・Linux での動作確認は、該当環境が用意でき次第行う（今回は対象外）</td><td>―（保留）</td></tr>
 			</tbody>
@@ -369,9 +370,9 @@
 			<tbody>
 				<tr>
 					<td class="num">1</td>
-					<td>bun が無い環境でのフォールバック</td>
-					<td>A. bun 前提にし、無ければエラーで気づける形にする<br>B. node にもフォールバックする仕組みを作る</td>
-					<td><strong>A</strong>。FFI 不使用でロジックは単純なため、フォールバック機構を作る複雑さに見合わない。bun 未導入はエラーメッセージで気づける</td>
+					<td>bun が無い環境での実行方法</td>
+					<td>A. node で実行する（標準モジュールだけで書き、bun でも同じファイルが動く）<br>B. bun があれば bun、無ければ node を使う（切り替え用のラッパーを持つ）</td>
+					<td><strong>A</strong>。どちらか一方が入っていれば足り、ラッパーを保守せずに済む。node が <code>.ts</code> を直接実行できる最低バージョンは手順3で確認する</td>
 				</tr>
 				<tr>
 					<td class="num">2</td>
@@ -382,7 +383,7 @@
 				<tr>
 					<td class="num">3</td>
 					<td>Obsidian Vault パスの持ち方</td>
-					<td>A. 環境変数（<code>CLAUDE_OBSIDIAN_VAULT</code>）<br>B. 設定ファイル（json 等）を別途置く</td>
+					<td>A. 環境変数（<code>AI_AGENT_OBSIDIAN_VAULT</code>）<br>B. 設定ファイル（json 等）を別途置く</td>
 					<td><strong>A</strong>。OS を問わず設定でき、1台につき1値で足りる用途に設定ファイルは過剰</td>
 				</tr>
 				<tr>
