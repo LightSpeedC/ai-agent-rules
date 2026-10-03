@@ -3,6 +3,7 @@
 適用条件: HTML・Markdown 等のドキュメントを作成・更新するとき。
 
 - **ドキュメントには作成日・更新日を入れる**。書式は `📅 作成: yyyy-mm-dd / 更新: yyyy-mm-dd`
+  - 英語の資料は `📅 Created: yyyy-mm-dd / Updated: yyyy-mm-dd`。日本語と英語を混ぜない
   - HTML: タイトルバー内に表示する
   - Markdown: 本文冒頭の引用行に置く
   - フッターに同じ日付を重複させない
