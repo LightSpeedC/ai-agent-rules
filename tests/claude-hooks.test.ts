@@ -28,6 +28,11 @@ function makeDir(name: string): string {
 	return dir;
 }
 
+// 表示の先頭は「絵文字 + 月/日 時:分」（例: ✅10/04 00:50 …）。日時は動くので、文言を比べるときは日時を外す
+function unstamp(message: string): string {
+	return message.replace(/^(\S)\d{2}\/\d{2} \d{2}:\d{2} /, '$1 ');
+}
+
 function run(script: string, input: string, env: Record<string, string | undefined> = {}) {
 	const mergedEnv: Record<string, string | undefined> = { ...process.env, ...env };
 	for (const key of Object.keys(mergedEnv)) {
@@ -117,14 +122,14 @@ describe('copy-session-jsonl の結果表示', () => {
 	test('SessionStart では、コピーした件数を ✅ で表示する', () => {
 		const r = run(copyHook, prepare('show1', 'SessionStart'));
 		assert.equal(r.status, 0, r.stderr);
-		assert.equal(JSON.parse(r.stdout).systemMessage, '✅ 会話ログを 2 件コピーした');
+		assert.equal(unstamp(JSON.parse(r.stdout).systemMessage), '✅ 会話ログを 2 件コピーした');
 	});
 
 	test('SessionStart では、変わっていなければ 0 件と表示する', () => {
 		const input = prepare('show2', 'SessionStart');
 		run(copyHook, input);
 		const r = run(copyHook, input);
-		assert.equal(JSON.parse(r.stdout).systemMessage, '✅ 会話ログを 0 件コピーした');
+		assert.equal(unstamp(JSON.parse(r.stdout).systemMessage), '✅ 会話ログを 0 件コピーした');
 	});
 
 	// Stop は応答のたびに走る。成功を毎回出すと 1 行ずつ増え続ける
@@ -147,7 +152,7 @@ describe('copy-session-jsonl の結果表示', () => {
 		test(`${event} で失敗したら、❌ と理由を表示し、フック自体は正常終了する`, () => {
 			const r = run(copyHook, failing('fail-' + event, event));
 			assert.equal(r.status, 0, 'フックの失敗でセッションを止めない');
-			const msg: string = JSON.parse(r.stdout).systemMessage;
+			const msg: string = unstamp(JSON.parse(r.stdout).systemMessage);
 			assert.ok(msg.startsWith('❌ 会話ログのコピーに失敗した: '), msg);
 		});
 	}
@@ -159,7 +164,7 @@ describe('copy-session-jsonl の結果表示', () => {
 		const out = JSON.parse(r.stdout);
 		assert.equal(out.hookSpecificOutput.hookEventName, 'SessionStart');
 		assert.match(out.hookSpecificOutput.additionalContext, /^セッション開始: \d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\.\d{3} JST/);
-		assert.equal(out.systemMessage, '✅ 会話ログを 2 件コピーした', '表示は変わらない');
+		assert.equal(unstamp(out.systemMessage), '✅ 会話ログを 2 件コピーした', '表示は変わらない');
 	});
 
 	test('source があれば、additionalContext に添える', () => {
@@ -181,21 +186,21 @@ describe('copy-session-jsonl の結果表示', () => {
 	test('SessionStart で失敗したときも、additionalContext を付ける（失敗の表示こそ捨てられたくない）', () => {
 		const r = run(copyHook, failing('ctx4', 'SessionStart'));
 		const out = JSON.parse(r.stdout);
-		assert.ok(out.systemMessage.startsWith('❌ '), out.systemMessage);
+		assert.ok(unstamp(out.systemMessage).startsWith('❌ '), out.systemMessage);
 		assert.match(out.hookSpecificOutput.additionalContext, /^セッション開始: /);
 	});
 
 	// additionalContext は SessionStart の仕組み。Stop には付けない
 	test('Stop で失敗したときは、additionalContext を付けない', () => {
 		const out = JSON.parse(run(copyHook, failing('ctx5', 'Stop')).stdout);
-		assert.ok(out.systemMessage.startsWith('❌ '), out.systemMessage);
+		assert.ok(unstamp(out.systemMessage).startsWith('❌ '), out.systemMessage);
 		assert.equal(out.hookSpecificOutput, undefined);
 	});
 
 	test('入力が JSON として読めなければ、❌ で表示して正常終了する', () => {
 		const r = run(copyHook, 'これは JSON ではない');
 		assert.equal(r.status, 0);
-		const msg: string = JSON.parse(r.stdout).systemMessage;
+		const msg: string = unstamp(JSON.parse(r.stdout).systemMessage);
 		assert.ok(msg.startsWith('❌ 会話ログのコピーに失敗した: '), msg);
 	});
 });
@@ -225,7 +230,7 @@ describe('load-obsidian-memory', () => {
 		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: undefined });
 		assert.equal(r.status, 0);
 		const out = JSON.parse(r.stdout);
-		assert.equal(out.systemMessage, '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
+		assert.equal(unstamp(out.systemMessage), '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
 		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
 	});
 
@@ -233,7 +238,7 @@ describe('load-obsidian-memory', () => {
 		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: join(work, 'no-such-vault') });
 		assert.equal(r.status, 0);
 		const out = JSON.parse(r.stdout);
-		assert.equal(out.systemMessage, '⬜ Obsidian メモリ: !memory.md が無いため注入なし');
+		assert.equal(unstamp(out.systemMessage), '⬜ Obsidian メモリ: !memory.md が無いため注入なし');
 		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
 	});
 
@@ -242,7 +247,7 @@ describe('load-obsidian-memory', () => {
 		const vault = makeVault('mem2', '# メモリ\n');
 		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: vault });
 		const out = JSON.parse(r.stdout);
-		assert.equal(out.systemMessage, '✅ Obsidian メモリを注入した');
+		assert.equal(unstamp(out.systemMessage), '✅ Obsidian メモリを注入した');
 		assert.ok(out.hookSpecificOutput.additionalContext.includes('# メモリ'));
 	});
 
@@ -252,7 +257,7 @@ describe('load-obsidian-memory', () => {
 		const vault = makeVault('mem4', '# メモリ\n');
 		const input = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
 		const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout);
-		assert.equal(out.systemMessage, '✅ Obsidian メモリを渡した（再開では、会話にあれば取り込まれない）');
+		assert.equal(unstamp(out.systemMessage), '✅ Obsidian メモリを渡した（再開では、会話にあれば取り込まれない）');
 		assert.ok(out.hookSpecificOutput.additionalContext.includes('# メモリ'), '渡す内容は変わらない');
 	});
 
@@ -261,14 +266,14 @@ describe('load-obsidian-memory', () => {
 			const vault = makeVault('mem5-' + source, '# メモリ\n');
 			const input = JSON.stringify({ hook_event_name: 'SessionStart', source });
 			const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout);
-			assert.equal(out.systemMessage, '✅ Obsidian メモリを注入した');
+			assert.equal(unstamp(out.systemMessage), '✅ Obsidian メモリを注入した');
 		});
 	}
 
 	test('再開でも、環境変数が未設定のときの ⬜ の文言は変わらない', () => {
 		const input = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
 		const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: undefined }).stdout);
-		assert.equal(out.systemMessage, '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
+		assert.equal(unstamp(out.systemMessage), '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
 	});
 
 	// !memory.md という名前のフォルダがあると、存在はするが読めない
@@ -278,7 +283,76 @@ describe('load-obsidian-memory', () => {
 		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: vault });
 		assert.equal(r.status, 0, 'フックの失敗でセッションを止めない');
 		const out = JSON.parse(r.stdout);
-		assert.ok(out.systemMessage.startsWith('❌ Obsidian メモリの読み込みに失敗した: '), out.systemMessage);
+		assert.ok(unstamp(out.systemMessage).startsWith('❌ Obsidian メモリの読み込みに失敗した: '), out.systemMessage);
 		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
+	});
+});
+
+describe('表示の先頭の日時', () => {
+	// 表示は「絵文字 + 月/日 時:分 + 本文」の形にする（例: ✅10/04 00:50 Obsidian メモリを注入した）。
+	// いつの結果かが、画面だけで分かるようにするため。日時は JST
+	const stampedForm = /^[✅⬜❌]\d{2}\/\d{2} \d{2}:\d{2} \S/;
+
+	const makeVault = (name: string) => {
+		const vault = makeDir(name);
+		mkdirSync(join(vault, 'memory'), { recursive: true });
+		writeFileSync(join(vault, 'memory/!memory.md'), '# メモリ\n');
+		return vault;
+	};
+
+	test('stamped は、絵文字の直後に JST の月/日 時:分を入れる', async () => {
+		const { stamped } = await import('../tools/80_ops/claude-hooks/jst.ts');
+		// UTC 2026-10-03 15:50 は JST 2026-10-04 00:50
+		assert.equal(stamped('✅ Obsidian メモリを注入した', Date.UTC(2026, 9, 3, 15, 50, 12)), '✅10/04 00:50 Obsidian メモリを注入した');
+	});
+
+	test('stamped は、月・日・時・分を 0 埋めし、年をまたぐ日付も JST で出す', async () => {
+		const { stamped } = await import('../tools/80_ops/claude-hooks/jst.ts');
+		// UTC 2026-12-31 15:05 は JST 2027-01-01 00:05
+		assert.equal(stamped('❌ 失敗した', Date.UTC(2026, 11, 31, 15, 5)), '❌01/01 00:05 失敗した');
+	});
+
+	test('stamped は、絵文字で始まらない文言なら、先頭に日時を付ける', async () => {
+		const { stamped } = await import('../tools/80_ops/claude-hooks/jst.ts');
+		assert.equal(stamped('本文', Date.UTC(2026, 9, 3, 15, 50)), '10/04 00:50 本文');
+	});
+
+	test('load-obsidian-memory の表示は、成功・再開・⬜・❌ のすべてで、絵文字の直後に日時が付く', () => {
+		const resume = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
+		const broken = makeDir('stamp-broken');
+		mkdirSync(join(broken, 'memory/!memory.md'), { recursive: true });
+		const cases: Array<[string, string, Record<string, string | undefined>]> = [
+			['成功', '{}', { AI_AGENT_OBSIDIAN_VAULT: makeVault('stamp-ok') }],
+			['再開', resume, { AI_AGENT_OBSIDIAN_VAULT: makeVault('stamp-resume') }],
+			['環境変数が未設定', '{}', { AI_AGENT_OBSIDIAN_VAULT: undefined }],
+			['!memory.md が無い', '{}', { AI_AGENT_OBSIDIAN_VAULT: join(work, 'stamp-no-such') }],
+			['読み込みに失敗', '{}', { AI_AGENT_OBSIDIAN_VAULT: broken }],
+		];
+		for (const [name, input, env] of cases) {
+			const msg: string = JSON.parse(run(memoryHook, input, env).stdout).systemMessage;
+			assert.match(msg, stampedForm, `${name}: ${msg}`);
+		}
+	});
+
+	test('copy-session-jsonl の表示は、成功と失敗（SessionStart・Stop）のどちらにも日時が付く', () => {
+		const src = makeDir('stamp-copy-src');
+		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
+		const ok = JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: makeDir('stamp-copy-cwd'), hook_event_name: 'SessionStart' });
+		const notDir = join(work, 'stamp-notdir');
+		writeFileSync(notDir, 'ファイル');
+		const ng = (event: string) => JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: notDir, hook_event_name: event });
+		for (const [name, input] of [['成功', ok], ['SessionStart の失敗', ng('SessionStart')], ['Stop の失敗', ng('Stop')]]) {
+			const msg: string = JSON.parse(run(copyHook, input).stdout).systemMessage;
+			assert.match(msg, stampedForm, `${name}: ${msg}`);
+		}
+	});
+
+	test('日時は、実行した時刻（JST の月/日 時:分）である', () => {
+		const jst = () => new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(5, 16).replace('T', ' ').replace('-', '/');
+		const before = jst();
+		const msg: string = JSON.parse(run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: makeVault('stamp-now') }).stdout).systemMessage;
+		const after = jst();
+		const shown = msg.slice(1, 12);
+		assert.ok(shown === before || shown === after, `表示 ${shown} / 実行前 ${before} / 実行後 ${after}`);
 	});
 });

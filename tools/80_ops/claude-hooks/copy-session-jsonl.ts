@@ -9,6 +9,7 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync, utimesSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
+import { jstNow, stamped } from './jst.ts';
 
 type HookInput = {
 	transcript_path?: string;
@@ -23,16 +24,11 @@ async function readStdin(): Promise<string> {
 	return Buffer.concat(chunks).toString('utf8');
 }
 
-// 日時は JST で、yyyy/mm/dd hh:mm:ss.ccc。実行環境のタイムゾーンに依らない
-function jstNow(): string {
-	return new Date(Date.now() + 9 * 3600 * 1000).toISOString().replace('T', ' ').replace('Z', '').replaceAll('-', '/');
-}
-
 // 結果を表示する。SessionStart では、開始時刻を additionalContext として一緒に渡す。
 // 理由: 再開（--continue / --resume）では、additionalContext が会話にある分と同じだと、同じ回の systemMessage ごと捨てられる
 // （Claude Code の重複排除。anthropics/claude-code の issue 96698）。毎回違う短い 1 行を渡し、同じ回に「新しい分」があるようにして、表示を残す。
 function show(message: string, payload: HookInput | undefined): void {
-	const out: Record<string, unknown> = { systemMessage: message };
+	const out: Record<string, unknown> = { systemMessage: stamped(message) };
 	if (payload?.hook_event_name !== 'Stop') {
 		const source = payload?.source ? `（source=${payload.source}）` : '';
 		out.hookSpecificOutput = {

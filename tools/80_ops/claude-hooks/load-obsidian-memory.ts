@@ -9,9 +9,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { stamped } from './jst.ts';
 
+// 表示の先頭に、絵文字に続けて日付（月/日）と時刻（時:分）を付ける（jst.ts を参照）
 function show(message: string): void {
-	console.log(JSON.stringify({ systemMessage: message }));
+	console.log(JSON.stringify({ systemMessage: stamped(message) }));
 }
 
 // 失敗の理由に、ユーザープロファイル配下のパス（ユーザー名）が混ざらないよう ~ に置き換える
@@ -69,9 +71,9 @@ function inject(source: string | undefined): void {
 			hookEventName: 'SessionStart',
 			additionalContext: context,
 		},
-		systemMessage: source === 'resume'
+		systemMessage: stamped(source === 'resume'
 			? '✅ Obsidian メモリを渡した（再開では、会話にあれば取り込まれない）'
-			: '✅ Obsidian メモリを注入した',
+			: '✅ Obsidian メモリを注入した'),
 	}));
 }
 

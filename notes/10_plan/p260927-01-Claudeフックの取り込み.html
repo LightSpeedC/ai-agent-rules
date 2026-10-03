@@ -359,7 +359,9 @@
 			</tbody>
 		</table>
 	</div>
-	<p><code>systemMessage</code> が画面でどう見えるかは未確認で、手順 10 で確かめる。</p>
+	<p><code>systemMessage</code> が画面でどう見えるかは、手順 10 で確認した（再開時にも 2 行が出る）。</p>
+	<p>表示の先頭には、絵文字に続けて、日付（月/日）と時刻（時:分、JST）を付ける（例: <code>✅10/04 00:50 Obsidian メモリを注入した</code>）。上の表は、日時を除いた文言を示している。</p>
+	<p>画面（Claude Desktop）では、再開直後にツール呼び出しが続くと、フックの表示は、同じターンのツール呼び出しと同じ折りたたみグループに入り、ターンの途中のテキストも一緒に畳まれる（見えるのは、最後の応答だけ）。再開後の作業が無いセッションでは、表示はそのまま残る。クライアントの仕様で、フックの出力からは変えられない。再開直後に 1 行のテキストを先に出す運用も試したが、一緒に畳まれて効かなかった（2026-10-04）。現状維持とし、展開すれば読める。</p>
 	<p>再開（<code>--continue</code> / <code>--resume</code>）では、<code>additionalContext</code> が会話にある分と同じだと、同じ回の <code>systemMessage</code> ごと捨てられる（Claude Code の重複排除。anthropics/claude-code の issue 96698）。そのため <code>copy-session-jsonl</code> は、SessionStart で、毎回違う開始時刻を <code>additionalContext</code> として一緒に渡す。会話に積むのは 1 行だけで、Stop には付けない。</p>
 </section>
 
@@ -386,6 +388,7 @@
 					<tr><td class="num">12</td><td>原因が分かったら、実行の記録（診断）を外す。<br>済: 2026-10-04 に撤去。実行の記録（<code>trace.ts</code>・<code>etc/hook-trace.log</code>）と、表示を止めるフラグの機能（<code>etc/hook-no-message</code>）を外し、そのテスト 10 件と README の節も外した。残した機能は、開始時刻の <code>additionalContext</code>（手順 13）と、再開時の文言（手順 14）。全 27 件が node・bun とも通過。<code>settings.json</code> のコマンドそのままの試走でも、表示を確認</td><td><span class="badge b-ok">済</span></td></tr>
 					<tr><td class="num">13</td><td>再開時にも表示が出るよう、<code>copy-session-jsonl</code> が SessionStart で、毎回違う開始時刻を <code>additionalContext</code> として渡す。<br>済: テストを先に書き、4 件が落ちることを確認してから実装。全 32 件が node・bun とも通過。<code>settings.json</code> のコマンドそのままの試走で、SessionStart では <code>systemMessage</code> と <code>additionalContext</code>（<code>セッション開始: … JST（source=resume）</code>）が出て、Stop では何も出ないことを確認。<br>済: 2026-10-04 00:33 の再開で、画面に表示が 2 行出た。<code>additionalContext</code>（<code>セッション開始: 2026/10/04 00:33:58.375 JST（source=resume）</code>）も会話に取り込まれた（ユーザーが確認、会話でも確認）。同じ内容の Obsidian メモリの注入は、会話にあるため取り込まれない（重複排除）</td><td><span class="badge b-ok">済</span></td></tr>
 					<tr><td class="num">14</td><td>再開のときの Obsidian メモリの表示を、実態に合わせる。フックには、取り込まれたかが分からないので、<code>source=resume</code> のときだけ「注入した」ではなく「渡した（再開では、会話にあれば取り込まれない）」と表示する。<br>済: テストを先に書き、2 件が落ちることを確認してから実装。全 37 件が node・bun とも通過</td><td><span class="badge b-ok">済</span></td></tr>
+					<tr><td class="num">15</td><td>表示の先頭に、絵文字に続けて日付（月/日）と時刻（時:分）を付ける（ユーザーの要望: <code>✅10/04 00:50 …</code> の形）。<br>済: テストを先に書き（日時を除いて文言を比べる形に既存の比較を直し、新しい 6 件が落ちることを確認）、2 つのフックが共有する <code>jst.ts</code>（<code>stamped</code>・<code>jstNow</code>）を足して実装。全 33 件が node・bun とも通過。<code>settings.json</code> のコマンドそのままの試走で、成功・再開・失敗の表示を確認</td><td><span class="badge b-ok">済</span></td></tr>
 			</tbody>
 		</table>
 	</div>
