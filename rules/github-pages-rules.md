@@ -65,6 +65,8 @@ gh api repos/OWNER/USER.github.io/pages --jq ".https_certificate.state, .https_c
 
 - **push したら、Pages の作り直しが終わるのを待ち、反映されたかを確かめてから報告する**。`gh api repos/OWNER/REPO/pages/builds/latest` の `commit` が push した commit になり、`status` が `built` になるまで待つ
 - **反映は公開 URL で実測する**。変えたファイルを 1 つ取り、変更が入っていることを見る
+- **待つのは、実時間の `sleep` で行う**。AI は経過時間の感覚を持たず、自己ペースの巡回は間隔・回数を守れない。単発の `sleep`（目安は 5 分＝300 秒）を背面で実行し、終わってから確かめる
+- **待っても、push した commit の作り直しが現れないことがある**。`gh run list` に該当 commit の run が無ければ、`gh api -X POST repos/OWNER/REPO/pages/builds` で作り直しを依頼する。push 済みの中身をもう一度出すだけなので、確認は要らない
 - **作り直しが失敗していたら、理由を `gh run view` で確かめ、`gh run rerun <run id>` で流し直す**。push 済みの中身をもう一度出すだけなので、確認は要らない
 - **流し直すのは、中身と関係ない失敗のときだけ**（ランナーが割り当てられない等）。ビルドのエラーなら流し直さずに報告する
 - **混雑すると、順番待ち（queued）のまま 15 分ほどで失敗になる**。待つ間は別の作業を進め、区切りで確かめ直す
