@@ -11,7 +11,7 @@
 
 ## セッション開始時の準備
 
-- **共有ツールの `cloud-session-start` で準備する**。使い方は `ai-agent-tools` の TOOLS-USAGE の第 10 章
+- **共有ツールの `cloud-session-start` で準備する**。使い方は `ai-agent-tools` の TOOLS-USAGE の「クラウドのセッションを準備する（cloud-session-start）」
   - `ai-agent-rules`・`ai-agent-tools` を隣に clone する。既にあれば、日（JST）が変わっていたときだけ fetch して rebase する
   - 共有ツールの `bin/` に実行権限を付け、PATH に入れる
   - プロジェクトの git の author を、`ai-agent-rules` の最新コミットと同じにする
