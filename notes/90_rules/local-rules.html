@@ -295,12 +295,6 @@
 	</ul>
 
 	<h2>共通ルールと違うところ</h2>
-	<p>共通ルールの「cron はセッションの中だけで生きる」は <strong>無指示で作り直さない</strong>と決めている。ここはそれと違い、<strong>セッションを開き直したら登録し直す</strong>。</p>
-	<ul class="plain">
-		<li><strong>なぜ</strong>: 追随と待受けはこの cron だけが引き金。作り直さないと暫定運用が止まる</li>
-		<li><strong>どこまで</strong>: このプロジェクトの 1 本（chat 待受け・共通ルールの追随の点検）だけ</li>
-		<li><strong>いつまで</strong>: 暫定運用のあいだ</li>
-	</ul>
 	<p>共通ルールの「修正は1点ずつ、確認を重視」は <strong>commit を自動で行わない</strong>、「重大な操作の確認方法」は <strong>push を別指示が要る操作</strong>と決めている。ここはそれと違い、<strong>確認を取らずに commit し、続けて push する</strong>。</p>
 	<ul class="plain">
 		<li><strong>なぜ</strong>: 原本は別のセッションからも書き換わる。取りこぼすと、どの版で何が変わったかが履歴から読めなくなる。全19章が <code>rules/</code> へ切り出し済みのため、書き換わるのは <code>common-rules.md</code> 側だけではない。commit だけで push しないと、他プロジェクトのセッションが見るのはリモート（GitHub）側になるため、ローカルに留めたままでは追随が伝わらない</li>
