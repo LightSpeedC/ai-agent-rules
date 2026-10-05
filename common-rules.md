@@ -60,6 +60,11 @@
 @rules/shell-rules.md
 <!-- コマンドを実行するとき、ps1・cmd・bat 等のスクリプトを書くときは `rules/shell-rules.md` を読み、その指示に従うこと。 -->
 
+# クラウド作業のルール
+
+@rules/cloud-rules.md
+<!-- クラウドの環境（Claude Code on the web 等、毎回作り直される Linux のコンテナ）で作業するときは `rules/cloud-rules.md` を読み、その指示に従うこと。 -->
+
 # HTMLデザインルール
 
 @rules/html-rules.md
