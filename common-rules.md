@@ -50,6 +50,11 @@
 @rules/sqlite-rules.md
 <!-- SQLite（node:sqlite・sqlite3 等）を扱うときは `rules/sqlite-rules.md` を読み、その指示に従うこと。 -->
 
+# DB 定義のルール
+
+@rules/db-schema-rules.md
+<!-- DB のテーブル・列・索引を定義・変更するときは `rules/db-schema-rules.md` を読み、その指示に従うこと。 -->
+
 # テストのルール
 
 @rules/test-rules.md
