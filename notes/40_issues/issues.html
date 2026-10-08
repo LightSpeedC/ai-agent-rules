@@ -19,6 +19,7 @@
 	}
 
 	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
 
 	* { box-sizing: border-box; }
 
@@ -255,7 +256,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules 課題</h1>
 		<p class="lead">これから解決することを記録する。片付いたグループは <a href="issues-archive.html">issues-archive.html</a> に残す。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-09-24</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-08</p>
 	</div>
 </div>
 
@@ -310,6 +311,21 @@
 	<summary><h1><code class="no">i260924-05</code> ルール分割対象の分析の凡例が実態と合っていない <span class="badge b-ok">済</span></h1></summary>
 
 	<p><code>p260923-02-ルール分割対象の分析</code> の章ごとのサイズ表の下にある凡例「青は <code>common-rules.md</code> に残る章」は、19章すべて済のため該当する行が無くなっている。</p>
+	</details>
+</section>
+
+<div class="groupbar">
+	<h2>Claude フック（#1383 起票、2026-10-08）</h2>
+	<p class="count">1 件 / 未 1 / 着手 0 / 済 0</p>
+</div>
+
+<section class="ch02">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261008-01</code> 会話ログのコピー先が、セッションが cd した先になる <span class="badge b-none">未</span></h1></summary>
+
+	<p><code>tools/80_ops/claude-hooks/copy-session-jsonl.ts</code> は、写す先を標準入力の <code>cwd</code> の直下の <code>etc/history/jsonl/</code> にしている。<code>cwd</code> はセッションのその時点の作業フォルダで、Bash ツールで <code>cd</code> すると変わる。</p>
+	<p>実例（#1383、20261004-kamishibai-animation から）: 20260915-misc-cc のセッションが <code>notes/samples</code> へ <code>cd</code> していた間（10/04 13:33〜15:49 JST）、<code>notes/samples/etc/history/jsonl/</code> に写しができた。そのフォルダごと別のプロジェクトへ移り、そこで見つかった。</p>
+	<p><strong>直し方の候補</strong>（未決）: 環境変数 <code>CLAUDE_PROJECT_DIR</code>（フックに渡るセッションの起点。<code>cd</code> に左右されないはず。未検証）を優先し、無ければ <code>cwd</code> から git の root をたどる。テストを先に書いて直す。</p>
 	</details>
 </section>
 
