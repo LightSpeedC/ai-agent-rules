@@ -1,4 +1,4 @@
-// SessionStart / Stop フック: 会話ログ（JSONL）を、そのプロジェクト直下の etc/history/jsonl/ へコピーする。
+// SessionStart / Stop フック: 会話ログ（JSONL）を、そのプロジェクト直下の etc/history/jsonl/ へコピーする（直下の決め方は findBase()）。
 // 標準入力の JSON（transcript_path・cwd・hook_event_name・source）を読む。コピー対象は transcript_path と同じフォルダの全 *.jsonl。
 // サイズと更新日時が同じファイルはスキップする（Stop フックは応答ごとに走るため）。
 // 結果は標準出力の JSON の systemMessage でユーザーに見せる（モデルへは渡らない）。
@@ -27,13 +27,15 @@ async function readStdin(): Promise<string> {
 // 結果を表示する。SessionStart では、開始時刻を additionalContext として一緒に渡す。
 // 理由: 再開（--continue / --resume）では、additionalContext が会話にある分と同じだと、同じ回の systemMessage ごと捨てられる
 // （Claude Code の重複排除。anthropics/claude-code の issue 96698）。毎回違う短い 1 行を渡し、同じ回に「新しい分」があるようにして、表示を残す。
-function show(message: string, payload: HookInput | undefined): void {
+// 写し先の決め方（環境変数・git・cwd）も添え、実環境でどれが使われたかを確かめられるようにする。
+function show(message: string, payload: HookInput | undefined, base?: Base | null): void {
 	const out: Record<string, unknown> = { systemMessage: stamped(message) };
 	if (payload?.hook_event_name !== 'Stop') {
+		const by = base ? `（写し先=${base.by}）` : '';
 		const source = payload?.source ? `（source=${payload.source}）` : '';
 		out.hookSpecificOutput = {
 			hookEventName: 'SessionStart',
-			additionalContext: `セッション開始: ${jstNow()} JST${source}`,
+			additionalContext: `セッション開始: ${jstNow()} JST${by}${source}`,
 		};
 	}
 	console.log(JSON.stringify(out));
@@ -45,14 +47,33 @@ function reason(e: unknown): string {
 	return text.split(homedir()).join('~');
 }
 
+type Base = { dir: string; by: 'CLAUDE_PROJECT_DIR' | 'git' | 'cwd' };
+
+// 写し先の起点を決める（課題 i261008-01）。cwd はセッションがその時点で居るフォルダで、cd すると変わるため、
+// 環境変数 CLAUDE_PROJECT_DIR（セッションの起点）→ cwd から上へたどった .git のあるフォルダ → cwd の順に使う
+function findBase(cwd: string | undefined): Base | null {
+	const env = process.env.CLAUDE_PROJECT_DIR;
+	if (env) return { dir: env, by: 'CLAUDE_PROJECT_DIR' };
+	if (!cwd) return null;
+	// cwd がフォルダでなければ（壊れた入力）たどらず、そのまま使う
+	if (existsSync(cwd) && statSync(cwd).isDirectory()) {
+		for (let dir = cwd; ; ) {
+			if (existsSync(join(dir, '.git'))) return { dir, by: 'git' };
+			const parent = dirname(dir);
+			if (parent === dir) break;
+			dir = parent;
+		}
+	}
+	return { dir: cwd, by: 'cwd' };
+}
+
 // コピーした件数を返す。入力が足りないときは何もせず null を返す
-function copyAll(payload: HookInput): number | null {
+function copyAll(payload: HookInput, base: Base | null): number | null {
 	const transcriptPath = payload.transcript_path;
-	const cwd = payload.cwd;
-	if (!transcriptPath || !existsSync(transcriptPath) || !cwd) return null;
+	if (!transcriptPath || !existsSync(transcriptPath) || !base) return null;
 
 	const sourceDir = dirname(transcriptPath);
-	const destDir = join(cwd, 'etc', 'history', 'jsonl');
+	const destDir = join(base.dir, 'etc', 'history', 'jsonl');
 	mkdirSync(destDir, { recursive: true });
 
 	let copied = 0;
@@ -77,14 +98,16 @@ function copyAll(payload: HookInput): number | null {
 
 async function main(): Promise<void> {
 	let payload: HookInput | undefined;
+	let base: Base | null = null;
 	try {
 		payload = JSON.parse(await readStdin());
-		const copied = copyAll(payload!);
+		base = findBase(payload!.cwd);
+		const copied = copyAll(payload!, base);
 		if (copied !== null && payload!.hook_event_name !== 'Stop') {
-			show(`✅ 会話ログを ${copied} 件コピーした`, payload);
+			show(`✅ 会話ログを ${copied} 件コピーした`, payload, base);
 		}
 	} catch (e) {
-		show('❌ 会話ログのコピーに失敗した: ' + reason(e), payload);
+		show('❌ 会話ログのコピーに失敗した: ' + reason(e), payload, base);
 	}
 }
 

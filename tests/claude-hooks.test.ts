@@ -21,10 +21,13 @@ after(() => {
 	rmSync(work, { recursive: true, force: true });
 });
 
-// 呼び出しごとに、他のテストと干渉しない作業フォルダを作る
-function makeDir(name: string): string {
+// 呼び出しごとに、他のテストと干渉しない作業フォルダを作る。
+// project を付けると、その中に .git を置いてプロジェクトの直下に見せる（写し先は、cwd から上へたどった .git のある所になるため。
+// 付けないと、tmp/ の上にあるこのリポジトリの直下まで上ってしまう）
+function makeDir(name: string, project = false): string {
 	const dir = join(work, name);
 	mkdirSync(dir, { recursive: true });
+	if (project) mkdirSync(join(dir, '.git'), { recursive: true });
 	return dir;
 }
 
@@ -46,7 +49,7 @@ function run(script: string, input: string, env: Record<string, string | undefin
 describe('copy-session-jsonl', () => {
 	test('transcript_path のあるフォルダの jsonl を、cwd の etc/history/jsonl へすべてコピーする', () => {
 		const src = makeDir('copy1-src');
-		const cwd = makeDir('copy1-cwd');
+		const cwd = makeDir('copy1-cwd', true);
 		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
 		writeFileSync(join(src, 'b.jsonl'), 'BBB\n');
 		writeFileSync(join(src, 'memo.txt'), 'jsonl 以外はコピーしない');
@@ -60,7 +63,7 @@ describe('copy-session-jsonl', () => {
 	// Stop フックは応答ごとに走るため、変わっていないファイルを毎回コピーしない
 	test('サイズと更新日時が同じファイルは再コピーしない', () => {
 		const src = makeDir('copy2-src');
-		const cwd = makeDir('copy2-cwd');
+		const cwd = makeDir('copy2-cwd', true);
 		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
 		const input = JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd });
 		assert.equal(run(copyHook, input).status, 0);
@@ -75,7 +78,7 @@ describe('copy-session-jsonl', () => {
 
 	test('元が更新されたら上書きする', () => {
 		const src = makeDir('copy3-src');
-		const cwd = makeDir('copy3-cwd');
+		const cwd = makeDir('copy3-cwd', true);
 		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
 		const input = JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd });
 		assert.equal(run(copyHook, input).status, 0);
@@ -86,7 +89,7 @@ describe('copy-session-jsonl', () => {
 
 	test('コピーしたファイルの更新日時は元に揃う（次回のスキップ判定に使うため）', () => {
 		const src = makeDir('copy4-src');
-		const cwd = makeDir('copy4-cwd');
+		const cwd = makeDir('copy4-cwd', true);
 		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
 		const old = new Date('2026-01-02T03:04:05.000Z');
 		utimesSync(join(src, 'a.jsonl'), old, old);
@@ -95,7 +98,7 @@ describe('copy-session-jsonl', () => {
 	});
 
 	test('transcript_path が実在しなければ、何もせず正常終了する', () => {
-		const cwd = makeDir('copy5-cwd');
+		const cwd = makeDir('copy5-cwd', true);
 		const r = run(copyHook, JSON.stringify({ transcript_path: join(work, 'no-such/x.jsonl'), cwd }));
 		assert.equal(r.status, 0);
 		assert.equal(existsSync(join(cwd, 'etc')), false);
@@ -104,8 +107,47 @@ describe('copy-session-jsonl', () => {
 	test('cwd が無ければ、何もせず正常終了する', () => {
 		const src = makeDir('copy6-src');
 		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
-		const r = run(copyHook, JSON.stringify({ transcript_path: join(src, 'a.jsonl') }));
+		const r = run(copyHook, JSON.stringify({ transcript_path: join(src, 'a.jsonl') }), { CLAUDE_PROJECT_DIR: undefined });
 		assert.equal(r.status, 0);
+	});
+});
+
+// 課題 i261008-01: cwd はセッションがその時点で居るフォルダで、cd すると変わる。写し先を cd に左右されないプロジェクトの直下にする
+describe('copy-session-jsonl の写し先（cd に左右されない）', () => {
+	const prepare = (name: string) => {
+		const src = makeDir(name + '-src');
+		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
+		const project = makeDir(name + '-project', true);
+		const sub = join(project, 'notes/samples');
+		mkdirSync(sub, { recursive: true });
+		return { src, project, sub };
+	};
+
+	test('環境変数 CLAUDE_PROJECT_DIR があれば、cwd ではなく、そこの etc/history/jsonl へ写す', () => {
+		const { src, sub } = prepare('dest1');
+		const other = makeDir('dest1-other', true);
+		const r = run(copyHook, JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: sub }), { CLAUDE_PROJECT_DIR: other });
+		assert.equal(r.status, 0, r.stderr);
+		assert.deepEqual(readdirSync(join(other, 'etc/history/jsonl')), ['a.jsonl']);
+		assert.equal(existsSync(join(sub, 'etc')), false, 'cd した先には作らない');
+	});
+
+	test('環境変数が無ければ、cwd から上へたどって .git のあるフォルダ（プロジェクトの直下）へ写す', () => {
+		const { src, project, sub } = prepare('dest2');
+		const r = run(copyHook, JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: sub }), { CLAUDE_PROJECT_DIR: undefined });
+		assert.equal(r.status, 0, r.stderr);
+		assert.deepEqual(readdirSync(join(project, 'etc/history/jsonl')), ['a.jsonl']);
+		assert.equal(existsSync(join(sub, 'etc')), false, 'cd した先には作らない');
+	});
+
+	// 実環境でどちらが使われたかを確かめられるよう、SessionStart で渡す 1 行に、写し先の決め方を添える
+	test('SessionStart の additionalContext に、写し先の決め方（環境変数・git・cwd）を添える', () => {
+		const { src, sub } = prepare('dest3');
+		const input = JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: sub, hook_event_name: 'SessionStart' });
+		const byEnv = JSON.parse(run(copyHook, input, { CLAUDE_PROJECT_DIR: makeDir('dest3-env', true) }).stdout);
+		assert.match(byEnv.hookSpecificOutput.additionalContext, /（写し先=CLAUDE_PROJECT_DIR）/);
+		const byGit = JSON.parse(run(copyHook, input, { CLAUDE_PROJECT_DIR: undefined }).stdout);
+		assert.match(byGit.hookSpecificOutput.additionalContext, /（写し先=git）/);
 	});
 });
 
@@ -113,7 +155,7 @@ describe('copy-session-jsonl の結果表示', () => {
 	// 結果をユーザーに見せるため、標準出力の JSON の systemMessage を使う（モデルへは渡らない）
 	const prepare = (name: string, event: string) => {
 		const src = makeDir(name + '-src');
-		const cwd = makeDir(name + '-cwd');
+		const cwd = makeDir(name + '-cwd', true);
 		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
 		writeFileSync(join(src, 'b.jsonl'), 'BBB\n');
 		return JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd, hook_event_name: event });
@@ -169,7 +211,7 @@ describe('copy-session-jsonl の結果表示', () => {
 
 	test('source があれば、additionalContext に添える', () => {
 		const src = makeDir('ctx2-src');
-		const cwd = makeDir('ctx2-cwd');
+		const cwd = makeDir('ctx2-cwd', true);
 		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
 		const input = JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd, hook_event_name: 'SessionStart', source: 'resume' });
 		const out = JSON.parse(run(copyHook, input).stdout);
@@ -337,7 +379,7 @@ describe('表示の先頭の日時', () => {
 	test('copy-session-jsonl の表示は、成功と失敗（SessionStart・Stop）のどちらにも日時が付く', () => {
 		const src = makeDir('stamp-copy-src');
 		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
-		const ok = JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: makeDir('stamp-copy-cwd'), hook_event_name: 'SessionStart' });
+		const ok = JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: makeDir('stamp-copy-cwd', true), hook_event_name: 'SessionStart' });
 		const notDir = join(work, 'stamp-notdir');
 		writeFileSync(notDir, 'ファイル');
 		const ng = (event: string) => JSON.stringify({ transcript_path: join(src, 'a.jsonl'), cwd: notDir, hook_event_name: event });

@@ -2,7 +2,7 @@
 
 Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.claude/settings.json` がこのフォルダのファイルを直接指すので、コピーは要らない。
 
-> 📅 作成: 2026-10-03 / 更新: 2026-10-04
+> 📅 作成: 2026-10-03 / 更新: 2026-10-09
 
 [README](../../../README.md)
 
@@ -12,7 +12,7 @@ Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.
 
 | ファイル | 役割 | 呼び出し元イベント |
 |---|---|---|
-| `copy-session-jsonl.ts` | 会話ログ（JSONL）を、プロジェクト直下の `etc/history/jsonl/` へコピーする。コピー元は `transcript_path` と同じフォルダの全 `*.jsonl`。サイズと更新日時が同じものは飛ばす | SessionStart・Stop |
+| `copy-session-jsonl.ts` | 会話ログ（JSONL）を、プロジェクト直下の `etc/history/jsonl/` へコピーする。コピー元は `transcript_path` と同じフォルダの全 `*.jsonl`。サイズと更新日時が同じものは飛ばす。プロジェクト直下は、環境変数 `CLAUDE_PROJECT_DIR` → `cwd` から上へたどった `.git` のあるフォルダ → `cwd` の順で決める（`cwd` はセッションが `cd` すると変わるため） | SessionStart・Stop |
 | `load-obsidian-memory.ts` | Obsidian Vault の `memory/!memory.md` を、`additionalContext` としてセッションに注入する | SessionStart |
 
 標準モジュール（`node:fs`・`node:path`）だけで書いてある。`node` でも `bun run` でも同じファイルが動き、切り替え用のラッパーは持たない。

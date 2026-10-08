@@ -256,7 +256,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules 課題</h1>
 		<p class="lead">これから解決することを記録する。片付いたグループは <a href="issues-archive.html">issues-archive.html</a> に残す。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-08</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-09</p>
 	</div>
 </div>
 
@@ -316,16 +316,23 @@
 
 <div class="groupbar">
 	<h2>Claude フック（#1383 起票、2026-10-08）</h2>
-	<p class="count">1 件 / 未 1 / 着手 0 / 済 0</p>
+	<p class="count">1 件 / 未 0 / 着手 1 / 済 0</p>
 </div>
 
 <section class="ch02">
 	<details class="md-flat" open>
-	<summary><h1><code class="no">i261008-01</code> 会話ログのコピー先が、セッションが cd した先になる <span class="badge b-none">未</span></h1></summary>
+	<summary><h1><code class="no">i261008-01</code> 会話ログのコピー先が、セッションが cd した先になる <span class="badge b-warn">着手</span></h1></summary>
 
 	<p><code>tools/80_ops/claude-hooks/copy-session-jsonl.ts</code> は、写す先を標準入力の <code>cwd</code> の直下の <code>etc/history/jsonl/</code> にしている。<code>cwd</code> はセッションのその時点の作業フォルダで、Bash ツールで <code>cd</code> すると変わる。</p>
 	<p>実例（#1383、20261004-kamishibai-animation から）: 20260915-misc-cc のセッションが <code>notes/samples</code> へ <code>cd</code> していた間（10/04 13:33〜15:49 JST）、<code>notes/samples/etc/history/jsonl/</code> に写しができた。そのフォルダごと別のプロジェクトへ移り、そこで見つかった。</p>
-	<p><strong>直し方の候補</strong>（未決）: 環境変数 <code>CLAUDE_PROJECT_DIR</code>（フックに渡るセッションの起点。<code>cd</code> に左右されないはず。未検証）を優先し、無ければ <code>cwd</code> から git の root をたどる。テストを先に書いて直す。</p>
+	<p><strong>直し方</strong>（案 A で決定、2026-10-09）: 写し先の起点を、環境変数 <code>CLAUDE_PROJECT_DIR</code> → <code>cwd</code> から上へたどった <code>.git</code> のあるフォルダ → <code>cwd</code> の順で決める。SessionStart の <code>additionalContext</code> に、どれを使ったか（<code>写し先=…</code>）を添える。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-ok">済</span> テストを先に書き（❌Red: 3 件）、実装して node・bun とも 36 件 ✅Green</li>
+		<li><span class="badge b-ok">済</span> <code>settings.json</code> のコマンドそのままで試走（<code>cwd</code> を <code>notes</code> にしても、写し先はプロジェクト直下。<code>写し先=git</code>）</li>
+		<li><span class="badge b-none">未</span> 実環境のフックで、<code>CLAUDE_PROJECT_DIR</code> が渡るかを確かめる（ツールのシェルには無かった。次の起動・再開の <code>写し先=…</code> で見る）</li>
+		<li><span class="badge b-none">未</span> 報告元（20261004-kamishibai-animation）の確認</li>
+	</ul>
 	</details>
 </section>
 

@@ -2,7 +2,7 @@
 
 これから解決することを記録する。片付いたグループは [issues-archive.html](issues-archive.md) に残す。
 
-> 📅 作成: 2026-09-10 / 更新: 2026-10-08
+> 📅 作成: 2026-09-10 / 更新: 2026-10-09
 
 [トップへ戻る](../../README.md)
 
@@ -42,15 +42,22 @@ README の資料一覧は2本だけで、root にある共通ルールの本体�
 
 ## Claude フック（#1383 起票、2026-10-08）
 
-1 件 / 未 1 / 着手 0 / 済 0
+1 件 / 未 0 / 着手 1 / 済 0
 
-### `i261008-01` 会話ログのコピー先が、セッションが cd した先になる ⬜ **未**
+### `i261008-01` 会話ログのコピー先が、セッションが cd した先になる ⚠️ **着手**
 
 `tools/80_ops/claude-hooks/copy-session-jsonl.ts` は、写す先を標準入力の `cwd` の直下の `etc/history/jsonl/` にしている。`cwd` はセッションのその時点の作業フォルダで、Bash ツールで `cd` すると変わる。
 
 実例（#1383、20261004-kamishibai-animation から）: 20260915-misc-cc のセッションが `notes/samples` へ `cd` していた間（10/04 13:33〜15:49 JST）、`notes/samples/etc/history/jsonl/` に写しができた。そのフォルダごと別のプロジェクトへ移り、そこで見つかった。
 
-**直し方の候補**（未決）: 環境変数 `CLAUDE_PROJECT_DIR`（フックに渡るセッションの起点。`cd` に左右されないはず。未検証）を優先し、無ければ `cwd` から git の root をたどる。テストを先に書いて直す。
+**直し方**（案 A で決定、2026-10-09）: 写し先の起点を、環境変数 `CLAUDE_PROJECT_DIR` → `cwd` から上へたどった `.git` のあるフォルダ → `cwd` の順で決める。SessionStart の `additionalContext` に、どれを使ったか（`写し先=…`）を添える。
+
+**やること**
+
+- ✅ **済** テストを先に書き（❌Red: 3 件）、実装して node・bun とも 36 件 ✅Green
+- ✅ **済** `settings.json` のコマンドそのままで試走（`cwd` を `notes` にしても、写し先はプロジェクト直下。`写し先=git`）
+- ⬜ **未** 実環境のフックで、`CLAUDE_PROJECT_DIR` が渡るかを確かめる（ツールのシェルには無かった。次の起動・再開の `写し先=…` で見る）
+- ⬜ **未** 報告元（20261004-kamishibai-animation）の確認
 
 [片付いた課題（issues-archive.html）](issues-archive.md)
 

@@ -203,7 +203,7 @@
 	<div class="inner">
 		<h1>Claude フック</h1>
 		<p class="lead">Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。<code>~/.claude/settings.json</code> がこのフォルダのファイルを直接指すので、コピーは要らない。</p>
-		<p class="date">📅 作成: 2026-10-03 / 更新: 2026-10-04</p>
+		<p class="date">📅 作成: 2026-10-03 / 更新: 2026-10-09</p>
 	</div>
 </div>
 
@@ -222,7 +222,7 @@
 				<tr><th class="nowrap">ファイル</th><th>役割</th><th class="nowrap">呼び出し元イベント</th></tr>
 			</thead>
 			<tbody>
-				<tr><td class="nowrap"><code>copy-session-jsonl.ts</code></td><td>会話ログ（JSONL）を、プロジェクト直下の <code>etc/history/jsonl/</code> へコピーする。コピー元は <code>transcript_path</code> と同じフォルダの全 <code>*.jsonl</code>。サイズと更新日時が同じものは飛ばす</td><td class="nowrap">SessionStart・Stop</td></tr>
+				<tr><td class="nowrap"><code>copy-session-jsonl.ts</code></td><td>会話ログ（JSONL）を、プロジェクト直下の <code>etc/history/jsonl/</code> へコピーする。コピー元は <code>transcript_path</code> と同じフォルダの全 <code>*.jsonl</code>。サイズと更新日時が同じものは飛ばす。プロジェクト直下は、環境変数 <code>CLAUDE_PROJECT_DIR</code> → <code>cwd</code> から上へたどった <code>.git</code> のあるフォルダ → <code>cwd</code> の順で決める（<code>cwd</code> はセッションが <code>cd</code> すると変わるため）</td><td class="nowrap">SessionStart・Stop</td></tr>
 				<tr><td class="nowrap"><code>load-obsidian-memory.ts</code></td><td>Obsidian Vault の <code>memory/!memory.md</code> を、<code>additionalContext</code> としてセッションに注入する</td><td class="nowrap">SessionStart</td></tr>
 			</tbody>
 		</table>
