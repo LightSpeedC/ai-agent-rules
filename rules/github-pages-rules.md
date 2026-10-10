@@ -32,7 +32,7 @@ gh api repos/OWNER/REPO/pages/builds/latest --jq ".status, .error.message"
 
 ## 公開 URL は実測で確かめる
 
-- **`<user>.github.io/<repo>` をそのまま公開 URL として案内しない**。ユーザーサイト（`<user>.github.io` リポジトリ）にカスタムドメインが設定されていると、project pages も `<customdomain>/<repo>` へ 301 される
+- **`<user>.github.io/<repo>` をそのまま公開 URL として案内しない**。ユーザサイト（`<user>.github.io` リポジトリ）にカスタムドメインが設定されていると、project pages も `<customdomain>/<repo>` へ 301 される
 - **このアカウントには独自ドメインが設定済み。全プロジェクトの Pages はそのドメイン配下になる**
 - API が返す `html_url` を確認し、さらに実際に HTTP で叩いて到達先を確かめる
 
@@ -44,7 +44,7 @@ gh api repos/OWNER/REPO/pages --jq .html_url
 
 ## Enforce HTTPS（HTTPS を強制）
 
-- **`https_enforced` はリポジトリ単位の設定**。ユーザーサイトで有効でも project pages には引き継がれないので、リポジトリごとに有効化する
+- **`https_enforced` はリポジトリ単位の設定**。ユーザサイトで有効でも project pages には引き継がれないので、リポジトリごとに有効化する
 
 ```powershell
 echo '{"https_enforced":true}' | gh api repos/OWNER/REPO/pages -X PUT --input -
@@ -68,7 +68,7 @@ gh api repos/OWNER/USER.github.io/pages --jq ".https_certificate.state, .https_c
 - **待つのは、実時間の `sleep` で行う**。AI は経過時間の感覚を持たず、自己ペースの巡回は間隔・回数を守れない。単発の `sleep`（目安は 5 分＝300 秒）を背面で実行し、終わってから確かめる
 - **待っても、push した commit の作り直しが現れないことがある**。`gh run list` に該当 commit の run が無ければ、`gh api -X POST repos/OWNER/REPO/pages/builds` で作り直しを依頼する。push 済みの中身をもう一度出すだけなので、確認は要らない
 - **作り直しが失敗していたら、理由を `gh run view` で確かめ、`gh run rerun <run id>` で流し直す**。push 済みの中身をもう一度出すだけなので、確認は要らない
-- **流し直すのは、中身と関係ない失敗のときだけ**（ランナーが割り当てられない等）。ビルドのエラーなら流し直さずに報告する
+- **流し直すのは、中身と関係ない失敗のときだけ**（ランナが割り当てられない等）。ビルドのエラーなら流し直さずに報告する
 - **混雑すると、順番待ち（queued）のまま 15 分ほどで失敗になる**。待つ間は別の作業を進め、区切りで確かめ直す
 - **流し直しても反映されなければ、報告して止める**。GitHub 側の障害は待つほかない
 
