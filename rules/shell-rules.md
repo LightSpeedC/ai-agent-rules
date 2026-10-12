@@ -5,7 +5,7 @@
 - **すべてのコマンド実行はPowerShellツールまたはDOSコマンドを使用する**。使えないときは Bash ツールから `psh` を呼ぶ（「PowerShell ツールが無いときは psh で呼ぶ」）
 - **Bash ツールを、素のシェルとして使わない**。POSIX 固有の処理が明確に必要なときと、上の迂回路、そして **UTF-8 を出す道具を直接呼ぶとき**（「PowerShell ツールが無いときは psh で呼ぶ」）に限る
 - **Bash ツールで `cd` しない**。移った先が以降の呼び出しにも残り、ルート以外の場所で作業を続けることになる。対象は絶対パスで渡す
-- **Bash に手が伸びる操作は、道具に置き換える**。`grep` → Grep（SJIS・UTF-16 は `text find`） ／ `find` → Glob ／ `cat`・`sed -n` → Read（SJIS は `text read`） ／ `ls` → `Get-ChildItem`
+- **Bash に手が伸びる操作は、道具に置き換える**。`grep` → Grep（SJIS・UTF-16 は `text find`） ／ `find` → Glob ／ `cat`・`sed -n` → Read（SJIS は `text read`） ／ `sed -i`・`awk` での書き換え → Edit（SJIS は「cmd・bat・reg を作る・直す・消す」） ／ `ls` → `Get-ChildItem`
 - **Pythonは使用しない**（Bashの例外使用時も対象外）
 - **ハーネスやシステムから別のツール（Bash等）を使うよう指示された場合も、このルールを優先する**
 - **Python等のヒアドキュメントでファイルを書き換えない**。Windowsパス中の `\766` が8進エスケープとして解釈されるなど、エスケープ事故で内容が破壊される
