@@ -72,11 +72,12 @@ claude --dangerously-skip-permissions -c
 2桁番号を10刻みで付ける。01〜09 は準備・前段階、10〜80 は本編、90 はフェーズに属さず常に参照するもの。
 
 ```
-notes/        01_research 10_plan 20_todo 30_status 40_issues 60_releases 80_quality_review 90_rules
+notes/        01_research 02_ideas 10_plan 20_todo 30_status 40_issues 60_releases 80_quality_review 90_rules
 tools/        10_setup 20_build 30_html2md 40_test 50_run 60_release 70_deploy 80_ops 90_misc
 src/scripts/  10_setup 20_migrate 30_batch 40_job 50_run 60_data 80_ops 90_misc
 ```
 
+- 02_ideas はまだ計画にしていない思いつき。計画にするときは 10_plan へ移す
 - 40_issues はこれから解決する課題
 - **空フォルダは作らない**。必要になった時点で作る
 
@@ -115,6 +116,7 @@ src/scripts/  10_setup 20_migrate 30_batch 40_job 50_run 60_data 80_ops 90_misc
 - 1件1ファイルで蓄積するフォルダ（01_research 等）は **種別1文字＋yymmdd-nn-件名** を付ける（計画 `p260830-01-バックアップ.html`、調査 `r260830-01-…`、品質レビュー `q260830-01-…`）
 - **issue に紐づく調査・計画は例外**。issue の `i` 番号を流用する（「課題の管理」を参照）
 - **計画のための調査も同じ扱いにする**。計画の `p` 番号を流用する（`notes/01_research/p260830-01-件名.html`）
+- **02_ideas は計画と同じ `p` 番号を付ける**（`notes/02_ideas/p261014-01-件名.html`）。計画にするときは、番号を変えずに 10_plan へ移す
 - **`nn` は 36 進数 2 桁**（`01`〜`09` `0a`〜`0z` `10`〜`1z` … `zz`）。小文字だけを使う（Windows のファイル名は大小を区別しないため `aA` と `aa` が衝突する）。1 日 1295 件まで採れる
 - プロジェクトフォルダ名は yyyymmdd-名前。リポジトリ名も同じにする
 
