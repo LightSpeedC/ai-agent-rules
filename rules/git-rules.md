@@ -68,6 +68,14 @@
 - **public で作成する場合も、初回コミット前の内容点検は省略しない**（「コミット前の確認」を参照）。点検で問題が見つかったときだけ作成を止めて報告する
 - pushするブランチ・GitHub側のデフォルトブランチは、ローカルの既定ブランチ（develop）に揃える。mainは作らない
 
+## push が認証で止まったら
+
+適用条件: `git push` が `could not read Username for 'https://github.com'` で失敗したとき。
+
+- **`gh auth status` で、gh にログインしているかを先に見る**。ログインしていなければ、本人が `gh auth login` を実行する
+- **ログイン済みでも止まるなら、git が gh の認証を使っていない**。本人が `gh auth setup-git` を 1 回実行する（ホーム配下の git の設定に書き込まれる）
+- **AI は git の設定を書き換えない**。その場の push だけを通すなら `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push` を使う
+
 ## .gitignore の共通除外設定
 
 - **プロジェクトの `.gitignore` には `tmp/`・`etc/`・`logs/` を必ず含める**（`tmp/` は一時ファイル、`etc/` はセッションログや補助スクリプト、`logs/` は自動生成するログ・レポート。常駐サービスのログ `logs/<サービス名>/` も含む）
