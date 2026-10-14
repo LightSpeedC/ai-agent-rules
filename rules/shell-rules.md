@@ -29,7 +29,7 @@
 
 - **`~/.claude/settings.json` の `env` に `CLAUDE_CODE_USE_POWERSHELL_TOOL: 1` を設定する**。次のセッションから PowerShell ツールが使える
 - **`psh` を使う**（プロジェクトを問わず共通・PATH に入っている）。`powershell` を直に呼ぶと、**PowerShell 経由で走る .NET 製の exe が CP932 で出す**ため日本語が化ける
-- **`git` ・ `gh` ・ `node` ・ `bun` ・ `psh` ・ `html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `aichat` ・ `psls` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
+- **`git` ・ `gh` ・ `node` ・ `bun` ・ `psh` ・ `html2md` ・ `text` ・ `convert-encoding` ・ `check-markdown` ・ `check-contrast` ・ `check-public` ・ `aichat` ・ `psls` ・ `convert-audio` ・ `transcribe` は Bash から直接呼んでよい**。UTF-8 で出すため化けない。psh で包まない
 - **`psh <path.ps1> [引数...]`** と **`psh -c "<式>"`**。既定は Windows PowerShell 5.1（`--pwsh` で 7）
 - **終了コードはそのまま返る**。判定に使ってよい
 - **手を入れられない ps1 にも効く**。外から持ってきたものや、他プロジェクトが持つ ps1 は書き換えられない。psh は受け側で読み分ける
