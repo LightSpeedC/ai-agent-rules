@@ -25,6 +25,7 @@
   2. `.gitignore`（「.gitignore の共通除外設定」）
   3. `.editorconfig` ・ `.gitattributes` ・ `.vscode/settings.json`（「文字コードと改行の定義ファイル」）
   4. `etc/c.bat`（「etc/c.bat 作成」）
+  5. Obsidian Vault の `projects/` にプロジェクトのノートと、`!projects.md` への 1 行（「Obsidianメモリ連携ルール」）
 - **中身は各見出しに書いたものを使う**。ここには何を作るかだけを置く
 - **空フォルダは作らない**。`notes/` `src/` 等は必要になった時点で作る
 - **作ったものを一覧で報告する**。commit・add はしない
