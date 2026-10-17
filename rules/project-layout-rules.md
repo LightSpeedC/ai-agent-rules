@@ -88,6 +88,27 @@ src/scripts/  10_setup 20_migrate 30_batch 40_job 50_run 60_data 80_ops 90_misc
 - **生成スクリプトは `tools/60_release/` に置く**。出力先は `_releases/`
 - **含める基準は「実行に要るかどうか」**。テスト・開発時だけ要るものは入れない
 
+## オフラインインストーラの構成
+
+適用条件: ネットにつながらない PC へ導入する配布物（オフラインインストーラ）を作るプロジェクト。
+
+- **トップレベルの `src/` `tools/` `deploy/` `dist/` の代わりに、次の 3 つを置く**
+
+  | フォルダ | 用途 | Git |
+  |---|---|---|
+  | prepare/ | ネットにつながる PC で動かすスクリプト（取得・構築・書き出し・まとめ） | 管理 |
+  | _bundle/ | prepare が集めたもの（インストーラ・イメージ・ドライバ）と `manifest.json` | 除外 |
+  | installer/ | ネットにつながらない PC で動かすスクリプト | 管理 |
+
+- **`notes/` `tests/` `_releases/` `tmp/` `etc/` は共通どおり**
+- **_bundle/ と `_releases/` を分ける**。_bundle/ は材料、`_releases/` は完成品
+- **prepare/ と installer/ の中に番号付きフォルダを作らない**。平置きにする
+- **_bundle/ の中身は `manifest.json` に、版・取得元・SHA-256・取得日時を書く**。取得のたびに prepare が書き換える
+- **取得物は、ハッシュと署名者を確かめてから _bundle/ に置く**。提供元がハッシュを出していれば突き合わせる
+- **installer/ はネットにつながない**。導入中に要るものは、すべて _bundle/ に入れる
+- **installer/ は導入前に、`manifest.json` のハッシュと手元のファイルを突き合わせる**。一致しなければ止める
+- **配布物は installer/ と _bundle/ を、同じ名前のまま zip にまとめて `_releases/` に出す**。まとめるスクリプトは prepare/ に置く（「配布物を作る」の `tools/60_release/` の代わり）
+
 ## スクリプトの置き場
 
 - **判断基準は外部に渡るかどうか**。渡るなら src/scripts/、渡らないなら tools/
