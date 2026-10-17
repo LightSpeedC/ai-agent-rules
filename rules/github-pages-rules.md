@@ -4,8 +4,7 @@
 
 ## 前提
 
-- **private リポジトリの Pages は有料プラン限定**。無料プランで公開するには public が必要になる。可視性の決め方と公開後の `gh repo edit --homepage` は「リモートリポジトリの作成・push」に従う
-- **description の扱いは「リモートリポジトリの作成・push」に従う**
+- **private リポジトリの Pages は有料プラン限定**。無料プランで公開するには public が必要になる。可視性の決め方・description・公開後の `gh repo edit --homepage` は「リモートリポジトリの作成・push」に従う
 
 ## 公開の準備
 
