@@ -12,11 +12,12 @@
 ## 読み書きの手段
 
 - **MCP は使わない**。Vault のファイルを Read・Write・Edit で直接読み書きする（Obsidian が起動していなくてよい）
-- **Vault の場所は SessionStart フックが注入する**。ルールにパスを書かない
+- **Vault の場所は環境変数 `AI_AGENT_OBSIDIAN_VAULT`**。ルールにパスを書かない
 - **Vault はプロジェクトの外でも、この見出しの用途に限り確認なしで読み書きしてよい**
 
 ## 構造
 
+- **Vault のフォルダ構成はこの節に従う**。「プロジェクトフォルダ構成」は当てはめない（`notes/`・`AGENTS.md`・ローカルルールを置かない）
 - `memory/!memory.md`: 起動時に注入する目次。`- [[ノート名]] — 要約（type）`
 - `memory/<事実>.md`: 1 ノート＝1 事実。フロントマターに type（`user` / `feedback` / `project` / `reference`）を付け、`[[!memory]]` をリンクする
 - `projects/!projects.md`: プロジェクト一覧。1 行 1 件
