@@ -68,16 +68,17 @@ claude --dangerously-skip-permissions -c
 
 ## 番号付きフォルダ
 
-2桁番号を10刻みで付ける。01〜09 は準備・前段階、10〜80 は本編、90 はフェーズに属さず常に参照するもの。
+2桁番号を10刻みで付ける。01〜09 は準備・前段階、10〜80 は本編、90 はフェーズに属さず常に参照するもの、**91〜99 はフェーズに属さない特殊なもの（道具が生成する等）**。
 
 ```
-notes/        01_research 02_ideas 10_plan 20_todo 30_status 40_issues 60_releases 80_quality_review 90_rules
+notes/        01_research 02_ideas 10_plan 20_todo 30_status 40_issues 60_releases 80_quality_review 90_rules 91_history
 tools/        10_setup 20_build 30_html2md 40_test 50_run 60_release 70_deploy 80_ops 90_misc
 src/scripts/  10_setup 20_migrate 30_batch 40_job 50_run 60_data 80_ops 90_misc
 ```
 
 - 02_ideas はまだ計画にしていない思いつき。計画にするときは 10_plan へ移す
 - 40_issues はこれから解決する課題
+- 91_history は history2html が書き出す会話の履歴。**手で書き換えない**（次の書き出しで上書きされる）
 - **空フォルダは作らない**。必要になった時点で作る
 
 ## 配布物を作る
