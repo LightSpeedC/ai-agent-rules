@@ -10,6 +10,7 @@
 
 - **エントリポイントの `index.html` を置く**。実体が `README.html` なら、そこへ 0 秒でリダイレクトするだけの中身にする。3 段構えにする: `location.replace()`（履歴を残さない）／ `meta http-equiv="refresh" content="0; url=..."`（JavaScript 無効時）／ 本文のリンク（両方効かない場合の手動フォールバック）
 - **`.nojekyll` を置く**。Jekyll のビルドを無効化する
+- **Pages を公開する指示は、この 2 つの commit・push を含む**
 - `.gitignore` で除外したものは配信されない。公開したいファイルが除外対象になっていないか確認する
 
 ## 有効化
