@@ -52,6 +52,11 @@
 - **共有ツール**: 動くのは `bin/` の拡張子の無いもの（sh 版）だけ。`html2md`・`check-public`・`check-markdown`・`convert-encoding`・`text`・`psls` の起動は確かめてある
 - **日時**: コンテナの時計は UTC。日付で判断するときは `TZ=Asia/Tokyo` で JST にする
 - **共有環境（ai-chat-lite・PlayWright 共有環境・Computer Use）**: クラウドからは届かない。「共通ルールを変えたら周知する」の周知は、ユーザに Windows PC 側から出してもらう
+- **PlayWright 共有環境の代わりに、環境に入っている Playwright を使う**。Playwright と Chromium は最初から入っていて、ブラウザの置き場は環境変数 `PLAYWRIGHT_BROWSERS_PATH`（`/opt/pw-browsers`）
+  - `playwright install` は実行しない
+  - Playwright は全体にインストールされている。node から `require` するときは `NODE_PATH` に `npm root -g` の値を渡す
+  - プロジェクトが別の版の `@playwright/test` を指定しているときは、ブラウザをダウンロードさせず、起動時に `executablePath: '/opt/pw-browsers/chromium'` を指定する
+  - 共有環境の側にある道具（`check-contrast` 等）は使えない
 
 ## この環境でできないこと
 
