@@ -17,7 +17,8 @@
 
 ## 構造
 
-- **Vault のフォルダ構成はこの節に従う**。「プロジェクトフォルダ構成」は当てはめない（`notes/`・`AGENTS.md`・ローカルルールを置かない）
+- **Vault のフォルダ構成はこの節に従う**。「プロジェクトフォルダ構成」は当てはめない（`notes/` を置かない）
+- **Vault のローカルルールは `rules/local-rules.md` に Markdown で書き、直下の `AGENTS.md` から取り込む**
 - `memory/!memory.md`: 起動時に注入する目次。`- [[ノート名]] — 要約（type）`
 - `memory/<事実>.md`: 1 ノート＝1 事実。フロントマターに type（`user` / `feedback` / `project` / `reference`）を付け、`[[!memory]]` をリンクする
 - `projects/!projects.md`: プロジェクト一覧。1 行 1 件
