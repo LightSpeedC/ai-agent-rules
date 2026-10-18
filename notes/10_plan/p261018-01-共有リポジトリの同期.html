@@ -1,0 +1,467 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>共有リポジトリの同期（shared-sync）</title>
+<style>
+	:root {
+		--navy1: #12224d;
+		--navy2: #2f5fbf;
+		--ink: #1c2330;
+		--ink-soft: #4a5568;
+		--line: #d9dfe8;
+		--code-bg: #f4f6fa;
+		--link: #1a4fa0;
+		--accent: #12224d;
+		--accent2: #2f5fbf;
+		--soft: #f2f5fb;
+	}
+
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+	.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch04 { --accent: hsl(70, 78%, 25%);  --accent2: hsl(70, 58%, 55%);  --soft: hsl(70, 28%, 95%); }
+	.ch05 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+		font-size: 15.5px;
+		line-height: 1.85;
+	}
+
+	a { color: var(--link, #1a4fa0); background: transparent; }
+
+	.titlebar {
+		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+	}
+	.titlebar .inner {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 34px 30px 30px;
+	}
+	.titlebar h1 {
+		font-size: 2em;
+		margin: 0 0 8px;
+		color: #ffffff;
+	}
+	.titlebar .lead {
+		color: #e2ebfb;
+		background: transparent;
+		margin: 0 0 10px;
+		font-size: .95em;
+		max-width: 1100px;
+	}
+	.titlebar .date {
+		color: #d3e1fb;
+		background: transparent;
+		font-size: .85em;
+	}
+	.titlebar code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	.wrap {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 0 30px;
+	}
+
+	section {
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 4px 26px 26px;
+		margin: 34px 0;
+	}
+
+	section h1 {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		font-size: 1.5em;
+		padding: 14px 20px;
+		margin: 26px 0 20px;
+		border-radius: 8px;
+		box-shadow: 0 3px 10px rgba(18, 34, 77, 0.22);
+	}
+	section h1 code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	h2 {
+		background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--accent, #12224d);
+		border-left: 6px solid var(--accent, #12224d);
+		border-radius: 0 6px 6px 0;
+		font-size: 1.18em;
+		padding: 6px 12px;
+		margin: 30px 0 12px;
+	}
+
+	.tablewrap { overflow-x: auto; margin: 14px 0; }
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
+	}
+	th {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-align: left;
+		font-weight: 600;
+		padding: 9px 12px;
+	}
+	td {
+		background: transparent;
+		color: var(--ink, #1c2330);
+		border-bottom: 1px solid var(--line, #d9dfe8);
+		vertical-align: top;
+		padding: 9px 12px;
+	}
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; white-space: nowrap; }
+	th.num { text-align: right; }
+	td.nowrap, th.nowrap { white-space: nowrap; }
+
+	pre {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border-left: 5px solid var(--accent2, #2f5fbf);
+		border-radius: 0 6px 6px 0;
+		padding: 13px 16px;
+		overflow-x: auto;
+	}
+
+	code {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-size: .92em;
+	}
+	pre code { border: none; padding: 0; }
+
+	.callout {
+		border-left: 6px solid var(--accent, #12224d);
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--ink, #1c2330);
+		border-radius: 0 8px 8px 0;
+		padding: 12px 18px;
+		margin: 18px 0;
+	}
+	.callout strong { color: var(--accent, #12224d); background: transparent; }
+
+	.badge {
+		display: inline-block;
+		padding: 2px 9px;
+		border-radius: 999px;
+		font-size: .82em;
+		font-weight: 600;
+		color: #ffffff;
+		white-space: nowrap;
+	}
+	.b-ok   { background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-ng   { background: linear-gradient(100deg, #a51f22, #e05a5c); }
+	.b-warn { background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+	.toc {
+		background: linear-gradient(180deg, #f2f5fb, #ffffff);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 16px 24px 24px;
+		margin: 34px 0;
+	}
+	.toc h2 {
+		background: linear-gradient(90deg, #f2f5fb, #ffffff);
+		color: var(--navy1, #12224d);
+		border-left: 6px solid var(--navy1, #12224d);
+	}
+	.toc ol {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		counter-reset: toc;
+	}
+	.toc li { counter-increment: toc; }
+	.toc ol a {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		width: 310px;
+		max-width: 100%;
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 8px 12px;
+		border-radius: 6px;
+		font-size: .9em;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+	.toc ol a::before { content: counter(toc) ". "; font-weight: 700; }
+
+	.navwrap { margin: 18px 0 0; }
+	.backlink {
+		display: inline-flex;
+		align-items: center;
+		background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 4px 10px;
+		border-radius: 6px;
+		line-height: 0;
+	}
+	footer {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 18px 30px 30px;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+	}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>共有リポジトリの同期（shared-sync）</h1>
+		<p class="lead">Obsidian Vault と ai-agent-rules の共通ルールは、どちらも複数のセッション・PC・クラウドから書き換えられる。同期（commit・pull・push）を共有ツール <code>shared-sync</code> 1 本に寄せ、clone の中では排他のロックで 1 本ずつ、clone の間では <code>pull --rebase</code> で取り込む。</p>
+		<p class="date">📅 作成: 2026-10-18 / 更新: 2026-10-18</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+
+<nav class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">目的</a></li>
+		<li class="ch02"><a href="#ch02">現状と問題</a></li>
+		<li class="ch03"><a href="#ch03">設計</a></li>
+		<li class="ch04"><a href="#ch04">手順</a></li>
+		<li class="ch05"><a href="#ch05">決めることの一覧</a></li>
+	</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+	<h1>目的</h1>
+	<p>複数のセッション・PC・クラウドが同じリポジトリを書き換えても、<strong>書きかけの変更を壊さず、取りこぼさずに</strong>、GitHub と同期できるようにする。手順はスクリプト 1 本に閉じ込め、リポジトリや書き手ごとに作り方がばらつかないようにする。</p>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>現状と問題</h1>
+
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap"></th><th>Obsidian Vault</th><th>ai-agent-rules の共通ルール</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap">同じ clone の書き手</td><td>全プロジェクトのセッション</td><td>全プロジェクトのセッション</td></tr>
+				<tr><td class="nowrap">ほかの書き手</td><td>別の PC・クラウドの clone</td><td>別の PC・クラウドの clone</td></tr>
+				<tr><td class="nowrap">今の同期</td><td>各セッションの Stop フック。書き手は書く前に fetch・rebase する</td><td>このプロジェクトの cron が commit → push。pull はしない</td></tr>
+				<tr><td class="nowrap">起こりうること</td><td>書きかけがあると rebase が止まる（2026-10-18 に起きた）。autostash で通すと、共有の作業フォルダから書きかけが一時的に消える。Stop フックが並んで走る</td><td>ほかの clone から先に push されていると、push が拒否されて止まる</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<p>git の <code>index.lock</code> は、コマンド 1 つの間しか効かない。commit → pull → push の一続きの途中に、ほかのセッションの commit が割り込むのは防げない。</p>
+	<p>同じ clone を書き換えるだけなら、書く前の rebase は要らない。rebase が要るのは、ほかの clone から push された分を取り込むときだけで、同期する 1 か所が行えば足りる。共通ルールの運用（書き手は git に触らず、cron 1 か所が同期する）は、この形になっている。</p>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>設計</h1>
+
+	<h2>役割の分け方</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">範囲</th><th>受け持つもの</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap">同じ clone の中</td><td>排他のロック。同期を同時に 1 本だけ走らせる</td></tr>
+				<tr><td class="nowrap">clone の間（PC・クラウド）</td><td><code>git pull --rebase</code>。ぶつかったら止めて報告する</td></tr>
+				<tr><td class="nowrap">書き手</td><td>ファイルを書き換えるだけ。git に触らない（fetch・rebase・stash もしない）</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>置き場と呼び方</h2>
+	<ul>
+		<li>共有ツール（ai-agent-tools の <code>bin/</code>）に <code>shared-sync</code> を置く。TypeScript で書き、cmd と sh の入り口を付ける（クラウドで動くのは sh 版だけ）</li>
+		<li>名前に <code>git-</code> を付けない。PATH の <code>git-&lt;名前&gt;</code> は git のサブコマンドとして扱われ、<code>git-sync</code> という公開ツールも既にある</li>
+	</ul>
+	<pre><code class="language-text">shared-sync "&lt;リポジトリ&gt;"                     # 変更をすべて載せる
+shared-sync "&lt;リポジトリ&gt;" &lt;パス&gt; [&lt;パス&gt; …]     # 名指しのパスだけ載せる</code></pre>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">使う側</th><th>呼び方</th><th class="nowrap">呼ぶ者</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap">Obsidian Vault</td><td>リポジトリだけを渡す（環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code> の値）。未設定なら呼ばない</td><td class="nowrap">Stop フック</td></tr>
+				<tr><td class="nowrap">ai-agent-rules</td><td><code>common-rules.md</code> と <code>rules</code> を名指しする（ローカルルールの決まり）</td><td class="nowrap">cron</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>処理の流れ</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>処理</th><th>失敗・競合のとき</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">1</td><td>ロックを取る。<code>.git/shared-sync.lock</code> を排他で作り（<code>openSync(path, "wx")</code>）、ホスト名・pid・開始時刻を書く</td><td>作れなければ中を読む。同じホストで pid のプロセスが無い、または期限を過ぎていれば残骸として消して作り直す。ホスト名が違うときは期限だけで判断する。どちらでもなければ、3 秒おきに取り直す。9 秒たっても取れなければ（初回を含めて 4 回）、「同期中のため飛ばした」と出して終了コード 0</td></tr>
+				<tr><td class="num">2</td><td>載せる対象に変更があれば、<code>git add</code>（全部か、名指しのパス）して commit。メッセージは <code>shared-sync yyyy/mm/dd hh:mm:ss</code>（JST）</td><td>失敗したら止めて終了コード 1</td></tr>
+				<tr><td class="num">3</td><td><code>git pull --rebase</code>。名指しのときは、名指し以外の commit 前の変更が作業フォルダに残っていても止まらないようにする</td><td>浅い clone で失敗したら <code>git fetch --unshallow</code> してやり直す。ぶつかったら <code>git rebase --abort</code> で戻し、ぶつかったファイル名を出して終了コード 2。commit は手元に残る</td></tr>
+				<tr><td class="num">4</td><td><code>git push</code></td><td>失敗したら終了コード 3（認証で止まったときも同じ。直し方は共通ルール「push が認証で止まったら」）。commit は手元に残り、次の回に送られる</td></tr>
+				<tr><td class="num">5</td><td><code>finally</code> でロックを放す。中のホスト名と pid が自分のときだけ消す</td><td>―</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>守ること</h2>
+	<ul>
+		<li>Node の標準モジュールだけで書く。Windows・Linux・Mac・クラウドで同じソースが動くようにする</li>
+		<li>git の呼び出しにはすべて <code>timeout</code> を付ける（共通ルール「同期 API は、そのプロセスの非同期処理を止める」）</li>
+		<li>日時は <code>Asia/Tokyo</code> を指定して作る。クラウドの時計は UTC</li>
+		<li>出力は何をしたかの 1 行だけ（例: <code>shared-sync: commit 1 件・push 済み</code>）</li>
+		<li>ほかのセッションの変更を消す操作（<code>reset --hard</code>・<code>stash</code>・<code>checkout --</code>）はしない</li>
+		<li>認証は呼ぶ側の環境に任せる（Windows は gh、クラウドは環境が用意するもの）。git の設定は書き換えない</li>
+	</ul>
+
+	<h2>テスト</h2>
+	<p><code>tmp/</code> に裸のリポジトリと、その clone を 2 つ作って使う（別の PC の代わり）。本物の Vault・共通ルールには触らない。テストを先に書く。</p>
+	<ul>
+		<li>変更が無いときは commit しない</li>
+		<li>変更があれば commit して push する</li>
+		<li>名指しのときは、名指し以外の変更を載せない</li>
+		<li>同じ clone で同時に 2 本を走らせても、同期の一続き（commit → pull → push）が重ならない</li>
+		<li>ロックが 9 秒以内に放されれば、待っていた側が取り直して進む。放されなければ飛ばす</li>
+		<li>残骸のロック（pid が無い・期限切れ・ホスト名が違って期限切れ）を消して進む</li>
+		<li>もう一方の clone が先に push していても、取り込んでから push する</li>
+		<li>rebase がぶつかると止まり、手元の commit と変更が残る</li>
+	</ul>
+	<p><code>openSync</code> の <code>wx</code> の排他と <code>process.kill(pid, 0)</code> による生存確認は一般的な仕様に基づく。Windows・Linux・Mac では未検証で、上のテストで確かめる。</p>
+
+	<h2>ルールの書き換え</h2>
+	<p>共通ルール「Obsidianメモリ連携ルール」＞「同期」を、次の文面に置き換える。ロックの中身はルールに書かず、<code>shared-sync</code> に閉じ込める。</p>
+	<pre><code class="language-markdown">## 同期
+
+- **書き手は git を使わない**。Vault のファイルを書き換えるだけにする（fetch・rebase・stash もしない）
+- **同期は `shared-sync` だけで行う**。Stop フックが呼ぶ。Vault に限った例外で、「重大な操作の確認方法」の対象にしない
+- **`shared-sync` が止まって報告したら、ほかのセッションの変更を消さずに、利用者に伝える**</code></pre>
+	<p>ローカルルール「chat 待受け・共通ルールの追随の点検」は、commit・push の手順を <code>shared-sync</code> の呼び出しに置き換える。</p>
+
+	<h2>クラウドでの扱い</h2>
+	<p>クラウドでは、commit・push は明示の指示を待つ（共通ルール「クラウド作業のルール」）。クラウドの Stop フックや cron から自動で呼ぶかは、決めることの 5 で決める。手で呼ぶだけなら、今の決まりのままで足りる。Vault を使う環境では、環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code> を設定する（クラウドでは <code>cloud-session-start</code> で設定）。</p>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>手順</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>作業</th><th class="nowrap">担当</th><th>状態</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">1</td><td>この計画の承認と、決めることの 3〜6 を決める</td><td class="nowrap">利用者</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">2</td><td>暫定対策: ai-agent-rules の cron の push の前に <code>git pull --rebase</code> を挟む（ローカルルールの書き換え）</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">3</td><td><code>shared-sync</code> の実装を依頼する（ai-chat-lite、宛先 <code>:ai-agent-tools:</code>）。設計の要点を本文に書き、計画書は番号だけ添える</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">4</td><td>テストを先に書き、<code>shared-sync</code> を実装する</td><td class="nowrap">ai-agent-tools</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">5</td><td>ローカルルールの commit・push を <code>shared-sync</code> の呼び出しに置き換え、cron から動かして結果を見る</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">6</td><td>Stop フックの commit・push を <code>shared-sync</code> の呼び出しに置き換えるよう依頼する（宛先 <code>:ai-obsidian-vault:</code>）</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">7</td><td>Stop フックを置き換え、実環境の Stop から動かして結果を見る</td><td class="nowrap">ai-obsidian-vault</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">8</td><td>共通ルール「Obsidianメモリ連携ルール」＞「同期」を書き換え、周知する</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p>ルールの書き換え（手順 5・8）は、<code>shared-sync</code> が動いてから行う。先に書き換えると、ルールに書かれた道具が存在しない期間ができる。</p>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>決めることの一覧</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>決めること</th><th>選択肢</th><th>決定</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="num">1</td>
+					<td>同期の形（13）</td>
+					<td>A. 書き手は git に触らず、同期する 1 か所が排他を取って 1 本ずつ同期する<br>B. ai-obsidian-vault のセッションの cron に寄せる</td>
+					<td><strong>A</strong>（2026-10-18）</td>
+				</tr>
+				<tr>
+					<td class="num">2</td>
+					<td>同期のスクリプトの置き場（14）</td>
+					<td>A. 共有ツール<br>B. ai-obsidian-vault の Stop フックの中</td>
+					<td><strong>A</strong>（2026-10-18）</td>
+				</tr>
+				<tr>
+					<td class="num">3</td>
+					<td>Vault と ai-agent-rules で共通にするか（15）</td>
+					<td>A. 共通の 1 本にし、リポジトリと載せるパスを引数で渡す<br>B. 別々に作る</td>
+					<td><strong>A</strong>（2026-10-18）</td>
+				</tr>
+				<tr>
+					<td class="num">4</td>
+					<td>名前（16）</td>
+					<td>A. <code>shared-sync</code><br>B. <code>sync-shared</code><br>C. <code>repo-sync</code></td>
+					<td>未定（推す案は A。役目が読め、ほかの共有ツールと同じ 2 語の形。この計画書は仮に A で書いている）</td>
+				</tr>
+				<tr>
+					<td class="num">5</td>
+					<td>残骸のロックとみなすまでの時間</td>
+					<td>A. 10 分<br>B. ほかの値</td>
+					<td>未定（推す案は A。push の <code>timeout</code> より長ければ足りる）</td>
+				</tr>
+				<tr>
+					<td class="num">6</td>
+					<td>クラウドから自動で呼ぶか</td>
+					<td>A. 手で呼ぶときだけにする（今の決まりのまま）<br>B. クラウドの Stop フック・cron からも呼ぶ（そのプロジェクトのローカルルールに例外を書く）</td>
+					<td>未定（推す案は A。クラウドの commit・push は明示を待つ決まりで、変えるなら別に決める）</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<p>Vault の <code>.gitignore</code> で除外が足りているか（全部を載せる呼び方で、載せてはいけないものが入らないか）は、ai-obsidian-vault に確かめる。</p>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+</footer>
+
+</body>
+</html>
