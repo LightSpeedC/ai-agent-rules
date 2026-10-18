@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>共有リポジトリの同期（shared-sync）</title>
+<title>共有リポジトリの同期（safe-push）</title>
 <style>
 	:root {
 		--navy1: #12224d;
@@ -249,8 +249,8 @@
 
 <div class="titlebar">
 	<div class="inner">
-		<h1>共有リポジトリの同期（shared-sync）</h1>
-		<p class="lead">Obsidian Vault と ai-agent-rules の共通ルールは、どちらも複数のセッション・PC・クラウドから書き換えられる。同期（commit・pull・push）を共有ツール <code>shared-sync</code> 1 本に寄せ、clone の中では排他のロックで 1 本ずつ、clone の間では <code>pull --rebase</code> で取り込む。</p>
+		<h1>共有リポジトリの同期（safe-push）</h1>
+		<p class="lead">Obsidian Vault と ai-agent-rules の共通ルールは、どちらも複数のセッション・PC・クラウドから書き換えられる。同期（commit・pull・push）を共有ツール <code>safe-push</code> 1 本に寄せ、clone の中では排他のロックで 1 本ずつ、clone の間では <code>pull --rebase</code> で取り込む。</p>
 		<p class="date">📅 作成: 2026-10-18 / 更新: 2026-10-18</p>
 	</div>
 </div>
@@ -315,11 +315,11 @@
 
 	<h2>置き場と呼び方</h2>
 	<ul>
-		<li>共有ツール（ai-agent-tools の <code>bin/</code>）に <code>shared-sync</code> を置く。TypeScript で書き、cmd と sh の入り口を付ける（クラウドで動くのは sh 版だけ）</li>
+		<li>共有ツール（ai-agent-tools の <code>bin/</code>）に <code>safe-push</code> を置く。TypeScript で書き、cmd と sh の入り口を付ける（クラウドで動くのは sh 版だけ）</li>
 		<li>名前に <code>git-</code> を付けない。PATH の <code>git-&lt;名前&gt;</code> は git のサブコマンドとして扱われ、<code>git-sync</code> という公開ツールも既にある</li>
 	</ul>
-	<pre><code class="language-text">shared-sync "&lt;リポジトリ&gt;"                     # 変更をすべて載せる
-shared-sync "&lt;リポジトリ&gt;" &lt;パス&gt; [&lt;パス&gt; …]     # 名指しのパスだけ載せる</code></pre>
+	<pre><code class="language-text">safe-push "&lt;リポジトリ&gt;" --all               # 変更をすべて載せる（パスなしでは全部を載せない）
+safe-push "&lt;リポジトリ&gt;" &lt;パス&gt; [&lt;パス&gt; …]     # 名指しのパスだけ載せる</code></pre>
 	<div class="tablewrap">
 		<table>
 			<thead>
@@ -339,10 +339,10 @@ shared-sync "&lt;リポジトリ&gt;" &lt;パス&gt; [&lt;パス&gt; …]     # 
 				<tr><th class="num">#</th><th>処理</th><th>失敗・競合のとき</th></tr>
 			</thead>
 			<tbody>
-				<tr><td class="num">1</td><td>ロックを取る。<code>.git/shared-sync.lock</code> を排他で作り（<code>openSync(path, "wx")</code>）、ホスト名・pid・開始時刻を書く</td><td>作れなければ中を読む。同じホストで pid のプロセスが無い、または期限を過ぎていれば残骸として消して作り直す。ホスト名が違うときは期限だけで判断する。どちらでもなければ、3 秒おきに取り直す。9 秒たっても取れなければ（初回を含めて 4 回）、「同期中のため飛ばした」と出して終了コード 0</td></tr>
-				<tr><td class="num">2</td><td>載せる対象に変更があれば、<code>git add</code>（全部か、名指しのパス）して commit。メッセージは <code>shared-sync yyyy/mm/dd hh:mm:ss</code>（JST）</td><td>失敗したら止めて終了コード 1</td></tr>
-				<tr><td class="num">3</td><td><code>git pull --rebase</code>。名指しのときは、名指し以外の commit 前の変更が作業フォルダに残っていても止まらないようにする</td><td>浅い clone で失敗したら <code>git fetch --unshallow</code> してやり直す。ぶつかったら <code>git rebase --abort</code> で戻し、ぶつかったファイル名を出して終了コード 2。commit は手元に残る</td></tr>
-				<tr><td class="num">4</td><td><code>git push</code></td><td>失敗したら終了コード 3（認証で止まったときも同じ。直し方は共通ルール「push が認証で止まったら」）。commit は手元に残り、次の回に送られる</td></tr>
+				<tr><td class="num">1</td><td>ロックを取る。<code>.git/safe-push.lock</code> を排他で作り（<code>openSync(path, "wx")</code>）、ホスト名・pid・開始時刻を書く</td><td>作れなければ中を読む。同じホストで pid のプロセスが無い、または期限を過ぎていれば残骸として消して作り直す。ホスト名が違うときは期限だけで判断する。どちらでもなければ、3 秒おきに取り直す。9 秒たっても取れなければ（初回を含めて 4 回）、「同期中のため飛ばした」と出して終了コード 0</td></tr>
+				<tr><td class="num">2</td><td>載せる対象に変更があれば、<code>git add</code>（全部か、名指しのパス）して commit。メッセージは <code>safe-push yyyy/mm/dd hh:mm:ss</code>（JST）</td><td>失敗したら止めて終了コード 1</td></tr>
+				<tr><td class="num">3</td><td><code>git pull --rebase</code>。名指しのときは、名指し以外の commit 前の変更が作業フォルダに残っていても止まらないようにする</td><td>浅い clone で失敗したら <code>git fetch --unshallow</code> してやり直す。ぶつかったら <code>git rebase --abort</code> で戻し、ぶつかったファイル名を出して終了コード 3。commit は手元に残る</td></tr>
+				<tr><td class="num">4</td><td><code>git push</code></td><td>失敗したら終了コード 4（認証で止まったときも同じ。直し方は共通ルール「push が認証で止まったら」）。commit は手元に残り、次の回に送られる</td></tr>
 				<tr><td class="num">5</td><td><code>finally</code> でロックを放す。中のホスト名と pid が自分のときだけ消す</td><td>―</td></tr>
 			</tbody>
 		</table>
@@ -353,7 +353,7 @@ shared-sync "&lt;リポジトリ&gt;" &lt;パス&gt; [&lt;パス&gt; …]     # 
 		<li>Node の標準モジュールだけで書く。Windows・Linux・Mac・クラウドで同じソースが動くようにする</li>
 		<li>git の呼び出しにはすべて <code>timeout</code> を付ける（共通ルール「同期 API は、そのプロセスの非同期処理を止める」）</li>
 		<li>日時は <code>Asia/Tokyo</code> を指定して作る。クラウドの時計は UTC</li>
-		<li>出力は何をしたかの 1 行だけ（例: <code>shared-sync: commit 1 件・push 済み</code>）</li>
+		<li>出力は何をしたかの 1 行だけ（例: <code>safe-push: commit 1 件・push 済み</code>）</li>
 		<li>ほかのセッションの変更を消す操作（<code>reset --hard</code>・<code>stash</code>・<code>checkout --</code>）はしない</li>
 		<li>認証は呼ぶ側の環境に任せる（Windows は gh、クラウドは環境が用意するもの）。git の設定は書き換えない</li>
 	</ul>
@@ -373,13 +373,13 @@ shared-sync "&lt;リポジトリ&gt;" &lt;パス&gt; [&lt;パス&gt; …]     # 
 	<p><code>openSync</code> の <code>wx</code> の排他と <code>process.kill(pid, 0)</code> による生存確認は一般的な仕様に基づく。Windows・Linux・Mac では未検証で、上のテストで確かめる。</p>
 
 	<h2>ルールの書き換え</h2>
-	<p>共通ルール「Obsidianメモリ連携ルール」＞「同期」を、次の文面に置き換える。ロックの中身はルールに書かず、<code>shared-sync</code> に閉じ込める。</p>
+	<p>共通ルール「Obsidianメモリ連携ルール」＞「同期」を、次の文面に置き換える。ロックの中身はルールに書かず、<code>safe-push</code> に閉じ込める。</p>
 	<pre><code class="language-markdown">## 同期
 
 - **書き手は git を使わない**。Vault のファイルを書き換えるだけにする（fetch・rebase・stash もしない）
-- **同期は `shared-sync` だけで行う**。Stop フックが呼ぶ。Vault に限った例外で、「重大な操作の確認方法」の対象にしない
-- **`shared-sync` が止まって報告したら、ほかのセッションの変更を消さずに、利用者に伝える**</code></pre>
-	<p>ローカルルール「chat 待受け・共通ルールの追随の点検」は、commit・push の手順を <code>shared-sync</code> の呼び出しに置き換える。</p>
+- **同期は `safe-push` だけで行う**。Stop フックが呼ぶ。Vault に限った例外で、「重大な操作の確認方法」の対象にしない
+- **`safe-push` が止まって報告したら、ほかのセッションの変更を消さずに、利用者に伝える**</code></pre>
+	<p>ローカルルール「chat 待受け・共通ルールの追随の点検」は、commit・push の手順を <code>safe-push</code> の呼び出しに置き換える。</p>
 
 	<h2>クラウドでの扱い</h2>
 	<p>クラウドでは、commit・push は明示の指示を待つ（共通ルール「クラウド作業のルール」）。クラウドの Stop フックや cron から自動で呼ぶかは、決めることの 5 で決める。手で呼ぶだけなら、今の決まりのままで足りる。Vault を使う環境では、環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code> を設定する（クラウドでは <code>cloud-session-start</code> で設定）。</p>
@@ -395,16 +395,16 @@ shared-sync "&lt;リポジトリ&gt;" &lt;パス&gt; [&lt;パス&gt; …]     # 
 			<tbody>
 				<tr><td class="num">1</td><td>この計画の承認と、決めることの 3〜6 を決める</td><td class="nowrap">利用者</td><td><span class="badge b-none">未</span></td></tr>
 				<tr><td class="num">2</td><td>暫定対策: ai-agent-rules の cron の push の前に <code>git pull --rebase</code> を挟む（ローカルルールの書き換え）</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
-				<tr><td class="num">3</td><td><code>shared-sync</code> の実装を依頼する（ai-chat-lite、宛先 <code>:ai-agent-tools:</code>）。設計の要点を本文に書き、計画書は番号だけ添える</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
-				<tr><td class="num">4</td><td>テストを先に書き、<code>shared-sync</code> を実装する</td><td class="nowrap">ai-agent-tools</td><td><span class="badge b-none">未</span></td></tr>
-				<tr><td class="num">5</td><td>ローカルルールの commit・push を <code>shared-sync</code> の呼び出しに置き換え、cron から動かして結果を見る</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
-				<tr><td class="num">6</td><td>Stop フックの commit・push を <code>shared-sync</code> の呼び出しに置き換えるよう依頼する（宛先 <code>:ai-obsidian-vault:</code>）</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">3</td><td><code>safe-push</code> の実装を依頼する（ai-chat-lite、宛先 <code>:ai-agent-tools:</code>）。設計の要点を本文に書き、計画書は番号だけ添える</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">4</td><td>テストを先に書き、<code>safe-push</code> を実装する</td><td class="nowrap">ai-agent-tools</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">5</td><td>ローカルルールの commit・push を <code>safe-push</code> の呼び出しに置き換え、cron から動かして結果を見る</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">6</td><td>Stop フックの commit・push を <code>safe-push</code> の呼び出しに置き換えるよう依頼する（宛先 <code>:ai-obsidian-vault:</code>）</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
 				<tr><td class="num">7</td><td>Stop フックを置き換え、実環境の Stop から動かして結果を見る</td><td class="nowrap">ai-obsidian-vault</td><td><span class="badge b-none">未</span></td></tr>
 				<tr><td class="num">8</td><td>共通ルール「Obsidianメモリ連携ルール」＞「同期」を書き換え、周知する</td><td class="nowrap">ai-agent-rules</td><td><span class="badge b-none">未</span></td></tr>
 			</tbody>
 		</table>
 	</div>
-	<p>ルールの書き換え（手順 5・8）は、<code>shared-sync</code> が動いてから行う。先に書き換えると、ルールに書かれた道具が存在しない期間ができる。</p>
+	<p>ルールの書き換え（手順 5・8）は、<code>safe-push</code> が動いてから行う。先に書き換えると、ルールに書かれた道具が存在しない期間ができる。</p>
 </section>
 
 <section class="ch05" id="ch05">
@@ -436,8 +436,8 @@ shared-sync "&lt;リポジトリ&gt;" &lt;パス&gt; [&lt;パス&gt; …]     # 
 				<tr>
 					<td class="num">4</td>
 					<td>名前（16）</td>
-					<td>A. <code>shared-sync</code><br>B. <code>sync-shared</code><br>C. <code>repo-sync</code></td>
-					<td>未定（推す案は A。役目が読め、ほかの共有ツールと同じ 2 語の形。この計画書は仮に A で書いている）</td>
+					<td>A. <code>safe-push</code><br>B. <code>sync-shared</code><br>C. <code>repo-sync</code></td>
+					<td><strong><code>safe-push</code></strong>（2026-10-18、ai-agent-tools が決定。#1534）。終了コードは 2 を使わない（Stop フックが「続ける」と読むため）: 衝突 3・push 失敗 4・ロックで飛ばした 0・引数の誤り 5。詳しくは ai-agent-tools の計画 i261018-01</td>
 				</tr>
 				<tr>
 					<td class="num">5</td>
