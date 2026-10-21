@@ -1,20 +1,39 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, rmSync, utimesSync, statSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, rmSync, utimesSync, statSync, chmodSync } from 'node:fs';
+import { join, resolve, delimiter } from 'node:path';
 
 // フック本体は tools/80_ops/claude-hooks/ にある。テストは本番の ~/.claude や Vault に触れず、tmp/ の下だけで動かす
 const root = resolve(import.meta.dirname, '..');
 const hooksDir = join(root, 'tools/80_ops/claude-hooks');
 const copyHook = join(hooksDir, 'copy-session-jsonl.ts');
 const memoryHook = join(hooksDir, 'load-obsidian-memory.ts');
+const syncHook = join(hooksDir, 'sync-obsidian-vault.ts');
 
 let work = '';
+let fakeBin = '';
 
 before(() => {
 	mkdirSync(join(root, 'tmp'), { recursive: true });
 	work = mkdtempSync(join(root, 'tmp/hooks-test-'));
+	// 本物の safe-push は GitHub へ push する。テストでは PATH の先頭に偽物を置き、呼ばれた引数を記録して、決めた終了コードで終わらせる
+	fakeBin = join(work, 'fake-bin');
+	mkdirSync(fakeBin, { recursive: true });
+	writeFileSync(join(fakeBin, 'safe-push.cmd'), [
+		'@echo off',
+		'if defined FAKE_SAFE_PUSH_LOG echo %*>>"%FAKE_SAFE_PUSH_LOG%"',
+		'if defined FAKE_SAFE_PUSH_EXIT exit /b %FAKE_SAFE_PUSH_EXIT%',
+		'exit /b 0',
+		'',
+	].join('\r\n'));
+	writeFileSync(join(fakeBin, 'safe-push'), [
+		'#!/bin/sh',
+		'[ -n "$FAKE_SAFE_PUSH_LOG" ] && echo "$*" >> "$FAKE_SAFE_PUSH_LOG"',
+		'exit "${FAKE_SAFE_PUSH_EXIT:-0}"',
+		'',
+	].join('\n'));
+	chmodSync(join(fakeBin, 'safe-push'), 0o755);
 });
 
 after(() => {
@@ -37,7 +56,9 @@ function unstamp(message: string): string {
 }
 
 function run(script: string, input: string, env: Record<string, string | undefined> = {}) {
-	const mergedEnv: Record<string, string | undefined> = { ...process.env, ...env };
+	// PATH の先頭に偽の safe-push を置く（本物の Vault・GitHub に触れないため）。Windows では名前が Path のこともあるので、元の名前のまま書き換える
+	const pathKey = Object.keys(process.env).find((key) => key.toUpperCase() === 'PATH') ?? 'PATH';
+	const mergedEnv: Record<string, string | undefined> = { ...process.env, [pathKey]: fakeBin + delimiter + (process.env[pathKey] ?? ''), ...env };
 	for (const key of Object.keys(mergedEnv)) {
 		if (mergedEnv[key] === undefined) delete mergedEnv[key];
 	}
@@ -327,6 +348,158 @@ describe('load-obsidian-memory', () => {
 		const out = JSON.parse(r.stdout);
 		assert.ok(unstamp(out.systemMessage).startsWith('❌ Obsidian メモリの読み込みに失敗した: '), out.systemMessage);
 		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
+	});
+});
+
+// 課題 i261018-01: 共通ルール「Obsidianメモリ連携ルール」に合わせる（MCP を使わない・projects の登録・Stop フックによる同期）
+describe('load-obsidian-memory（Obsidianメモリ連携ルール）', () => {
+	const makeVault = (name: string, projects: Record<string, string> = {}) => {
+		const vault = makeDir(name);
+		mkdirSync(join(vault, 'memory'), { recursive: true });
+		mkdirSync(join(vault, 'projects'), { recursive: true });
+		writeFileSync(join(vault, 'memory/!memory.md'), '# メモリ目次\n');
+		writeFileSync(join(vault, 'projects/!projects.md'), '- [[proj-a]] — プロジェクト A\n');
+		for (const [file, text] of Object.entries(projects)) writeFileSync(join(vault, 'projects', file), text);
+		return vault;
+	};
+	const context = (r: { stdout: string }): string => JSON.parse(r.stdout).hookSpecificOutput.additionalContext;
+
+	test('注入文に MCP の記述が無く、Vault のファイルを直接読み書きすると案内する', () => {
+		const ctx = context(run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: makeVault('rule1') }));
+		assert.doesNotMatch(ctx, /MCP\s*または|obsidian-mcp/);
+		assert.match(ctx, /直接読み書き/);
+		assert.match(ctx, /Obsidianメモリ連携ルール/);
+	});
+
+	test('projects/!projects.md も注入する', () => {
+		const ctx = context(run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: makeVault('rule2') }));
+		assert.ok(ctx.includes('# メモリ目次'), '!memory.md');
+		assert.ok(ctx.includes('- [[proj-a]] — プロジェクト A'), '!projects.md');
+	});
+
+	test('注入の前に、safe-push <Vault> --all で同期する', () => {
+		const vault = makeVault('rule3');
+		const log = join(work, 'rule3.log');
+		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: vault, FAKE_SAFE_PUSH_LOG: log });
+		assert.equal(r.status, 0, r.stderr);
+		const called = readFileSync(log, 'utf8');
+		assert.ok(called.includes(vault) && called.includes('--all'), called);
+	});
+
+	test('同期に失敗しても注入は続け、表示に失敗を添える', () => {
+		const r = run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: makeVault('rule4'), FAKE_SAFE_PUSH_EXIT: '4' });
+		assert.equal(r.status, 0, r.stderr);
+		const out = JSON.parse(r.stdout);
+		assert.ok(out.hookSpecificOutput.additionalContext.includes('# メモリ目次'), '注入は行う');
+		assert.match(out.systemMessage, /同期に失敗/);
+		assert.match(out.systemMessage, /4/);
+	});
+
+	test('同期に成功したら、表示はこれまでと同じ', () => {
+		const out = JSON.parse(run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: makeVault('rule5') }).stdout);
+		assert.equal(unstamp(out.systemMessage), '✅ Obsidian メモリを注入した');
+	});
+
+	test('CLAUDE_PROJECT_DIR のフォルダ名が projects/ に未登録なら、登録を促す文を注入に足す', () => {
+		const vault = makeVault('rule6');
+		const ctx = context(run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: vault, CLAUDE_PROJECT_DIR: join(work, 'proj-new') }));
+		assert.match(ctx, /proj-new/);
+		assert.match(ctx, /未登録/);
+	});
+
+	test('登録済み（projects/<名前>.md がある）なら、登録を促す文は入らない', () => {
+		const vault = makeVault('rule7', { 'proj-a.md': '# proj-a\n' });
+		const ctx = context(run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: vault, CLAUDE_PROJECT_DIR: join(work, 'proj-a') }));
+		assert.doesNotMatch(ctx, /未登録/);
+	});
+
+	test('CLAUDE_PROJECT_DIR が無ければ、標準入力の cwd のフォルダ名で判定する', () => {
+		const vault = makeVault('rule8');
+		const input = JSON.stringify({ hook_event_name: 'SessionStart', cwd: join(work, 'proj-from-cwd') });
+		const ctx = context(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault, CLAUDE_PROJECT_DIR: undefined }));
+		assert.match(ctx, /proj-from-cwd/);
+	});
+
+	// Vault 自体も特別扱いしない（依頼 #1548）
+	test('Vault 自体のフォルダ名も、未登録なら登録を促す', () => {
+		const vault = makeVault('rule9-vault');
+		const ctx = context(run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: vault, CLAUDE_PROJECT_DIR: vault }));
+		assert.match(ctx, /rule9-vault/);
+		assert.match(ctx, /未登録/);
+	});
+
+	test('環境変数が未設定なら、safe-push を呼ばない', () => {
+		const log = join(work, 'rule10.log');
+		run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: undefined, FAKE_SAFE_PUSH_LOG: log });
+		assert.equal(existsSync(log), false);
+	});
+});
+
+describe('sync-obsidian-vault（Stop フック）', () => {
+	const hour = 3600 * 1000;
+	// daily/ の最新のファイルの更新日時を、ago ミリ秒前にした Vault を作る。ago が null なら daily/ を作らない
+	const makeVault = (name: string, ago: number | null) => {
+		const vault = makeDir(name);
+		if (ago !== null) {
+			mkdirSync(join(vault, 'daily'), { recursive: true });
+			const file = join(vault, 'daily/2026-10-20.md');
+			writeFileSync(file, '# 2026-10-20\n');
+			const at = new Date(Date.now() - ago);
+			utimesSync(file, at, at);
+		}
+		return vault;
+	};
+	const stop = (extra: Record<string, unknown> = {}) => JSON.stringify({ hook_event_name: 'Stop', ...extra });
+
+	test('環境変数が未設定なら、何もせず正常終了する（safe-push も呼ばない）', () => {
+		const log = join(work, 'sync1.log');
+		const r = run(syncHook, stop(), { AI_AGENT_OBSIDIAN_VAULT: undefined, FAKE_SAFE_PUSH_LOG: log });
+		assert.equal(r.status, 0, r.stderr);
+		assert.equal(r.stdout, '');
+		assert.equal(existsSync(log), false);
+	});
+
+	test('daily の最後の追記から 6 時間未満なら、促さずに safe-push <Vault> --all で同期し、成功は表示しない', () => {
+		const vault = makeVault('sync2', 1 * hour);
+		const log = join(work, 'sync2.log');
+		const r = run(syncHook, stop(), { AI_AGENT_OBSIDIAN_VAULT: vault, FAKE_SAFE_PUSH_LOG: log });
+		assert.equal(r.status, 0, r.stderr);
+		assert.equal(r.stdout, '', 'Stop は応答のたびに走るので、成功は出さない');
+		const called = readFileSync(log, 'utf8');
+		assert.ok(called.includes(vault) && called.includes('--all'), called);
+	});
+
+	test('daily の最後の追記から 6 時間以上空いていれば、decision: block で追記を促す', () => {
+		const vault = makeVault('sync3', 7 * hour);
+		const r = run(syncHook, stop(), { AI_AGENT_OBSIDIAN_VAULT: vault, CLAUDE_PROJECT_DIR: join(work, 'proj-x') });
+		assert.equal(r.status, 0, '終了コード 2 は使わない（続ける、と読まれる）');
+		const out = JSON.parse(r.stdout);
+		assert.equal(out.decision, 'block');
+		assert.match(out.reason, /daily/);
+		assert.match(out.reason, /proj-x/);
+		assert.match(out.reason, /Obsidianメモリ連携ルール/);
+	});
+
+	test('daily/ が無ければ、追記を促す', () => {
+		const out = JSON.parse(run(syncHook, stop(), { AI_AGENT_OBSIDIAN_VAULT: makeVault('sync4', null) }).stdout);
+		assert.equal(out.decision, 'block');
+	});
+
+	// 促した結果の Stop（stop_hook_active）でまた促すと、止まらなくなる
+	test('stop_hook_active のときは促さず、同期だけ行う', () => {
+		const vault = makeVault('sync5', 7 * hour);
+		const log = join(work, 'sync5.log');
+		const r = run(syncHook, stop({ stop_hook_active: true }), { AI_AGENT_OBSIDIAN_VAULT: vault, FAKE_SAFE_PUSH_LOG: log });
+		assert.equal(r.stdout, '');
+		assert.ok(existsSync(log), '同期は行う');
+	});
+
+	test('同期に失敗したら、❌ と終了コードを表示し、フック自体は正常終了する', () => {
+		const r = run(syncHook, stop(), { AI_AGENT_OBSIDIAN_VAULT: makeVault('sync6', 1 * hour), FAKE_SAFE_PUSH_EXIT: '3' });
+		assert.equal(r.status, 0);
+		const msg: string = unstamp(JSON.parse(r.stdout).systemMessage);
+		assert.ok(msg.startsWith('❌ Obsidian Vault の同期に失敗した'), msg);
+		assert.match(msg, /3/);
 	});
 });
 
