@@ -256,7 +256,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules 課題</h1>
 		<p class="lead">これから解決することを記録する。片付いたグループは <a href="issues-archive.html">issues-archive.html</a> に残す。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-09</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-18</p>
 	</div>
 </div>
 
@@ -316,7 +316,7 @@
 
 <div class="groupbar">
 	<h2>Claude フック（#1383 起票、2026-10-08）</h2>
-	<p class="count">1 件 / 未 0 / 着手 0 / 済 1</p>
+	<p class="count">2 件 / 未 0 / 着手 1 / 済 1</p>
 </div>
 
 <section class="ch02">
@@ -332,6 +332,29 @@
 		<li><span class="badge b-ok">済</span> <code>settings.json</code> のコマンドそのままで試走（<code>cwd</code> を <code>notes</code> にしても、写し先はプロジェクト直下。<code>写し先=git</code>）</li>
 		<li><span class="badge b-ok">済</span> 実環境のフックで、<code>CLAUDE_PROJECT_DIR</code> が渡るかを確かめる（ツールのシェルには無かったが、フックには渡る。10/09 07:06 の再開で <code>写し先=CLAUDE_PROJECT_DIR</code>）</li>
 		<li><span class="badge b-ok">済</span> 報告元（20261004-kamishibai-animation）の確認（#1397: cd したまま Stop フックを動かし、写しがプロジェクト直下にだけ入ることを確認）</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch02">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261018-01</code> フックを「Obsidianメモリ連携ルール」に合わせる <span class="badge b-warn">着手</span></h1></summary>
+
+	<p>依頼（#1548、ai-obsidian-vault から。Vault の計画 p261017-01）: Claude フックを、共通ルール「Obsidianメモリ連携ルール」に合わせる。ルールに無い決め事は次のとおり。</p>
+	<ul>
+		<li>同期は <code>safe-push &lt;Vault&gt; --all</code>。SessionStart で同期に失敗しても、注入は続ける</li>
+		<li>SessionStart で <code>projects/!projects.md</code> も注入する。注入文から MCP の記述を消す</li>
+		<li>未登録の判定に使うプロジェクト名は <code>CLAUDE_PROJECT_DIR</code> のフォルダ名、無ければ <code>cwd</code>。Vault 自体も特別扱いしない</li>
+		<li>daily の追記を促すのは、最後の追記から 6 時間以上空いたとき</li>
+	</ul>
+	<p>今の <code>load-obsidian-memory.ts</code> は、注入文で「obsidian-mcp MCP または Read で読む」と案内しており、ルールの「MCP は使わない」と食い違っている。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-ok">済</span> 計画（<code>notes/10_plan/i261018-01-フックをObsidian連携ルールに合わせる.html</code>）を立て、利用者の承認を得る（10/20、決めることは 3 点とも A）</li>
+		<li><span class="badge b-ok">済</span> テストを先に書き（❌Red: 13 件）、実装して node・bun とも 52 件 ✅Green</li>
+		<li><span class="badge b-ok">済</span> <code>settings.json</code> の hooks を書き換え（Stop に <code>sync-obsidian-vault.ts</code>、SessionStart の timeout 30 秒）、コマンドそのままで試走</li>
+		<li><span class="badge b-none">未</span> 実環境のフック（SessionStart・Stop）から動かして結果を見る</li>
+		<li><span class="badge b-none">未</span> 報告元（ai-obsidian-vault）の確認</li>
 	</ul>
 	</details>
 </section>

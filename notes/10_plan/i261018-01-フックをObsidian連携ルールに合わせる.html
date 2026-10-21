@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>フックを Obsidianメモリ連携ルールに合わせる</title>
+<style>
+	:root {
+		--navy1: #12224d;
+		--navy2: #2f5fbf;
+		--ink: #1c2330;
+		--ink-soft: #4a5568;
+		--line: #d9dfe8;
+		--code-bg: #f4f6fa;
+		--link: #1a4fa0;
+		--accent: #12224d;
+		--accent2: #2f5fbf;
+		--soft: #f2f5fb;
+	}
+
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+	.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch04 { --accent: hsl(70, 78%, 25%);  --accent2: hsl(70, 58%, 55%);  --soft: hsl(70, 28%, 95%); }
+	.ch05 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+		font-size: 15.5px;
+		line-height: 1.85;
+	}
+
+	a { color: var(--link, #1a4fa0); background: transparent; }
+
+	.titlebar {
+		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+	}
+	.titlebar .inner {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 34px 30px 30px;
+	}
+	.titlebar h1 {
+		font-size: 2em;
+		margin: 0 0 8px;
+		color: #ffffff;
+	}
+	.titlebar .lead {
+		color: #e2ebfb;
+		background: transparent;
+		margin: 0 0 10px;
+		font-size: .95em;
+		max-width: 1100px;
+	}
+	.titlebar .date {
+		color: #d3e1fb;
+		background: transparent;
+		font-size: .85em;
+	}
+	.titlebar code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	.wrap {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 0 30px;
+	}
+
+	section {
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 4px 26px 26px;
+		margin: 34px 0;
+	}
+
+	section h1 {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		font-size: 1.5em;
+		padding: 14px 20px;
+		margin: 26px 0 20px;
+		border-radius: 8px;
+		box-shadow: 0 3px 10px rgba(18, 34, 77, 0.22);
+	}
+	section h1 code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	h2 {
+		background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--accent, #12224d);
+		border-left: 6px solid var(--accent, #12224d);
+		border-radius: 0 6px 6px 0;
+		font-size: 1.18em;
+		padding: 6px 12px;
+		margin: 30px 0 12px;
+	}
+
+	.tablewrap { overflow-x: auto; margin: 14px 0; }
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
+	}
+	th {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-align: left;
+		font-weight: 600;
+		padding: 9px 12px;
+	}
+	td {
+		background: transparent;
+		color: var(--ink, #1c2330);
+		border-bottom: 1px solid var(--line, #d9dfe8);
+		vertical-align: top;
+		padding: 9px 12px;
+	}
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; white-space: nowrap; }
+	th.num { text-align: right; }
+	td.nowrap, th.nowrap { white-space: nowrap; }
+
+	pre {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border-left: 5px solid var(--accent2, #2f5fbf);
+		border-radius: 0 6px 6px 0;
+		padding: 13px 16px;
+		overflow-x: auto;
+	}
+
+	code {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-size: .92em;
+	}
+	pre code { border: none; padding: 0; }
+
+	.callout {
+		border-left: 6px solid var(--accent, #12224d);
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--ink, #1c2330);
+		border-radius: 0 8px 8px 0;
+		padding: 12px 18px;
+		margin: 18px 0;
+	}
+	.callout strong { color: var(--accent, #12224d); background: transparent; }
+
+	.badge {
+		display: inline-block;
+		padding: 2px 9px;
+		border-radius: 999px;
+		font-size: .82em;
+		font-weight: 600;
+		color: #ffffff;
+		white-space: nowrap;
+	}
+	.b-ok   { background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-ng   { background: linear-gradient(100deg, #a51f22, #e05a5c); }
+	.b-warn { background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+	.toc {
+		background: linear-gradient(180deg, #f2f5fb, #ffffff);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 16px 24px 24px;
+		margin: 34px 0;
+	}
+	.toc h2 {
+		background: linear-gradient(90deg, #f2f5fb, #ffffff);
+		color: var(--navy1, #12224d);
+		border-left: 6px solid var(--navy1, #12224d);
+	}
+	.toc ol {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		counter-reset: toc;
+	}
+	.toc li { counter-increment: toc; }
+	.toc ol a {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		width: 310px;
+		max-width: 100%;
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 8px 12px;
+		border-radius: 6px;
+		font-size: .9em;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+	.toc ol a::before { content: counter(toc) ". "; font-weight: 700; }
+
+	.navwrap { margin: 18px 0 0; }
+	.backlink {
+		display: inline-flex;
+		align-items: center;
+		background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 4px 10px;
+		border-radius: 6px;
+		line-height: 0;
+	}
+	footer {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 18px 30px 30px;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+	}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>フックを Obsidianメモリ連携ルールに合わせる</h1>
+		<p class="lead">課題 i261018-01（#1548、ai-obsidian-vault からの依頼）。SessionStart のフックで Vault を同期してから目次 2 つを注入し、Stop のフックで daily の追記を促して <code>safe-push</code> で同期する。</p>
+		<p class="date">📅 作成: 2026-10-18 / 更新: 2026-10-18</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+
+<nav class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">目的</a></li>
+		<li class="ch02"><a href="#ch02">現状</a></li>
+		<li class="ch03"><a href="#ch03">設計</a></li>
+		<li class="ch04"><a href="#ch04">手順</a></li>
+		<li class="ch05"><a href="#ch05">決めることの一覧</a></li>
+	</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+	<h1>目的</h1>
+	<p>共通ルール「Obsidianメモリ連携ルール」が求める動き（MCP を使わない・projects の登録・daily の追記・Stop フックによる同期）を、このプロジェクトの Claude フックで実現する。依頼元が示した、ルールに無い決め事は次のとおり。</p>
+	<ul>
+		<li>同期は <code>safe-push &lt;Vault&gt; --all</code>。SessionStart で同期に失敗しても、注入は続ける</li>
+		<li>SessionStart で <code>projects/!projects.md</code> も注入する。注入文から MCP の記述を消す</li>
+		<li>未登録の判定に使うプロジェクト名は <code>CLAUDE_PROJECT_DIR</code> のフォルダ名、無ければ <code>cwd</code>。Vault 自体も特別扱いしない</li>
+		<li>daily の追記を促すのは、最後の追記から 6 時間以上空いたとき</li>
+	</ul>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>現状</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="nowrap">イベント</th><th class="nowrap">フック</th><th>していること</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="nowrap">SessionStart</td><td class="nowrap"><code>load-obsidian-memory.ts</code></td><td><code>memory/!memory.md</code> を注入する。注入文が「obsidian-mcp MCP または Read で読む」と案内している（ルールと食い違い）</td></tr>
+				<tr><td class="nowrap">SessionStart・Stop</td><td class="nowrap"><code>copy-session-jsonl.ts</code></td><td>会話ログをプロジェクトの <code>etc/history/jsonl/</code> へ写す（今回は変えない）</td></tr>
+			</tbody>
+		</table>
+	</div>
+	<p><code>~/.claude/settings.json</code> の Stop には <code>copy-session-jsonl.ts</code> しか無い。<strong>ルールが「Stop フックが行う」とする Vault の commit・push は、今どこでも行われていない</strong>。Vault の書きかけが溜まっていたのはこのためと見られる（2026-10-18 に、commit 前の変更が 3 件残っていた）。</p>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>設計</h1>
+
+	<h2>SessionStart（<code>load-obsidian-memory.ts</code> を直す）</h2>
+	<ol>
+		<li>環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code> が無ければ、今までどおり何もしない</li>
+		<li><code>safe-push &lt;Vault&gt; --all</code> で同期する（ほかの PC の分を取り込む）。失敗しても、表示に残して先へ進む</li>
+		<li><code>memory/!memory.md</code> と <code>projects/!projects.md</code> を注入する。片方が無ければ、ある方だけ</li>
+		<li>プロジェクト名（<code>CLAUDE_PROJECT_DIR</code> のフォルダ名、無ければ <code>cwd</code> のフォルダ名）の <code>projects/&lt;名前&gt;.md</code> が無ければ、注入文に「未登録なので登録する」旨を足す</li>
+		<li>注入文から MCP の記述を消し、「Vault のファイルを直接読み書きする。書き方は共通ルール『Obsidianメモリ連携ルール』」と案内する</li>
+	</ol>
+	<p>注入文に手順を写さない（共通ルール「手順は 1 箇所に置く」）。見出し名で指すだけにする。</p>
+
+	<h2>Stop（新しく <code>sync-obsidian-vault.ts</code> を作る）</h2>
+	<ol>
+		<li>環境変数が無ければ何もしない</li>
+		<li>daily の最後の追記（<code>daily/</code> の中で最も新しいファイルの更新日時）から 6 時間以上空いていれば、追記を促す（促し方は決めることの 1）</li>
+		<li><code>safe-push &lt;Vault&gt; --all</code> で同期する。成功は表示しない（Stop は応答のたびに走るため）。失敗したときだけ表示する</li>
+	</ol>
+	<p><code>safe-push</code> の終了コード（0 成功・ロックで飛ばした、1 失敗、3 衝突、4 push 失敗、5 引数の誤り）を、そのまま表示の文言に対応させる。Stop の終了コード 2 は「続ける」と読まれるので、フック自身は常に 0 で終わる。</p>
+
+	<h2><code>settings.json</code></h2>
+	<ul>
+		<li>Stop に <code>sync-obsidian-vault.ts</code> を足す</li>
+		<li>SessionStart の <code>load-obsidian-memory.ts</code> の <code>timeout</code>（今は 15 秒）を、同期の分だけ延ばす（決めることの 2）</li>
+	</ul>
+
+	<h2>テスト</h2>
+	<p>テストを先に書く。Vault は <code>tmp/</code> に作った裸のリポジトリと clone で代える（共通ルール「git を使うテストの材料」）。本物の Vault には触らない。</p>
+	<ul>
+		<li>注入文に MCP の記述が無い。<code>!memory.md</code> と <code>!projects.md</code> の両方が入る</li>
+		<li>未登録のプロジェクトでは登録を促す文が入り、登録済みなら入らない。Vault 自体も同じ扱い</li>
+		<li>同期が失敗しても注入は行われる</li>
+		<li>daily の最後の追記が 6 時間以上前なら促し、6 時間未満なら促さない</li>
+		<li>Stop の同期が成功したときは何も表示せず、失敗したときだけ表示する</li>
+		<li>環境変数が無ければ、どちらのフックも何もしない</li>
+	</ul>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>手順</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>作業</th><th>状態</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">1</td><td>この計画の承認と、決めることの 1〜3 を決める<br>済: 2026-10-20、3 点とも A</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">2</td><td>テストを先に書き、❌Red を確かめる<br>済: 新しい 16 件のうち 13 件が落ちた（3 件は今の実装でも当てはまる内容）。偽の <code>safe-push</code> を PATH の先頭に置き、本物の Vault・GitHub に触れない</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">3</td><td><code>load-obsidian-memory.ts</code> を直し、<code>sync-obsidian-vault.ts</code> を作る。node・bun とも全件 ✅Green<br>済: 2 つが共有する処理は <code>vault.ts</code>（入力の読み取り・プロジェクト名・<code>safe-push</code> の呼び出し）。node・bun とも 52 件 ✅Green</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">4</td><td><code>settings.json</code> の hooks を書き換え、コマンドそのままで試走する<br>済: Stop に <code>sync-obsidian-vault.ts</code>（timeout 30 秒）を足し、SessionStart の <code>load-obsidian-memory.ts</code> の timeout を 30 秒にした。書き換える前の控えを <code>tmp/</code> に取った。試走で、SessionStart は同期してから 2 つの目次を注入し、Stop は daily の追記を <code>decision: block</code> で促した（<code>stop_hook_active</code> のときは同期だけ）</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">5</td><td>実環境のフック（セッションの開き直し・応答の終わり）から動かして結果を見る<br>済（Stop）: 2026-10-20 08:43、書き換えた直後の応答の終わりに、動いているセッションのままで daily の追記を促した（<code>settings.json</code> の Stop の追加は、開き直さなくても効いた）。追記したあとの Stop で <code>safe-push</code> が Vault を commit・push した（<code>safe-push 2026/10/20 08:43:41</code>、GitHub と一致）<br>未（SessionStart）: セッションを開き直したときに、同期と注入を確かめる</td><td><span class="badge b-warn">着手</span></td></tr>
+				<tr><td class="num">6</td><td><code>tools/80_ops/claude-hooks/README.html</code> とローカルルール「Claude フックの置き場とメンテ」を直す</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">7</td><td>ai-obsidian-vault に済んだことを知らせ、確認を受けてから課題を済にする</td><td><span class="badge b-none">未</span></td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>決めることの一覧</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>決めること</th><th>選択肢</th><th>推す案</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="num">1</td>
+					<td>daily の追記の促し方</td>
+					<td>A. Stop で <code>decision: "block"</code> を返し、理由に「daily に追記する」と書く（Claude がその場で追記してから止まる）<br>B. <code>systemMessage</code> で利用者に表示するだけ</td>
+					<td><strong>A</strong>。ルールは「Stop フックが促す」としており、Claude に届かなければ追記されない。6 時間に 1 回なので、応答が長引くのもその回だけ</td>
+				</tr>
+				<tr>
+					<td class="num">2</td>
+					<td>SessionStart の <code>timeout</code></td>
+					<td>A. 30 秒<br>B. 15 秒のまま（同期が間に合わなければ注入ごと落ちる）</td>
+					<td><strong>A</strong>。<code>safe-push</code> はロック待ちだけで最大 9 秒かかる。15 秒では、push まで含めると足りないおそれがある</td>
+				</tr>
+				<tr>
+					<td class="num">3</td>
+					<td>Stop の同期をどのファイルに置くか</td>
+					<td>A. 新しい <code>sync-obsidian-vault.ts</code><br>B. <code>copy-session-jsonl.ts</code> に足す</td>
+					<td><strong>A</strong>。会話ログの写しと Vault の同期は別の役目で、片方が失敗しても、もう片方を止めない</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<p><code>decision: "block"</code> の振る舞い（Stop で返すと Claude が続ける）は Claude Code の公式ドキュメントの記述に基づく。この環境では未検証で、手順 4・5 で確かめる。</p>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+</footer>
+
+</body>
+</html>
