@@ -59,10 +59,15 @@ describe('isEnglishOnly（英語だけかどうかの判定）', () => {
 		assert.equal(isEnglishOnly('This response is mostly English but ends with a Japanese word 完了。'), false);
 	});
 
-	test('列挙された記号（" ` [] {} < > = + * % # / @ : ;）を含めばコードとみなし、英語のみとみなさない', () => {
+	test('列挙された記号（" ` [] {} < > = + * % # / @）を含めばコードとみなし、英語のみとみなさない', () => {
 		assert.equal(isEnglishOnly('This sentence explains the result but also has a path: C/work/file'), false);
 		assert.equal(isEnglishOnly('This sentence explains the result and also has a value a=b in it'), false);
 		assert.equal(isEnglishOnly('This sentence explains the result and also has a tag <div> in it'), false);
+	});
+
+	// コロンとセミコロンは英文でも使う。どちらか一方だけでは、コードとはみなさない
+	test('コロンやセミコロンだけを含む英文は、コードとはみなさず英語のみとみなす', () => {
+		assert.equal(isEnglishOnly('Note: this sentence is plain English; with punctuation and no code at all.'), true);
 	});
 
 	test('バッククォート（`）を含めばコードとみなし、英語のみとみなさない', () => {
