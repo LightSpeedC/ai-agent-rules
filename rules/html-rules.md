@@ -188,3 +188,4 @@ html2md が読むクラス名。プロジェクトごとに違う名前を使わ
 - **警告・注意・落とし穴・補足は `.callout` で囲む**。`border-left: 6px solid var(--accent)` ＋ `--soft`→白の上下グラデーション ＋ `border-radius: 0 8px 8px 0`。中の `strong` は `var(--accent)` にする
 - **本文で述べた結論を callout で言い直さない**。callout には本文に無いことだけを書く。消しても本文だけで意味が通るなら、その callout は不要
 - **`<head>` に `<meta name="format-detection" content="telephone=no">` を入れる**。iPhone のブラウザは数字の並び（CVE 番号・日付・番号）を電話番号と判断し、勝手に `tel:` のリンクにする
+- **CVE 番号・GHSA 番号・GitHub の issue や PR の番号を HTML に書くときは、リンクにする**。リンク先は、CVE は `https://www.cve.org/CVERecord?id=<番号>`、GHSA はそのリポジトリの勧告のページ、issue・PR はその URL。番号だけでは読み手が中身を確かめられない
