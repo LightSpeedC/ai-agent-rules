@@ -187,3 +187,4 @@ html2md が読むクラス名。プロジェクトごとに違う名前を使わ
 - 良い/悪い/未実施/警告はバッジで色分けし、**100deg の2色グラデーション**にする: 良い・完了 `#1d7a3c`→`#45b56c`（緑） / 悪い・リスク `#a51f22`→`#e05a5c`（赤） / 未実施 `#5a6472`→`#97a1ae`（灰） / 警告 `#b8620a`→`#f0a548`（橙）。いずれも `color: #fff`、`white-space: nowrap`
 - **警告・注意・落とし穴・補足は `.callout` で囲む**。`border-left: 6px solid var(--accent)` ＋ `--soft`→白の上下グラデーション ＋ `border-radius: 0 8px 8px 0`。中の `strong` は `var(--accent)` にする
 - **本文で述べた結論を callout で言い直さない**。callout には本文に無いことだけを書く。消しても本文だけで意味が通るなら、その callout は不要
+- **`<head>` に `<meta name="format-detection" content="telephone=no">` を入れる**。iPhone のブラウザは数字の並び（CVE 番号・日付・番号）を電話番号と判断し、勝手に `tel:` のリンクにする
