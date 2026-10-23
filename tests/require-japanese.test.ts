@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { isEnglishOnly, lastAssistantText } from '../tools/80_ops/claude-hooks/japanese-check.ts';
+import { isEnglishOnly, lastAssistantText, lastTurnTexts } from '../tools/80_ops/claude-hooks/japanese-check.ts';
 
 // 課題 p261021-01: 英語だけの応答を日本語に書き直させる Stop フック。
 // 判定の関数は japanese-check.ts に分けてあり、ここでは直接確かめる。フック全体は、実際に node で起動して確かめる。
@@ -94,6 +94,12 @@ describe('lastAssistantText（最後の応答のテキスト）', () => {
 		assert.equal(lastOf(file), '前半後半');
 	});
 
+	// 応答は、テキストのかたまりごとに別の行として記録される。かたまりごとに判定できるよう、区切りを残して取り出す
+	test('テキストのかたまりを、別々に取り出す（途中の英語を、日本語のかたまりに混ぜて隠さない）', () => {
+		const file = transcript('last3', [user('質問'), assistant('日本語の説明です。'), assistant('This is a plain English sentence in the middle of the reply.'), assistant('最後は日本語。')]);
+		assert.deepEqual(lastTurnTexts(readFileSync(file, 'utf8')), ['日本語の説明です。', 'This is a plain English sentence in the middle of the reply.', '最後は日本語。']);
+	});
+
 	test('会話ログが無ければ空文字', () => {
 		assert.equal(lastOf(join(work, 'no-such.jsonl')), '');
 	});
@@ -101,6 +107,14 @@ describe('lastAssistantText（最後の応答のテキスト）', () => {
 
 describe('require-japanese（フック全体）', () => {
 	const runHook = (input: unknown) => spawnSync('node', [hook], { input: JSON.stringify(input), encoding: 'utf8', timeout: 15000 });
+
+	// 途中のかたまりが英語だけなら、応答全体に日本語があっても、書き直させる
+	test('日本語の応答の途中に英語だけのかたまりがあれば、decision: block を返す', () => {
+		const file = transcript('hook5', [user('質問'), assistant('日本語の説明です。'), assistant('This is a plain English sentence in the middle of the reply.'), assistant('最後は日本語。')]);
+		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
+		assert.equal(r.status, 0, r.stderr);
+		assert.equal(JSON.parse(r.stdout).decision, 'block');
+	});
 
 	test('英語だけの応答は、日本語で書き直すように decision: block を返す', () => {
 		const file = transcript('hook1', [user('質問'), assistant('This response is written entirely in English without any Japanese.')]);

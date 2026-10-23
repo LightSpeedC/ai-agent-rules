@@ -22,11 +22,12 @@ export function isEnglishOnly(text: string): boolean {
 	return letters >= MIN_ENGLISH_LETTERS;
 }
 
-// 会話ログ（JSONL の中身）から、最後の応答のテキストを取り出す。
-// 利用者の発言（テキストを含む user の行）で区切り、その後のアシスタントのテキストを連ねる。
-// ツールの結果（tool_result だけの user の行）は区切りにしない。
-export function lastAssistantText(jsonl: string): string {
-	let buffer = '';
+// 会話ログ（JSONL の中身）から、最後の応答のテキストを、かたまりごとに取り出す。
+// 応答は、テキストのかたまりごとに別の行として記録される。かたまりを連ねると、途中の英語が日本語に隠れるため、別々に返す。
+// 利用者の発言（テキストを含む user の行）で区切り、その後のアシスタントのテキストを集める。
+// ツールの結果（tool_result だけの user の行）は区切りにならない。
+export function lastTurnTexts(jsonl: string): string[] {
+	let parts: string[] = [];
 	for (const line of jsonl.split(/\r?\n/)) {
 		if (line.trim() === '') continue;
 		let entry: any;
@@ -40,12 +41,17 @@ export function lastAssistantText(jsonl: string): string {
 		const content = message.content;
 		if (message.role === 'user') {
 			const hasUserText = typeof content === 'string' || (Array.isArray(content) && content.some((block: any) => block?.type === 'text'));
-			if (hasUserText) buffer = '';
+			if (hasUserText) parts = [];
 		} else if (message.role === 'assistant' && Array.isArray(content)) {
 			for (const block of content) {
-				if (block?.type === 'text' && typeof block.text === 'string') buffer += block.text;
+				if (block?.type === 'text' && typeof block.text === 'string') parts.push(block.text);
 			}
 		}
 	}
-	return buffer;
+	return parts;
+}
+
+// 最後の応答の本文を、1 つの文字列にする（判定の単位ではなく、表示や確かめに使う）
+export function lastAssistantText(jsonl: string): string {
+	return lastTurnTexts(jsonl).join('');
 }

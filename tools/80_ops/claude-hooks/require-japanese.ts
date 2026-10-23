@@ -6,7 +6,7 @@
 // node でも bun でも動くよう、標準モジュールだけで書く。
 import { readFileSync } from 'node:fs';
 import { stamped } from './jst.ts';
-import { isEnglishOnly, lastAssistantText } from './japanese-check.ts';
+import { isEnglishOnly, lastTurnTexts } from './japanese-check.ts';
 import { readInput } from './vault.ts';
 
 const reason = '応答は日本語で書いてください。英語だけの応答を検出しました。日本語で書き直してください。技術用語・識別子・コマンドは原文のままで構いません。';
@@ -15,13 +15,14 @@ async function main(): Promise<void> {
 	const input = await readInput();
 	if (!input.transcript_path) return;
 
-	let text: string;
+	// 応答のかたまりごとに、今の条件で判定する。1 つでも英語だけのかたまりがあれば、書き直させる
+	let texts: string[];
 	try {
-		text = lastAssistantText(readFileSync(input.transcript_path, 'utf8'));
+		texts = lastTurnTexts(readFileSync(input.transcript_path, 'utf8'));
 	} catch {
 		return;
 	}
-	if (!isEnglishOnly(text)) return;
+	if (!texts.some(isEnglishOnly)) return;
 
 	if (input.stop_hook_active) {
 		console.log(JSON.stringify({ systemMessage: stamped('❌ 英語だけの応答を検出したが、書き直しは 1 回までのため止めた') }));
