@@ -379,6 +379,8 @@
 	<ul class="plain">
 		<li><strong>フックを変えるときは、テストを先に書き、全件を通す</strong>。通したあと、<code>settings.json</code> のコマンドそのままで試走する</li>
 		<li><strong>別の PC では、<code>settings.json</code> の hooks を、その PC のこのリポジトリの置き場に向けて書く</strong></li>
+			<li><strong>英語判定・会話ログの写し・Obsidian 連携のフックを変えたら、REA の <code>rea-claude</code> の設定（<code>claude-config/settings.json</code>）も確かめて、必要なら直す</strong>。REA の hooks に、その変更を反映したコマンドが並んでいることを確かめる</li>
+			<li><strong>アクセスの許可</strong>: REA の <code>claude-config/settings.json</code> は、読み取りと書き込みを確認なしで行ってよい（「プロジェクトフォルダ外へのアクセス」の例外）。目的は、フックの登録を、このプロジェクトの変更に合わせることだけ</li>
 	</ul>
 
 	<h2>落とし穴</h2>
