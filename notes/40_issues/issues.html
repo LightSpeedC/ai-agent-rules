@@ -316,7 +316,7 @@
 
 <div class="groupbar">
 	<h2>Claude フック（#1383 起票、2026-10-08）</h2>
-	<p class="count">3 件 / 未 0 / 着手 2 / 済 1</p>
+	<p class="count">3 件 / 未 0 / 着手 1 / 済 2</p>
 </div>
 
 <section class="ch02">
@@ -360,8 +360,8 @@
 </section>
 
 <section class="ch02">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i261025-01</code> 張り直しの漏れと、権限拒否で止まる sed・awk をフックで案内する <span class="badge b-warn">着手</span></h1></summary>
+	<details class="md-flat">
+	<summary><h1><code class="no">i261025-01</code> 張り直しの漏れと、権限拒否で止まる sed・awk をフックで案内する <span class="badge b-ok">済</span></h1></summary>
 
 	<p>依頼（#1641、20260824-ai-pc-public から。作業振り返りで、ルールの文だけでは止まらなかった失敗）。共通ルールのフックに次の 2 点を検討してほしい。</p>
 	<ul>
@@ -374,8 +374,8 @@
 		<li><span class="badge b-ok">済</span> テストを先に書き（❌Red: 22 件）、実装して node・bun とも 93 件 ✅Green</li>
 		<li><span class="badge b-ok">済</span> <code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に登録（バックアップは <code>tmp/</code>）。登録したコマンドそのままで試走し、出力を確かめた</li>
 		<li><span class="badge b-ok">済</span> 報告 #1643（別プロジェクトのローカルルールの見出し名が、案内文に出ていた）を直す。ローカルルールは見出し名で指さず、「ローカルルールに定義があれば」と書く（テストを先に変えて ❌Red、直して 93 件 ✅Green）</li>
-		<li><span class="badge b-none">未</span> 次の新しいセッションで、実環境から確かめる（再開の案内が出る・Bash の sed が deny され理由が出る）</li>
-		<li><span class="badge b-none">未</span> 報告元（20260824-ai-pc-public）へ、対応の結果を返信し、検証を依頼する。OK が出るまで「済」にしない</li>
+		<li><span class="badge b-ok">済</span> 次の新しいセッションで、実環境から確かめる（再開の案内が出る・Bash の sed が deny され理由が出る）。ai-pc-public の環境で確認（10/25、#1651。compact 後に案内が出た・sed が PreToolUse で止まり Read・Edit の案内が出た）</li>
+		<li><span class="badge b-ok">済</span> 報告元（20260824-ai-pc-public）へ、対応の結果を返信し、検証を依頼する（#1650）。報告元から OK が出た（#1651、10/25）</li>
 	</ul>
 	</details>
 </section>
