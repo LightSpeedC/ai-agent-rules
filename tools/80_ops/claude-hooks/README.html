@@ -224,6 +224,8 @@
 			<tbody>
 				<tr><td class="nowrap"><code>copy-session-jsonl.ts</code></td><td>会話ログ（JSONL）を、プロジェクト直下の <code>etc/history/jsonl/</code> へコピーする。コピー元は <code>transcript_path</code> と同じフォルダの全 <code>*.jsonl</code>。サイズと更新日時が同じものは飛ばす。プロジェクト直下は、環境変数 <code>CLAUDE_PROJECT_DIR</code> → <code>cwd</code> から上へたどった <code>.git</code> のあるフォルダ → <code>cwd</code> の順で決める（<code>cwd</code> はセッションが <code>cd</code> すると変わるため）</td><td class="nowrap">SessionStart・Stop</td></tr>
 				<tr><td class="nowrap"><code>load-obsidian-memory.ts</code></td><td>Obsidian Vault の <code>memory/!memory.md</code> を、<code>additionalContext</code> としてセッションに注入する</td><td class="nowrap">SessionStart</td></tr>
+<tr><td class="nowrap"><code>remind-resume.ts</code></td><td>再開（<code>resume</code>）・compact のとき、chat 待受けと cron の張り直しを促す。判定はせず、固定の短い文（時刻入り）を <code>additionalContext</code> で出す。手順は共通ルールとローカルルールの見出し名で指す（課題 i261025-01）</td><td class="nowrap">SessionStart</td></tr>
+<tr><td class="nowrap"><code>guard-bash-sed-awk.ts</code></td><td>Bash のコマンドの区切りごとの先頭語が <code>sed</code>・<code>awk</code> なら deny し、理由に Edit・Read を書く。引数の中の語では止めない（課題 i261025-01）</td><td class="nowrap">PreToolUse（matcher: Bash）</td></tr>
 			</tbody>
 		</table>
 	</div>

@@ -1,0 +1,72 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>ai-agent-rules: 張り直しとsed・awkのフック（i261025-01）</title>
+<style>
+:root{--navy1:#12224d;--navy2:#2f5fbf;--ink:#1c2330;--ink-soft:#4a5568;--line:#d9dfe8;--code-bg:#f4f6fa;--accent:#12224d;--accent2:#2f5fbf;--soft:#f2f5fb;}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Yu Gothic UI","Hiragino Sans","Meiryo",sans-serif;font-size:15.5px;line-height:1.85;}
+.titlebar{background:linear-gradient(135deg,var(--navy1),var(--navy2));color:#fff;padding:34px 30px 30px;}
+.titlebar .inner{max-width:1600px;margin:0 auto;}
+.titlebar h1{font-size:1.6em;margin:0 0 6px;color:#fff;}
+.titlebar .date{font-size:.9em;opacity:.9;}
+.wrap{max-width:1600px;margin:0 auto;padding:0 30px;}
+section{padding:4px 26px 26px;margin:34px 0;background:linear-gradient(180deg,var(--soft),#fff);border-radius:8px;}
+h2{border-left:6px solid var(--accent2);padding:6px 12px;margin:30px 0 12px;}
+code{background:var(--code-bg);border:1px solid var(--line);padding:0 4px;border-radius:4px;color:#17335f;}
+.badge{display:inline-block;padding:0 9px;border-radius:6px;color:#fff;background:linear-gradient(100deg,#5a6472,#97a1ae);white-space:nowrap;}
+.b-warn{background:linear-gradient(100deg,#b8620a,#f0a548);}
+footer{max-width:1600px;margin:0 auto;padding:18px 30px 30px;}
+</style>
+</head>
+<body>
+<header class="titlebar"><div class="inner"><h1>ai-agent-rules: 張り直しとsed・awkのフック（i261025-01）</h1><div class="date">📅 作成: 2026-10-25 / 更新: 2026-10-25</div></div></header>
+<div class="wrap">
+
+<section class="ch01">
+<h2>目的</h2>
+<p>課題 <code>i261025-01</code> の 2 点を、フックで実装する。ルールの文だけでは止まらなかった失敗（依頼 #1641、20260824-ai-pc-public の振り返り）に対応する。</p>
+<ul>
+	<li>cron と chat 待受けの張り直し漏れ（4 回）: 再開時に、張り直しを促す。</li>
+	<li>権限の拒否で止まる <code>sed</code>・<code>awk</code>（8 回）: 代わりの手段（Edit・Read）を示す。</li>
+</ul>
+</section>
+
+<section class="ch01">
+<h2>決めたこと（利用者の決定）</h2>
+<ul>
+	<li><strong>1-A</strong>: 再開（<code>source</code> が <code>resume</code>・<code>compact</code>）のとき、固定の短い案内を <code>additionalContext</code> で出す。判定はしない。手順は書かず、見出し名で指す。</li>
+	<li><strong>2-A</strong>: PreToolUse で、Bash のコマンドの先頭が <code>sed</code>・<code>awk</code> のものを deny し、理由に Edit・Read を書く。</li>
+	<li><strong>3-B</strong>: 全プロジェクトの <code>~/.claude/settings.json</code> に加え、REA の <code>rea-claude</code> の設定（<code>claude-config/settings.json</code>）にも入れる。REA の設定へは、利用者が許可済みの書き込みとして入れる。</li>
+</ul>
+</section>
+
+<section class="ch02">
+<h2>実装</h2>
+<ol>
+	<li><code>tools/80_ops/claude-hooks/remind-resume.ts</code>（SessionStart）。毎回違う文にする（時刻を入れる）。再開のときは、<code>systemMessage</code> に 🔁 の表示も出す。</li>
+	<li><code>tools/80_ops/claude-hooks/guard-bash-sed-awk.ts</code>（PreToolUse、matcher は <code>Bash</code>）。コマンドを <code>&amp;&amp;</code> <code>||</code> <code>;</code> <code>|</code> と改行で区切り、各区切りの先頭語が <code>sed</code>・<code>awk</code> なら deny。</li>
+	<li><code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に登録する。登録前に、それぞれのバックアップを <code>tmp/</code> に取る。</li>
+</ol>
+</section>
+
+<section class="ch02">
+<h2>テストと検証</h2>
+<ul>
+	<li>テストを先に書き、落ちることを確かめる（❌Red）。その後に実装して、node・bun とも全件 ✅Green にする。</li>
+	<li>フックの試走: 各フックに、標準入力の見本を渡して出力を見る。</li>
+	<li><strong>実環境の確認は、次の新しいセッションで行う</strong>（再開の案内が出る・<code>sed</code> が deny され理由が出る）。これが済むまで課題は「済」にしない。</li>
+</ul>
+</section>
+
+<section class="ch02">
+<h2>状態</h2>
+<p><span class="badge b-warn">着手</span> 実装と登録は行った。実環境の確認が未了。</p>
+</section>
+
+</div>
+<footer><p><a href="../../README.html">README へ戻る</a></p></footer>
+</body>
+</html>
