@@ -182,7 +182,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules</h1>
 		<p class="lead">AIエージェント（Claude Code・Codex 等）が参照する共通ルール。</p>
-		<p class="date">📅 作成: 2026-09-02 / 更新: 2026-09-27</p>
+		<p class="date">📅 作成: 2026-09-02 / 更新: 2026-10-25</p>
 	</div>
 </div>
 
@@ -211,7 +211,36 @@
 		</li>
 		<li>
 			<a class="doclink d1" href="notes/01_research/r260927-01-コンソールのコードページ問題.html">コンソールのコードページ問題の調査</a>
+			<a class="doclink d1" href="notes/01_research/p261027-01-振り返り.html">p261027-01 振り返り</a>
 			<p class="note">C# ・ PowerShell で出力エンコーディングを変えると同じ窓の cmd が化ける問題の実測と、外部情報の調査。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/p260923-01-HTMLルールの切り出しと参照実験.html">HTMLルールの切り出しと参照実験</a>
+			<p class="note">「HTMLデザインルール」章を <code>rules/</code> へ切り出し、Claude Code・Codex が実体をその場所から参照できるかを試す計画。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/p260923-02-ルール分割対象の分析.html">ルール分割対象の分析</a>
+			<p class="note"><code>common-rules.md</code> と <code>rules/</code> の章ごとのサイズと固有語の分布を調べ、次に切り出す対象を決めるための分析。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/p260927-01-Claudeフックの取り込み.html">Claudeフックの取り込み</a>
+			<p class="note">フック本体を TypeScript で書き直し、<code>~/.claude/settings.json</code> からこのプロジェクトを直接参照する計画。Windows 専用の案は取り下げた。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/p261018-01-共有リポジトリの同期.html">共有リポジトリの同期</a>
+			<p class="note">Obsidian Vault と共通ルールの同期 (commit ・ pull ・ push) を、共有ツール <code>safe-push</code> 1 本に寄せる計画。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/p261021-01-日本語のみ応答の書き直し.html">日本語のみ応答の書き直し</a>
+			<p class="note">英語だけの応答を、Stop フックで日本語に書き直させる計画。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/p261027-01-SessionStartフックの統合.html">SessionStart フックの統合</a>
+			<p class="note">SessionStart で動く 3 本のフックを入口 1 本にまとめ、出力を JSON 1 つにする計画。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/p261027-02-REA設定の通常セッションへの統合.html">REA 設定の通常セッションへの統合</a>
+			<p class="note">専用コマンド <code>rea-claude</code> をやめ、REA の MCP ・ スキル ・ 会話ログを <code>~/.claude</code> にまとめる計画。</p>
 		</li>
 	</ul>
 

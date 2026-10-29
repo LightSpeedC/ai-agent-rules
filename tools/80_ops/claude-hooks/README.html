@@ -203,7 +203,7 @@
 	<div class="inner">
 		<h1>Claude フック</h1>
 		<p class="lead">Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。<code>~/.claude/settings.json</code> がこのフォルダのファイルを直接指すので、コピーは要らない。</p>
-		<p class="date">📅 作成: 2026-10-03 / 更新: 2026-10-09</p>
+		<p class="date">📅 作成: 2026-10-03 / 更新: 2026-10-28</p>
 	</div>
 </div>
 
@@ -222,10 +222,13 @@
 				<tr><th class="nowrap">ファイル</th><th>役割</th><th class="nowrap">呼び出し元イベント</th></tr>
 			</thead>
 			<tbody>
-				<tr><td class="nowrap"><code>copy-session-jsonl.ts</code></td><td>会話ログ（JSONL）を、プロジェクト直下の <code>etc/history/jsonl/</code> へコピーする。コピー元は <code>transcript_path</code> と同じフォルダの全 <code>*.jsonl</code>。サイズと更新日時が同じものは飛ばす。プロジェクト直下は、環境変数 <code>CLAUDE_PROJECT_DIR</code> → <code>cwd</code> から上へたどった <code>.git</code> のあるフォルダ → <code>cwd</code> の順で決める（<code>cwd</code> はセッションが <code>cd</code> すると変わるため）</td><td class="nowrap">SessionStart・Stop</td></tr>
-				<tr><td class="nowrap"><code>load-obsidian-memory.ts</code></td><td>Obsidian Vault の <code>memory/!memory.md</code> を、<code>additionalContext</code> としてセッションに注入する</td><td class="nowrap">SessionStart</td></tr>
-<tr><td class="nowrap"><code>remind-resume.ts</code></td><td>再開（<code>resume</code>）・compact のとき、chat 待受けと cron の張り直しを促す。判定はせず、固定の短い文（時刻入り）を <code>additionalContext</code> で出す。手順は共通ルールとローカルルールの見出し名で指す（課題 i261025-01）</td><td class="nowrap">SessionStart</td></tr>
+				<tr><td class="nowrap"><code>session-start.ts</code></td><td>SessionStart の入口。動かす処理を引数に名前で並べ、並べた順に呼ぶ（<code>copy</code>・<code>obsidian</code>・<code>resume</code>）。結果を JSON 1 つにまとめ、<code>additionalContext</code> の最後に開始時刻の行を 1 回だけ入れる。引数が無いとき・知らない名前は ⚠️ で知らせる（計画 p261027-01）</td><td class="nowrap">SessionStart</td></tr>
+				<tr><td class="nowrap"><code>copy-session-jsonl.ts</code></td><td>Stop の入口。会話ログを写す（処理は <code>jsonl-copy.ts</code>）。成功は表示せず、失敗だけ表示する</td><td class="nowrap">Stop</td></tr>
+				<tr><td class="nowrap"><code>jsonl-copy.ts</code></td><td>（<code>copy</code>）会話ログ（JSONL）を、プロジェクト直下の <code>etc/history/jsonl/</code> へコピーする。コピー元は <code>transcript_path</code> と同じフォルダの全 <code>*.jsonl</code>。サイズと更新日時が同じものは飛ばす。プロジェクト直下は、環境変数 <code>CLAUDE_PROJECT_DIR</code> → <code>cwd</code> から上へたどった <code>.git</code> のあるフォルダ → <code>cwd</code> の順で決める（<code>cwd</code> はセッションが <code>cd</code> すると変わるため）</td><td class="nowrap">（入口から呼ぶ）</td></tr>
+				<tr><td class="nowrap"><code>obsidian-memory.ts</code></td><td>（<code>obsidian</code>）Vault を同期してから、<code>memory/!memory.md</code> と <code>projects/!projects.md</code> を <code>additionalContext</code> として注入する</td><td class="nowrap">（入口から呼ぶ）</td></tr>
+				<tr><td class="nowrap"><code>resume-reminder.ts</code></td><td>（<code>resume</code>）再開（<code>resume</code>）・compact のとき、chat 待受けと cron の張り直しを促す。フックは応答を始められないので、「次の発言を受けたら、本題の前に張り直す」と書く。手順は共通ルールの見出し名で指す（課題 i261025-01）</td><td class="nowrap">（入口から呼ぶ）</td></tr>
 <tr><td class="nowrap"><code>guard-bash-sed-awk.ts</code></td><td>Bash のコマンドの区切りごとの先頭語が <code>sed</code>・<code>awk</code> なら deny し、理由に Edit・Read を書く。引数の中の語では止めない（課題 i261025-01）</td><td class="nowrap">PreToolUse（matcher: Bash）</td></tr>
+<tr><td class="nowrap"><code>convert-after-write.ts</code></td><td>Write で書いた ps1・html・cmd・bat を、<code>convert-encoding</code> で文字コードと改行を揃える（ps1 → ps1、html → html、cmd・bat → cmd）。成功は無表示、失敗は ❌ で書き換えなしを知らせる（依頼 #1672）</td><td class="nowrap">PostToolUse（matcher: Write）</td></tr>
 			</tbody>
 		</table>
 	</div>
@@ -252,18 +255,19 @@
 		</table>
 	</div>
 	<p>失敗の理由に出るパスは、ホームを <code>~</code> に置き換える。</p>
-	<p>再開（<code>--continue</code> / <code>--resume</code>）では、<code>additionalContext</code> が会話にある分と同じだと、同じ回の <code>systemMessage</code> ごと捨てられる（Claude Code の重複排除。anthropics/claude-code の issue 96698）。そのため <code>copy-session-jsonl</code> は、SessionStart で、毎回違う開始時刻（<code>セッション開始: 2026/10/04 00:30:12.345 JST（source=resume）</code> の形）を <code>additionalContext</code> として一緒に渡し、同じ回に「新しい分」があるようにしている。Stop には付けない。</p>
+	<p>再開（<code>--continue</code> / <code>--resume</code>）では、<code>additionalContext</code> が会話にある分と同じだと、Claude Code が捨てる（重複排除。anthropics/claude-code の issue 96698）。そのため <code>session-start.ts</code> は、毎回違う開始時刻の行（<code>セッション開始: 2026/10/04 00:30:12.345 JST（写し先=git）（source=resume）</code> の形）を、<code>additionalContext</code> の最後に 1 回だけ入れる。Stop には付けない。</p>
 </section>
 
 <section class="ch02" id="ch02">
 	<h1>設定</h1>
 
 	<h2>環境変数</h2>
-	<p><code>load-obsidian-memory.ts</code> は、Vault の場所を環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code> から読む。未設定、または <code>memory/!memory.md</code> が無いときは、何も注入せずに正常終了する。</p>
+	<p><code>obsidian-memory.ts</code> は、Vault の場所を環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code> から読む。未設定、または <code>memory/!memory.md</code> が無いときは、何も注入せずに正常終了する。</p>
 
 	<h2>settings.json の書き方</h2>
 	<p><code>~/.claude/settings.json</code> の <code>hooks</code> から、このフォルダのファイルを直接呼ぶ。パスはその環境でのこのリポジトリの置き場にする。</p>
-	<pre><code class="language-json">"command": "node \"W:/ai-agent-rules/tools/80_ops/claude-hooks/copy-session-jsonl.ts\""</code></pre>
+	<pre><code class="language-json">"command": "node \"W:/ai-agent-rules/tools/80_ops/claude-hooks/session-start.ts\" copy obsidian resume"</code></pre>
+	<p>SessionStart は、この 1 行だけにする。Obsidian を使わない PC では <code>obsidian</code> を外すなど、構成の違いは引数だけで変える。待ち時間の上限（<code>timeout</code>）は 45 秒にする（Vault の同期に最大 25 秒かかるため）。</p>
 
 	<p>Node は、<code>.ts</code> を直接実行できる版（v22.18.0 以降、または v23.6.0 以降）が要る。手元の v26.10.0 では実測で動いた。</p>
 </section>

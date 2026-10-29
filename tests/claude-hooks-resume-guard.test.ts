@@ -7,12 +7,18 @@ import { join, resolve } from 'node:path';
 // フック本体は tools/80_ops/claude-hooks/ にある。テストは本番の ~/.claude や REA に触れない
 const root = resolve(import.meta.dirname, '..');
 const hooksDir = join(root, 'tools/80_ops/claude-hooks');
-const remindHook = join(hooksDir, 'remind-resume.ts');
+// 再開の案内は SessionStart の入口（session-start.ts）から出る（p261027-01）
+const remindHook = join(hooksDir, 'session-start.ts');
 const guardHook = join(hooksDir, 'guard-bash-sed-awk.ts');
 
 function run(script: string, input: string) {
+	// 入口は Obsidian メモリも読む。本物の Vault と safe-push に触れないよう、環境変数を外す
+	const env: NodeJS.ProcessEnv = { ...process.env };
+	delete env.AI_AGENT_OBSIDIAN_VAULT;
 	// timeout は固まったことに気づく唯一の手段（同期 API は待ちを止めるため）
-	const r = spawnSync('node', [script], { input, timeout: 15000, encoding: 'utf8' });
+	// 入口は、動かす処理を引数で選ぶ。settings.json と同じ 3 つを並べる
+	const args = script === remindHook ? [script, 'copy', 'obsidian', 'resume'] : [script];
+	const r = spawnSync('node', args, { input, env, timeout: 15000, encoding: 'utf8' });
 	return { status: r.status, stdout: r.stdout, stderr: r.stderr };
 }
 
@@ -54,10 +60,17 @@ describe('remind-resume（再開時の張り直しの案内）', () => {
 		assert.match(JSON.parse(r.stdout).hookSpecificOutput.additionalContext, /張り直す/);
 	});
 
-	test('新規（startup）では、何も出さずに正常終了する', () => {
+	// フックは応答を始められない。張り直しが始まるのは次の発言を受けてからなので、文言もそう書く（p261027-01 の 3-A）
+	test('案内は「次の発言を受けたら、本題の前に張り直す」と書き、「指示を待たずに」とは書かない', () => {
+		const ctx: string = JSON.parse(run(remindHook, input('resume')).stdout).hookSpecificOutput.additionalContext;
+		assert.match(ctx, /次の発言を受けたら、本題の前に張り直す/);
+		assert.doesNotMatch(ctx, /指示を待たずに/);
+	});
+
+	test('新規（startup）では、再開の案内を出さずに正常終了する', () => {
 		const r = run(remindHook, input('startup'));
 		assert.equal(r.status, 0, r.stderr);
-		assert.equal(r.stdout, '');
+		assert.doesNotMatch(r.stdout, /🔁|張り直/);
 	});
 
 	// 同じ文が会話にあると Claude Code が捨てる（重複排除）ため、実行のたびに違う文にする（時刻を入れる）
@@ -70,13 +83,13 @@ describe('remind-resume（再開時の張り直しの案内）', () => {
 	test('再開では、ユーザーへの表示として 🔁 の systemMessage を出す', () => {
 		const out = JSON.parse(run(remindHook, input('resume')).stdout);
 		// 🔁 は UTF-16 で 2 文字のため、unstamp の \S では外せない。日時の位置ごと確かめる
-		assert.match(out.systemMessage, /^🔁\d{2}\/\d{2} \d{2}:\d{2} 再開: .*張り直し/);
+		assert.match(out.systemMessage, /^🔁\d{2}\/\d{2} \d{2}:\d{2} 再開: .*張り直し/m);
 	});
 
-	test('入力が JSON として読めなくても、何も出さずに正常終了する（セッションを止めない）', () => {
+	test('入力が JSON として読めなくても、再開の案内を出さずに正常終了する（セッションを止めない）', () => {
 		const r = run(remindHook, 'JSON ではない');
 		assert.equal(r.status, 0);
-		assert.equal(r.stdout, '');
+		assert.doesNotMatch(r.stdout, /🔁|張り直/);
 	});
 });
 

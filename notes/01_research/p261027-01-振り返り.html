@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>p261027-01 振り返り</title>
+<style>
+	:root {
+		--navy1: #12224d; --navy2: #2f5fbf; --ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa;
+		--link: #1a4fa0; --accent: var(--navy1); --accent2: var(--navy2); --soft: #f2f5fb;
+	}
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch03 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	body { margin: 0; background: #ffffff; color: var(--ink, #1c2330); font-size: 15.5px; line-height: 1.85; font-family: sans-serif; }
+	a { color: var(--link, #1a4fa0); background: transparent; }
+	.titlebar { background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; padding: 34px 30px 30px; }
+	.titlebar .inner { max-width: 1600px; margin: 0 auto; }
+	.titlebar h1 { font-size: 1.7em; margin: 0 0 6px; color: #ffffff; }
+	.titlebar .lead, .titlebar .date { margin: 4px 0; color: #e6ecf8; background: transparent; }
+	.titlebar code { background: rgba(255,255,255,0.16); color: #fff; border: none; }
+	.wrap { max-width: 1600px; margin: 0 auto; padding: 0 30px; }
+	section { background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); padding: 4px 26px 26px; margin: 34px 0; border-radius: 8px; }
+	section h1 { background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 14px 20px; margin: 26px 0 20px; border-radius: 8px; font-size: 1.35em; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+	code { background: var(--code-bg, #f4f6fa); border: 1px solid var(--line, #d9dfe8); color: #17335f; padding: 0 4px; border-radius: 4px; }
+	.tablewrap { overflow-x: auto; }
+	table { border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08); margin: 10px 0; }
+	th { background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 9px 12px; text-align: left; }
+	td { background: #ffffff; color: var(--ink, #1c2330); padding: 9px 12px; vertical-align: top; border-top: 1px solid var(--line, #d9dfe8); }
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; } td.nowrap { white-space: nowrap; }
+	.backlink { display: inline-block; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; text-decoration: none; padding: 4px 12px; border-radius: 6px; }
+	.backlink svg { display: block; }
+	.wrap > .navwrap { margin-top: 18px; }
+	footer { max-width: 1600px; margin: 0 auto; padding: 18px 30px 30px; background: #ffffff; color: var(--ink, #1c2330); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>p261027-01 振り返り</h1>
+		<p class="lead">計画 <code>p261027-01</code> (SessionStart フックの統合) の期間の失敗を拾い、ルール・フックと突き合わせる。入力: 本プロジェクトの会話ログ (10/27 09:00 JST 以降)。出力: この調査。</p>
+		<p class="date">📅 作成: 2026-10-29 / 更新: 2026-10-29</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+
+<section class="ch01" id="ch01">
+<h1>拾った失敗と、防ぐルール・フック</h1>
+<p>英語の判定は簡易な正規表現で拾ったため、取りこぼしがあり得る。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>失敗</th><th>回数</th><th>防ぐルール・フック</th></tr></thead>
+<tbody>
+<tr><td>Edit の old_string が一致しない (インデントのタブ)</td><td class="num">3</td><td>⚠️ 一部 (ツールの説明に「インデントを合わせる」とあるだけ。自分で気づいて直せた)</td></tr>
+<tr><td>応答本文に英語の文 (ツールの前の 1 行の報告)</td><td class="num">2</td><td>⚠️ 一部 (共通ルール「AIエージェント応答の言語」と Stop フック。10/29 の 1 回はフックをすり抜けた。PreToolUse で止める案は課題 i261029-01)</td></tr>
+<tr><td>PowerShell で <code>&lt;</code> のリダイレクトを使い、構文エラー</td><td class="num">2</td><td>❌ 無い</td></tr>
+<tr><td>再開の後に chat 待受けを張り直さなかった</td><td class="num">1</td><td>✅ ある (共通ルール「セッションを開き直したとき」と、再開の案内のフック。案内の文言は本計画の 3-A で直した)</td></tr>
+<tr><td>設計を分けすぎて、統合を指示された</td><td class="num">2</td><td>❌ 無い (本計画で統合済み)</td></tr>
+<tr><td>対象のプロジェクト・フォルダを推測で取り違えた</td><td class="num">2</td><td>⚠️ 一部 (共通ルール「未検証の技術的挙動を、確認済みであるかのように断定しない」)</td></tr>
+<tr><td>起動したプロセスを残した (<code>xx cc</code>)</td><td class="num">1</td><td>✅ ある (共通ルール「残ったプロセスを調べるときは psls を使う」)</td></tr>
+<tr><td>Bash の sed がフックに拒否された</td><td class="num">1</td><td>✅ ある (PreToolUse フックが止めて案内した)</td></tr>
+<tr><td>統合のあとに古いファイルを残した</td><td class="num">1</td><td>⚠️ 一部 (計画に削除の手順が無かった)</td></tr>
+</tbody>
+</table></div>
+<p>テストの失敗 2 回は、テストを先に書いた段階の ❌Red と改修の途中のもので、失敗に数えない。プラグインのフックの <code>hook_cancelled</code> は環境の事象で、AI の失敗ではない。</p>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>ルール化の候補</h1>
+<p>2 回以上起きたか、ルールがあるのに破られたもの。英語の文は課題 i261029-01 で扱うので、ここには挙げない。待受けの張り直しの漏れは 1 回で、本計画で直したので挙げない。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>番号</th><th>失敗</th><th>案</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">1-A</td><td>PowerShell の <code>&lt;</code></td><td>恒久: 共通ルール「PowerShellの落とし穴」に 1 行足す。「<strong><code>&lt;</code> のリダイレクトは無い</strong>。構文エラーになる。標準入力に渡すなら <code>Get-Content -Raw &lt;path&gt; | コマンド</code>、空を渡すなら <code>$null | コマンド</code>」。文 1 行で済み、エラーで止まるので害が残らない</td></tr>
+<tr><td class="nowrap">1-B</td><td>同上</td><td>恒久: PreToolUse フックで、PowerShell のコマンドに <code>&lt;</code> のリダイレクトがあれば止め、上の書き方を案内する。確実だが、文字列の中の <code>&lt;</code> との見分けが要る</td></tr>
+<tr><td class="nowrap">2-A</td><td>Edit の old_string の不一致</td><td>恒久: 共通ルール「ツールごとの文字コードの扱い」の Edit の項に足す。「<strong>old_string は Read の出力から行番号の後のタブ 1 つだけを除いて写す</strong>。インデントのタブを空白で書かない」。自分で直せているので優先は低い</td></tr>
+<tr><td class="nowrap">3-A</td><td>分けすぎ・古いファイルの残し</td><td>恒久: 共通ルール「機能を追加・変更するときの順序」に足す。「<strong>ファイルを置き換える計画には、古いファイルの削除を手順に入れる</strong>」。分けすぎは 1 件の判断の誤りなので、ルールにしない</td></tr>
+</tbody>
+</table></div>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+</footer>
+
+</body>
+</html>

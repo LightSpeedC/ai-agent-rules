@@ -8,7 +8,11 @@ import { join, resolve, delimiter } from 'node:path';
 const root = resolve(import.meta.dirname, '..');
 const hooksDir = join(root, 'tools/80_ops/claude-hooks');
 const copyHook = join(hooksDir, 'copy-session-jsonl.ts');
-const memoryHook = join(hooksDir, 'load-obsidian-memory.ts');
+// SessionStart は入口 1 本（session-start.ts）にまとめた（p261027-01）。Obsidian メモリの分も、入口から起動して確かめる
+// 動かす処理は引数で選ぶ。settings.json と同じ 3 つを並べる
+const sessionHook = join(hooksDir, 'session-start.ts');
+const sessionAll = [sessionHook, 'copy', 'obsidian', 'resume'];
+const memoryHook = sessionAll;
 const syncHook = join(hooksDir, 'sync-obsidian-vault.ts');
 
 let work = '';
@@ -55,7 +59,8 @@ function unstamp(message: string): string {
 	return message.replace(/^(\S)\d{2}\/\d{2} \d{2}:\d{2} /, '$1 ');
 }
 
-function run(script: string, input: string, env: Record<string, string | undefined> = {}) {
+// script は、引数を付けるときは [スクリプト, 引数...] の配列で渡す
+function run(script: string | string[], input: string, env: Record<string, string | undefined> = {}) {
 	// PATH の先頭に偽の safe-push を置く（本物の Vault・GitHub に触れないため）。Windows では名前が Path のこともあるので、元の名前のまま書き換える
 	const pathKey = Object.keys(process.env).find((key) => key.toUpperCase() === 'PATH') ?? 'PATH';
 	const mergedEnv: Record<string, string | undefined> = { ...process.env, [pathKey]: fakeBin + delimiter + (process.env[pathKey] ?? ''), ...env };
@@ -63,7 +68,7 @@ function run(script: string, input: string, env: Record<string, string | undefin
 		if (mergedEnv[key] === undefined) delete mergedEnv[key];
 	}
 	// timeout は固まったことに気づく唯一の手段（同期 API は待ちを止めるため）
-	const r = spawnSync('node', [script], { input, env: mergedEnv as NodeJS.ProcessEnv, timeout: 15000, encoding: 'utf8' });
+	const r = spawnSync('node', typeof script === 'string' ? [script] : script, { input, env: mergedEnv as NodeJS.ProcessEnv, timeout: 15000, encoding: 'utf8' });
 	return { status: r.status, stdout: r.stdout, stderr: r.stderr };
 }
 
@@ -294,7 +299,7 @@ describe('load-obsidian-memory', () => {
 		assert.equal(r.status, 0);
 		const out = JSON.parse(r.stdout);
 		assert.equal(unstamp(out.systemMessage), '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
-		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
+		assert.doesNotMatch(out.hookSpecificOutput?.additionalContext ?? '', /!memory\.md ここから/, '注入しない');
 	});
 
 	test('環境変数のパスに !memory.md が無ければ、何も注入せず正常終了し、⬜ で知らせる', () => {
@@ -302,7 +307,7 @@ describe('load-obsidian-memory', () => {
 		assert.equal(r.status, 0);
 		const out = JSON.parse(r.stdout);
 		assert.equal(unstamp(out.systemMessage), '⬜ Obsidian メモリ: !memory.md が無いため注入なし');
-		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
+		assert.doesNotMatch(out.hookSpecificOutput?.additionalContext ?? '', /!memory\.md ここから/, '注入しない');
 	});
 
 	// systemMessage はユーザーにだけ見え、additionalContext（モデルへ渡す内容）とは別に出る
@@ -320,8 +325,25 @@ describe('load-obsidian-memory', () => {
 		const vault = makeVault('mem4', '# メモリ\n');
 		const input = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
 		const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout);
-		assert.equal(unstamp(out.systemMessage), '✅ Obsidian メモリを渡した（再開では、会話にあれば取り込まれない）');
+		// 再開では、再開の案内の 🔁 の行が後ろに続く。Obsidian の分は 1 行目
+		assert.equal(unstamp(out.systemMessage.split('\n')[0]), '✅ Obsidian メモリを渡した（再開では、会話にあれば取り込まれない）');
 		assert.ok(out.hookSpecificOutput.additionalContext.includes('# メモリ'), '渡す内容は変わらない');
+	});
+
+	// 再開では、注入文が会話にある文と同じだと Claude Code が捨てる（重複排除）。毎回違う開始時刻を入れて、同じ文にならないようにする（remind-resume と同じ形）
+	test('注入文の末尾に、毎回違う開始時刻の行（セッション開始: yyyy/mm/dd hh:mm:ss.ccc JST）を入れる', () => {
+		const vault = makeVault('mem6', '# メモリ\n');
+		const input = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
+		const ctx: string = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout).hookSpecificOutput.additionalContext;
+		assert.match(ctx, /セッション開始: \d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\.\d{3} JST/);
+	});
+
+	test('同じ Vault でも、2 回の注入文は違う（開始時刻が毎回変わる）', () => {
+		const vault = makeVault('mem7', '# メモリ\n');
+		const input = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
+		const first: string = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout).hookSpecificOutput.additionalContext;
+		const second: string = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout).hookSpecificOutput.additionalContext;
+		assert.notEqual(first, second, '同じ文だと再開で捨てられる');
 	});
 
 	for (const source of ['startup', 'compact', 'clear']) {
@@ -329,14 +351,15 @@ describe('load-obsidian-memory', () => {
 			const vault = makeVault('mem5-' + source, '# メモリ\n');
 			const input = JSON.stringify({ hook_event_name: 'SessionStart', source });
 			const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: vault }).stdout);
-			assert.equal(unstamp(out.systemMessage), '✅ Obsidian メモリを注入した');
+			// compact では、再開の案内の 🔁 の行が後ろに続く。Obsidian の分は 1 行目
+			assert.equal(unstamp(out.systemMessage.split('\n')[0]), '✅ Obsidian メモリを注入した');
 		});
 	}
 
 	test('再開でも、環境変数が未設定のときの ⬜ の文言は変わらない', () => {
 		const input = JSON.stringify({ hook_event_name: 'SessionStart', source: 'resume' });
 		const out = JSON.parse(run(memoryHook, input, { AI_AGENT_OBSIDIAN_VAULT: undefined }).stdout);
-		assert.equal(unstamp(out.systemMessage), '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
+		assert.equal(unstamp(out.systemMessage.split('\n')[0]), '⬜ Obsidian メモリ: 環境変数が未設定のため注入なし');
 	});
 
 	// !memory.md という名前のフォルダがあると、存在はするが読めない
@@ -347,7 +370,7 @@ describe('load-obsidian-memory', () => {
 		assert.equal(r.status, 0, 'フックの失敗でセッションを止めない');
 		const out = JSON.parse(r.stdout);
 		assert.ok(unstamp(out.systemMessage).startsWith('❌ Obsidian メモリの読み込みに失敗した: '), out.systemMessage);
-		assert.equal(out.hookSpecificOutput, undefined, '注入しない');
+		assert.doesNotMatch(out.hookSpecificOutput?.additionalContext ?? '', /!memory\.md ここから/, '注入しない');
 	});
 });
 
@@ -432,6 +455,105 @@ describe('load-obsidian-memory（Obsidianメモリ連携ルール）', () => {
 		const log = join(work, 'rule10.log');
 		run(memoryHook, '{}', { AI_AGENT_OBSIDIAN_VAULT: undefined, FAKE_SAFE_PUSH_LOG: log });
 		assert.equal(existsSync(log), false);
+	});
+});
+
+// p261027-01: SessionStart の 3 本（会話ログの写し・Obsidian メモリ・再開の案内）を入口 1 本にまとめる
+describe('session-start（SessionStart の入口 1 本）', () => {
+	const makeVault = (name: string) => {
+		const vault = makeDir(name);
+		mkdirSync(join(vault, 'memory'), { recursive: true });
+		writeFileSync(join(vault, 'memory/!memory.md'), '# メモリ\n');
+		return vault;
+	};
+	// 会話ログの写しが動く入力（transcript_path と、.git のある cwd）
+	const fullInput = (name: string, source: string, cwd?: string) => {
+		const src = makeDir(name + '-src');
+		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
+		return JSON.stringify({ hook_event_name: 'SessionStart', source, transcript_path: join(src, 'a.jsonl'), cwd: cwd ?? makeDir(name + '-cwd', true) });
+	};
+	const noProjectDir = { CLAUDE_PROJECT_DIR: undefined };
+
+	test('出力は JSON 1 つだけ（3 つの処理の結果を 1 つにまとめる）', () => {
+		const r = run(sessionAll,fullInput('ss1', 'resume'), { AI_AGENT_OBSIDIAN_VAULT: makeVault('ss1-vault'), ...noProjectDir });
+		assert.equal(r.status, 0, r.stderr);
+		const lines = r.stdout.trim().split(/\r?\n/);
+		assert.equal(lines.length, 1, r.stdout);
+		const out = JSON.parse(lines[0]);
+		assert.match(out.systemMessage, /会話ログを 1 件コピーした/);
+		assert.match(out.systemMessage, /Obsidian メモリを渡した/);
+		assert.match(out.systemMessage, /🔁.*再開/);
+	});
+
+	// 再開では、同じ文が会話にあると Claude Code が捨てる（重複排除）。開始時刻の行は入口が 1 回だけ入れる
+	test('開始時刻の行は、注入文の最後に 1 回だけ入り、写し先と source を添える', () => {
+		const out = JSON.parse(run(sessionAll,fullInput('ss2', 'resume'), { AI_AGENT_OBSIDIAN_VAULT: makeVault('ss2-vault'), ...noProjectDir }).stdout);
+		const ctx: string = out.hookSpecificOutput.additionalContext;
+		assert.equal(ctx.match(/セッション開始:/g)?.length, 1, ctx);
+		assert.match(ctx.split('\n').pop()!, /^セッション開始: \d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}\.\d{3} JST（写し先=git）（source=resume）$/);
+	});
+
+	test('Obsidian の読み込みに失敗しても、会話ログの写しの表示と再開の案内は出る', () => {
+		const broken = makeDir('ss3-broken');
+		mkdirSync(join(broken, 'memory/!memory.md'), { recursive: true });
+		const r = run(sessionAll,fullInput('ss3', 'resume'), { AI_AGENT_OBSIDIAN_VAULT: broken, ...noProjectDir });
+		assert.equal(r.status, 0, r.stderr);
+		const out = JSON.parse(r.stdout);
+		assert.match(out.systemMessage, /❌.*Obsidian メモリの読み込みに失敗した/);
+		assert.match(out.systemMessage, /会話ログを 1 件コピーした/);
+		assert.match(out.hookSpecificOutput.additionalContext, /張り直す/);
+	});
+
+	test('会話ログの写しに失敗しても、Obsidian メモリと再開の案内は出る', () => {
+		const notDir = join(work, 'ss4-notdir');
+		writeFileSync(notDir, 'ファイル');
+		const r = run(sessionAll,fullInput('ss4', 'resume', notDir), { AI_AGENT_OBSIDIAN_VAULT: makeVault('ss4-vault'), ...noProjectDir });
+		assert.equal(r.status, 0, r.stderr);
+		const out = JSON.parse(r.stdout);
+		assert.match(out.systemMessage, /❌.*会話ログのコピーに失敗した/);
+		const ctx: string = out.hookSpecificOutput.additionalContext;
+		assert.match(ctx, /!memory\.md ここから/);
+		assert.match(ctx, /張り直す/);
+	});
+
+	test('新規（startup）では、再開の案内を出さない', () => {
+		const out = JSON.parse(run(sessionAll,fullInput('ss5', 'startup'), { AI_AGENT_OBSIDIAN_VAULT: makeVault('ss5-vault'), ...noProjectDir }).stdout);
+		assert.doesNotMatch(out.systemMessage, /🔁/);
+		assert.doesNotMatch(out.hookSpecificOutput.additionalContext, /張り直す/);
+	});
+
+	// 構成の違い（Obsidian を使わない PC など）は、settings.json の引数だけで変える
+	test('引数で並べた処理だけを、並べた順に動かす', () => {
+		const out = JSON.parse(run([sessionHook, 'resume', 'copy'], fullInput('ss7', 'resume'), { AI_AGENT_OBSIDIAN_VAULT: makeVault('ss7-vault'), ...noProjectDir }).stdout);
+		const lines: string[] = out.systemMessage.split('\n');
+		assert.equal(lines.length, 2, out.systemMessage);
+		assert.match(lines[0], /^🔁/);
+		assert.match(lines[1], /会話ログを 1 件コピーした/);
+		assert.doesNotMatch(out.hookSpecificOutput.additionalContext, /!memory\.md ここから/, 'obsidian は並べていない');
+	});
+
+	// 指定し忘れたときに、黙って全部動かさない（7-A）
+	test('引数が無ければ何も動かさず、⚠️ を出して正常終了する', () => {
+		const r = run(sessionHook, fullInput('ss8', 'resume'), { AI_AGENT_OBSIDIAN_VAULT: makeVault('ss8-vault'), ...noProjectDir });
+		assert.equal(r.status, 0, r.stderr);
+		const out = JSON.parse(r.stdout);
+		assert.match(out.systemMessage, /^⚠️\d{2}\/\d{2} \d{2}:\d{2} .*引数/);
+		assert.doesNotMatch(out.systemMessage, /会話ログ|Obsidian|🔁/);
+	});
+
+	test('知らない名前は ⚠️ で知らせ、ほかの名前は動かす', () => {
+		const out = JSON.parse(run([sessionHook, 'obsidain', 'copy'], fullInput('ss9', 'resume'), { ...noProjectDir }).stdout);
+		assert.match(out.systemMessage, /⚠️.*obsidain/);
+		assert.match(out.systemMessage, /会話ログを 1 件コピーした/);
+	});
+
+	test('Stop の入口（copy-session-jsonl）は、成功では何も出さない（従来どおり）', () => {
+		const src = makeDir('ss6-src');
+		writeFileSync(join(src, 'a.jsonl'), 'AAA\n');
+		const input = JSON.stringify({ hook_event_name: 'Stop', transcript_path: join(src, 'a.jsonl'), cwd: makeDir('ss6-cwd', true) });
+		const r = run(copyHook, input, noProjectDir);
+		assert.equal(r.status, 0, r.stderr);
+		assert.equal(r.stdout, '');
 	});
 });
 

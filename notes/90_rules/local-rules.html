@@ -211,7 +211,7 @@
 	<div class="inner">
 		<h1>ローカルルール</h1>
 		<p class="lead">このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-04</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-29</p>
 	</div>
 </div>
 
@@ -354,7 +354,7 @@
 				<tr>
 					<td class="nowrap">置き場</td>
 					<td><code>tools/80_ops/claude-hooks/</code></td>
-					<td>ts の 2 本（<code>copy-session-jsonl.ts</code>・<code>load-obsidian-memory.ts</code>）</td>
+					<td>SessionStart は <code>session-start.ts</code> (引数で copy・obsidian・resume を並べる)、Stop は <code>copy-session-jsonl.ts</code> ほか</td>
 				</tr>
 				<tr>
 					<td class="nowrap">呼び方</td>
@@ -385,7 +385,8 @@
 
 	<h2>落とし穴</h2>
 	<ul class="plain">
-		<li><strong>再開（<code>--continue</code> / <code>--resume</code>）では、<code>additionalContext</code> が会話にある分と同じだと、同じ回の <code>systemMessage</code> ごと捨てられる</strong>（Claude Code の重複排除）。表示を出すフックは、毎回違う短い <code>additionalContext</code> を一緒に渡す</li>
+		<li><strong>再開では、<code>additionalContext</code> が会話にある分と同じだと、Claude Code が捨てる</strong> (重複排除)。<code>session-start.ts</code> が、毎回違う開始時刻の行を最後に 1 回だけ入れる</li>
+		<li><strong>フックは応答を始められない</strong>。再開の張り直しは、次の発言を受けてから行う</li>
 		<li><strong><code>settings.json</code> を書き換えても、動いているセッションには効かない</strong>。次の起動・再開から有効になる</li>
 	</ul>
 </section>

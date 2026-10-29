@@ -256,7 +256,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules 課題</h1>
 		<p class="lead">これから解決することを記録する。片付いたグループは <a href="issues-archive.html">issues-archive.html</a> に残す。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-18</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-29</p>
 	</div>
 </div>
 
@@ -266,7 +266,7 @@
 
 <div class="groupbar">
 	<h2>資料の整合性（レビュー #1108 起票、2026-09-24）</h2>
-	<p class="count">5 件 / 未 1 / 着手 0 / 済 4</p>
+	<p class="count">5 件 / 未 0 / 着手 0 / 済 5</p>
 </div>
 
 <section class="ch01">
@@ -280,8 +280,8 @@
 </section>
 
 <section class="ch01">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i260924-02</code> README が共通ルールの実体・切り出し先・新しい計画書に触れていない <span class="badge b-none">未</span></h1></summary>
+	<details class="md-flat">
+	<summary><h1><code class="no">i260924-02</code> README が共通ルールの実体・切り出し先・新しい計画書に触れていない <span class="badge b-ok">済</span></h1></summary>
 
 	<p>README の資料一覧は2本だけで、root にある共通ルールの本体（<code>common-rules.md</code>）と切り出し先19本（<code>rules/</code>）への言及がない。09-22・09-23に作られた計画3本も載っていない。</p>
 	<p>共通ルール「HTMLデザインルール」の「root の README.html と資料の html は相互リンクする」。</p>
@@ -316,7 +316,7 @@
 
 <div class="groupbar">
 	<h2>Claude フック（#1383 起票、2026-10-08）</h2>
-	<p class="count">3 件 / 未 0 / 着手 1 / 済 2</p>
+	<p class="count">5 件 / 未 1 / 着手 2 / 済 2</p>
 </div>
 
 <section class="ch02">
@@ -353,7 +353,7 @@
 		<li><span class="badge b-ok">済</span> 計画（<code>notes/10_plan/i261018-01-フックをObsidian連携ルールに合わせる.html</code>）を立て、利用者の承認を得る（10/20、決めることは 3 点とも A）</li>
 		<li><span class="badge b-ok">済</span> テストを先に書き（❌Red: 13 件）、実装して node・bun とも 52 件 ✅Green</li>
 		<li><span class="badge b-ok">済</span> <code>settings.json</code> の hooks を書き換え（Stop に <code>sync-obsidian-vault.ts</code>、SessionStart の timeout 30 秒）、コマンドそのままで試走</li>
-		<li><span class="badge b-none">未</span> 実環境のフック（SessionStart・Stop）から動かして結果を見る</li>
+		<li><span class="badge b-ok">済</span> 実環境のフック（SessionStart・Stop）から動かして結果を見る。SessionStart は 10/25 の compact 後に、MCP の記述が無い Vault 注入が出た。Stop は Vault の履歴に safe-push の commit が turn ごとに残った（10/25 12:22・13:04）</li>
 		<li><span class="badge b-none">未</span> 報告元（ai-obsidian-vault）の確認</li>
 	</ul>
 	</details>
@@ -376,6 +376,36 @@
 		<li><span class="badge b-ok">済</span> 報告 #1643（別プロジェクトのローカルルールの見出し名が、案内文に出ていた）を直す。ローカルルールは見出し名で指さず、「ローカルルールに定義があれば」と書く（テストを先に変えて ❌Red、直して 93 件 ✅Green）</li>
 		<li><span class="badge b-ok">済</span> 次の新しいセッションで、実環境から確かめる（再開の案内が出る・Bash の sed が deny され理由が出る）。ai-pc-public の環境で確認（10/25、#1651。compact 後に案内が出た・sed が PreToolUse で止まり Read・Edit の案内が出た）</li>
 		<li><span class="badge b-ok">済</span> 報告元（20260824-ai-pc-public）へ、対応の結果を返信し、検証を依頼する（#1650）。報告元から OK が出た（#1651、10/25）</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch02">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261025-02</code> Write で書いた ps1・html・cmd・bat を、convert-encoding で文字コードと改行に揃える <span class="badge b-warn">着手</span></h1></summary>
+
+	<p>依頼（#1672、20261019-file-manager から）。共通ルール「ツールごとの文字コードの扱い」は Write の後の変換を人に任せているが、守られず ps1 の日本語が化けた事例がある。Write の直後に、拡張子に応じた変換を掛ける PostToolUse フックを足してほしい。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-ok">済</span> テストを先に書き（❌Red: 9 件）、実装して node・bun とも全件 102 件 ✅Green</li>
+		<li><span class="badge b-ok">済</span> <code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に PostToolUse（matcher: Write）を登録（バックアップは <code>tmp/</code>）。登録したコマンドそのままで試走し、BOM と CRLF が付くことを確かめた</li>
+		<li><span class="badge b-none">未</span> 次の新しいセッションで、実環境から Write を行い、変換されることを確かめる</li>
+		<li><span class="badge b-none">未</span> 報告元（20261019-file-manager）へ、対応の結果を返信し、検証を依頼する。OK が出るまで「済」にしない</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch02">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261029-01</code> ツールを呼ぶ前に、直前の文が英語だけなら止める <span class="badge b-none">未</span></h1></summary>
+
+	<p>依頼（#1691、20261019-file-manager から）。今の Stop フックは応答を終えた後に英語を見つけるため、英語の行はすでに利用者に出ている。PreToolUse で、直前の応答の文が英語だけならツールの呼び出しを止めてほしい。判定は Stop フックのものを流用できるはず。2026-10-29 の 20261019-file-manager で、ツールの前の 1 行の報告を英語で書く失敗が 8 回あった（ai-agent-rules でも 10/29 に 1 回）。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 計画を立て、利用者の承認を得る</li>
+		<li><span class="badge b-none">未</span> テストを先に書き、実装して node・bun とも全件 ✅Green</li>
+		<li><span class="badge b-none">未</span> <code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に登録し、実環境から確かめる</li>
+		<li><span class="badge b-none">未</span> 報告元（20261019-file-manager）へ結果を返信し、検証を依頼する。OK が出るまで「済」にしない</li>
 	</ul>
 	</details>
 </section>

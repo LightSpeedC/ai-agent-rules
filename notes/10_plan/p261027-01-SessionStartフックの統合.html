@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SessionStart フックを 1 本にまとめる</title>
+<style>
+	:root {
+		--navy1: #12224d;
+		--navy2: #2f5fbf;
+		--ink: #1c2330;
+		--ink-soft: #4a5568;
+		--line: #d9dfe8;
+		--code-bg: #f4f6fa;
+		--link: #1a4fa0;
+		--accent: #12224d;
+		--accent2: #2f5fbf;
+		--soft: #f2f5fb;
+	}
+
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+	.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch04 { --accent: hsl(70, 78%, 25%);  --accent2: hsl(70, 58%, 55%);  --soft: hsl(70, 28%, 95%); }
+	.ch05 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+		font-size: 15.5px;
+		line-height: 1.85;
+	}
+
+	a { color: var(--link, #1a4fa0); background: transparent; }
+
+	.titlebar {
+		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+	}
+	.titlebar .inner {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 34px 30px 30px;
+	}
+	.titlebar h1 {
+		font-size: 2em;
+		margin: 0 0 8px;
+		color: #ffffff;
+	}
+	.titlebar .lead {
+		color: #e2ebfb;
+		background: transparent;
+		margin: 0 0 10px;
+		font-size: .95em;
+		max-width: 1100px;
+	}
+	.titlebar .date {
+		color: #d3e1fb;
+		background: transparent;
+		font-size: .85em;
+	}
+	.titlebar code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	.wrap {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 0 30px;
+	}
+
+	section {
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 4px 26px 26px;
+		margin: 34px 0;
+	}
+
+	section h1 {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		font-size: 1.5em;
+		padding: 14px 20px;
+		margin: 26px 0 20px;
+		border-radius: 8px;
+		box-shadow: 0 3px 10px rgba(18, 34, 77, 0.22);
+	}
+	section h1 code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	h2 {
+		background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--accent, #12224d);
+		border-left: 6px solid var(--accent, #12224d);
+		border-radius: 0 6px 6px 0;
+		font-size: 1.18em;
+		padding: 6px 12px;
+		margin: 30px 0 12px;
+	}
+
+	.tablewrap { overflow-x: auto; margin: 14px 0; }
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
+	}
+	th {
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-align: left;
+		font-weight: 600;
+		padding: 9px 12px;
+	}
+	td {
+		background: transparent;
+		color: var(--ink, #1c2330);
+		border-bottom: 1px solid var(--line, #d9dfe8);
+		vertical-align: top;
+		padding: 9px 12px;
+	}
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; white-space: nowrap; }
+	th.num { text-align: right; }
+	td.nowrap, th.nowrap { white-space: nowrap; }
+
+	pre {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border-left: 5px solid var(--accent2, #2f5fbf);
+		border-radius: 0 6px 6px 0;
+		padding: 13px 16px;
+		overflow-x: auto;
+	}
+
+	code {
+		background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-size: .92em;
+	}
+	pre code { border: none; padding: 0; }
+
+	.callout {
+		border-left: 6px solid var(--accent, #12224d);
+		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--ink, #1c2330);
+		border-radius: 0 8px 8px 0;
+		padding: 12px 18px;
+		margin: 18px 0;
+	}
+	.callout strong { color: var(--accent, #12224d); background: transparent; }
+
+	.badge {
+		display: inline-block;
+		padding: 2px 9px;
+		border-radius: 999px;
+		font-size: .82em;
+		font-weight: 600;
+		color: #ffffff;
+		white-space: nowrap;
+	}
+	.b-ok   { background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-ng   { background: linear-gradient(100deg, #a51f22, #e05a5c); }
+	.b-warn { background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+	.toc {
+		background: linear-gradient(180deg, #f2f5fb, #ffffff);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 16px 24px 24px;
+		margin: 34px 0;
+	}
+	.toc h2 {
+		background: linear-gradient(90deg, #f2f5fb, #ffffff);
+		color: var(--navy1, #12224d);
+		border-left: 6px solid var(--navy1, #12224d);
+	}
+	.toc ol {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		counter-reset: toc;
+	}
+	.toc li { counter-increment: toc; }
+	.toc ol a {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		width: 310px;
+		max-width: 100%;
+		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 8px 12px;
+		border-radius: 6px;
+		font-size: .9em;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+	.toc ol a::before { content: counter(toc) ". "; font-weight: 700; }
+
+	.navwrap { margin: 18px 0 0; }
+	.backlink {
+		display: inline-flex;
+		align-items: center;
+		background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 4px 10px;
+		border-radius: 6px;
+		line-height: 0;
+	}
+	footer {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 18px 30px 30px;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+	}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>SessionStart フックを 1 本にまとめる</h1>
+		<p class="lead">対象: ai-agent-rules ／ 入力: SessionStart の標準入力 (JSON) と Vault ／ 出力: 1 つの JSON (systemMessage と additionalContext) と、会話ログの写し。今は 3 本に分かれているフックを、入口 1 本にまとめる。</p>
+		<p class="date">📅 作成: 2026-10-27 / 更新: 2026-10-29</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+
+<nav class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">目的</a></li>
+		<li class="ch02"><a href="#ch02">現状</a></li>
+		<li class="ch03"><a href="#ch03">設計</a></li>
+		<li class="ch04"><a href="#ch04">手順</a></li>
+		<li class="ch05"><a href="#ch05">決めることの一覧</a></li>
+	</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+	<h1>目的</h1>
+	<p>SessionStart で動くフック 3 本を、入口 1 本にまとめる。出力も JSON 1 つにまとめ、開始時刻の行を 1 回だけ入れる。重複排除への対策を 1 か所で済ませ、node の起動回数も減らす。</p>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>現状</h1>
+	<ul>
+		<li><code>~/.claude/settings.json</code> の SessionStart に 3 本を登録している: <code>load-obsidian-memory.ts</code> ・ <code>copy-session-jsonl.ts</code> ・ <code>remind-resume.ts</code></li>
+		<li>3 本とも、毎回違う開始時刻の行を <code>additionalContext</code> に入れている。再開では、会話にある文と同じだと Claude Code が捨てるため (重複排除)</li>
+		<li><code>copy-session-jsonl.ts</code> は Stop にも登録している</li>
+		<li>REA の <code>claude-config/settings.json</code> にも同じ登録がある</li>
+		<li>再開の案内の文言は「指示を待たずに張り直す」となっている。しかしフックは応答を始められないので、張り直しが始まるのは、次の発言を受けてから (2026-10-27 の再開で確かめた)</li>
+	</ul>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>設計</h1>
+
+	<h2>ファイルの分け方</h2>
+	<ul>
+		<li>入口 <code>session-start.ts</code> を新しく作る。標準入力を 1 回だけ読み、下の 3 つの関数を順に呼ぶ</li>
+		<li>今の 3 本の処理は、関数として切り出す。各関数は、<code>{ message?: string; context?: string }</code> を返す (表示する 1 行と、Claude へ渡す文)
+			<ul>
+				<li>会話ログの写し: <code>jsonl-copy.ts</code></li>
+				<li>Obsidian メモリ: <code>obsidian-memory.ts</code></li>
+				<li>再開の案内: <code>resume-reminder.ts</code></li>
+			</ul>
+		</li>
+		<li><strong>動かす処理は、引数で名前を並べて選ぶ</strong> (<code>session-start.ts copy obsidian resume</code>)。並べた順に呼ぶ。PC ごとの構成の違いは <code>settings.json</code> の引数だけで変える (実装中に利用者の提案で追加)</li>
+		<li>引数が無いとき、知らない名前があるときは、⚠️ を出す。引数が無ければ何も動かさない (決めることの 2)</li>
+		<li><code>copy-session-jsonl.ts</code> は、Stop 用の入口として残す。中身は <code>jsonl-copy.ts</code> を呼ぶだけにする</li>
+		<li><code>load-obsidian-memory.ts</code> と <code>remind-resume.ts</code> は、<code>settings.json</code> を切り替えて動きを確かめてから消す</li>
+	</ul>
+
+	<h2>出力</h2>
+	<ul>
+		<li>JSON を 1 つだけ出す</li>
+		<li><code>systemMessage</code>: 3 つの表示を、今と同じ「絵文字 + 月/日 時:分 + 本文」の形のまま、改行でつなぐ</li>
+		<li><code>additionalContext</code>: 3 つの文を空行でつなぎ、最後に開始時刻の行を 1 回だけ入れる (<code>セッション開始: yyyy/mm/dd hh:mm:ss.ccc JST（写し先=…）（source=…）</code>)</li>
+		<li>呼ぶ順: 会話ログの写し → Obsidian メモリ → 再開の案内</li>
+		<li>1 つの関数が失敗しても、ほかの関数は続ける。失敗は ❌ の表示にする。終了コードは常に 0</li>
+	</ul>
+
+	<h2>テスト</h2>
+	<ul>
+		<li>今のテストのうち、3 本を起動している分は、<code>session-start.ts</code> を起動する形に直す。期待値は変えない</li>
+		<li>新しく足すもの
+			<ul>
+				<li>出力が JSON 1 つだけ</li>
+				<li>開始時刻の行が 1 回だけ入る</li>
+				<li>Obsidian が失敗しても、会話ログの写しの表示と、再開の案内は出る</li>
+				<li>startup では再開の案内を出さず、resume ・ compact では出す</li>
+				<li>Stop 用の <code>copy-session-jsonl.ts</code> は、今と同じ動き (失敗のときだけ表示する)</li>
+			</ul>
+		</li>
+	</ul>
+
+	<h2>登録</h2>
+	<ul>
+		<li><code>~/.claude/settings.json</code> の SessionStart を 1 行にする。Stop は変えない。書き換える前に、控えを <code>tmp/</code> に取る</li>
+		<li>REA の <code>claude-config/settings.json</code> も同じように直す (ローカルルール「Claude フックの置き場とメンテ」)</li>
+	</ul>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>手順</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>作業</th><th>状態</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">1</td><td>この計画の承認と、決めることの 1 を決める (1 は A に決定)</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">2</td><td>テストを先に書き直す・足す。❌Red を確かめる</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">3</td><td>関数への切り出しと <code>session-start.ts</code> を実装する。node ・ bun とも全件 ✅Green</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">4</td><td><code>settings.json</code> のコマンドそのままで試走する</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">5</td><td><code>~/.claude/settings.json</code> と REA の設定を書き換える</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">6</td><td>実環境で、新規起動と再開の両方を見る (表示 3 行、注入文、写し)</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">7</td><td>古い 2 本 (<code>load-obsidian-memory.ts</code> ・ <code>remind-resume.ts</code>) を消す</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">8</td><td><code>tools/80_ops/claude-hooks/README.html</code> を直す。ローカルルールの「Claude フックの置き場とメンテ」の値も、文言を出して指示を受けてから直す</td><td><span class="badge b-ok">済</span></td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>決めることの一覧</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>決めること</th><th>選択肢</th><th>推す案</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="num">1</td>
+					<td>再開の案内の文言</td>
+					<td>A. 「次の発言を受けたら、本題の前に張り直す」に直す<br>B. 今のまま (「指示を待たずに張り直す」)</td>
+					<td><strong>A (決定)</strong>。フックは応答を始められず、実際の動きと合う。B では、発言を待たずに張られると読めてしまう</td>
+				</tr>
+				<tr>
+					<td class="num">2</td>
+					<td>引数が無いときの動き</td>
+					<td>A. 何もせず、⚠️ を出して正常終了する<br>B. 3 つとも動かす</td>
+					<td><strong>A (決定)</strong>。指定し忘れたときに黙って全部動かず、どれが動くかが設定から読める</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+</footer>
+
+</body>
+</html>
