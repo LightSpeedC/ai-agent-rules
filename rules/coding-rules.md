@@ -47,6 +47,7 @@
 - **ps1 を Write で書いたら BOM と CRLF を入れ直す**（`--to ps1`）。Write は BOM無し LF で書く
 - **HTML を Write で書いたら BOM を入れ直す**（`--to html`）
 - **Edit は UTF-8 なら安全**。BOM の有無・LF / CRLF とも維持され、追加した行も元の改行に揃う。`old_string` は LF で書いてよい
+- **old_string は Read の出力から、行番号の後のタブ 1 つだけを除いて写す**。インデントのタブを空白で書かない
 
 変換は `convert-encoding` を使う（プロジェクトを問わず共通）。用途名を渡すと、文字コードと改行の両方が決まる。
 
