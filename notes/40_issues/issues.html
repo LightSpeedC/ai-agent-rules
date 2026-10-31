@@ -428,6 +428,77 @@
 	</details>
 </section>
 
+<div class="groupbar">
+	<h2>品質レビュー q261031-01 の指摘（2026-10-31）</h2>
+	<p class="count">6 件 / 未 6 / 着手 0 / 済 0</p>
+</div>
+
+<section class="ch01">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261031-02</code> <code>format-detection</code> の meta が 15 ファイルに無い <span class="badge b-none">未</span></h1></summary>
+	<p>品質レビュー（<a href="../80_quality_review/q261031-01-品質レビュー.html">q261031-01</a>）の指摘。HTML 20 本のうち、<code>&lt;meta name="format-detection" content="telephone=no"&gt;</code> があるのは 5 本だけ（10/31 に Grep で数えた）。共通ルール「HTMLデザインルール」の「その他」。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 15 本の <code>&lt;head&gt;</code> に足す</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch02">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261031-03</code> 戻るリンクが欠けている・文字になっている <span class="badge b-none">未</span></h1></summary>
+	<p>品質レビューの指摘。<code>i261025-01-張り直しとsed・awkのフック.html</code> は上側の戻るリンクが無く、下側は「README へ戻る」の文字のリンク。<code>issues-archive.html</code> は README へ戻るリンクが無く、<code>issues.html</code> への文字のリンクだけがある。品質レビュー自身の Markdown 側も文字のリンク。共通ルール「root の README.html と資料の html は相互リンクする」。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 上下に ⌂ の紺のバッジを置く（<code>issues-archive.html</code> は <code>issues.html</code> へのリンクも残す）</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch01">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261031-04</code> 色の <code>var()</code> にフォールバックが無い <span class="badge b-none">未</span></h1></summary>
+	<p>品質レビューの指摘。10/31 に数えた <code>var(--名前)</code> だけの箇所: <code>r260927-01</code> 9・<code>i261025-01</code> 5・<code>q261031-01</code> 2・<code>p261027-01</code>・<code>i261029-01</code>・<code>i261031-01</code> 各 1。後の 2 本は <code>:root</code> の変数の定義（<code>--accent: var(--navy1)</code>）で、直すかは見て決める。共通ルール「絶対ルール: 文字色と背景色は必ずペアで成立させる」。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 色に使う箇所へフォールバックの値を書く</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch02">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261031-05</code> README が、カテゴリごとの h1 の章立てになっていない <span class="badge b-none">未</span></h1></summary>
+	<p>品質レビューの指摘。README は <code>section</code> が 1 つで、h2 で「ルール」「資料」「課題」を並べている。共通ルールでは、<code>notes/</code> のカテゴリ（01_research・10_plan・40_issues・80_quality_review・90_rules）ごとに 1 章の h1 にし、虹色を振る。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 章立てを作り直す（章の数と色相を計算する）</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch01">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261031-06</code> issues.html の章の色が 2 色しか無い <span class="badge b-none">未</span></h1></summary>
+	<p>品質レビューの指摘。<code>issues.html</code> は課題が増えても <code>.ch01</code>・<code>.ch02</code> を交互に使っている。共通ルールの「章数に応じた虹色配分」との合わせ方（グループごとに振るか、全体で通すか）を決める必要がある。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 振り方を決め、利用者の承認を得てから直す</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch02">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261031-07</code> 品質レビュー q261031-01 の中身が古い・ルールに外れる <span class="badge b-none">未</span></h1></summary>
+	<p>テストの件数（114 件。今は 130 件）・未追跡ファイルの一覧が古い。<code>issues.html</code> のコントラスト（1.24:1）は 10/31 の <code>check-contrast</code> で全件 OK になり、解消済み。丸かっこが全角。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 解消済みの指摘と古い数値に、10/31 時点の結果を書き足す（レビュー当時の記録は消さない）</li>
+	</ul>
+	</details>
+</section>
+
 <p class="navwrap"><a class="backlink" href="issues-archive.html">片付いた課題（issues-archive.html）</a></p>
 
 </div>
