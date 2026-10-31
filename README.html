@@ -32,7 +32,7 @@
 	a { color: var(--link, #1a4fa0); background: transparent; }
 
 	.titlebar {
-		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
 		color: #ffffff;
 	}
 	.titlebar .inner {
@@ -70,7 +70,7 @@
 	}
 
 	section {
-		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
 		color: var(--ink, #1c2330);
 		border: 1px solid var(--line, #d9dfe8);
 		border-radius: 10px;
@@ -79,7 +79,7 @@
 	}
 
 	h2 {
-		background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		background: #f2f5fb; background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
 		color: var(--accent, #12224d);
 		border-left: 6px solid var(--accent, #12224d);
 		border-radius: 0 6px 6px 0;
@@ -89,7 +89,7 @@
 	}
 
 	code {
-		background: var(--code-bg, #f4f6fa);
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
 		color: #17335f;
 		border: 1px solid var(--line, #d9dfe8);
 		border-radius: 4px;
@@ -101,7 +101,7 @@
 	.doclist li { margin: 8px 0; }
 	.doclist .doclink {
 		display: inline-block;
-		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
 		color: #ffffff;
 		text-decoration: none;
 		padding: 4px 12px;
@@ -133,7 +133,7 @@
 		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
 	}
 	th {
-		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
 		color: #ffffff;
 		text-align: left;
 		font-weight: 600;
@@ -155,7 +155,7 @@
 	.navwrap { margin: 18px 0 0; }
 	.backlink {
 		display: inline-block;
-		background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
 		color: #ffffff;
 		text-decoration: none;
 		padding: 4px 12px;
@@ -182,7 +182,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules</h1>
 		<p class="lead">AIエージェント（Claude Code・Codex 等）が参照する共通ルール。</p>
-		<p class="date">📅 作成: 2026-09-02 / 更新: 2026-10-25</p>
+		<p class="date">📅 作成: 2026-09-02 / 更新: 2026-10-31</p>
 	</div>
 </div>
 
@@ -240,6 +240,8 @@
 		</li>
 		<li>
 			<a class="doclink d1" href="notes/10_plan/p261027-02-REA設定の通常セッションへの統合.html">REA 設定の通常セッションへの統合</a>
+			<a class="doclink d1" href="notes/10_plan/i261029-01-ツール前の英語判定.html">ツール前の英語判定</a>
+			<a class="doclink d1" href="notes/10_plan/i261031-01-英語判定の割合化.html">英語判定の割合化</a>
 			<p class="note">専用コマンド <code>rea-claude</code> をやめ、REA の MCP ・ スキル ・ 会話ログを <code>~/.claude</code> にまとめる計画。</p>
 		</li>
 	</ul>
@@ -249,6 +251,14 @@
 		<li>
 			<a class="doclink d1" href="notes/40_issues/issues.html">課題</a>
 			<p class="note">これから解決することの記録。</p>
+		</li>
+	</ul>
+
+	<h2>品質レビュー</h2>
+	<ul class="doclist">
+		<li>
+			<a class="doclink d1" href="notes/80_quality_review/q261031-01-品質レビュー.html">プロジェクト品質レビュー結果</a>
+			<p class="note">フォルダ構成、HTMLデザインルール適合性、コード・テスト、Git運用の総合品質レビュー報告書。</p>
 		</li>
 	</ul>
 

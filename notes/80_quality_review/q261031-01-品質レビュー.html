@@ -1,0 +1,882 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>ai-agent-rules プロジェクト品質レビュー結果（q261031-01）</title>
+<style>
+:root {
+	--navy1: #12224d;
+	--navy2: #2f5fbf;
+	--ink: #1c2330;
+	--ink-soft: #4a5568;
+	--line: #d9dfe8;
+	--code-bg: #f4f6fa;
+	--link: #1a4fa0;
+	--accent: #12224d;
+	--accent2: #2f5fbf;
+	--soft: #f2f5fb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+	margin: 0;
+	background: #ffffff;
+	color: var(--ink, #1c2330);
+	font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+	font-size: 15.5px;
+	line-height: 1.85;
+}
+
+a { color: var(--link, #1a4fa0); background: transparent; }
+
+.titlebar {
+	background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+	color: #ffffff;
+}
+.titlebar .inner {
+	max-width: 1600px;
+	margin: 0 auto;
+	padding: 34px 30px 30px;
+}
+.titlebar h1 {
+	font-size: 2em;
+	margin: 0 0 8px;
+	color: #ffffff;
+}
+.titlebar .lead {
+	color: #e2ebfb;
+	background: transparent;
+	margin: 0 0 10px;
+	font-size: .95em;
+	max-width: 1100px;
+}
+.titlebar .lead a {
+	color: #ffffff;
+	background: rgba(255, 255, 255, 0.18);
+	padding: 1px 6px;
+	border-radius: 4px;
+	text-decoration: underline;
+}
+.titlebar .date {
+	color: #d3e1fb;
+	background: transparent;
+	font-size: .85em;
+}
+.titlebar code {
+	background: rgba(255, 255, 255, 0.16);
+	color: #ffffff;
+	border: none;
+}
+
+.wrap {
+	max-width: 1600px;
+	margin: 0 auto;
+	padding: 0 30px;
+}
+
+.navwrap { margin: 18px 0 0; }
+.backlink {
+	display: inline-block;
+	background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+	color: #ffffff;
+	text-decoration: none;
+	padding: 4px 12px;
+	border-radius: 6px;
+	line-height: 1;
+}
+.backlink svg { display: block; }
+
+.toc {
+	margin: 24px 0 34px;
+	padding: 18px 22px;
+	background: #f8fafe;
+	color: var(--ink, #1c2330);
+	border: 1px solid var(--line, #d9dfe8);
+	border-radius: 8px;
+}
+.toc h2 {
+	margin: 0 0 14px;
+	font-size: 1.1em;
+	background: transparent;
+	border: none;
+	padding: 0;
+	color: var(--navy1, #12224d);
+}
+.toc ol {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	counter-reset: toc-counter;
+}
+.toc li {
+	counter-increment: toc-counter;
+}
+.toc a {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	white-space: normal;
+	width: 310px;
+	max-width: 100%;
+	background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+	color: #ffffff;
+	text-decoration: none;
+	padding: 6px 12px;
+	border-radius: 6px;
+	font-size: .92em;
+	font-weight: 700;
+	box-shadow: 0 2px 4px rgba(18, 34, 77, 0.12);
+}
+.toc a::before {
+	content: counter(toc-counter) ". ";
+}
+
+section {
+	background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+	color: var(--ink, #1c2330);
+	border: 1px solid var(--line, #d9dfe8);
+	border-radius: 10px;
+	padding: 4px 26px 26px;
+	margin: 34px 0;
+}
+
+section h1 {
+	background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+	color: #ffffff;
+	padding: 14px 20px;
+	margin: 26px 0 20px;
+	border-radius: 8px;
+	font-size: 1.35em;
+	box-shadow: 0 3px 8px rgba(18, 34, 77, 0.16);
+}
+
+h2 {
+	background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+	color: var(--accent, #12224d);
+	border-left: 6px solid var(--accent, #12224d);
+	border-radius: 0 6px 6px 0;
+	font-size: 1.15em;
+	padding: 6px 12px;
+	margin: 30px 0 12px;
+}
+
+h3 {
+	border-bottom: 2px dotted var(--accent2, #2f5fbf);
+	display: inline-block;
+	color: var(--ink, #1c2330);
+	background: transparent;
+	font-size: 1.05em;
+	padding-bottom: 3px;
+	margin: 20px 0 8px;
+}
+
+code {
+	background: var(--code-bg, #f4f6fa);
+	color: #17335f;
+	border: 1px solid var(--line, #d9dfe8);
+	border-radius: 4px;
+	padding: 1px 5px;
+	font-size: .92em;
+}
+
+pre {
+	background: var(--code-bg, #f4f6fa);
+	color: var(--ink, #1c2330);
+	border: 1px solid var(--line, #d9dfe8);
+	border-left: 5px solid var(--accent2, #2f5fbf);
+	border-radius: 4px;
+	padding: 13px 16px;
+	overflow-x: auto;
+	font-size: .92em;
+	line-height: 1.6;
+}
+pre code {
+	background: transparent;
+	border: none;
+	padding: 0;
+	color: inherit;
+}
+
+.tablewrap {
+	overflow-x: auto;
+	margin: 14px 0;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	background: #ffffff;
+	color: var(--ink, #1c2330);
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
+}
+th {
+	background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+	color: #ffffff;
+	text-align: left;
+	font-weight: 600;
+	padding: 9px 12px;
+}
+td {
+	background: transparent;
+	color: var(--ink, #1c2330);
+	border-bottom: 1px solid var(--line, #d9dfe8);
+	vertical-align: top;
+	padding: 9px 12px;
+}
+tr:nth-child(even) td { background: #fafbfe; }
+td.num { text-align: right; }
+td.nowrap, th.nowrap { white-space: nowrap; }
+
+.badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 6px;
+	color: #ffffff;
+	font-size: .85em;
+	font-weight: 700;
+	white-space: nowrap;
+	margin-right: 4px;
+}
+.b-ok { background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+.b-ng { background: linear-gradient(100deg, #a51f22, #e05a5c); }
+.b-warn { background: linear-gradient(100deg, #b8620a, #f0a548); }
+.b-none { background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+.callout {
+	border-left: 6px solid var(--accent, #12224d);
+	background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+	border-radius: 0 8px 8px 0;
+	padding: 12px 18px;
+	margin: 18px 0;
+	color: var(--ink, #1c2330);
+}
+.callout strong {
+	color: var(--accent, #12224d);
+}
+.callout-important {
+	border-left-color: #a51f22;
+	background: linear-gradient(180deg, #fdf3f3, #ffffff);
+}
+.callout-important strong {
+	color: #a51f22;
+}
+.callout-tip {
+	border-left-color: #1d7a3c;
+	background: linear-gradient(180deg, #f2fbf5, #ffffff);
+}
+.callout-tip strong {
+	color: #1d7a3c;
+}
+.callout-warning {
+	border-left-color: #b8620a;
+	background: linear-gradient(180deg, #fdf8f0, #ffffff);
+}
+.callout-warning strong {
+	color: #b8620a;
+}
+
+/* 5章構成の虹色グラデーション（280° -> 0°、刻み幅 70°） */
+.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+.ch04 { --accent: hsl(70, 78%, 25%);  --accent2: hsl(70, 58%, 55%);  --soft: hsl(70, 28%, 95%); }
+.ch05 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
+
+footer {
+	border-top: 1px solid var(--line, #d9dfe8);
+	color: var(--ink-soft, #4a5568);
+	background: transparent;
+	margin-top: 40px;
+}
+footer .inner {
+	max-width: 1600px;
+	margin: 0 auto;
+	padding: 18px 30px 30px;
+}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>ai-agent-rules プロジェクト品質レビュー結果</h1>
+		<p class="lead"><code>ai-agent-rules</code> プロジェクト全体のファイル・フォルダ構成、HTMLデザインルール適合性、コード・テスト、Git運用の総合品質レビュー報告書。</p>
+		<p class="date">📅 作成: 2026-10-31 / 更新: 2026-10-31</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="READMEへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+
+<div class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">プロジェクト概要と総合評価</a></li>
+		<li class="ch02"><a href="#ch02">HTMLデザインルールの詳細検証</a></li>
+		<li class="ch03"><a href="#ch03">フォルダ構成と命名規則の検証</a></li>
+		<li class="ch04"><a href="#ch04">文字コード・テスト・Git運用の検証</a></li>
+		<li class="ch05"><a href="#ch05">改善推奨事項と是正アクションプラン</a></li>
+	</ol>
+</div>
+
+<section class="ch01" id="ch01">
+	<h1>プロジェクト概要と総合評価</h1>
+	
+	<h2>プロジェクトの目的と位置づけ</h2>
+	<p><code>ai-agent-rules</code> は、各種AIエージェント（Claude Code、Codex 等）が参照する共通ルールの原本リポジトリであり、AI開発ワークフロー全体の安全・品質・統一性を担保する中枢プロジェクトです。全21章にわたる共通ルール群（<code>rules/</code> 配下）およびClaude Code用フック（<code>tools/80_ops/claude-hooks/</code>）の保守・提供を担っています。</p>
+
+	<h2>総合評価サマリー</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr>
+					<th>評価領域</th>
+					<th>評価基準</th>
+					<th class="nowrap">状態</th>
+					<th>判定概要</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><strong>文字コード・改行規約</strong></td>
+					<td>BOM付きUTF-8 / LF / CRLF の厳格準拠</td>
+					<td class="nowrap"><span class="badge b-ok">優良</span></td>
+					<td>全ファイルでBOM・改行規則の違反が0件。100%の遵守を確認。</td>
+				</tr>
+				<tr>
+					<td><strong>自動テスト・コード品質</strong></td>
+					<td>Node.js / Bun によるテストスイート実行</td>
+					<td class="nowrap"><span class="badge b-ok">優良</span></td>
+					<td>全114件のテストが両ランタイムでオールグリーン（Pass 114 / Fail 0）。</td>
+				</tr>
+				<tr>
+					<td><strong>HTMLデザインルール適合性</strong></td>
+					<td>html-rules.md（配色・寸法・戻るリンク等）</td>
+					<td class="nowrap"><span class="badge b-warn">要改善</span></td>
+					<td><code>check-contrast</code> で1件のコントラスト比違反（1.24:1）を検出。READMEの章構成乖離、戻るリンクの欠落・表記揺れを複数検出。</td>
+				</tr>
+				<tr>
+					<td><strong>フォルダ構成・命名規約</strong></td>
+					<td>project-layout-rules.md（2桁番号・種別記号）</td>
+					<td class="nowrap"><span class="badge b-ok">良好</span></td>
+					<td><code>01_research</code>、<code>10_plan</code>、<code>40_issues</code>、<code>90_rules</code> の配置、<code>r/p/i</code> プレフィックスの付与は極めて正確。</td>
+				</tr>
+				<tr>
+					<td><strong>Git作業ツリー健全性</strong></td>
+					<td>未コミット差分、未追跡ファイルの管理</td>
+					<td class="nowrap"><span class="badge b-warn">要確認</span></td>
+					<td><code>README.html</code> や <code>issues.html</code> の未ステージ差分、未追跡の <code>.md</code> ファイルおよびフック実装ファイルが存在。</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="callout callout-tip">
+		<strong>評価の総括:</strong> ルールの原本管理リポジトリとして、テスト品質や文字コード規約は極めて高い水準に保たれています。一方で、自身が規定している「HTMLデザインルール」に対して、過去の作成ファイルやREADME自身にいくつかの不整合やルール未追随が蓄積しています。これらを是正することで、模範リポジトリとしての完成度をさらに高めることができます。
+	</div>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>HTMLデザインルールの詳細検証</h1>
+
+	<h2>コントラスト比の実測検証（check-contrast）</h2>
+	<p>共通ルールに定められた実測検証ツール <code>check-contrast.cmd -Path . -Recurse</code> を全18個のHTMLファイルに対して実行しました。その結果、1箇所でしきい値 1.5:1 未満のコントラスト違反が検出されました。</p>
+
+	<div class="callout callout-important">
+		<strong>検出された違反:</strong> <code>notes/40_issues/issues.html</code> のタイトルバー内リード文において、コントラスト比 <strong>1.24:1</strong> が検出されました。<br>
+		<code>&lt;p class="lead"&gt;... 片付いたグループは &lt;a href="issues-archive.html"&gt;issues-archive.html&lt;/a&gt; に残す。&lt;/p&gt;</code><br>
+		背景が濃紺グラデーション（<code>rgb(33, 65, 134)</code>）であるのに対し、リンク文字色がデフォルトの <code>--link</code>（<code>rgb(26, 79, 160)</code>）のままとなっており、文字色と背景色が同化して視読不能となっています。「濃い背景の中の code・a・strong・バッジは個別に色を指定する」という絶対ルールに違反しています。
+	</div>
+
+	<h2>HTML全18ファイルの詳細ルール適合表</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr>
+					<th>ファイルパス</th>
+					<th class="nowrap">BOM</th>
+					<th class="nowrap">電話番号無効</th>
+					<th class="nowrap">戻るリンク</th>
+					<th class="nowrap">var()フォールバック</th>
+					<th class="nowrap">章h1・虹色配分</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>README.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-warn">章h1なし (h2のみ)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/01_research/p261027-01-振り返り.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">あり</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-warn">2箇所欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (2章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/01_research/r260828-01-エージェントルール棚卸し.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (8章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/01_research/r260927-01-コンソールのコードページ問題.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-warn">11箇所欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/i261018-01-フックをObsidian連携ルールに合わせる.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/i261025-01-張り直しとsed・awkのフック.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">あり</span></td>
+					<td class="nowrap"><span class="badge b-ng">上側欠落 / 文字リンク</span></td>
+					<td class="nowrap"><span class="badge b-warn">7箇所欠落</span></td>
+					<td class="nowrap"><span class="badge b-ng">章h1なし (h2のみ)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/i261029-01-ツール前の英語判定.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">あり</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-warn">2箇所欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (4章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/p260923-01-HTMLルールの切り出しと参照実験.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/p260923-02-ルール分割対象の分析.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/p260927-01-Claudeフックの取り込み.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/p261018-01-共有リポジトリの同期.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/p261021-01-日本語のみ応答の書き直し.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/p261027-01-SessionStartフックの統合.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/10_plan/p261027-02-REA設定の通常セッションへの統合.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (5章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/40_issues/issues-archive.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ng">READMEリンクなし</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (1章)</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/40_issues/issues.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-warn">10章中2色のみ定義</span></td>
+				</tr>
+				<tr>
+					<td><code>notes/90_rules/local-rules.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (4章)</span></td>
+				</tr>
+				<tr>
+					<td><code>tools/80_ops/claude-hooks/README.html</code></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ng">欠落</span></td>
+					<td class="nowrap"><span class="badge b-ok">上下OK (3階層上)</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK</span></td>
+					<td class="nowrap"><span class="badge b-ok">OK (3章)</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>主なHTMLルールの課題詳解</h2>
+	<h3>1. 電話番号自動リンク無効化メタタグの未適用</h3>
+	<p><code>&lt;meta name="format-detection" content="telephone=no"&gt;</code> はiPhone等のSafariブラウザでCVE番号や日付、課題番号などの連続した数字が誤って <code>tel:</code> リンクに変換される事故を防ぐ必須タグです。現在全18ファイル中3ファイルのみで指定されており、15ファイルで未指定です。</p>
+
+	<h3>2. root README.html の構成乖離</h3>
+	<p>HTMLデザインルールでは「<strong>README の章(h1)は、公開する資料を持つ notes/ カテゴリフォルダ（01_research・10_plan・40_issues・90_rules 等）に対応させ、カテゴリごとに1章とする。章数に応じた虹色配分を適用し、章内に資料へのリンクを列挙する</strong>」と明記されています。現在の <code>README.html</code> は <code>&lt;section&gt;</code> が1つだけで、その中に <code>h2</code> で「ルール」「資料」「課題」が並んでおり、カテゴリ別の h1 虹色セクション構造になっていません。</p>
+
+	<h3>3. 戻るリンクの表記揺れ・欠落</h3>
+	<p>ルールでは「<strong>ラベルは ⌂（家）のアイコンだけにし、文字を付けない</strong>」「<strong>本文（.wrap）の先頭とフッターの両方に張る</strong>」「<strong>上側の戻るリンクは margin-top: 18px を付ける</strong>」と規定されています。</p>
+	<ul>
+		<li><code>notes/10_plan/i261025-01-張り直しとsed・awkのフック.html</code>: 先頭リンクがなく、フッターのみ。さらに <code>&lt;a href="../../README.html"&gt;README へ戻る&lt;/a&gt;</code> とテキストリンクになっている。</li>
+		<li><code>notes/40_issues/issues-archive.html</code>: <code>README.html</code> への戻るリンクが存在せず、<code>issues.html</code> への文字リンク（「課題一覧へ」）のみが置かれている。</li>
+	</ul>
+
+	<h3>4. CSS var() のフォールバック値欠落</h3>
+	<p>ルール「絶対ルール: 文字色と背景色は必ずペアで成立させる」において、「<strong>色の var() には必ずフォールバックを書く: var(--accent, #12224d)</strong>」と定められています。<code>r260927-01-コンソールのコードページ問題.html</code> や <code>i261025-01-張り直しとsed・awkのフック.html</code> などで <code>var(--ink)</code> や <code>var(--navy1)</code> のようにフォールバックが省略された箇所が見受けられます。</p>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>フォルダ構成と命名規則の検証</h1>
+
+	<h2>ディレクトリ配置の整合性</h2>
+	<p><code>rules/project-layout-rules.md</code> に基づき、トップレベルおよび配下のフォルダ構成を検証しました。</p>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr>
+					<th>フォルダ</th>
+					<th>定義された用途</th>
+					<th class="nowrap">実体状況</th>
+					<th>適合判定</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>notes/</code></td>
+					<td>管理ドキュメント（HTML正）。自分たちのためのもの</td>
+					<td class="nowrap">存在（01, 10, 40, 90）</td>
+					<td><span class="badge b-ok">適合</span></td>
+				</tr>
+				<tr>
+					<td><code>rules/</code></td>
+					<td>共通ルールの各章切り出し先（Markdown）</td>
+					<td class="nowrap">存在（全21章）</td>
+					<td><span class="badge b-ok">適合</span></td>
+				</tr>
+				<tr>
+					<td><code>tools/</code></td>
+					<td>開発・運用の補助（スクリプト、フック等）</td>
+					<td class="nowrap">存在（40_test, 80_ops）</td>
+					<td><span class="badge b-ok">適合</span></td>
+				</tr>
+				<tr>
+					<td><code>tests/</code></td>
+					<td>テスト本体（TypeScriptテスト）</td>
+					<td class="nowrap">存在（4ファイル）</td>
+					<td><span class="badge b-ok">適合</span></td>
+				</tr>
+				<tr>
+					<td><code>etc/</code></td>
+					<td>非Git管理の一時ファイル・作業履歴・過去ルール等</td>
+					<td class="nowrap">存在（c.bat, history等）</td>
+					<td><span class="badge b-ok">適合</span></td>
+				</tr>
+				<tr>
+					<td><code>tmp/</code></td>
+					<td>設定バックアップ・一時ファイル</td>
+					<td class="nowrap">存在</td>
+					<td><span class="badge b-ok">適合</span></td>
+				</tr>
+				<tr>
+					<td><code>logs/</code></td>
+					<td>クライアント実行ログ等</td>
+					<td class="nowrap">存在</td>
+					<td><span class="badge b-ok">適合</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>ファイル命名規約の検証</h2>
+	<p>「1件1ファイルで蓄積するフォルダは <strong>種別1文字＋yymmdd-nn-件名</strong>」とする規約（<code>p</code>: 計画、<code>r</code>: 調査、<code>q</code>: 品質レビュー、<code>i</code>: 課題紐付き）の適用状況を精査しました。</p>
+	<ul>
+		<li><code>notes/01_research/</code>: <code>r260828-01-エージェントルール棚卸し.html</code>、<code>r260927-01-コンソールのコードページ問題.html</code>、<code>p261027-01-振り返り.html</code>（計画p261027-01の振り返りとして番号を流用）―― <strong>規約に完全準拠</strong></li>
+		<li><code>notes/10_plan/</code>: <code>p260923-01-...</code>、<code>p260923-02-...</code>、<code>p260927-01-...</code>、<code>p261018-01-...</code>、<code>p261021-01-...</code>、<code>p261027-01-...</code>、<code>p261027-02-...</code>、および課題由来の <code>i261018-01-...</code>、<code>i261025-01-...</code>、<code>i261029-01-...</code> ―― <strong>規約に完全準拠</strong></li>
+		<li><code>notes/40_issues/</code>: <code>issues.html</code>、<code>issues-archive.html</code> ―― <strong>固定名として完全準拠</strong></li>
+		<li><code>notes/90_rules/</code>: <code>local-rules.html</code> ―― <strong>ローカルルール命名規約に完全準拠</strong></li>
+	</ul>
+	<p>すべてのドキュメントファイル名において半角英数・日本語・ハイフンのみが使われ、空白文字や大文字小文字の重複、命名規則の乱れは見られません。極めて秩序正しく管理されています。</p>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>文字コード・テスト・Git運用の検証</h1>
+
+	<h2>文字コードと改行コードの全ファイル実測結果</h2>
+	<p>プロジェクト内の全ファイル（<code>.git</code>, <code>etc</code>, <code>tmp</code> を除く）について、BOMの有無および改行コード（LF / CRLF）を機械的にスキャン検証しました。</p>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr>
+					<th>対象種別</th>
+					<th>規定のエンコーディング</th>
+					<th>規定の改行</th>
+					<th class="num">検証対象数</th>
+					<th class="nowrap">判定</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>*.html</code></td>
+					<td>UTF-8 (BOMあり)</td>
+					<td>LF (<code>\n</code>)</td>
+					<td class="num">18</td>
+					<td class="nowrap"><span class="badge b-ok">違反 0件</span></td>
+				</tr>
+				<tr>
+					<td><code>*.md</code></td>
+					<td>UTF-8 (BOMなし)</td>
+					<td>LF (<code>\n</code>)</td>
+					<td class="num">41</td>
+					<td class="nowrap"><span class="badge b-ok">違反 0件</span></td>
+				</tr>
+				<tr>
+					<td><code>*.ts</code></td>
+					<td>UTF-8 (BOMなし)</td>
+					<td>LF (<code>\n</code>)</td>
+					<td class="num">16</td>
+					<td class="nowrap"><span class="badge b-ok">違反 0件</span></td>
+				</tr>
+				<tr>
+					<td><code>*.ps1</code></td>
+					<td>UTF-8 (BOMあり)</td>
+					<td>CRLF (<code>\r\n</code>)</td>
+					<td class="num">1</td>
+					<td class="nowrap"><span class="badge b-ok">違反 0件</span></td>
+				</tr>
+				<tr>
+					<td><code>*.cmd, *.bat</code></td>
+					<td>Shift-JIS / UTF-8</td>
+					<td>CRLF (<code>\r\n</code>)</td>
+					<td class="num">1</td>
+					<td class="nowrap"><span class="badge b-ok">違反 0件</span></td>
+				</tr>
+				<tr>
+					<td>設定ファイル (<code>.editorconfig</code>, <code>.gitattributes</code> 等)</td>
+					<td>UTF-8 (BOMなし)</td>
+					<td>LF (<code>\n</code>)</td>
+					<td class="num">4</td>
+					<td class="nowrap"><span class="badge b-ok">違反 0件</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<p><code>.editorconfig</code> および <code>.gitattributes</code> の設定が厳密に機能しており、すべてのファイルがそれぞれの拡張子に定められた文字コード・改行規約に100%合致しています。</p>
+
+	<h2>自動テストスイートの実行結果</h2>
+	<p><code>tools/40_test/run-tests.cmd</code> を実行し、Node.js および Bun によるテストスイートの動作を検証しました。</p>
+	<pre><code class="language-text">=== node --test ===
+✔ convert-after-write（Write の後に文字コードと改行を揃える） (2756ms)
+✔ remind-resume（再開時の張り直しの案内） (1936ms)
+✔ guard-bash-sed-awk（Bash の sed・awk を止め、Edit・Read を案内する） (1606ms)
+✔ copy-session-jsonl (1495ms)
+✔ copy-session-jsonl の写し先（cd に左右されない） (668ms)
+✔ load-obsidian-memory（SessionStart で Obsidian の記憶を注入する） (1790ms)
+✔ session-start（SessionStart の入口 1 本） (3368ms)
+✔ sync-obsidian-vault（Stop フック） (2289ms)
+✔ 表示の先頭の日時 (2462ms)
+✔ isEnglishOnly（英語だけかどうかの判定） (1ms)
+✔ lastAssistantText（最後の応答のテキスト） (3ms)
+✔ require-japanese（フック全体） (1627ms)
+114 pass, 0 fail (14.81s)
+
+=== bun test ===
+114 pass, 0 fail (1.20s)</code></pre>
+	<p>4つのテストファイル（<code>claude-hooks-convert-after-write.test.ts</code>、<code>claude-hooks-resume-guard.test.ts</code>、<code>claude-hooks.test.ts</code>、<code>require-japanese.test.ts</code>）に定義された全114テストケースが、両環境で全くエラーなく通過しました。特に例外系（JSONパース失敗時にセッションを停止させない設計、タイムスタンプ制御、重複排除回避）の網羅性が高く、堅牢なフック群が構築されています。</p>
+
+	<h2>Git作業ツリーの健全性状態</h2>
+	<p>Git状態（<code>git status -s</code>）を調査したところ、以下の変更が未ステージ・未コミットのまま作業ツリーに残されていることが判明しました。</p>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr>
+					<th>状態</th>
+					<th>ファイルパス</th>
+					<th>内容と背景</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="nowrap"><strong>Modified</strong></td>
+					<td><code>README.html</code> / <code>README.md</code></td>
+					<td>課題 <code>i261029-01-ツール前の英語判定</code> へのリンク追加差分</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><strong>Modified</strong></td>
+					<td><code>notes/40_issues/issues.html</code> / <code>issues.md</code></td>
+					<td>課題 <code>i261029-01</code> の計画リンク追加差分</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><strong>Untracked</strong></td>
+					<td><code>notes/10_plan/i261029-01-ツール前の英語判定.html</code> / <code>.md</code></td>
+					<td>新規作成された計画ファイル</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><strong>Untracked</strong></td>
+					<td><code>notes/10_plan/i261018-01-...md</code> ほか3件の <code>.md</code></td>
+					<td>html2md により生成されたが追跡されていないMarkdownファイル</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><strong>Untracked</strong></td>
+					<td><code>tools/80_ops/claude-hooks/convert-after-write.ts</code></td>
+					<td>新規フック実装本体</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><strong>Untracked</strong></td>
+					<td><code>tests/claude-hooks-convert-after-write.test.ts</code></td>
+					<td>新規フックのテストコード</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="callout callout-warning">
+		<strong>注意:</strong> ローカルルールの第1項では「共通ルールの追随（<code>common-rules.md</code> と <code>rules/</code> 配下）」に関しては即座の commit &amp; push が義務付けられていますが、それ以外の計画・フック実装コード・課題更新は通常のワークフロールール（確認を経てコミット）に従います。未コミット差分が長期間放置されないよう、作業単位ごとのコミットが推奨されます。
+	</div>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>改善推奨事項と是正アクションプラン</h1>
+
+	<h2>優先度別改善項目一覧</h2>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr>
+					<th class="nowrap">優先度</th>
+					<th>分類</th>
+					<th>対象ファイル</th>
+					<th>改善内容</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="nowrap"><span class="badge b-ng">高 (即時)</span></td>
+					<td>コントラスト比</td>
+					<td><code>notes/40_issues/issues.html</code></td>
+					<td>タイトルバーの <code>.lead a</code> に <code>color: #ffffff</code> および下線等の個別スタイルを追加し、コントラスト比 1.5:1 以上（実質 4.5:1 以上）を確保する。</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><span class="badge b-warn">中 (早期)</span></td>
+					<td>戻るリンク</td>
+					<td><code>notes/10_plan/i261025-01-張り直しとsed・awkのフック.html</code></td>
+					<td><code>.wrap</code> 先頭への戻るリンク（<code>margin-top: 18px</code>）を追加し、フッターのテキストリンクを <code>⌂</code> アイコン紺バッジに差し替える。</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><span class="badge b-warn">中 (早期)</span></td>
+					<td>戻るリンク</td>
+					<td><code>notes/40_issues/issues-archive.html</code></td>
+					<td><code>README.html</code> への戻るリンクを先頭およびフッターに配備する（または issues.html と README の両方への遷移を整理）。</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><span class="badge b-warn">中 (早期)</span></td>
+					<td>metaタグ</td>
+					<td>未設定の15ファイル</td>
+					<td><code>&lt;head&gt;</code> 内に <code>&lt;meta name="format-detection" content="telephone=no"&gt;</code> を追加する。</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><span class="badge b-warn">中 (早期)</span></td>
+					<td>章構成・見出し</td>
+					<td><code>README.html</code></td>
+					<td>HTMLデザインルールに基づき、<code>notes/</code> の各カテゴリ（01_research, 10_plan, 40_issues, 80_quality_review, 90_rules）に応じた h1 虹色章立てへ改修する。</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><span class="badge b-none">低 (随時)</span></td>
+					<td>CSS変数</td>
+					<td><code>r260927-01</code>, <code>p261027-01</code> 等</td>
+					<td>CSS内の <code>var(--ink)</code> や <code>var(--navy1)</code> にフォールバック値（例: <code>var(--navy1, #12224d)</code>）を追記する。</td>
+				</tr>
+				<tr>
+					<td class="nowrap"><span class="badge b-none">低 (随時)</span></td>
+					<td>Git整理</td>
+					<td>作業ツリー全体</td>
+					<td>未追跡の <code>.md</code> ファイル、フックコード、未コミットの更新を整理してコミットする。</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>具体的な修正コード例</h2>
+	<h3>1. issues.html のタイトルバーリンク修正</h3>
+	<pre><code class="language-css">/* notes/40_issues/issues.html の style タグ内に追記 */
+.titlebar .lead a {
+	color: #ffffff;
+	background: rgba(255, 255, 255, 0.18);
+	padding: 1px 6px;
+	border-radius: 4px;
+	text-decoration: underline;
+}</code></pre>
+
+	<h3>2. i261025-01 の戻るリンク修正</h3>
+	<pre><code class="language-html">&lt;!-- .wrap の直後（先頭） --&gt;
+&lt;p class="navwrap"&gt;&lt;a class="backlink" href="../../README.html" aria-label="READMEへ戻る"&gt;&lt;svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M2 8 L8 2.5 L14 8"/&gt;&lt;path d="M3.5 7 V13.5 H12.5 V7"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;!-- footer 内 --&gt;
+&lt;footer&gt;
+	&lt;div class="inner"&gt;
+		&lt;p class="navwrap"&gt;&lt;a class="backlink" href="../../README.html" aria-label="READMEへ戻る"&gt;&lt;svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"&gt;&lt;path d="M2 8 L8 2.5 L14 8"/&gt;&lt;path d="M3.5 7 V13.5 H12.5 V7"/&gt;&lt;/svg&gt;&lt;/a&gt;&lt;/p&gt;
+	&lt;/div&gt;
+&lt;/footer&gt;</code></pre>
+</section>
+
+</div>
+
+<footer>
+	<div class="inner">
+		<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="READMEへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+	</div>
+</footer>
+
+</body>
+</html>
