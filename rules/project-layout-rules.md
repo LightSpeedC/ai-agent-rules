@@ -72,13 +72,14 @@ claude --dangerously-skip-permissions -c
 2桁番号を10刻みで付ける。01〜09 は準備・前段階、10〜80 は本編、90 はフェーズに属さず常に参照するもの、**91〜99 はフェーズに属さない特殊なもの（道具が生成する等）**。
 
 ```
-notes/        01_research 02_ideas 10_plan 20_todo 30_status 40_issues 60_releases 80_quality_review 90_rules 91_history
+notes/        01_research 02_ideas 10_plan 20_todo 30_status 40_issues 50_spec 60_releases 80_quality_review 90_rules 91_history
 tools/        10_setup 20_build 30_html2md 40_test 50_run 60_release 70_deploy 80_ops 90_misc
 src/scripts/  10_setup 20_migrate 30_batch 40_job 50_run 60_data 80_ops 90_misc
 ```
 
 - 02_ideas はまだ計画にしていない思いつき。計画にするときは 10_plan へ移す
 - 40_issues はこれから解決する課題
+- **50_spec は、決まった仕様 (いまどう動くか)**。話題ごとに 1 ファイル (`プレビュー.html` 等)。番号は付けない。ただし、並び順などをプロジェクトで決めたいときは、ローカルルールに書いて番号を付けてよい (`10-プレビュー.html` 等)。課題・計画で仕様が決まったら、同じ回のうちにここへ写す。課題・計画には、何をどう変えたかを残す
 - 91_history は history2html が書き出す会話の履歴。**手で書き換えない**（次の書き出しで上書きされる）
 - **空フォルダは作らない**。必要になった時点で作る
 
