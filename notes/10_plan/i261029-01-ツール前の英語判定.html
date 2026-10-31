@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>i261029-01 ツール前の英語判定</title>
+<style>
+	:root {
+		--navy1: #12224d; --navy2: #2f5fbf; --ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa;
+		--link: #1a4fa0; --accent: var(--navy1); --accent2: var(--navy2); --soft: #f2f5fb;
+	}
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(186.7, 78%, 25%); --accent2: hsl(186.7, 58%, 55%); --soft: hsl(186.7, 28%, 95%); }
+	.ch03 { --accent: hsl(93.3, 78%, 25%); --accent2: hsl(93.3, 58%, 55%); --soft: hsl(93.3, 28%, 95%); }
+	.ch04 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	body { margin: 0; background: #ffffff; color: var(--ink, #1c2330); font-size: 15.5px; line-height: 1.85; font-family: sans-serif; }
+	a { color: var(--link, #1a4fa0); background: transparent; }
+	.titlebar { background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; padding: 34px 30px 30px; }
+	.titlebar .inner { max-width: 1600px; margin: 0 auto; }
+	.titlebar h1 { font-size: 1.7em; margin: 0 0 6px; color: #ffffff; }
+	.titlebar .lead, .titlebar .date { margin: 4px 0; color: #e6ecf8; background: transparent; }
+	.titlebar code { background: rgba(255,255,255,0.16); color: #fff; border: none; }
+	.wrap { max-width: 1600px; margin: 0 auto; padding: 0 30px; }
+	section { background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); padding: 4px 26px 26px; margin: 34px 0; border-radius: 8px; }
+	section h1 { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 14px 20px; margin: 26px 0 20px; border-radius: 8px; font-size: 1.35em; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+	code { background: #f4f6fa; background: var(--code-bg, #f4f6fa); border: 1px solid var(--line, #d9dfe8); color: #17335f; padding: 0 4px; border-radius: 4px; }
+	.tablewrap { overflow-x: auto; }
+	table { border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08); margin: 10px 0; }
+	th { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 9px 12px; text-align: left; }
+	td { background: #ffffff; color: var(--ink, #1c2330); padding: 9px 12px; vertical-align: top; border-top: 1px solid var(--line, #d9dfe8); }
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; } td.nowrap { white-space: nowrap; }
+	.badge { display: inline-block; color: #ffffff; padding: 0 8px; border-radius: 6px; font-size: .85em; font-weight: 700; white-space: nowrap; }
+	.b-ok { background: #1d7a3c; background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-none { background: #5a6472; background: linear-gradient(100deg, #5a6472, #97a1ae); }
+	.callout { border-left: 6px solid var(--accent, #12224d); background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); border-radius: 0 8px 8px 0; padding: 8px 16px; margin: 12px 0; }
+	.callout strong { color: var(--accent, #12224d); }
+	.backlink { display: inline-block; background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; text-decoration: none; padding: 4px 12px; border-radius: 6px; }
+	.backlink svg { display: block; }
+	.wrap > .navwrap { margin-top: 18px; }
+	footer { max-width: 1600px; margin: 0 auto; padding: 18px 30px 30px; background: #ffffff; color: var(--ink, #1c2330); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>i261029-01 ツール前の英語判定</h1>
+		<p class="lead">対象: ai-agent-rules の <code>tools/80_ops/claude-hooks/</code>。入力: ツールを呼ぶ前の会話ログ (JSONL)。出力: PreToolUse フック 1 本と、そのテスト・登録 (<code>~/.claude/settings.json</code> と REA の設定)。</p>
+		<p class="date">📅 作成: 2026-10-30 / 更新: 2026-10-31</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+
+<section class="ch01" id="ch01">
+<h1>背景</h1>
+<p>依頼 #1691 (20261019-file-manager から)。今の Stop フック (<code>require-japanese.ts</code>) は応答を終えた後に見るため、ツールの前に書いた 1 行の英語の報告は、ターンの最後まで見つからない。20261019-file-manager で 10/29 に 8 回、ai-agent-rules でも 10/27 から 3 回あった。</p>
+<p>調べて分かったこと:</p>
+<ul>
+	<li>10/29 21:27 の「Diff matches #1689 and #1690. Committing and pushing per the local rule.」は、Stop フックを通り抜けた。判定 <code>isEnglishOnly</code> が <code>#</code> をコードの記号とみなし、英語と判定しなかったため。発言の番号 <code>#1689</code> は英文にも普通に出る</li>
+	<li>Stop フックは、ターンの全部のかたまりを見る。かたまりごとに判定しているので、ツールの前の 1 行も対象には入っている。ただ、知らせるのがターンの最後になる</li>
+</ul>
+<div class="callout"><strong>PreToolUse でも、英語の行が画面に出るのは防げない (未確認)。</strong> テキストはツールを呼ぶ前に表示されているはず。このフックで変わるのは、気づく時点がターンの最後からその場になることと、英語のままツールの作業を進めないこと。</div>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>方針</h1>
+<ul>
+	<li>新しいフック <code>guard-english-before-tool.ts</code> を PreToolUse に足す。判定は <code>japanese-check.ts</code> の <code>isEnglishOnly</code> を使う</li>
+	<li>見るのは、直前のツールの結果 (またはターンの始め) から後のテキストのかたまりだけ。止めた後に日本語で書き直せば、次の呼び出しは通る (同じ英語で何度も止まらない)</li>
+	<li>区切りを、計画の当初の「ツールの呼び出し」から「ツールの結果」に変えた (10/31、実装の中で)。いま呼ぶツールの呼び出しが PreToolUse の時点でログに書かれていると、その後ろには何も無く、判定できなくなるため (書かれるかどうかは未確認)</li>
+	<li>英語だけのかたまりがあれば、<code>permissionDecision: "deny"</code> で止め、理由に「英語の文の日本語訳を本文に書いてから、もう一度呼ぶ」と書く</li>
+	<li>会話ログが読めない・形が違うときは通す (フックの不具合で作業を止めない)</li>
+</ul>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>決めること</h1>
+<div class="tablewrap"><table>
+<thead><tr><th>番号</th><th>案</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">1-A (推奨)</td><td>すべてのツールで見る (matcher を付けない)。英語の行は、どのツールの前にも出るため</td></tr>
+<tr><td class="nowrap">1-B</td><td>Bash・PowerShell・Edit・Write だけで見る。Read や Grep の前の英語は通る</td></tr>
+<tr><td class="nowrap">2-A (推奨)</td><td>判定で、<code>#</code> の直後が数字のもの (<code>#1689</code>) をコードの記号とみなさない。Stop フックにも効く。今回すり抜けた形を塞ぐ</td></tr>
+<tr><td class="nowrap">2-B</td><td><code>#</code> を記号の一覧から外す。見出しの <code>#</code> やコメントの <code>#</code> を含む英文も英語と判定するようになり、誤って止める数が増える</td></tr>
+</tbody>
+</table></div>
+<p>どちらも恒久対策。<strong>決定 (10/30): 1-A・2-A</strong></p>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>手順</h1>
+<div class="tablewrap"><table>
+<thead><tr><th>#</th><th>やること</th><th>状態</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td>テストを先に書く (英語だけで止まる・日本語なら通る・止めた後に日本語を書けば通る・<code>#1689</code> を含む英文で止まる・ログが読めなければ通る)。❌Red を見る</td><td><span class="badge b-ok">済</span></td></tr>
+<tr><td class="num">2</td><td><code>japanese-check.ts</code> に、直前のツールの結果より後のかたまりを返す関数を足し、2 の決定を判定に入れる</td><td><span class="badge b-ok">済</span></td></tr>
+<tr><td class="num">3</td><td><code>guard-english-before-tool.ts</code> を書く。node・bun で全件 ✅Green</td><td><span class="badge b-ok">済</span></td></tr>
+<tr><td class="num">4</td><td><code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に登録する (控えは <code>tmp/</code>)。登録したコマンドそのままで試走する。10/31: <code>~/.claude/settings.json</code> は登録・試走済み。REA の <code>claude-config/settings.json</code> は置き場に無く、未登録</td><td><span class="badge b-none">未</span></td></tr>
+<tr><td class="num">5</td><td>次のセッションで、実環境から確かめる (英語の 1 行の後のツールが止まる)</td><td><span class="badge b-none">未</span></td></tr>
+<tr><td class="num">6</td><td><code>tools/80_ops/claude-hooks/README.html</code> と課題 i261029-01 を更新する。<code>tmp/</code> の控えを消す</td><td><span class="badge b-none">未</span></td></tr>
+<tr><td class="num">7</td><td>依頼元 (20261019-file-manager) に結果を返し、検証を頼む。OK が出るまで課題を「済」にしない</td><td><span class="badge b-none">未</span></td></tr>
+</tbody>
+</table></div>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+</footer>
+
+</body>
+</html>

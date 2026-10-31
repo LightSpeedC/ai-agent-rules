@@ -35,7 +35,7 @@
 	a { color: var(--link, #1a4fa0); background: transparent; }
 
 	.titlebar {
-		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
 		color: #ffffff;
 	}
 	.titlebar .inner {
@@ -65,6 +65,10 @@
 		color: #ffffff;
 		border: none;
 	}
+	.titlebar a {
+		background: transparent;
+		color: #ffffff;
+	}
 
 	.wrap {
 		max-width: 1600px;
@@ -73,7 +77,7 @@
 	}
 
 	.groupbar {
-		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
 		color: #ffffff;
 		border-radius: 8px;
 		padding: 12px 20px;
@@ -95,7 +99,7 @@
 	}
 
 	section {
-		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
 		color: var(--ink, #1c2330);
 		border: 1px solid var(--line, #d9dfe8);
 		border-radius: 10px;
@@ -104,7 +108,7 @@
 	}
 
 	section h1 {
-		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
 		color: #ffffff;
 		font-size: 1.4em;
 		padding: 14px 20px;
@@ -119,7 +123,7 @@
 	}
 
 	h2 {
-		background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		background: #f2f5fb; background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
 		color: var(--accent, #12224d);
 		border-left: 6px solid var(--accent, #12224d);
 		border-radius: 0 6px 6px 0;
@@ -163,7 +167,7 @@
 		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
 	}
 	th {
-		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
 		color: #ffffff;
 		text-align: left;
 		font-weight: 600;
@@ -185,7 +189,7 @@
 	td.nowrap, th.nowrap { white-space: nowrap; }
 
 	pre {
-		background: var(--code-bg, #f4f6fa);
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
 		color: #17335f;
 		border-left: 5px solid var(--accent2, #2f5fbf);
 		border-radius: 0 6px 6px 0;
@@ -194,7 +198,7 @@
 	}
 
 	code {
-		background: var(--code-bg, #f4f6fa);
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
 		color: #17335f;
 		border: 1px solid var(--line, #d9dfe8);
 		border-radius: 4px;
@@ -204,7 +208,7 @@
 
 	.callout {
 		border-left: 6px solid var(--accent, #12224d);
-		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+		background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
 		color: var(--ink, #1c2330);
 		border-radius: 0 8px 8px 0;
 		padding: 12px 18px;
@@ -221,10 +225,10 @@
 		color: #ffffff;
 		white-space: nowrap;
 	}
-	.b-ok   { background: linear-gradient(100deg, #1d7a3c, #45b56c); }
-	.b-ng   { background: linear-gradient(100deg, #a51f22, #e05a5c); }
-	.b-warn { background: linear-gradient(100deg, #b8620a, #f0a548); }
-	.b-none { background: linear-gradient(100deg, #5a6472, #97a1ae); }
+	.b-ok   { background: #1d7a3c; background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-ng   { background: #a51f22; background: linear-gradient(100deg, #a51f22, #e05a5c); }
+	.b-warn { background: #b8620a; background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: #5a6472; background: linear-gradient(100deg, #5a6472, #97a1ae); }
 
 	ul.plain { margin: 10px 0; padding-left: 1.4em; }
 	ul.plain li { margin: 4px 0; }
@@ -233,7 +237,7 @@
 	.backlink svg { display: block; }
 	.backlink {
 		display: inline-block;
-		background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
 		color: #ffffff;
 		text-decoration: none;
 		padding: 4px 12px;
@@ -256,7 +260,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules 課題</h1>
 		<p class="lead">これから解決することを記録する。片付いたグループは <a href="issues-archive.html">issues-archive.html</a> に残す。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-29</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-31</p>
 	</div>
 </div>
 
@@ -316,7 +320,7 @@
 
 <div class="groupbar">
 	<h2>Claude フック（#1383 起票、2026-10-08）</h2>
-	<p class="count">5 件 / 未 1 / 着手 2 / 済 2</p>
+	<p class="count">6 件 / 未 0 / 着手 4 / 済 2</p>
 </div>
 
 <section class="ch02">
@@ -397,14 +401,28 @@
 
 <section class="ch02">
 	<details class="md-flat" open>
-	<summary><h1><code class="no">i261029-01</code> ツールを呼ぶ前に、直前の文が英語だけなら止める <span class="badge b-none">未</span></h1></summary>
+	<summary><h1><code class="no">i261029-01</code> ツールを呼ぶ前に、直前の文が英語だけなら止める <span class="badge b-warn">着手</span></h1></summary>
 
 	<p>依頼（#1691、20261019-file-manager から）。今の Stop フックは応答を終えた後に英語を見つけるため、英語の行はすでに利用者に出ている。PreToolUse で、直前の応答の文が英語だけならツールの呼び出しを止めてほしい。判定は Stop フックのものを流用できるはず。2026-10-29 の 20261019-file-manager で、ツールの前の 1 行の報告を英語で書く失敗が 8 回あった（ai-agent-rules でも 10/29 に 1 回）。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 計画を立て、利用者の承認を得る</li>
-		<li><span class="badge b-none">未</span> テストを先に書き、実装して node・bun とも全件 ✅Green</li>
+		<li><span class="badge b-ok">済</span> 計画（<a href="../10_plan/i261029-01-ツール前の英語判定.html">i261029-01-ツール前の英語判定</a>）を立て、利用者の承認を得る</li>
+		<li><span class="badge b-ok">済</span> テストを先に書き、実装して node・bun とも全件 ✅Green</li>
 		<li><span class="badge b-none">未</span> <code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に登録し、実環境から確かめる</li>
+		<li><span class="badge b-none">未</span> 報告元（20261019-file-manager）へ結果を返信し、検証を依頼する。OK が出るまで「済」にしない</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch02">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261031-01</code> 英語の判定が、太字・パス・日本語の語を含む英文を通す <span class="badge b-warn">着手</span></h1></summary>
+
+	<p>依頼（#1709、20261019-file-manager から）。10/31 14 時以降、英語だけの応答が何度も Stop フックを通った（止まったのは 1 回）。<code>isEnglishOnly</code> は、記号が 1 つでもあるか、日本語の字が 1 字でもあれば、英語ではないと判定する。10/31 に手元で確かめ、太字（<code>**</code>）・パス（<code>/</code>）・日本語の語を 1 つ含む英文が、どれも通ることを確認した。依頼元の案は、コードブロック・コードスパン・パス・URL を除いてから、日本語の字と英語の語の割合で判定する。i261029-01 の PreToolUse フックも同じ判定を使う。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-ok">済</span> 判定の方式を決める（割合のしきい値・除くものの範囲）。計画（<a href="../10_plan/i261031-01-英語判定の割合化.html">i261031-01-英語判定の割合化</a>）を立て、利用者の承認を得る</li>
+		<li><span class="badge b-ok">済</span> すり抜けた形をテストにして ❌Red を見てから直し、node・bun とも全件 ✅Green</li>
 		<li><span class="badge b-none">未</span> 報告元（20261019-file-manager）へ結果を返信し、検証を依頼する。OK が出るまで「済」にしない</li>
 	</ul>
 	</details>

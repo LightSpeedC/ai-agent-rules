@@ -55,23 +55,73 @@ describe('isEnglishOnly（英語だけかどうかの判定）', () => {
 		assert.equal(isEnglishOnly('OK, done.'), false);
 	});
 
-	test('日本語が 1 字でも混ざれば、英語のみとみなさない', () => {
-		assert.equal(isEnglishOnly('This response is mostly English but ends with a Japanese word 完了。'), false);
+	// 課題 i261031-01（#1709）: 記号や日本語の字が 1 つあるだけで丸ごと外すと、Markdown で書いた英文の多くがすり抜けた。
+	// コードの部分を除いてから、日本語の字の数と英語の語の数を比べる（3-A）。
+	test('日本語の語が 1 つ混ざっただけの英文は、英語のみとみなす', () => {
+		assert.equal(isEnglishOnly('This response is mostly English but ends with a Japanese word 完了。'), true);
+		assert.equal(isEnglishOnly('I added the issue to 課題 and replied to the requester with the result of the investigation.'), true);
 	});
 
-	test('列挙された記号（" ` [] {} < > = + * % # / @）を含めばコードとみなし、英語のみとみなさない', () => {
-		assert.equal(isEnglishOnly('This sentence explains the result but also has a path: C/work/file'), false);
-		assert.equal(isEnglishOnly('This sentence explains the result and also has a value a=b in it'), false);
-		assert.equal(isEnglishOnly('This sentence explains the result and also has a tag <div> in it'), false);
+	test('太字（**）を含む英文は、英語のみとみなす', () => {
+		assert.equal(isEnglishOnly('The fix is in place. **All 125 tests pass** and the hook is ready for registration.'), true);
+	});
+
+	test('パス・URL・コードスパン・記号を含む英文は、それらを除いて判定し、英語のみとみなす', () => {
+		assert.equal(isEnglishOnly('This sentence explains the result but also has a path: C/work/file'), true);
+		assert.equal(isEnglishOnly('I updated the file at tools/80_ops/claude-hooks and all of the tests now pass on both runtimes.'), true);
+		assert.equal(isEnglishOnly('See https://example.com/docs/page for the details of the change that was made.'), true);
+		assert.equal(isEnglishOnly('Run `git status` to see the changes in this repository now.'), true);
+		assert.equal(isEnglishOnly('This sentence explains the result and also has a value a=b in it'), true);
+	});
+
+	// 課題 i261029-01 の 2-A: 発言の番号（#1689）は英文にも普通に出る
+	test('発言の番号（#1689）を含む英文は、英語のみとみなす', () => {
+		assert.equal(isEnglishOnly('Diff matches #1689 and #1690. Committing and pushing per the local rule.'), true);
+	});
+
+	test('見出し・箇条書き・引用・表の記法を含む英文は、英語のみとみなす', () => {
+		assert.equal(isEnglishOnly('## Result\n\n- The tests pass on both runtimes\n> quoted line here\n| a | b |'), true);
+	});
+
+	test('識別子やコードスパンの多い日本語の応答は、英語のみとみなさない', () => {
+		assert.equal(isEnglishOnly('`japanese-check.ts` の `isEnglishOnly` を直し、`guard-english-before-tool.ts` を足した。node と bun で全件が通った。'), false);
+		assert.equal(isEnglishOnly('PreToolUse の hook で permissionDecision を deny にして、Stop hook の decision block と揃えた。'), false);
+	});
+
+	test('英語のエラー文を 1 行引いた日本語の応答は、英語のみとみなさない', () => {
+		assert.equal(isEnglishOnly('push が失敗しました。出たメッセージは次のとおりです。\nfatal: could not read Username for github\n認証を設定し直してから、もう一度実行します。'), false);
+	});
+
+	test('URL の多い日本語の応答は、英語のみとみなさない', () => {
+		assert.equal(isEnglishOnly('出典は https://github.com/oven-sh/bun/issues/43660 と https://github.com/microsoft/terminal/issues/9174 です。'), false);
+	});
+
+	// 10/31 に会話ログへ流して見つけた誤判定: diff の中のフェンスで、開きと閉じの組がずれ、日本語の部分まで除いていた
+	test('中にフェンスを含む diff を貼った日本語の応答は、英語のみとみなさない', () => {
+		const text = [
+			'コミットの差分です。',
+			'',
+			'```diff',
+			'diff --git a/rules/coding-rules.md b/rules/coding-rules.md',
+			'+  ```csharp',
+			'+  var utf8 = new UTF8Encoding(false);',
+			'+  if (Console.IsOutputRedirected) Console.SetOut(new StreamWriter(Console.OpenStandardOutput(), utf8));',
+			'+  ```',
+			' ```powershell',
+			'```',
+			'',
+			'push はまだしていません。共通ルールの追随として、次の点検でも確かめます。',
+		].join('\n');
+		assert.equal(isEnglishOnly(text), false);
+	});
+
+	test('コードブロックだけのかたまりは、英語のみとみなさない', () => {
+		assert.equal(isEnglishOnly('```powershell\nGet-ChildItem -Path . -Recurse | Where-Object { $_.Length -gt 1000 }\n```'), false);
 	});
 
 	// コロンとセミコロンは英文でも使う。どちらか一方だけでは、コードとはみなさない
 	test('コロンやセミコロンだけを含む英文は、コードとはみなさず英語のみとみなす', () => {
 		assert.equal(isEnglishOnly('Note: this sentence is plain English; with punctuation and no code at all.'), true);
-	});
-
-	test('バッククォート（`）を含めばコードとみなし、英語のみとみなさない', () => {
-		assert.equal(isEnglishOnly('Run `git status` to see the changes in this repository now.'), false);
 	});
 
 	test('‘ , . - ( ) だけなら、コードとはみなさず英語のみとみなす', () => {
