@@ -203,7 +203,7 @@
 	<div class="inner">
 		<h1>Claude フック</h1>
 		<p class="lead">Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。<code>~/.claude/settings.json</code> がこのフォルダのファイルを直接指すので、コピーは要らない。</p>
-		<p class="date">📅 作成: 2026-10-03 / 更新: 2026-10-28</p>
+		<p class="date">📅 作成: 2026-10-03 / 更新: 2026-10-31</p>
 	</div>
 </div>
 
@@ -228,6 +228,8 @@
 				<tr><td class="nowrap"><code>obsidian-memory.ts</code></td><td>（<code>obsidian</code>）Vault を同期してから、<code>memory/!memory.md</code> と <code>projects/!projects.md</code> を <code>additionalContext</code> として注入する</td><td class="nowrap">（入口から呼ぶ）</td></tr>
 				<tr><td class="nowrap"><code>resume-reminder.ts</code></td><td>（<code>resume</code>）再開（<code>resume</code>）・compact のとき、chat 待受けと cron の張り直しを促す。フックは応答を始められないので、「次の発言を受けたら、本題の前に張り直す」と書く。手順は共通ルールの見出し名で指す（課題 i261025-01）</td><td class="nowrap">（入口から呼ぶ）</td></tr>
 <tr><td class="nowrap"><code>guard-bash-sed-awk.ts</code></td><td>Bash のコマンドの区切りごとの先頭語が <code>sed</code>・<code>awk</code> なら deny し、理由に Edit・Read を書く。引数の中の語では止めない（課題 i261025-01）</td><td class="nowrap">PreToolUse（matcher: Bash）</td></tr>
+<tr><td class="nowrap"><code>guard-english-before-tool.ts</code></td><td>直前のツールの結果（無ければターンの始め）より後のテキストに、英語だけのかたまりがあれば deny し、理由に「日本語訳を本文に書いてから呼び直す」と書く。会話ログが読めなければ通す（課題 i261029-01）</td><td class="nowrap">PreToolUse（matcher なし）</td></tr>
+<tr><td class="nowrap"><code>japanese-check.ts</code></td><td>英語の判定 <code>isEnglishOnly</code>。コードブロック・コードスパン・URL・パスを除き、英字が 20 字以上で、日本語の字の数が英語の語の数より少なければ英語とみなす（課題 i261031-01）。<code>require-japanese.ts</code>（Stop）と <code>guard-english-before-tool.ts</code> が使う</td><td class="nowrap">（各フックから呼ぶ）</td></tr>
 <tr><td class="nowrap"><code>convert-after-write.ts</code></td><td>Write で書いた ps1・html・cmd・bat を、<code>convert-encoding</code> で文字コードと改行を揃える（ps1 → ps1、html → html、cmd・bat → cmd）。成功は無表示、失敗は ❌ で書き換えなしを知らせる（依頼 #1672）</td><td class="nowrap">PostToolUse（matcher: Write）</td></tr>
 			</tbody>
 		</table>
