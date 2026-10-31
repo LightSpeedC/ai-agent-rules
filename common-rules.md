@@ -85,6 +85,11 @@
 @rules/doc-date-rules.md
 <!-- ドキュメントを作成・更新するときは `rules/doc-date-rules.md` を読み、その指示に従うこと。 -->
 
+# 仕様の書き方と置き場
+
+@rules/spec-rules.md
+<!-- 動作を決めたとき、仕様を資料にするとき、他プロジェクトに使い方を見せるときは `rules/spec-rules.md` を読み、その指示に従うこと。 -->
+
 # 学習資料の作成ルール
 
 @rules/tutorial-rules.md
