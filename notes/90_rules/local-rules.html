@@ -32,7 +32,7 @@
 	a { color: var(--link, #1a4fa0); background: transparent; }
 
 	.titlebar {
-		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
 		color: #ffffff;
 	}
 	.titlebar .inner {
@@ -72,7 +72,7 @@
 	.nav { margin: 18px 0 0; }
 	.nav a {
 		display: inline-block;
-		background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
 		color: #ffffff;
 		text-decoration: none;
 		padding: 4px 12px;
@@ -84,7 +84,7 @@
 	.nav svg { vertical-align: middle; }
 
 	.minibar {
-		background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
 		color: #ffffff;
 		border-radius: 8px;
 		padding: 8px 18px;
@@ -94,7 +94,7 @@
 	}
 
 	section {
-		background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
 		color: var(--ink, #1c2330);
 		border: 1px solid var(--line, #d9dfe8);
 		border-radius: 10px;
@@ -123,7 +123,7 @@
 	}
 
 	section h1 {
-		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
 		color: #ffffff;
 		border-radius: 8px;
 		box-shadow: 0 3px 8px rgba(18, 34, 77, 0.18);
@@ -133,7 +133,7 @@
 	}
 
 	h2 {
-		background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		background: #f2f5fb; background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
 		color: var(--accent, #12224d);
 		border-left: 6px solid var(--accent, #12224d);
 		border-radius: 0 6px 6px 0;
@@ -143,7 +143,7 @@
 	}
 
 	pre {
-		background: var(--code-bg, #f4f6fa);
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
 		color: #17335f;
 		border-left: 5px solid var(--accent2, #2f5fbf);
 		border-radius: 0 6px 6px 0;
@@ -152,7 +152,7 @@
 	}
 
 	code {
-		background: var(--code-bg, #f4f6fa);
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
 		color: #17335f;
 		border: 1px solid var(--line, #d9dfe8);
 		border-radius: 4px;
@@ -177,7 +177,7 @@
 		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
 	}
 	th {
-		background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
 		color: #ffffff;
 		text-align: left;
 		font-weight: 600;
@@ -211,7 +211,7 @@
 	<div class="inner">
 		<h1>ローカルルール</h1>
 		<p class="lead">このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-29</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-31</p>
 	</div>
 </div>
 
@@ -380,6 +380,7 @@
 		<li><strong>フックを変えるときは、テストを先に書き、全件を通す</strong>。通したあと、<code>settings.json</code> のコマンドそのままで試走する</li>
 		<li><strong>別の PC では、<code>settings.json</code> の hooks を、その PC のこのリポジトリの置き場に向けて書く</strong></li>
 			<li><strong>英語判定・会話ログの写し・Obsidian 連携のフックを変えたら、REA の <code>rea-claude</code> の設定（<code>claude-config/settings.json</code>）も確かめて、必要なら直す</strong>。REA の hooks に、その変更を反映したコマンドが並んでいることを確かめる</li>
+			<li><strong>REA の置き場は <code>C:/Tools/reverse-engineering/rea/</code></strong>。<code>rea-claude.cmd</code> が同じフォルダの <code>claude-config</code> を <code>CLAUDE_CONFIG_DIR</code> にして起動するので、設定は <code>C:/Tools/reverse-engineering/rea/claude-config/settings.json</code>。見つからなければ <code>Get-Command rea-claude</code> で探す</li>
 			<li><strong>アクセスの許可</strong>: REA の <code>claude-config/settings.json</code> は、読み取りと書き込みを確認なしで行ってよい（「プロジェクトフォルダ外へのアクセス」の例外）。目的は、フックの登録を、このプロジェクトの変更に合わせることだけ</li>
 	</ul>
 

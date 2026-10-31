@@ -2,7 +2,7 @@
 
 このプロジェクトでだけ通る決めごと。全プロジェクトに通ることは共通ルールに置き、ここには書かない。
 
-> 📅 作成: 2026-09-10 / 更新: 2026-10-29
+> 📅 作成: 2026-09-10 / 更新: 2026-10-31
 
 [README へ戻る](../../README.md)
 
@@ -106,6 +106,7 @@ Codex は `@path` の取り込み記法を持たない。代わりに `@path` �
 - **フックを変えるときは、テストを先に書き、全件を通す**。通したあと、`settings.json` のコマンドそのままで試走する
 - **別の PC では、`settings.json` の hooks を、その PC のこのリポジトリの置き場に向けて書く**
 - **英語判定・会話ログの写し・Obsidian 連携のフックを変えたら、REA の `rea-claude` の設定（`claude-config/settings.json`）も確かめて、必要なら直す**。REA の hooks に、その変更を反映したコマンドが並んでいることを確かめる
+- **REA の置き場は `C:/Tools/reverse-engineering/rea/`**。`rea-claude.cmd` が同じフォルダの `claude-config` を `CLAUDE_CONFIG_DIR` にして起動するので、設定は `C:/Tools/reverse-engineering/rea/claude-config/settings.json`。見つからなければ `Get-Command rea-claude` で探す
 - **アクセスの許可**: REA の `claude-config/settings.json` は、読み取りと書き込みを確認なしで行ってよい（「プロジェクトフォルダ外へのアクセス」の例外）。目的は、フックの登録を、このプロジェクトの変更に合わせることだけ
 
 #### 落とし穴
