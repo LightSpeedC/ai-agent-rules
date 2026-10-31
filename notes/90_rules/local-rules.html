@@ -107,16 +107,21 @@
 		--soft: hsl(280, 28%, 95%);
 	}
 	section.ch02 {
-		--accent: hsl(186.7, 78%, 25%);
-		--accent2: hsl(186.7, 58%, 55%);
-		--soft: hsl(186.7, 28%, 95%);
+		--accent: hsl(210, 78%, 25%);
+		--accent2: hsl(210, 58%, 55%);
+		--soft: hsl(210, 28%, 95%);
 	}
 	section.ch03 {
-		--accent: hsl(93.3, 78%, 25%);
-		--accent2: hsl(93.3, 58%, 55%);
-		--soft: hsl(93.3, 28%, 95%);
+		--accent: hsl(140, 78%, 25%);
+		--accent2: hsl(140, 58%, 55%);
+		--soft: hsl(140, 28%, 95%);
 	}
 	section.ch04 {
+		--accent: hsl(70, 78%, 25%);
+		--accent2: hsl(70, 58%, 55%);
+		--soft: hsl(70, 28%, 95%);
+	}
+	section.ch05 {
 		--accent: hsl(0, 78%, 25%);
 		--accent2: hsl(0, 58%, 55%);
 		--soft: hsl(0, 28%, 95%);
@@ -389,6 +394,16 @@
 		<li><strong>再開では、<code>additionalContext</code> が会話にある分と同じだと、Claude Code が捨てる</strong> (重複排除)。<code>session-start.ts</code> が、毎回違う開始時刻の行を最後に 1 回だけ入れる</li>
 		<li><strong>フックは応答を始められない</strong>。再開の張り直しは、次の発言を受けてから行う</li>
 		<li><strong><code>settings.json</code> を書き換えても、動いているセッションには効かない</strong>。次の起動・再開から有効になる</li>
+	</ul>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>commit の分け方</h1>
+	<p>「適切な単位でコミット」と言われたら、次のように分ける。</p>
+	<ul class="plain">
+		<li><strong>目的ごとに 1 commit にする</strong>。体裁の一括変更 (HTML の CSS 等)、機能の変更 (コード・テスト・その計画と課題)、ルールの変更を別々にする</li>
+		<li><strong>1 つのファイルに 2 つの目的の変更が混ざったら、主な目的の commit に載せる</strong>。<code>git add -p</code> は使えないため、ファイルの中で分けない</li>
+		<li><strong>自分が作っていないファイルと、それへのリンクを含むファイルは載せない</strong>。残したものと理由を報告し、指示を待つ</li>
 	</ul>
 </section>
 
