@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="format-detection" content="telephone=no">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Claude フック</title>
 <style>
@@ -224,7 +225,7 @@
 			<tbody>
 				<tr><td class="nowrap"><code>session-start.ts</code></td><td>SessionStart の入口。動かす処理を引数に名前で並べ、並べた順に呼ぶ（<code>copy</code>・<code>obsidian</code>・<code>resume</code>）。結果を JSON 1 つにまとめ、<code>additionalContext</code> の最後に開始時刻の行を 1 回だけ入れる。引数が無いとき・知らない名前は ⚠️ で知らせる（計画 p261027-01）</td><td class="nowrap">SessionStart</td></tr>
 				<tr><td class="nowrap"><code>copy-session-jsonl.ts</code></td><td>Stop の入口。会話ログを写す（処理は <code>jsonl-copy.ts</code>）。成功は表示せず、失敗だけ表示する</td><td class="nowrap">Stop</td></tr>
-				<tr><td class="nowrap"><code>jsonl-copy.ts</code></td><td>（<code>copy</code>）会話ログ（JSONL）を、プロジェクト直下の <code>etc/history/jsonl/</code> へコピーする。コピー元は <code>transcript_path</code> と同じフォルダの全 <code>*.jsonl</code>。サイズと更新日時が同じものは飛ばす。プロジェクト直下は、環境変数 <code>CLAUDE_PROJECT_DIR</code> → <code>cwd</code> から上へたどった <code>.git</code> のあるフォルダ → <code>cwd</code> の順で決める（<code>cwd</code> はセッションが <code>cd</code> すると変わるため）</td><td class="nowrap">（入口から呼ぶ）</td></tr>
+				<tr><td class="nowrap"><code>jsonl-copy.ts</code></td><td>（<code>copy</code>）会話ログ（JSONL）を、プロジェクト直下の <code>etc/history/jsonl/</code> へコピーする。コピー元は <code>transcript_path</code> と同じフォルダの全 <code>*.jsonl</code>。サイズと更新日時が同じものは飛ばす。プロジェクト直下の決め方は、環境変数の詳細仕様の <code>CLAUDE_PROJECT_DIR</code></td><td class="nowrap">（入口から呼ぶ）</td></tr>
 				<tr><td class="nowrap"><code>obsidian-memory.ts</code></td><td>（<code>obsidian</code>）Vault を同期してから、<code>memory/!memory.md</code> と <code>projects/!projects.md</code> を <code>additionalContext</code> として注入する</td><td class="nowrap">（入口から呼ぶ）</td></tr>
 				<tr><td class="nowrap"><code>resume-reminder.ts</code></td><td>（<code>resume</code>）再開（<code>resume</code>）・compact のとき、chat 待受けと cron の張り直しを促す。フックは応答を始められないので、「次の発言を受けたら、本題の前に張り直す」と書く。手順は共通ルールの見出し名で指す（課題 i261025-01）</td><td class="nowrap">（入口から呼ぶ）</td></tr>
 <tr><td class="nowrap"><code>guard-bash-sed-awk.ts</code></td><td>Bash のコマンドの区切りごとの先頭語が <code>sed</code>・<code>awk</code> なら deny し、理由に Edit・Read を書く。引数の中の語では止めない（課題 i261025-01）</td><td class="nowrap">PreToolUse（matcher: Bash）</td></tr>
@@ -264,7 +265,7 @@
 	<h1>設定</h1>
 
 	<h2>環境変数</h2>
-	<p><code>obsidian-memory.ts</code> は、Vault の場所を環境変数 <code>AI_AGENT_OBSIDIAN_VAULT</code> から読む。未設定、または <code>memory/!memory.md</code> が無いときは、何も注入せずに正常終了する。</p>
+	<p>フックが読む環境変数 (<code>AI_AGENT_OBSIDIAN_VAULT</code> ・ <code>CLAUDE_PROJECT_DIR</code>) は、詳細仕様 <a href="../../../notes/50_spec/環境変数.html">環境変数</a> に書いてある。</p>
 
 	<h2>settings.json の書き方</h2>
 	<p><code>~/.claude/settings.json</code> の <code>hooks</code> から、このフォルダのファイルを直接呼ぶ。パスはその環境でのこのリポジトリの置き場にする。</p>

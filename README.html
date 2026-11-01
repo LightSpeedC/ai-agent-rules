@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="format-detection" content="telephone=no">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ai-agent-rules</title>
 <style>
@@ -174,6 +175,23 @@
 		margin: 0 auto;
 		padding: 18px 30px 30px;
 	}
+
+	/* 章(h1)はカテゴリごと。5 章の虹色 (280 / 210 / 140 / 70 / 0) */
+	section.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	section.ch02 { --accent: hsl(224, 78%, 25%); --accent2: hsl(224, 58%, 55%); --soft: hsl(224, 28%, 95%); }
+	section.ch03 { --accent: hsl(168, 78%, 25%); --accent2: hsl(168, 58%, 55%); --soft: hsl(168, 28%, 95%); }
+	section.ch04 { --accent: hsl(112, 78%, 25%); --accent2: hsl(112, 58%, 55%); --soft: hsl(112, 28%, 95%); }
+	section.ch05 { --accent: hsl(56, 78%, 25%); --accent2: hsl(56, 58%, 55%); --soft: hsl(56, 28%, 95%); }
+	section.ch06 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	section h1 {
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		padding: 14px 20px;
+		margin: 26px 0 20px;
+		border-radius: 8px;
+		font-size: 1.35em;
+		box-shadow: 0 3px 8px rgba(18, 34, 77, 0.16);
+	}
 </style>
 </head>
 <body>
@@ -181,8 +199,8 @@
 <div class="titlebar">
 	<div class="inner">
 		<h1>ai-agent-rules</h1>
-		<p class="lead">AIエージェント（Claude Code・Codex 等）が参照する共通ルール。</p>
-		<p class="date">📅 作成: 2026-09-02 / 更新: 2026-10-31</p>
+		<p class="lead">AIエージェント (Claude Code・Codex 等) が参照する共通ルール。</p>
+		<p class="date">📅 作成: 2026-09-02 / 更新: 2026-11-01</p>
 	</div>
 </div>
 
@@ -190,8 +208,8 @@
 
 <p class="navwrap"><a class="backlink" href="../"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="親サイトへ戻る"><path d="M2 7.2 8 2l6 5.2"/><path d="M3.6 6.6V13h8.8V6.6"/></svg></a></p>
 
-<section>
-	<h2>ルール</h2>
+<section class="ch01" id="ch01">
+	<h1>ルール</h1>
 	<ul class="doclist">
 		<li>
 			<a class="doclink d1" href="common-rules.md">共通ルール</a>
@@ -202,8 +220,10 @@
 			<p class="note">このプロジェクトでだけ通る決めごと。chat 待受けの運用と、共通ルールの追随。</p>
 		</li>
 	</ul>
+</section>
 
-	<h2>資料</h2>
+<section class="ch02" id="ch02">
+	<h1>調査</h1>
 	<ul class="doclist">
 		<li>
 			<a class="doclink d1" href="notes/01_research/r260828-01-エージェントルール棚卸し.html">エージェントルール棚卸し</a>
@@ -211,9 +231,18 @@
 		</li>
 		<li>
 			<a class="doclink d1" href="notes/01_research/r260927-01-コンソールのコードページ問題.html">コンソールのコードページ問題の調査</a>
-			<a class="doclink d1" href="notes/01_research/p261027-01-振り返り.html">p261027-01 振り返り</a>
 			<p class="note">C# ・ PowerShell で出力エンコーディングを変えると同じ窓の cmd が化ける問題の実測と、外部情報の調査。</p>
 		</li>
+		<li>
+			<a class="doclink d1" href="notes/01_research/p261027-01-振り返り.html">p261027-01 振り返り</a>
+			<p class="note">SessionStart フックの統合 (p261027-01) の作業で起きた失敗を拾い、ルール・フックと突き合わせたもの。</p>
+		</li>
+	</ul>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>計画</h1>
+	<ul class="doclist">
 		<li>
 			<a class="doclink d1" href="notes/10_plan/p260923-01-HTMLルールの切り出しと参照実験.html">HTMLルールの切り出しと参照実験</a>
 			<p class="note">「HTMLデザインルール」章を <code>rules/</code> へ切り出し、Claude Code・Codex が実体をその場所から参照できるかを試す計画。</p>
@@ -240,21 +269,53 @@
 		</li>
 		<li>
 			<a class="doclink d1" href="notes/10_plan/p261027-02-REA設定の通常セッションへの統合.html">REA 設定の通常セッションへの統合</a>
-			<a class="doclink d1" href="notes/10_plan/i261029-01-ツール前の英語判定.html">ツール前の英語判定</a>
-			<a class="doclink d1" href="notes/10_plan/i261031-01-英語判定の割合化.html">英語判定の割合化</a>
 			<p class="note">専用コマンド <code>rea-claude</code> をやめ、REA の MCP ・ スキル ・ 会話ログを <code>~/.claude</code> にまとめる計画。</p>
 		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/p261101-01-環境変数の仕様.html">環境変数の仕様</a>
+			<p class="note">フックが読む環境変数を、詳細仕様 <code>notes/50_spec/</code> にまとめる計画。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/i261018-01-フックをObsidian連携ルールに合わせる.html">フックを Obsidian 連携ルールに合わせる</a>
+			<p class="note">課題 i261018-01 の対応計画。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/i261025-01-張り直しとsed・awkのフック.html">張り直しと sed ・ awk のフック</a>
+			<p class="note">再開時に張り直しを促すフックと、Bash の sed ・ awk を止めるフックの計画。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/i261029-01-ツール前の英語判定.html">ツール前の英語判定</a>
+			<p class="note">ツールを呼ぶ前に、直前の英語だけの文で止める PreToolUse フックの計画。</p>
+		</li>
+		<li>
+			<a class="doclink d1" href="notes/10_plan/i261031-01-英語判定の割合化.html">英語判定の割合化</a>
+			<p class="note">コードの部分を除き、日本語の字と英語の語の数で英語かを判定する計画。</p>
+		</li>
 	</ul>
+</section>
 
-	<h2>課題</h2>
+<section class="ch04" id="ch04">
+	<h1>課題</h1>
 	<ul class="doclist">
 		<li>
 			<a class="doclink d1" href="notes/40_issues/issues.html">課題</a>
 			<p class="note">これから解決することの記録。</p>
 		</li>
 	</ul>
+</section>
 
-	<h2>品質レビュー</h2>
+<section class="ch05" id="ch05">
+	<h1>仕様</h1>
+	<ul class="doclist">
+		<li>
+			<a class="doclink d1" href="notes/50_spec/環境変数.html">環境変数</a>
+			<p class="note">フックが読む環境変数と、<code>settings.json</code> の <code>env</code> に置く環境変数の詳細仕様。</p>
+		</li>
+	</ul>
+</section>
+
+<section class="ch06" id="ch06">
+	<h1>品質レビュー</h1>
 	<ul class="doclist">
 		<li>
 			<a class="doclink d1" href="notes/80_quality_review/q261031-01-品質レビュー.html">プロジェクト品質レビュー結果</a>

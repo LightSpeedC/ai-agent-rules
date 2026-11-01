@@ -2,7 +2,7 @@
 
 Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.claude/settings.json` がこのフォルダのファイルを直接指すので、コピーは要らない。
 
-> 📅 作成: 2026-10-03 / 更新: 2026-10-28
+> 📅 作成: 2026-10-03 / 更新: 2026-10-31
 
 [README](../../../README.md)
 
@@ -14,10 +14,12 @@ Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.
 |---|---|---|
 | `session-start.ts` | SessionStart の入口。動かす処理を引数に名前で並べ、並べた順に呼ぶ（`copy`・`obsidian`・`resume`）。結果を JSON 1 つにまとめ、`additionalContext` の最後に開始時刻の行を 1 回だけ入れる。引数が無いとき・知らない名前は ⚠️ で知らせる（計画 p261027-01） | SessionStart |
 | `copy-session-jsonl.ts` | Stop の入口。会話ログを写す（処理は `jsonl-copy.ts`）。成功は表示せず、失敗だけ表示する | Stop |
-| `jsonl-copy.ts` | （`copy`）会話ログ（JSONL）を、プロジェクト直下の `etc/history/jsonl/` へコピーする。コピー元は `transcript_path` と同じフォルダの全 `*.jsonl`。サイズと更新日時が同じものは飛ばす。プロジェクト直下は、環境変数 `CLAUDE_PROJECT_DIR` → `cwd` から上へたどった `.git` のあるフォルダ → `cwd` の順で決める（`cwd` はセッションが `cd` すると変わるため） | （入口から呼ぶ） |
+| `jsonl-copy.ts` | （`copy`）会話ログ（JSONL）を、プロジェクト直下の `etc/history/jsonl/` へコピーする。コピー元は `transcript_path` と同じフォルダの全 `*.jsonl`。サイズと更新日時が同じものは飛ばす。プロジェクト直下の決め方は、環境変数の詳細仕様の `CLAUDE_PROJECT_DIR` | （入口から呼ぶ） |
 | `obsidian-memory.ts` | （`obsidian`）Vault を同期してから、`memory/!memory.md` と `projects/!projects.md` を `additionalContext` として注入する | （入口から呼ぶ） |
 | `resume-reminder.ts` | （`resume`）再開（`resume`）・compact のとき、chat 待受けと cron の張り直しを促す。フックは応答を始められないので、「次の発言を受けたら、本題の前に張り直す」と書く。手順は共通ルールの見出し名で指す（課題 i261025-01） | （入口から呼ぶ） |
 | `guard-bash-sed-awk.ts` | Bash のコマンドの区切りごとの先頭語が `sed`・`awk` なら deny し、理由に Edit・Read を書く。引数の中の語では止めない（課題 i261025-01） | PreToolUse（matcher: Bash） |
+| `guard-english-before-tool.ts` | 直前のツールの結果（無ければターンの始め）より後のテキストに、英語だけのかたまりがあれば deny し、理由に「日本語訳を本文に書いてから呼び直す」と書く。会話ログが読めなければ通す（課題 i261029-01） | PreToolUse（matcher なし） |
+| `japanese-check.ts` | 英語の判定 `isEnglishOnly`。コードブロック・コードスパン・URL・パスを除き、英字が 20 字以上で、日本語の字の数が英語の語の数より少なければ英語とみなす（課題 i261031-01）。`require-japanese.ts`（Stop）と `guard-english-before-tool.ts` が使う | （各フックから呼ぶ） |
 | `convert-after-write.ts` | Write で書いた ps1・html・cmd・bat を、`convert-encoding` で文字コードと改行を揃える（ps1 → ps1、html → html、cmd・bat → cmd）。成功は無表示、失敗は ❌ で書き換えなしを知らせる（依頼 #1672） | PostToolUse（matcher: Write） |
 
 標準モジュール（`node:fs`・`node:path`）だけで書いてある。`node` でも `bun run` でも同じファイルが動き、切り替え用のラッパーは持たない。
@@ -46,7 +48,7 @@ Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.
 
 #### 環境変数
 
-`obsidian-memory.ts` は、Vault の場所を環境変数 `AI_AGENT_OBSIDIAN_VAULT` から読む。未設定、または `memory/!memory.md` が無いときは、何も注入せずに正常終了する。
+フックが読む環境変数 (`AI_AGENT_OBSIDIAN_VAULT` ・ `CLAUDE_PROJECT_DIR`) は、詳細仕様 [環境変数](../../../notes/50_spec/環境変数.md) に書いてある。
 
 #### settings.json の書き方
 
