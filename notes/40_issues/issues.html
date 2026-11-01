@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="format-detection" content="telephone=no">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ai-agent-rules 課題</title>
 <style>
@@ -18,8 +19,33 @@
 		--soft: #f2f5fb;
 	}
 
-	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
-	.ch02 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	/* 章の色はグループごとの虹色。n<件数> と chNN の組で色相を決める (280 → 0) */
+	.n5.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.n5.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+	.n5.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.n5.ch04 { --accent: hsl(70, 78%, 25%); --accent2: hsl(70, 58%, 55%); --soft: hsl(70, 28%, 95%); }
+	.n5.ch05 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	.n6.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.n6.ch02 { --accent: hsl(224, 78%, 25%); --accent2: hsl(224, 58%, 55%); --soft: hsl(224, 28%, 95%); }
+	.n6.ch03 { --accent: hsl(168, 78%, 25%); --accent2: hsl(168, 58%, 55%); --soft: hsl(168, 28%, 95%); }
+	.n6.ch04 { --accent: hsl(112, 78%, 25%); --accent2: hsl(112, 58%, 55%); --soft: hsl(112, 28%, 95%); }
+	.n6.ch05 { --accent: hsl(56, 78%, 25%); --accent2: hsl(56, 58%, 55%); --soft: hsl(56, 28%, 95%); }
+	.n6.ch06 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	.n7.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.n7.ch02 { --accent: hsl(233.3, 78%, 25%); --accent2: hsl(233.3, 58%, 55%); --soft: hsl(233.3, 28%, 95%); }
+	.n7.ch03 { --accent: hsl(186.7, 78%, 25%); --accent2: hsl(186.7, 58%, 55%); --soft: hsl(186.7, 28%, 95%); }
+	.n7.ch04 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.n7.ch05 { --accent: hsl(93.3, 78%, 25%); --accent2: hsl(93.3, 58%, 55%); --soft: hsl(93.3, 28%, 95%); }
+	.n7.ch06 { --accent: hsl(46.7, 78%, 25%); --accent2: hsl(46.7, 58%, 55%); --soft: hsl(46.7, 28%, 95%); }
+	.n7.ch07 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	.n8.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.n8.ch02 { --accent: hsl(240, 78%, 25%); --accent2: hsl(240, 58%, 55%); --soft: hsl(240, 28%, 95%); }
+	.n8.ch03 { --accent: hsl(200, 78%, 25%); --accent2: hsl(200, 58%, 55%); --soft: hsl(200, 28%, 95%); }
+	.n8.ch04 { --accent: hsl(160, 78%, 25%); --accent2: hsl(160, 58%, 55%); --soft: hsl(160, 28%, 95%); }
+	.n8.ch05 { --accent: hsl(120, 78%, 25%); --accent2: hsl(120, 58%, 55%); --soft: hsl(120, 28%, 95%); }
+	.n8.ch06 { --accent: hsl(80, 78%, 25%); --accent2: hsl(80, 58%, 55%); --soft: hsl(80, 28%, 95%); }
+	.n8.ch07 { --accent: hsl(40, 78%, 25%); --accent2: hsl(40, 58%, 55%); --soft: hsl(40, 28%, 95%); }
+	.n8.ch08 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
 
 	* { box-sizing: border-box; }
 
@@ -273,7 +299,7 @@
 	<p class="count">5 件 / 未 0 / 着手 0 / 済 5</p>
 </div>
 
-<section class="ch01">
+<section class="ch01 n5">
 	<details class="md-flat">
 	<summary><h1><code class="no">i260924-01</code> 暫定運用の計画書・README が分割完了前の古い状態のまま <span class="badge b-ok">済</span></h1></summary>
 
@@ -283,7 +309,7 @@
 	</details>
 </section>
 
-<section class="ch01">
+<section class="ch02 n5">
 	<details class="md-flat">
 	<summary><h1><code class="no">i260924-02</code> README が共通ルールの実体・切り出し先・新しい計画書に触れていない <span class="badge b-ok">済</span></h1></summary>
 
@@ -292,7 +318,7 @@
 	</details>
 </section>
 
-<section class="ch01">
+<section class="ch03 n5">
 	<details class="md-flat">
 	<summary><h1><code class="no">i260924-03</code> .gitignore に logs/ が無い <span class="badge b-ok">済</span></h1></summary>
 
@@ -301,7 +327,7 @@
 	</details>
 </section>
 
-<section class="ch01">
+<section class="ch04 n5">
 	<details class="md-flat">
 	<summary><h1><code class="no">i260924-04</code> ローカルルールが存在しない資料を参照している <span class="badge b-ok">済</span></h1></summary>
 
@@ -310,7 +336,7 @@
 	</details>
 </section>
 
-<section class="ch01">
+<section class="ch05 n5">
 	<details class="md-flat">
 	<summary><h1><code class="no">i260924-05</code> ルール分割対象の分析の凡例が実態と合っていない <span class="badge b-ok">済</span></h1></summary>
 
@@ -320,10 +346,10 @@
 
 <div class="groupbar">
 	<h2>Claude フック（#1383 起票、2026-10-08）</h2>
-	<p class="count">6 件 / 未 0 / 着手 4 / 済 2</p>
+	<p class="count">8 件 / 未 2 / 着手 4 / 済 2</p>
 </div>
 
-<section class="ch02">
+<section class="ch01 n8">
 	<details class="md-flat">
 	<summary><h1><code class="no">i261008-01</code> 会話ログのコピー先が、セッションが cd した先になる <span class="badge b-ok">済</span></h1></summary>
 
@@ -340,7 +366,7 @@
 	</details>
 </section>
 
-<section class="ch02">
+<section class="ch02 n8">
 	<details class="md-flat" open>
 	<summary><h1><code class="no">i261018-01</code> フックを「Obsidianメモリ連携ルール」に合わせる <span class="badge b-warn">着手</span></h1></summary>
 
@@ -363,7 +389,7 @@
 	</details>
 </section>
 
-<section class="ch02">
+<section class="ch03 n8">
 	<details class="md-flat">
 	<summary><h1><code class="no">i261025-01</code> 張り直しの漏れと、権限拒否で止まる sed・awk をフックで案内する <span class="badge b-ok">済</span></h1></summary>
 
@@ -384,7 +410,7 @@
 	</details>
 </section>
 
-<section class="ch02">
+<section class="ch04 n8">
 	<details class="md-flat" open>
 	<summary><h1><code class="no">i261025-02</code> Write で書いた ps1・html・cmd・bat を、convert-encoding で文字コードと改行に揃える <span class="badge b-warn">着手</span></h1></summary>
 
@@ -393,13 +419,13 @@
 	<ul>
 		<li><span class="badge b-ok">済</span> テストを先に書き（❌Red: 9 件）、実装して node・bun とも全件 102 件 ✅Green</li>
 		<li><span class="badge b-ok">済</span> <code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に PostToolUse（matcher: Write）を登録（バックアップは <code>tmp/</code>）。登録したコマンドそのままで試走し、BOM と CRLF が付くことを確かめた</li>
-		<li><span class="badge b-none">未</span> 次の新しいセッションで、実環境から Write を行い、変換されることを確かめる</li>
+		<li><span class="badge b-ok">済</span> 次の新しいセッションで、実環境から Write を行い、変換されることを確かめる（10/31 Write した html に BOM が付いた）</li>
 		<li><span class="badge b-none">未</span> 報告元（20261019-file-manager）へ、対応の結果を返信し、検証を依頼する。OK が出るまで「済」にしない</li>
 	</ul>
 	</details>
 </section>
 
-<section class="ch02">
+<section class="ch05 n8">
 	<details class="md-flat" open>
 	<summary><h1><code class="no">i261029-01</code> ツールを呼ぶ前に、直前の文が英語だけなら止める <span class="badge b-warn">着手</span></h1></summary>
 
@@ -408,13 +434,13 @@
 	<ul>
 		<li><span class="badge b-ok">済</span> 計画（<a href="../10_plan/i261029-01-ツール前の英語判定.html">i261029-01-ツール前の英語判定</a>）を立て、利用者の承認を得る</li>
 		<li><span class="badge b-ok">済</span> テストを先に書き、実装して node・bun とも全件 ✅Green</li>
-		<li><span class="badge b-warn">着手</span> <code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に登録し、実環境から確かめる（10/31 両方に登録・試走済み。実環境の確認は次のセッション）</li>
+		<li><span class="badge b-ok">済</span> <code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に登録し、実環境から確かめる（10/31 両方に登録・試走済み。同日、英語の 1 行の後の Edit が実環境で止まった）</li>
 		<li><span class="badge b-warn">着手</span> 報告元（20261019-file-manager）へ結果を返信し、検証を依頼する。OK が出るまで「済」にしない（10/31 #1714 で返信済み。検証待ち）</li>
 	</ul>
 	</details>
 </section>
 
-<section class="ch02">
+<section class="ch06 n8">
 	<details class="md-flat" open>
 	<summary><h1><code class="no">i261031-01</code> 英語の判定が、太字・パス・日本語の語を含む英文を通す <span class="badge b-warn">着手</span></h1></summary>
 
@@ -428,73 +454,98 @@
 	</details>
 </section>
 
+<section class="ch07 n8">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261031-08</code> 訳を書いた直後のツールが、前の英語の文で止まる <span class="badge b-none">未</span></h1></summary>
+	<p>10/31 に 2 回起きた。英語の文の後にツールを呼び、その結果の後に日本語の訳を書いてから次のツールを呼ぶと、PreToolUse のフックが前の英語の文で止める。止まった直後に同じログで判定し直すと通る。PreToolUse の時点で、ログの書き込み (前のツールの結果、または新しい文) が追いついていない、と推測している (未確認)。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 止まった時点のログの末尾を残して、書き込みの順を確かめる</li>
+		<li><span class="badge b-none">未</span> 直し方を決め、テストを先に書いて直す</li>
+	</ul>
+	</details>
+</section>
+
+<section class="ch08 n8">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261101-01</code> 失敗したままの Edit・Write の後の git commit を止める <span class="badge b-none">未</span></h1></summary>
+	<p>11/01 に 20261019-file-manager から依頼を受けた (#1727)。向こうで、Edit の失敗を見ずに git commit し、壊れたファイルが入った (向こうの振り返りの 413-A)。commit の前に会話の記録を調べ、失敗したままの Edit・Write があれば止める PreToolUse フックを、claude-hooks に組み込む。サンプル (<code>guard-commit-after-failed-edit.ts</code>) は向こうが用意済み。置き場は利用者から伝えられる。登録と試験の案・確かめていないことは、サンプルの頭のコメントにある。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-none">未</span> 利用者からサンプルの置き場を聞き、読んで計画を立てる</li>
+		<li><span class="badge b-none">未</span> テストを先に書いて組み込み、<code>settings.json</code> に登録する</li>
+		<li><span class="badge b-none">未</span> 引き取ったことを依頼元へ知らせる (向こうがサンプルを消す)</li>
+	</ul>
+	</details>
+</section>
+
 <div class="groupbar">
 	<h2>品質レビュー q261031-01 の指摘（2026-10-31）</h2>
-	<p class="count">6 件 / 未 6 / 着手 0 / 済 0</p>
+	<p class="count">6 件 / 未 0 / 着手 0 / 済 6</p>
 </div>
 
-<section class="ch01">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i261031-02</code> <code>format-detection</code> の meta が 15 ファイルに無い <span class="badge b-none">未</span></h1></summary>
+<section class="ch01 n6">
+	<details class="md-flat">
+	<summary><h1><code class="no">i261031-02</code> <code>format-detection</code> の meta が 15 ファイルに無い <span class="badge b-ok">済</span></h1></summary>
 	<p>品質レビュー（<a href="../80_quality_review/q261031-01-品質レビュー.html">q261031-01</a>）の指摘。HTML 20 本のうち、<code>&lt;meta name="format-detection" content="telephone=no"&gt;</code> があるのは 5 本だけ（10/31 に Grep で数えた）。共通ルール「HTMLデザインルール」の「その他」。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 15 本の <code>&lt;head&gt;</code> に足す</li>
+		<li><span class="badge b-ok">済</span> 15 本の <code>&lt;head&gt;</code> に足す</li>
 	</ul>
 	</details>
 </section>
 
-<section class="ch02">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i261031-03</code> 戻るリンクが欠けている・文字になっている <span class="badge b-none">未</span></h1></summary>
+<section class="ch02 n6">
+	<details class="md-flat">
+	<summary><h1><code class="no">i261031-03</code> 戻るリンクが欠けている・文字になっている <span class="badge b-ok">済</span></h1></summary>
 	<p>品質レビューの指摘。<code>i261025-01-張り直しとsed・awkのフック.html</code> は上側の戻るリンクが無く、下側は「README へ戻る」の文字のリンク。<code>issues-archive.html</code> は README へ戻るリンクが無く、<code>issues.html</code> への文字のリンクだけがある。品質レビュー自身の Markdown 側も文字のリンク。共通ルール「root の README.html と資料の html は相互リンクする」。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 上下に ⌂ の紺のバッジを置く（<code>issues-archive.html</code> は <code>issues.html</code> へのリンクも残す）</li>
+		<li><span class="badge b-ok">済</span> 上下に ⌂ の紺のバッジを置く（<code>issues-archive.html</code> は <code>issues.html</code> へのリンクも残す）</li>
 	</ul>
 	</details>
 </section>
 
-<section class="ch01">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i261031-04</code> 色の <code>var()</code> にフォールバックが無い <span class="badge b-none">未</span></h1></summary>
+<section class="ch03 n6">
+	<details class="md-flat">
+	<summary><h1><code class="no">i261031-04</code> 色の <code>var()</code> にフォールバックが無い <span class="badge b-ok">済</span></h1></summary>
 	<p>品質レビューの指摘。10/31 に数えた <code>var(--名前)</code> だけの箇所: <code>r260927-01</code> 9・<code>i261025-01</code> 5・<code>q261031-01</code> 2・<code>p261027-01</code>・<code>i261029-01</code>・<code>i261031-01</code> 各 1。後の 2 本は <code>:root</code> の変数の定義（<code>--accent: var(--navy1)</code>）で、直すかは見て決める。共通ルール「絶対ルール: 文字色と背景色は必ずペアで成立させる」。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 色に使う箇所へフォールバックの値を書く</li>
+		<li><span class="badge b-ok">済</span> 色に使う箇所へフォールバックの値を書く</li>
 	</ul>
 	</details>
 </section>
 
-<section class="ch02">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i261031-05</code> README が、カテゴリごとの h1 の章立てになっていない <span class="badge b-none">未</span></h1></summary>
+<section class="ch04 n6">
+	<details class="md-flat">
+	<summary><h1><code class="no">i261031-05</code> README が、カテゴリごとの h1 の章立てになっていない <span class="badge b-ok">済</span></h1></summary>
 	<p>品質レビューの指摘。README は <code>section</code> が 1 つで、h2 で「ルール」「資料」「課題」を並べている。共通ルールでは、<code>notes/</code> のカテゴリ（01_research・10_plan・40_issues・80_quality_review・90_rules）ごとに 1 章の h1 にし、虹色を振る。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 章立てを作り直す（章の数と色相を計算する）</li>
+		<li><span class="badge b-ok">済</span> 章立てを作り直す（章の数と色相を計算する）</li>
 	</ul>
 	</details>
 </section>
 
-<section class="ch01">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i261031-06</code> issues.html の章の色が 2 色しか無い <span class="badge b-none">未</span></h1></summary>
+<section class="ch05 n6">
+	<details class="md-flat">
+	<summary><h1><code class="no">i261031-06</code> issues.html の章の色が 2 色しか無い <span class="badge b-ok">済</span></h1></summary>
 	<p>品質レビューの指摘。<code>issues.html</code> は課題が増えても <code>.ch01</code>・<code>.ch02</code> を交互に使っている。共通ルールの「章数に応じた虹色配分」との合わせ方（グループごとに振るか、全体で通すか）を決める必要がある。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 振り方を決め、利用者の承認を得てから直す</li>
+		<li><span class="badge b-ok">済</span> 振り方を決め、利用者の承認を得てから直す（10/31 決定: グループごとに虹色。<code>n&lt;件数&gt;</code> と <code>chNN</code> の組で色相を決める）</li>
 	</ul>
 	</details>
 </section>
 
-<section class="ch02">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i261031-07</code> 品質レビュー q261031-01 の中身が古い・ルールに外れる <span class="badge b-none">未</span></h1></summary>
+<section class="ch06 n6">
+	<details class="md-flat">
+	<summary><h1><code class="no">i261031-07</code> 品質レビュー q261031-01 の中身が古い・ルールに外れる <span class="badge b-ok">済</span></h1></summary>
 	<p>テストの件数（114 件。今は 130 件）・未追跡ファイルの一覧が古い。<code>issues.html</code> のコントラスト（1.24:1）は 10/31 の <code>check-contrast</code> で全件 OK になり、解消済み。丸かっこが全角。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 解消済みの指摘と古い数値に、10/31 時点の結果を書き足す（レビュー当時の記録は消さない）</li>
+		<li><span class="badge b-ok">済</span> 解消済みの指摘と古い数値に、10/31 時点の結果を書き足す（レビュー当時の記録は消さない）</li>
 	</ul>
 	</details>
 </section>

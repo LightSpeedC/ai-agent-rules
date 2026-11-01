@@ -8,7 +8,7 @@
 <style>
 	:root {
 		--navy1: #12224d; --navy2: #2f5fbf; --ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa;
-		--link: #1a4fa0; --accent: var(--navy1); --accent2: var(--navy2); --soft: #f2f5fb;
+		--link: #1a4fa0; --accent: var(--navy1, #12224d); --accent2: var(--navy2, #2f5fbf); --soft: #f2f5fb;
 	}
 	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
 	.ch02 { --accent: hsl(186.7, 78%, 25%); --accent2: hsl(186.7, 58%, 55%); --soft: hsl(186.7, 28%, 95%); }
@@ -101,7 +101,7 @@
 <tr><td class="num">2</td><td><code>japanese-check.ts</code> に、直前のツールの結果より後のかたまりを返す関数を足し、2 の決定を判定に入れる</td><td><span class="badge b-ok">済</span></td></tr>
 <tr><td class="num">3</td><td><code>guard-english-before-tool.ts</code> を書く。node・bun で全件 ✅Green</td><td><span class="badge b-ok">済</span></td></tr>
 <tr><td class="num">4</td><td><code>~/.claude/settings.json</code> と REA の <code>claude-config/settings.json</code> に登録する (控えは <code>tmp/</code>)。登録したコマンドそのままで試走する。10/31: <code>~/.claude/settings.json</code> は登録・試走済み。REA の <code>claude-config/settings.json</code> も登録・試走済み (置き場はローカルルールの「Claude フックの置き場とメンテ」)</td><td><span class="badge b-ok">済</span></td></tr>
-<tr><td class="num">5</td><td>次のセッションで、実環境から確かめる (英語の 1 行の後のツールが止まる)</td><td><span class="badge b-none">未</span></td></tr>
+<tr><td class="num">5</td><td>次のセッションで、実環境から確かめる (英語の 1 行の後のツールが止まる)。10/31: 登録した同じセッションの中で、英語の 1 行の後の Edit が止まった</td><td><span class="badge b-ok">済</span></td></tr>
 <tr><td class="num">6</td><td><code>tools/80_ops/claude-hooks/README.html</code> と課題 i261029-01 を更新する。<code>tmp/</code> の控えを消す</td><td><span class="badge b-ok">済</span></td></tr>
 <tr><td class="num">7</td><td>依頼元 (20261019-file-manager) に結果を返し、検証を頼む。OK が出るまで課題を「済」にしない</td><td><span class="badge b-none">未</span></td></tr>
 </tbody>
