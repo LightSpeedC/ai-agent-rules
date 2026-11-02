@@ -55,6 +55,36 @@
 @rules/db-schema-rules.md
 <!-- DB のテーブル・列・索引を定義・変更するときは `rules/db-schema-rules.md` を読み、その指示に従うこと。 -->
 
+# 設計の原則
+
+@rules/design-rules.md
+<!-- アプリの構成 (スレッド・プロセス・外部の部品の扱い) を決めるときは `rules/design-rules.md` を読み、その指示に従うこと。 -->
+
+# 性能
+
+@rules/performance-rules.md
+<!-- 処理の速さ・メモリ・CPU の使い方を作る・変えるときは `rules/performance-rules.md` を読み、その指示に従うこと。 -->
+
+# 堅牢性
+
+@rules/robustness-rules.md
+<!-- ファイル・DB に書く処理、外から受け取るデータを読む処理、失敗したときの動きを作るときは `rules/robustness-rules.md` を読み、その指示に従うこと。 -->
+
+# 保守性
+
+@rules/maintainability-rules.md
+<!-- ファイルの分け方・資源の後始末・コメントの書き方を決めるときは `rules/maintainability-rules.md` を読み、その指示に従うこと。 -->
+
+# Windows のデスクトップアプリ
+
+@rules/windows-desktop-rules.md
+<!-- Win32 の画面 (窓・DPI・IME・GDI・COM) を持つアプリを作る・試験するときは `rules/windows-desktop-rules.md` を読み、その指示に従うこと。 -->
+
+# 品質レビューの受け方
+
+@rules/quality-review-rules.md
+<!-- 品質レビューを頼むとき、レビューの結果をルールに返すときは `rules/quality-review-rules.md` を読み、その指示に従うこと。 -->
+
 # テストのルール
 
 @rules/test-rules.md
