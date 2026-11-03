@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>画面の範囲を撮るコマンドを止める</title>
+<style>
+	:root {
+		--navy1: #12224d;
+		--navy2: #2f5fbf;
+		--ink: #1c2330;
+		--ink-soft: #4a5568;
+		--line: #d9dfe8;
+		--code-bg: #f4f6fa;
+		--link: #1a4fa0;
+		--accent: #12224d;
+		--accent2: #2f5fbf;
+		--soft: #f2f5fb;
+	}
+
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+	.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch04 { --accent: hsl(70, 78%, 25%);  --accent2: hsl(70, 58%, 55%);  --soft: hsl(70, 28%, 95%); }
+	.ch05 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+		font-size: 15.5px;
+		line-height: 1.85;
+	}
+
+	a { color: var(--link, #1a4fa0); background: transparent; }
+
+	.titlebar {
+		background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+	}
+	.titlebar .inner {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 34px 30px 30px;
+	}
+	.titlebar h1 {
+		font-size: 2em;
+		margin: 0 0 8px;
+		color: #ffffff;
+	}
+	.titlebar .lead {
+		color: #e2ebfb;
+		background: transparent;
+		margin: 0 0 10px;
+		font-size: .95em;
+		max-width: 1100px;
+	}
+	.titlebar .date {
+		color: #d3e1fb;
+		background: transparent;
+		font-size: .85em;
+	}
+	.titlebar code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	.wrap {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 0 30px;
+	}
+
+	section {
+		background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 4px 26px 26px;
+		margin: 34px 0;
+	}
+
+	section h1 {
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		font-size: 1.5em;
+		padding: 14px 20px;
+		margin: 26px 0 20px;
+		border-radius: 8px;
+		box-shadow: 0 3px 10px rgba(18, 34, 77, 0.22);
+	}
+	section h1 code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	h2 {
+		background: #f2f5fb; background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--accent, #12224d);
+		border-left: 6px solid var(--accent, #12224d);
+		border-radius: 0 6px 6px 0;
+		font-size: 1.18em;
+		padding: 6px 12px;
+		margin: 30px 0 12px;
+	}
+
+	.tablewrap { overflow-x: auto; margin: 14px 0; }
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
+	}
+	th {
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-align: left;
+		font-weight: 600;
+		padding: 9px 12px;
+	}
+	td {
+		background: transparent;
+		color: var(--ink, #1c2330);
+		border-bottom: 1px solid var(--line, #d9dfe8);
+		vertical-align: top;
+		padding: 9px 12px;
+	}
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; white-space: nowrap; }
+	th.num { text-align: right; }
+	td.nowrap, th.nowrap { white-space: nowrap; }
+
+	pre {
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border-left: 5px solid var(--accent2, #2f5fbf);
+		border-radius: 0 6px 6px 0;
+		padding: 13px 16px;
+		overflow-x: auto;
+	}
+
+	code {
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-size: .92em;
+	}
+	pre code { border: none; padding: 0; }
+
+	.callout {
+		border-left: 6px solid var(--accent, #12224d);
+		background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--ink, #1c2330);
+		border-radius: 0 8px 8px 0;
+		padding: 12px 18px;
+		margin: 18px 0;
+	}
+	.callout strong { color: var(--accent, #12224d); background: transparent; }
+
+	.badge {
+		display: inline-block;
+		padding: 2px 9px;
+		border-radius: 999px;
+		font-size: .82em;
+		font-weight: 600;
+		color: #ffffff;
+		white-space: nowrap;
+	}
+	.b-ok   { background: #1d7a3c; background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-ng   { background: #a51f22; background: linear-gradient(100deg, #a51f22, #e05a5c); }
+	.b-warn { background: #b8620a; background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: #5a6472; background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+	.toc {
+		background: #f2f5fb; background: linear-gradient(180deg, #f2f5fb, #ffffff);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 16px 24px 24px;
+		margin: 34px 0;
+	}
+	.toc h2 {
+		background: #f2f5fb; background: linear-gradient(90deg, #f2f5fb, #ffffff);
+		color: var(--navy1, #12224d);
+		border-left: 6px solid var(--navy1, #12224d);
+	}
+	.toc ol {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		counter-reset: toc;
+	}
+	.toc li { counter-increment: toc; }
+	.toc ol a {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		width: 310px;
+		max-width: 100%;
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 8px 12px;
+		border-radius: 6px;
+		font-size: .9em;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+	.toc ol a::before { content: counter(toc) ". "; font-weight: 700; }
+
+	.navwrap { margin: 18px 0 0; }
+	.backlink {
+		display: inline-flex;
+		align-items: center;
+		background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 4px 10px;
+		border-radius: 6px;
+		line-height: 0;
+	}
+	footer {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 18px 30px 30px;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+	}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>画面の範囲を撮るコマンドを止める</h1>
+		<p class="lead">対象: ai-agent-rules ／ 入力: 20261019-file-manager のサンプル <code>guard-screen-capture.ts</code> (#1732) と、PreToolUse の入力 (コマンド ・ Write と Edit の中身 ・ コマンドに出たスクリプトの中身) ／ 出力: <code>tools/80_ops/claude-hooks/guard-screen-capture.ts</code> ・ そのテスト ・ <code>~/.claude/settings.json</code> の PreToolUse の登録 ・ フックの README</p>
+		<p class="date">📅 作成: 2026-11-02 / 更新: 2026-11-02</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+
+<nav class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">目的</a></li>
+		<li class="ch02"><a href="#ch02">現状</a></li>
+		<li class="ch03"><a href="#ch03">設計</a></li>
+		<li class="ch04"><a href="#ch04">手順</a></li>
+		<li class="ch05"><a href="#ch05">決めることの一覧</a></li>
+	</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+	<h1>目的</h1>
+	<p>確かめの撮影で画面の範囲を写し、ほかの窓が会話の記録に残った (20261019-file-manager の振り返り 416-A)。共通ルール「利用者に見せる前に、自分で見る」の「撮るのは、確かめる窓だけにする」を、フックで守らせる。</p>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>現状</h1>
+	<ul>
+		<li>依頼元がサンプルを用意した。動かして確かめてはいない。止める語は <code>CopyFromScreen</code> と <code>GetDC(0)</code> (<code>[IntPtr]::Zero</code> ・ <code>IntPtr.Zero</code> ・ <code>null</code> も) の 2 つ。見るのは Bash ・ PowerShell のコマンドの文字列だけ</li>
+		<li>サンプルの頭のコメントにあるとおり、ps1 の中で呼ぶ形は止まらない</li>
+		<li>既存の PreToolUse のフックは 3 つ。どれも <code>deny</code> で止める</li>
+	</ul>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>設計</h1>
+	<ul>
+		<li>単独のファイル <code>guard-screen-capture.ts</code> として置き、PreToolUse に matcher <code>Bash|PowerShell|Write|Edit</code> で 1 つ足す (i261101-01 の決めること 5 と同じ置き方)</li>
+		<li>止める語は 3 つ: <code>CopyFromScreen</code> ・ <code>GetDC(0)</code> の形 ・ <code>GetWindowDC(GetDesktopWindow())</code> の形 (決めること 7)。空白と大小は問わない。<code>BitBlt</code> ・ <code>PrintWindow</code> ・ <code>PrimaryScreen</code> は窓 1 つを撮るときにも使うので止めない</li>
+		<li>見る所は 2 つ (決めること 6)
+			<ul>
+				<li>Bash ・ PowerShell のコマンドの文字列と、そこに出た <code>.ps1</code> ・ <code>.cs</code> のパスのファイルの中身。ファイルが無い ・ 読めないときは、そのファイルを飛ばす</li>
+				<li>Write の <code>content</code> と Edit の <code>new_string</code>。ただし書く先がスクリプト (<code>.ps1</code> ・ <code>.psm1</code> ・ <code>.cs</code> ・ <code>.cmd</code> ・ <code>.bat</code>) のときだけ (決めること 9)</li>
+			</ul>
+		</li>
+		<li>当たれば <code>deny</code> で止め、理由に、当たった語と、確かめる窓だけをその窓から写すことを書く (決めること 8)</li>
+		<li>入力が読めないときは止めない (フックの不具合で作業を止め続けない)</li>
+	</ul>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>手順</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>作業</th><th>状態</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">1</td><td>この計画の承認 (決めることは 11/01 に 6-C、11/02 に 7-A ・ 8-A ・ 9-A)。11/02 承認</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">2</td><td>テストを先に書き、❌Red を見る。3 つの語の各々で止める ・ <code>psh -c</code> で包んでも止める ・ <code>GetWindowDC</code> と <code>BitBlt</code> だけなら通す ・ 語の無いコマンドは通す ・ コマンドに出た ps1 の中身で止める ・ スクリプトへの Write ・ Edit で止める ・ 資料 (html ・ md) への Write は通す ・ 入力が壊れていれば通す (11/02 13 件。❌Red: 止める側の 8 件)</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">3</td><td>実装して、node ・ bun とも全件 ✅Green (11/02 153 件)</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">4</td><td><code>~/.claude/settings.json</code> の PreToolUse に登録し (控えは <code>tmp/</code>)、登録したコマンドそのままで試走する (11/02 登録。CopyFromScreen は deny、git status は通った)</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">5</td><td>フックの README に行を足し、html2md ・ check-contrast を通す (11/02 読めない配色なし)</td><td><span class="badge b-ok">済</span></td></tr>
+				<tr><td class="num">6</td><td>次のセッションで、実環境から確かめる (止める語を含むコマンドが止まる ・ 窓だけを写すコマンドは通る)</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">7</td><td>依頼元 (20261019-file-manager) に、完成したことと、サンプル (hook-416) を消してよいことを知らせる</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">8</td><td>この計画と課題に結果を足す</td><td><span class="badge b-none">未</span></td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>決めることの一覧</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>決めること</th><th>選択肢</th><th>推す案</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="num">6</td>
+					<td>どこを見るか</td>
+					<td>A. コマンドの文字列だけ<br>B. A と、コマンドに出た <code>.ps1</code> ・ <code>.cs</code> の中身<br>C. B と、Write ・ Edit の中身</td>
+					<td><strong>C (決定)</strong></td>
+				</tr>
+				<tr>
+					<td class="num">7</td>
+					<td>止める語の範囲</td>
+					<td>A. サンプルの 2 つに <code>GetWindowDC(GetDesktopWindow())</code> を足す<br>B. サンプルの 2 つだけ<br>C. A に <code>BitBlt</code> ・ <code>PrintWindow</code> ・ <code>PrimaryScreen</code> も足す</td>
+					<td><strong>A (決定)</strong>。画面全体を撮る別の書き方を塞ぎ、窓 1 つを撮る呼び出しは止めない</td>
+				</tr>
+				<tr>
+					<td class="num">8</td>
+					<td>止め方</td>
+					<td>A. <code>deny</code> で止め、窓だけを写す書き方を理由に書く<br>B. <code>ask</code> で利用者に聞く</td>
+					<td><strong>A (決定)</strong>。ルールで禁じており、ask はその場の流れで承認されやすい</td>
+				</tr>
+				<tr>
+					<td class="num">9</td>
+					<td>Write ・ Edit で見る書き先</td>
+					<td>A. スクリプトの拡張子 (<code>.ps1</code> ・ <code>.psm1</code> ・ <code>.cs</code> ・ <code>.cmd</code> ・ <code>.bat</code>) だけ<br>B. すべてのファイル</td>
+					<td><strong>A (決定)</strong>。撮影を呼ぶのは ps1 ・ C# ・ cmd が主。B や、<code>.ts</code> ・ <code>.js</code> まで含めると、語を書き記すルール ・ 計画 ・ このフック自身とそのテストが書けなくなる</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+</div>
+
+</body>
+</html>

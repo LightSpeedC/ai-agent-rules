@@ -19,6 +19,8 @@ Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.
 | `resume-reminder.ts` | （`resume`）再開（`resume`）・compact のとき、chat 待受けと cron の張り直しを促す。フックは応答を始められないので、「次の発言を受けたら、本題の前に張り直す」と書く。手順は共通ルールの見出し名で指す（課題 i261025-01） | （入口から呼ぶ） |
 | `guard-bash-sed-awk.ts` | Bash のコマンドの区切りごとの先頭語が `sed`・`awk` なら deny し、理由に Edit・Read を書く。引数の中の語では止めない（課題 i261025-01） | PreToolUse（matcher: Bash） |
 | `guard-english-before-tool.ts` | 直前のツールの結果（無ければターンの始め）より後のテキストに、英語だけのかたまりがあれば deny し、理由に「日本語訳を本文に書いてから呼び直す」と書く。会話ログが読めなければ通す（課題 i261029-01） | PreToolUse（matcher なし） |
+| `guard-commit-after-failed-edit.ts` | git commit の前に会話ログを読み、失敗したままの Edit・Write があれば deny し、理由にファイル名と解き方を書く。印は、失敗の後の同じファイルへの Edit・Write か Read が通れば解ける。通った commit より前の失敗は見ない。会話ログが読めなければ通す（課題 i261101-01） | PreToolUse（matcher `Bash\|PowerShell`） |
+| `guard-screen-capture.ts` | 画面の範囲を撮る呼び出し（`CopyFromScreen`・`GetDC(0)`・`GetWindowDC(GetDesktopWindow())`）があれば deny し、窓だけを写す書き方を理由に書く。見るのは、コマンドと、そこに出た ps1・psm1・cs の中身、スクリプト（ps1・psm1・cs・cmd・bat）への Write・Edit の中身。入力が読めなければ通す（課題 i261101-02） | PreToolUse（matcher `Bash\|PowerShell\|Write\|Edit`） |
 | `japanese-check.ts` | 英語の判定 `isEnglishOnly`。コードブロック・コードスパン・URL・パスを除き、英字が 20 字以上で、日本語の字の数が英語の語の数より少なければ英語とみなす（課題 i261031-01）。`require-japanese.ts`（Stop）と `guard-english-before-tool.ts` が使う | （各フックから呼ぶ） |
 | `convert-after-write.ts` | Write で書いた ps1・html・cmd・bat を、`convert-encoding` で文字コードと改行を揃える（ps1 → ps1、html → html、cmd・bat → cmd）。成功は無表示、失敗は ❌ で書き換えなしを知らせる（依頼 #1672） | PostToolUse（matcher: Write） |
 

@@ -27,6 +27,7 @@ AIエージェント (Claude Code・Codex 等) が参照する共通ルール。
 - [SessionStart フックの統合](notes/10_plan/p261027-01-SessionStartフックの統合.md) SessionStart で動く 3 本のフックを入口 1 本にまとめ、出力を JSON 1 つにする計画。
 - [REA 設定の通常セッションへの統合](notes/10_plan/p261027-02-REA設定の通常セッションへの統合.md) 専用コマンド `rea-claude` をやめ、REA の MCP ・ スキル ・ 会話ログを `~/.claude` にまとめる計画。
 - [環境変数の仕様](notes/10_plan/p261101-01-環境変数の仕様.md) フックが読む環境変数を、詳細仕様 `notes/50_spec/` にまとめる計画。
+- [失敗したままの Edit ・ Write の後の git commit を止める](notes/10_plan/i261101-01-失敗したEditの後のcommitを止める.md) [画面の範囲を撮るコマンドを止める](notes/10_plan/i261101-02-画面の範囲の撮影を止める.md) 失敗したままの Edit ・ Write があれば、git commit を PreToolUse のフックで止める計画。
 - [フックを Obsidian 連携ルールに合わせる](notes/10_plan/i261018-01-フックをObsidian連携ルールに合わせる.md) 課題 i261018-01 の対応計画。
 - [張り直しと sed ・ awk のフック](notes/10_plan/i261025-01-張り直しとsed・awkのフック.md) 再開時に張り直しを促すフックと、Bash の sed ・ awk を止めるフックの計画。
 - [ツール前の英語判定](notes/10_plan/i261029-01-ツール前の英語判定.md) ツールを呼ぶ前に、直前の英語だけの文で止める PreToolUse フックの計画。
