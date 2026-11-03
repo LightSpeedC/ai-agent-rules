@@ -2,7 +2,7 @@
 
 AIエージェント (Claude Code・Codex 等) が参照する共通ルール。
 
-> 📅 作成: 2026-09-02 / 更新: 2026-11-01
+> 📅 作成: 2026-09-02 / 更新: 2026-11-03
 
 [^^](../)
 
@@ -28,6 +28,7 @@ AIエージェント (Claude Code・Codex 等) が参照する共通ルール。
 - [REA 設定の通常セッションへの統合](notes/10_plan/p261027-02-REA設定の通常セッションへの統合.md) 専用コマンド `rea-claude` をやめ、REA の MCP ・ スキル ・ 会話ログを `~/.claude` にまとめる計画。
 - [環境変数の仕様](notes/10_plan/p261101-01-環境変数の仕様.md) フックが読む環境変数を、詳細仕様 `notes/50_spec/` にまとめる計画。
 - [失敗したままの Edit ・ Write の後の git commit を止める](notes/10_plan/i261101-01-失敗したEditの後のcommitを止める.md) [画面の範囲を撮るコマンドを止める](notes/10_plan/i261101-02-画面の範囲の撮影を止める.md) 失敗したままの Edit ・ Write があれば、git commit を PreToolUse のフックで止める計画。
+- [止める指示で cron を消すよう促す](notes/10_plan/i261103-01-止める指示でcronを消すよう促す.md) 「止めて」等の発言を受けたとき、cron を消すよう UserPromptSubmit のフックで思い出させる計画。
 - [フックを Obsidian 連携ルールに合わせる](notes/10_plan/i261018-01-フックをObsidian連携ルールに合わせる.md) 課題 i261018-01 の対応計画。
 - [張り直しと sed ・ awk のフック](notes/10_plan/i261025-01-張り直しとsed・awkのフック.md) 再開時に張り直しを促すフックと、Bash の sed ・ awk を止めるフックの計画。
 - [ツール前の英語判定](notes/10_plan/i261029-01-ツール前の英語判定.md) ツールを呼ぶ前に、直前の英語だけの文で止める PreToolUse フックの計画。

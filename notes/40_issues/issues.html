@@ -307,7 +307,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules 課題</h1>
 		<p class="lead">これから解決することを記録する。片付いたグループは <a href="issues-archive.html">issues-archive.html</a> に残す。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-10-31</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-11-03</p>
 	</div>
 </div>
 
@@ -530,12 +530,12 @@
 
 <section class="ch11 n12">
 	<details class="md-flat" open>
-	<summary><h1><code class="no">i261103-01</code> 「止めて」等の発言で、その応答で cron を消すよう促す <span class="badge b-none">未</span></h1></summary>
+	<summary><h1><code class="no">i261103-01</code> 「止めて」等の発言で、その応答で cron を消すよう促す <span class="badge b-warn">着手</span></h1></summary>
 	<p>11/03 に 20261019-file-manager から依頼を受けた (#1758)。利用者が「止めて」「止める」「中断」等と発言したら、その応答で cron を消す (CronList → CronDelete) よう、<code>additionalContext</code> を差し込む UserPromptSubmit フックを、claude-hooks に足す。「止めてよい」等の許可の言い回しは除く。サンプル (<code>stop-cron-on-halt.ts</code>) は向こうが用意済み。置き場は利用者から伝えられる。確かめ方は、「止めて」「区切りで止めて」で差し込まれ、「fm を止めてよい」では差し込まれないこと。<code>~/.claude/settings.json</code> への登録は利用者が行う。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 利用者からサンプルの置き場を聞き、読んで計画を立てる</li>
-		<li><span class="badge b-none">未</span> テストを先に書いて組み込む</li>
+		<li><span class="badge b-ok">済</span> 利用者からサンプルの置き場を聞き、読んで計画を立てる (計画 <a href="../10_plan/i261103-01-止める指示でcronを消すよう促す.html">i261103-01</a>、11/03 承認)</li>
+		<li><span class="badge b-ok">済</span> テストを先に書いて組み込む (❌Red を見てから実装、node ・ bun とも全件 ✅Green、<code>settings.json</code> へ登録し試走)</li>
 		<li><span class="badge b-none">未</span> 実環境から確かめ、依頼元へ知らせる。OK が出るまで「済」にしない</li>
 	</ul>
 	</details>
