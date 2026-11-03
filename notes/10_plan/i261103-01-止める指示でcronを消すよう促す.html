@@ -1,0 +1,344 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>止める指示で cron を消すよう促す</title>
+<style>
+	:root {
+		--navy1: #12224d;
+		--navy2: #2f5fbf;
+		--ink: #1c2330;
+		--ink-soft: #4a5568;
+		--line: #d9dfe8;
+		--code-bg: #f4f6fa;
+		--link: #1a4fa0;
+		--accent: #12224d;
+		--accent2: #2f5fbf;
+		--soft: #f2f5fb;
+	}
+
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+	.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch04 { --accent: hsl(70, 78%, 25%);  --accent2: hsl(70, 58%, 55%);  --soft: hsl(70, 28%, 95%); }
+	.ch05 { --accent: hsl(0, 78%, 25%);   --accent2: hsl(0, 58%, 55%);   --soft: hsl(0, 28%, 95%); }
+
+	* { box-sizing: border-box; }
+
+	body {
+		margin: 0;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+		font-size: 15.5px;
+		line-height: 1.85;
+	}
+
+	a { color: var(--link, #1a4fa0); background: transparent; }
+
+	.titlebar {
+		background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+	}
+	.titlebar .inner {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 34px 30px 30px;
+	}
+	.titlebar h1 {
+		font-size: 2em;
+		margin: 0 0 8px;
+		color: #ffffff;
+	}
+	.titlebar .lead {
+		color: #e2ebfb;
+		background: transparent;
+		margin: 0 0 10px;
+		font-size: .95em;
+		max-width: 1100px;
+	}
+	.titlebar .date {
+		color: #d3e1fb;
+		background: transparent;
+		font-size: .85em;
+	}
+	.titlebar code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	.wrap {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 0 30px;
+	}
+
+	section {
+		background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff 55%);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 4px 26px 26px;
+		margin: 34px 0;
+	}
+
+	section h1 {
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		font-size: 1.5em;
+		padding: 14px 20px;
+		margin: 26px 0 20px;
+		border-radius: 8px;
+		box-shadow: 0 3px 10px rgba(18, 34, 77, 0.22);
+	}
+	section h1 code {
+		background: rgba(255, 255, 255, 0.16);
+		color: #ffffff;
+		border: none;
+	}
+
+	h2 {
+		background: #f2f5fb; background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--accent, #12224d);
+		border-left: 6px solid var(--accent, #12224d);
+		border-radius: 0 6px 6px 0;
+		font-size: 1.18em;
+		padding: 6px 12px;
+		margin: 30px 0 12px;
+	}
+
+	.tablewrap { overflow-x: auto; margin: 14px 0; }
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 2px 6px rgba(18, 34, 77, 0.10);
+	}
+	th {
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-align: left;
+		font-weight: 600;
+		padding: 9px 12px;
+	}
+	td {
+		background: transparent;
+		color: var(--ink, #1c2330);
+		border-bottom: 1px solid var(--line, #d9dfe8);
+		vertical-align: top;
+		padding: 9px 12px;
+	}
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; white-space: nowrap; }
+	th.num { text-align: right; }
+	td.nowrap, th.nowrap { white-space: nowrap; }
+
+	pre {
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border-left: 5px solid var(--accent2, #2f5fbf);
+		border-radius: 0 6px 6px 0;
+		padding: 13px 16px;
+		overflow-x: auto;
+	}
+
+	code {
+		background: #f4f6fa; background: var(--code-bg, #f4f6fa);
+		color: #17335f;
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-size: .92em;
+	}
+	pre code { border: none; padding: 0; }
+
+	.callout {
+		border-left: 6px solid var(--accent, #12224d);
+		background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff);
+		color: var(--ink, #1c2330);
+		border-radius: 0 8px 8px 0;
+		padding: 12px 18px;
+		margin: 18px 0;
+	}
+	.callout strong { color: var(--accent, #12224d); background: transparent; }
+
+	.badge {
+		display: inline-block;
+		padding: 2px 9px;
+		border-radius: 999px;
+		font-size: .82em;
+		font-weight: 600;
+		color: #ffffff;
+		white-space: nowrap;
+	}
+	.b-ok   { background: #1d7a3c; background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-ng   { background: #a51f22; background: linear-gradient(100deg, #a51f22, #e05a5c); }
+	.b-warn { background: #b8620a; background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: #5a6472; background: linear-gradient(100deg, #5a6472, #97a1ae); }
+
+	.toc {
+		background: #f2f5fb; background: linear-gradient(180deg, #f2f5fb, #ffffff);
+		color: var(--ink, #1c2330);
+		border: 1px solid var(--line, #d9dfe8);
+		border-radius: 10px;
+		padding: 16px 24px 24px;
+		margin: 34px 0;
+	}
+	.toc h2 {
+		background: #f2f5fb; background: linear-gradient(90deg, #f2f5fb, #ffffff);
+		color: var(--navy1, #12224d);
+		border-left: 6px solid var(--navy1, #12224d);
+	}
+	.toc ol {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		padding: 0;
+		margin: 0;
+		counter-reset: toc;
+	}
+	.toc li { counter-increment: toc; }
+	.toc ol a {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		width: 310px;
+		max-width: 100%;
+		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 8px 12px;
+		border-radius: 6px;
+		font-size: .9em;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+	.toc ol a::before { content: counter(toc) ". "; font-weight: 700; }
+
+	.navwrap { margin: 18px 0 0; }
+	.backlink {
+		display: inline-flex;
+		align-items: center;
+		background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf));
+		color: #ffffff;
+		text-decoration: none;
+		padding: 4px 10px;
+		border-radius: 6px;
+		line-height: 0;
+	}
+	footer {
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 18px 30px 30px;
+		background: #ffffff;
+		color: var(--ink, #1c2330);
+	}
+</style>
+</head>
+<body>
+
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>止める指示で cron を消すよう促す</h1>
+		<p class="lead">対象: ai-agent-rules ／ 入力: 20261019-file-manager のサンプル <code>stop-cron-on-halt.ts</code> (#1758) と、UserPromptSubmit の入力 (利用者の発言) ／ 出力: <code>tools/80_ops/claude-hooks/stop-cron-on-halt.ts</code> ・ そのテスト ・ <code>~/.claude/settings.json</code> の UserPromptSubmit の登録 ・ フックの README</p>
+		<p class="date">📅 作成: 2026-11-03 / 更新: 2026-11-03</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 8 8 2l6.5 6M3.5 6.5V14h9V6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+
+<nav class="toc">
+	<h2>目次</h2>
+	<ol>
+		<li class="ch01"><a href="#ch01">目的</a></li>
+		<li class="ch02"><a href="#ch02">現状</a></li>
+		<li class="ch03"><a href="#ch03">設計</a></li>
+		<li class="ch04"><a href="#ch04">手順</a></li>
+		<li class="ch05"><a href="#ch05">決めることの一覧</a></li>
+	</ol>
+</nav>
+
+<section class="ch01" id="ch01">
+	<h1>目的</h1>
+	<p>利用者が作業を止めるよう言っても、cron が残って点検が動き続けた (20261019-file-manager の振り返り 460)。ローカルルールの文だけでは守られなかったため、止める指示を受けた応答で cron を消すよう、フックで思い出させる。</p>
+</section>
+
+<section class="ch02" id="ch02">
+	<h1>現状</h1>
+	<ul>
+		<li>依頼元がサンプルを用意した。発言に「止めて」「止める」「中断」「ストップ」「区切りで止」があれば、cron を消すよう <code>additionalContext</code> を差し込む。「止めてよい」「止めても構わない」等の許可の言い回しは除く</li>
+		<li>サンプルが使う <code>readInput</code> (<code>vault.ts</code>) と <code>stamped</code> (<code>jst.ts</code>) は、こちらのフックにも同じものがある</li>
+		<li>語だけで判定するため、cron と関係の無いものを止める発言 (「親プロセスは止めて」) や、止めることの説明 (「撮影を止めるフック」) にも当たる。そのまま消すと、点検の cron が次に開き直すまで止まる</li>
+		<li>UserPromptSubmit のフックは、まだ 1 つも登録していない</li>
+	</ul>
+</section>
+
+<section class="ch03" id="ch03">
+	<h1>設計</h1>
+	<ul>
+		<li>単独のファイル <code>stop-cron-on-halt.ts</code> として置き、<code>settings.json</code> に UserPromptSubmit を 1 つ足す</li>
+		<li>語の判定はサンプルのまま (決めること 10)</li>
+		<li>差し込む文で、何を止める指示かを読ませる (決めること 10)。作業全体を止める指示なら、CronList を見て、張っている cron を CronDelete で消す。プロセスなど特定のものを止める指示 ・ 止めることの説明なら消さない。再び張るのは、利用者が再開を指示してから</li>
+		<li>判定の関数を export し、テストから直接呼べるようにする。本体は直接実行したときだけ動く</li>
+		<li>入力が読めないときは何も出さない</li>
+	</ul>
+</section>
+
+<section class="ch04" id="ch04">
+	<h1>手順</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>作業</th><th>状態</th></tr>
+			</thead>
+			<tbody>
+				<tr><td class="num">1</td><td>この計画の承認 (決めることは 11/03 に 10-A)</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">2</td><td>テストを先に書き、❌Red を見る。「止めて」「区切りで止めて」「中断して」で差し込む ・ 差し込む文に、特定のものを止める指示なら消さないことが書いてある ・ 「fm を止めてよい」「止めても構わない」では差し込まない ・ 語の無い発言では差し込まない ・ 入力が壊れていれば何も出さない</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">3</td><td>実装して、node ・ bun とも全件 ✅Green</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">4</td><td><code>~/.claude/settings.json</code> に UserPromptSubmit を登録し (控えは <code>tmp/</code>)、登録したコマンドそのままで試走する</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">5</td><td>フックの README に行を足し、課題 ・ README にこの計画へのリンクを足す。html2md ・ check-contrast を通す</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">6</td><td>次のセッションで、実環境から確かめる (「止めて」で差し込まれる ・ 「止めてよい」では差し込まれない)</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">7</td><td>依頼元 (20261019-file-manager) に、完成したことと、サンプルを消してよいことを知らせる。OK が出るまで課題を「済」にしない</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">8</td><td>この計画と課題に結果を足す</td><td><span class="badge b-none">未</span></td></tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<section class="ch05" id="ch05">
+	<h1>決めることの一覧</h1>
+	<div class="tablewrap">
+		<table>
+			<thead>
+				<tr><th class="num">#</th><th>決めること</th><th>選択肢</th><th>推す案</th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="num">10</td>
+					<td>何を「止める指示」と見なすか</td>
+					<td>A. 語の判定はサンプルのまま。差し込む文で、作業全体を止める指示かを読ませる<br>B. サンプルのまま。語があれば常に消すよう促す<br>C. 作業全体を止める言い回しだけに語を絞る</td>
+					<td><strong>A (決定)</strong>。依頼元の確かめ方を満たしたまま、関係の無い発言で cron が消えるのを避ける</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+</div>
+
+</body>
+</html>
