@@ -1,6 +1,8 @@
 // PreToolUse フック: git commit の前に、会話の記録 (JSONL) を読み、失敗したままの Edit・Write があれば止める (課題 i261101-01)。
 // 20261019-file-manager で、Edit の失敗を見ずに commit し、壊れたファイルが入った (#1727。サンプルを元にした)。
 // 印を解くのは、失敗の後の同じファイルへの Edit・Write か Read が通ったとき。通った commit より前の失敗は見ない。
+// 14-A (11/04、20261019-file-manager の報告 #1783): --dry-run の commit は何も commit しないので、止めず、区切りにもしない。
+// 同じ応答に並べた Edit・Write の失敗は、フックから知れない (11/05 実測。調査 r261105-01)。共通ルールで並べないと決めた (21-A)。
 // 記録が読めないときは止めない (フックの不具合で commit を止め続けないため)。
 // node でも bun でも動くよう、標準モジュールだけで書く。
 import { readFileSync } from 'node:fs';
@@ -8,9 +10,14 @@ import { readInput, type HookInput } from './vault.ts';
 
 const SPLIT = /&&|\|\||;|\||\n/;
 
-// 区切りごとに、先頭が git で、オプション (-c x=y ・ -C <path> 等) の後に commit があるか
+// 区切りごとに、先頭が git で、オプション (-c x=y ・ -C <path> 等) の後に commit があるか。--dry-run 付きは対象外
+// --dry-run は引用符の外だけを見る。コミットメッセージの中の文字 (-m "--dry-run を直す") はオプションではない
 export function isCommit(command: string): boolean {
-	return command.split(SPLIT).some((s) => /^\s*\(*\s*git(\s+(-[cC]\s+("[^"]*"|'[^']*'|\S+)|--?[\w-]+(=\S+)?))*\s+commit\b/.test(s));
+	return command.split(SPLIT).some((s) => {
+		if (!/^\s*\(*\s*git(\s+(-[cC]\s+("[^"]*"|'[^']*'|\S+)|--?[\w-]+(=\S+)?))*\s+commit\b/.test(s)) return false;
+		const outsideQuotes = s.replace(/"[^"]*"|'[^']*'/g, ' ');
+		return !/(^|\s)--dry-run(\s|=|$)/.test(outsideQuotes);
+	});
 }
 
 // Windows は大小を区別しないため、区切りと大小を揃えて比べる

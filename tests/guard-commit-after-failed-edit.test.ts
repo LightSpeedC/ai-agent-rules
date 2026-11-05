@@ -7,6 +7,7 @@ import { join, resolve } from 'node:path';
 // 課題 i261101-01: 失敗したままの Edit・Write があれば、git commit を止める PreToolUse フック。
 // 20261019-file-manager で、Edit の失敗を見ずに commit し、壊れたファイルが入った (#1727)。
 // 印を解くのは、失敗の後の同じファイルへの Edit・Write か Read が通ったとき (決めることの 3-A)。
+// 同じ応答に Edit と commit を並べた場合は、フックから失敗を知れない (11/05 実測。調査 r261105-01)。共通ルールで並べないと決めた (21-A)
 const root = resolve(import.meta.dirname, '..');
 const hook = join(root, 'tools/80_ops/claude-hooks/guard-commit-after-failed-edit.ts');
 
@@ -99,5 +100,34 @@ describe('guard-commit-after-failed-edit (失敗したままの Edit の後の c
 	test('会話の記録が無ければ止めない', () => {
 		assert.equal(runHook(undefined, 'git commit -m "x"').denied, false);
 		assert.equal(runHook(join(work, 'none.jsonl'), 'git commit -m "x"').denied, false);
+	});
+});
+
+// 課題 i261101-01、11/04 に 20261019-file-manager から報告 (#1783)。14-A で決めた。
+describe('--dry-run の commit (14-A)', () => {
+	test('--dry-run の commit は、失敗した Edit があっても止めない (何も commit されないため)', () => {
+		assert.equal(runHook(transcript([edit(fileA, true)]), 'git commit --dry-run').denied, false);
+		assert.equal(runHook(transcript([edit(fileA, true)]), 'git -C "W:/proj" commit -m "x" --dry-run').denied, false);
+	});
+
+	test('--dry-run の commit は区切りにならない。そのあとの本物の commit は止める', () => {
+		assert.equal(runHook(transcript([edit(fileA, true), bash('git commit --dry-run')]), 'git commit -m "x"').denied, true);
+	});
+
+	test('コミットメッセージの中の --dry-run の文字は、オプションとみなさず、止める', () => {
+		assert.equal(runHook(transcript([edit(fileA, true)]), 'git commit -m "--dry-run を直す"').denied, true);
+	});
+
+	test('通った Edit の呼び出しが、結果の行の後に api-request-blob として入り直しても、失敗とみなさない', () => {
+		// 記録には、結果の行の後に同じ呼び出しが入り直す (11/04 実測)。写しを数え直して、止めてしまわないこと
+		const id = 'toolu_echo';
+		const lines = [
+			{ type: 'assistant', message: { content: [{ type: 'tool_use', id, name: 'Edit', input: { file_path: fileA, old_string: 'a', new_string: 'b' } }] } },
+			{ type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: id, content: 'ok' }] } },
+			{ type: 'api-request-blob', message: { content: [{ type: 'tool_use', id, name: 'Edit', input: { file_path: fileA, old_string: 'a', new_string: 'b' } }] } },
+		];
+		const file = join(work, `echo${++seq}.jsonl`);
+		writeFileSync(file, lines.map((l) => JSON.stringify(l)).join('\n') + '\n');
+		assert.equal(runHook(file, 'git commit -m "x"').denied, false);
 	});
 });

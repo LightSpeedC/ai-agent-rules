@@ -2,7 +2,7 @@
 
 対象: ai-agent-rules ／ 入力: 20261019-file-manager のサンプル `guard-commit-after-failed-edit.ts` (#1727) と、会話の記録 (JSONL) ／ 出力: `tools/80_ops/claude-hooks/guard-commit-after-failed-edit.ts` ・ そのテスト ・ `~/.claude/settings.json` の PreToolUse の登録 ・ フックの README
 
-> 📅 作成: 2026-11-01 / 更新: 2026-11-01
+> 📅 作成: 2026-11-01 / 更新: 2026-11-03
 
 [トップへ戻る](../../README.md)
 
@@ -43,7 +43,7 @@ Edit の失敗を見ないまま git commit し、壊れたファイルが入っ
 | 3 | 実装して、node ・ bun とも全件 ✅Green (11/01 140 件) | ✅ **済** |
 | 4 | `~/.claude/settings.json` の PreToolUse に matcher `Bash\|PowerShell` で登録し (控えは `tmp/`)、登録したコマンドそのままで試走する (11/01 登録。この会話の記録で試走し、Edit の失敗が後の Edit で解けていたため通った) | ✅ **済** |
 | 5 | フックの README に行を足し、html2md ・ check-contrast を通す (11/01 指摘なし ・ 読めない配色なし) | ✅ **済** |
-| 6 | 次のセッションで、実環境から確かめる (失敗した Edit の後の commit が止まる ・ Read の後は通る) | ⬜ **未** |
+| 6 | 次のセッションで、実環境から確かめる (失敗した Edit の後の commit が止まる ・ Read の後は通る) (11/03 実測: 失敗する Edit の後の `git commit --dry-run` が、ファイル名と解き方の理由つきで止まり、Read の後は通った) | ✅ **済** |
 | 7 | 依頼元 (20261019-file-manager) に、完成したことと、サンプルを消してよいことを知らせる (利用者の指示、11/01) | ⬜ **未** |
 | 8 | この計画と課題に結果を足す | ⬜ **未** |
 

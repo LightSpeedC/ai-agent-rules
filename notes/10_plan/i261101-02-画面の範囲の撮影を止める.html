@@ -252,7 +252,7 @@
 	<div class="inner">
 		<h1>画面の範囲を撮るコマンドを止める</h1>
 		<p class="lead">対象: ai-agent-rules ／ 入力: 20261019-file-manager のサンプル <code>guard-screen-capture.ts</code> (#1732) と、PreToolUse の入力 (コマンド ・ Write と Edit の中身 ・ コマンドに出たスクリプトの中身) ／ 出力: <code>tools/80_ops/claude-hooks/guard-screen-capture.ts</code> ・ そのテスト ・ <code>~/.claude/settings.json</code> の PreToolUse の登録 ・ フックの README</p>
-		<p class="date">📅 作成: 2026-11-02 / 更新: 2026-11-02</p>
+		<p class="date">📅 作成: 2026-11-02 / 更新: 2026-11-03</p>
 	</div>
 </div>
 
@@ -314,7 +314,7 @@
 				<tr><td class="num">3</td><td>実装して、node ・ bun とも全件 ✅Green (11/02 153 件)</td><td><span class="badge b-ok">済</span></td></tr>
 				<tr><td class="num">4</td><td><code>~/.claude/settings.json</code> の PreToolUse に登録し (控えは <code>tmp/</code>)、登録したコマンドそのままで試走する (11/02 登録。CopyFromScreen は deny、git status は通った)</td><td><span class="badge b-ok">済</span></td></tr>
 				<tr><td class="num">5</td><td>フックの README に行を足し、html2md ・ check-contrast を通す (11/02 読めない配色なし)</td><td><span class="badge b-ok">済</span></td></tr>
-				<tr><td class="num">6</td><td>次のセッションで、実環境から確かめる (止める語を含むコマンドが止まる ・ 窓だけを写すコマンドは通る)</td><td><span class="badge b-none">未</span></td></tr>
+				<tr><td class="num">6</td><td>次のセッションで、実環境から確かめる (止める語を含むコマンドが止まる ・ 窓だけを写すコマンドは通る) (11/03 実測: <code>CopyFromScreen</code> を含む PowerShell のコマンドが、理由つきで止まり、<code>GetWindowDC($hwnd)</code> と <code>BitBlt</code> の文字列を含むコマンドは通った)</td><td><span class="badge b-ok">済</span></td></tr>
 				<tr><td class="num">7</td><td>依頼元 (20261019-file-manager) に、完成したことと、サンプル (hook-416) を消してよいことを知らせる</td><td><span class="badge b-none">未</span></td></tr>
 				<tr><td class="num">8</td><td>この計画と課題に結果を足す</td><td><span class="badge b-none">未</span></td></tr>
 			</tbody>
