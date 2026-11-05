@@ -368,7 +368,7 @@
 
 <div class="groupbar">
 	<h2>Claude フック（#1383 起票、2026-10-08）</h2>
-	<p class="count">12 件 / 未 4 / 着手 6 / 済 2</p>
+	<p class="count">12 件 / 未 2 / 着手 5 / 済 5</p>
 </div>
 
 <section class="ch01 n12">
@@ -547,13 +547,13 @@
 
 <section class="ch12 n12">
 	<details class="md-flat" open>
-	<summary><h1><code class="no">i261103-02</code> 会話の記録が 100 MB を超えたら、Stop フックで引継ぎを提案するよう知らせる <span class="badge b-none">未</span></h1></summary>
-	<p>11/03 に利用者の指示で、共通ルール「会話の記録が大きくなったら引き継ぐ」を足した (決めることは 11-A ・ 12-A ・ 13-A)。13-A で、超えたことは Stop フックで知らせると決めた。AI は記録の大きさを自分では知れないため。超えた後の最初の 1 回だけ知らせる。</p>
+	<summary><h1><code class="no">i261103-02</code> 会話の記録が 10 MB 以上、または圧縮 3 回以上になったら、Stop フックで引継ぎを提案するよう知らせる <span class="badge b-ok">済</span></h1></summary>
+	<p>11/03 に利用者の指示で、共通ルール「会話の記録が大きくなったら引き継ぐ」を足した (決めることは 11-A ・ 12-A ・ 13-A)。13-A で、超えたことは Stop フックで知らせると決めた。AI は記録の大きさを自分では知れないため。超えた後の最初の 1 回だけ知らせる。11/06 に利用者の指示で、目安を「記録 10 MB 以上、または圧縮 3 回以上 (どちらか早いほう)」に変え、フックとルールを一緒に直した。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> 計画を立てる (どのフックに足すか ・ 1 回だけにする印の持ち方)</li>
-		<li><span class="badge b-none">未</span> テストを先に書いて実装し、<code>settings.json</code> の登録を確かめる</li>
-		<li><span class="badge b-none">未</span> 実環境から確かめる</li>
+		<li><span class="badge b-ok">済</span> 計画を立てる (どのフックに足すか ・ 1 回だけにする印の持ち方)。計画書は立てず、利用者の「先にフックを変更して、ルールを反映する」の指示で進めた。新しい Stop フック <code>handoff-reminder.ts</code> に足し、印は一時フォルダに記録の名前で置く</li>
+		<li><span class="badge b-ok">済</span> テストを先に書いて実装し、<code>settings.json</code> の登録を確かめる (7 件を先に書いて ❌Red を見てから実装、node ・ bun とも全件 175 件 ✅Green、登録して試走)</li>
+		<li><span class="badge b-ok">済</span> 実環境から確かめる (11/06、Stop で促しが 1 回出た。記録 11.4 MB ・ 圧縮 3 回。その後の Stop では出ていない)</li>
 	</ul>
 	</details>
 </section>
@@ -570,8 +570,8 @@
 	<p><strong>やること</strong></p>
 	<ul>
 		<li><span class="badge b-ok">済</span> 調査と <code>/context</code> の実測、案の決定、計画の承認 (11/05)</li>
-		<li><span class="badge b-warn">着手</span> 試験: <code>light-sqlite</code> を作り、ホームの置き場にシンボリックリンクを張った。同じセッションの skill の一覧に出た (11/05)。セッションを開き直した 11/05 に、Skill の呼び出しでシンボリックリンク越しに本文が読み込まれることを確かめた。<strong>未: SQLite の作業で、呼ばずに自動で選ばれるか (説明文の効き) を確かめる</strong></li>
-		<li><span class="badge b-none">未</span> 試験が通ったら、章を 1 つずつ移す。shell ・ coding は核と skill に分ける。移すたびに <code>common-rules.md</code> を直す</li>
+		<li><span class="badge b-ok">済</span> 試験: <code>light-sqlite</code> を作り、ホームの置き場にシンボリックリンクを張った。同じセッションの skill の一覧に出た (11/05)。セッションを開き直した 11/05 に、Skill の呼び出しでシンボリックリンク越しに本文が読み込まれることを確かめた。自動選択は、原本を常時読み込みから外して、新しいプロセス (<code>claude -p</code>) で測った。<strong>説明文に要点を並べた版は、呼ばれず、原本の細部が落ちた (❌)。「答える前に必ず呼んで本文を読む。本文には説明文に無い決まりがある」と書いた版は、呼ばれて細部まで出た (✅)</strong>。各 1 回で、確率は測れていない。サブエージェントでの試験は、開始時の文脈を引き継ぐため成り立たない。決めた: 23-A (説明文は「答える前に必ず呼ぶ」と書き、要点を並べない) ・ 24-A (章のコメントは「Skill ツールで <code>light-sqlite</code> を呼ぶ。Skill が使えない環境は <code>skills/light-sqlite/SKILL.md</code> を読む」)。説明文の直しは <code>skills/light-sqlite/SKILL.md</code> に入れた</li>
+		<li><span class="badge b-none">未</span> 章を 1 つずつ移す (説明文は 23-A、章のコメントは 24-A の書き方。ルール変更なので、差分を出して「反映して」を待つ)。shell ・ coding は核と skill に分ける。移すたびに <code>common-rules.md</code> を直す</li>
 		<li><span class="badge b-none">未</span> <code>/context</code> の Memory files を測り直し、前後を計画書に書く</li>
 		<li><span class="badge b-none">未</span> 共通ルールの周知 (見出しと変わった点だけ)、ローカルルール 1 ・ 3 の直し、詳細仕様 (<code>notes/50_spec/</code>) への記録</li>
 	</ul>

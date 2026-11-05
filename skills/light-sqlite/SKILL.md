@@ -1,6 +1,6 @@
 ---
 name: light-sqlite
-description: ai-agent-rules の共通ルール「SQLite の大原則」。SQLite (node:sqlite・sqlite3 等) を扱うとき、使い捨ての確認コマンドも含めて読む。-wal と -shm を消さない、開いたら閉じる、常駐プロセスの WAL の上限、変えられないものはテーブルを作り直す、の決まり。
+description: ai-agent-rules の共通ルール「SQLite の大原則」。SQLite (node:sqlite・sqlite3 等) のコードを書く・直す・動かす・説明するときは、答える前に必ずこの skill を呼んで本文を読む。使い捨ての確認コマンドも含む。本文には説明文に無い決まりがあり、一般知識では代われない。
 ---
 
 # SQLite の大原則
