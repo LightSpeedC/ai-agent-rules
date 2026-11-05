@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>p261105-01 共通ルールを skill に分けて常時読み込みを減らす</title>
+<style>
+	:root {
+		--navy1: #12224d; --navy2: #2f5fbf; --ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa;
+		--link: #1a4fa0; --accent: var(--navy1, #12224d); --accent2: var(--navy2, #2f5fbf); --soft: #f2f5fb;
+	}
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(186.7, 78%, 25%); --accent2: hsl(186.7, 58%, 55%); --soft: hsl(186.7, 28%, 95%); }
+	.ch03 { --accent: hsl(93.3, 78%, 25%); --accent2: hsl(93.3, 58%, 55%); --soft: hsl(93.3, 28%, 95%); }
+	.ch04 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	body { margin: 0; background: #ffffff; color: var(--ink, #1c2330); font-size: 15.5px; line-height: 1.85; font-family: sans-serif; }
+	a { color: var(--link, #1a4fa0); background: transparent; }
+	.titlebar { background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; padding: 34px 30px 30px; }
+	.titlebar .inner { max-width: 1600px; margin: 0 auto; }
+	.titlebar h1 { font-size: 1.7em; margin: 0 0 6px; color: #ffffff; }
+	.titlebar .lead, .titlebar .date { margin: 4px 0; color: #e6ecf8; background: transparent; }
+	.titlebar code { background: rgba(255,255,255,0.16); color: #fff; border: none; }
+	.wrap { max-width: 1600px; margin: 0 auto; padding: 0 30px; }
+	section { background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); padding: 4px 26px 26px; margin: 34px 0; border-radius: 8px; }
+	section h1 { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 14px 20px; margin: 26px 0 20px; border-radius: 8px; font-size: 1.35em; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+	code { background: #f4f6fa; background: var(--code-bg, #f4f6fa); border: 1px solid var(--line, #d9dfe8); color: #17335f; padding: 0 4px; border-radius: 4px; }
+	.tablewrap { overflow-x: auto; }
+	table { border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08); margin: 10px 0; }
+	th { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 9px 12px; text-align: left; }
+	td { background: #ffffff; color: var(--ink, #1c2330); padding: 9px 12px; vertical-align: top; border-top: 1px solid var(--line, #d9dfe8); }
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; } td.nowrap { white-space: nowrap; }
+	.backlink { display: inline-block; background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; text-decoration: none; padding: 4px 12px; border-radius: 6px; }
+	.backlink svg { display: block; }
+	.wrap > .navwrap { margin-top: 18px; }
+	footer { max-width: 1600px; margin: 0 auto; padding: 18px 30px 30px; background: #ffffff; color: var(--ink, #1c2330); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>p261105-01 共通ルールを skill に分けて常時読み込みを減らす</h1>
+		<p class="lead">共通ルール (<code>common-rules.md</code> と <code>rules/</code>、約 198 KB、約 7.5 万トークン) の状況別の章を skill に移し、常時読み込む分を核だけにする。入力: <code>rules/</code> の全ファイル。出力: <code>skills/</code> の <code>SKILL.md</code> 群と、ホームの skill の置き場へのシンボリックリンク、変更後の <code>common-rules.md</code>。</p>
+		<p class="date">📅 作成: 2026-11-05 / 更新: 2026-11-05</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+
+<section class="ch01" id="ch01">
+<h1>決めたこと</h1>
+<p>調査 r261105-01 の案から、利用者が選んだもの (11/05)。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>番号</th><th>決めたこと</th><th>種別</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">16-A</td><td>常時読み込みを核だけにし、状況別の章は skill へ移す</td><td>恒久</td></tr>
+<tr><td class="nowrap">17-A</td><td>skill の実体はこのリポジトリの <code>skills/&lt;名前&gt;/SKILL.md</code>。ホームの skill の置き場には、<strong>実体のパス (<code>C:</code> のパス。subst のドライブではない)</strong> へのシンボリックリンクを張る</td><td>恒久</td></tr>
+<tr><td class="nowrap">18-B</td><td>Codex は <code>@</code> を解釈せず、<code>@path</code> の直後の日本語コメントを読んで自分でファイルを開く (ローカルルール 2)。skill に移した章にも、同じ形の「◯◯のときは <code>skills/…/SKILL.md</code> を読む」というコメントを残せば、読まれなくなる心配は無い。Codex の skill の仕組みは調べずに進める</td><td>恒久</td></tr>
+<tr><td class="nowrap">19-A</td><td>常時読み込みを核だけにする。見込みは約 7.5 万から約 2.7 万トークン (ファイルの大きさからの見込みで、実測ではない)</td><td>恒久</td></tr>
+<tr><td class="nowrap">20-A</td><td>skill の名前は、接頭辞 <code>light-</code> を付ける (<code>light-html</code> ・ <code>light-sqlite</code> 等)。一般的な語なので、他の skill や plugin と重なるものが現れたら、そのとき考える</td><td>恒久</td></tr>
+</tbody>
+</table></div>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>核と skill の切り分け (案)</h1>
+<p>判断の基準は、各章の「適用条件」。<strong>どの作業でも毎回効くものは核に残し、特定の作業のときだけ効くものは skill にする</strong>。<strong>破られると取り返しがつかない決まり (確認の語・機密情報・commit と push の指示) は、核に残す</strong>。大きさは <code>rules/</code> の実測。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>ファイル</th><th>大きさ</th><th>案</th><th>理由・skill の説明文の下書き</th></tr></thead>
+<tbody>
+<tr><td>common-rules.md</td><td class="num">6.2 KB</td><td>核 (書き換える)</td><td>状況別の章は、見出しと skill の読み先 1 行だけにする。Codex 用のコメントも同じ形で残す</td></tr>
+<tr><td>security-rules.md</td><td class="num">6.0 KB</td><td>核</td><td>機密情報・フルパスは、どの応答にも効く</td></tr>
+<tr><td>workflow-principles-rules.md</td><td class="num">17.3 KB</td><td>核</td><td>commit の指示・質問への答え方・複数案の出し方。毎回効く</td></tr>
+<tr><td>workflow-confirm-rules.md</td><td class="num">8.4 KB</td><td>核</td><td>実行を明示する語。取り返しがつかない操作を止める</td></tr>
+<tr><td>workflow-record-rules.md</td><td class="num">9.4 KB</td><td>核</td><td>セッションを開き直したとき・cron・引継ぎは、起動時に要る</td></tr>
+<tr><td>language-rules.md</td><td class="num">6.8 KB</td><td>核</td><td>応答の言語・日時・番号の書き方。毎回効く</td></tr>
+<tr><td>obsidian-rules.md</td><td class="num">3.2 KB</td><td>核</td><td>適用条件が「すべてのセッション」</td></tr>
+<tr><td>shell-rules.md</td><td class="num">21.5 KB</td><td>分ける</td><td>核: コマンド実行の優先順位・エラーで止める・パスの区切り・CLI の引数・ブロックされたら回避しない・一時ファイル (約 8 KB)。skill <code>light-shell-details</code>: PowerShell の落とし穴・昇格・cmd の注意・psh など「PowerShell・cmd・ps1 を書く・動かすとき」</td></tr>
+<tr><td>coding-rules.md</td><td class="num">16.4 KB</td><td>分ける</td><td>核: 使用言語・インデント・ツールごとの文字コードの扱い (約 5 KB)。skill <code>light-coding-details</code>: コードページ・FFI・Bun・同期 API・桁揃え・ログの日時など「コードを書くとき」</td></tr>
+<tr><td>doc-date-rules.md</td><td class="num">1.0 KB</td><td>核</td><td>小さく、資料を書くたびに効く</td></tr>
+<tr><td>git-rules.md</td><td class="num">7.6 KB</td><td>skill <code>light-git</code></td><td>「git のブランチ・タグ・メッセージ・push・リモートの作成をするとき」。commit・push の指示の決まりは、核の workflow-principles と workflow-confirm に残る</td></tr>
+<tr><td>project-layout-rules.md</td><td class="num">13.9 KB</td><td>skill <code>light-project-layout</code></td><td>「新規プロジェクトを作る・ファイルの置き場や名前を決める・ローカルルールを書くとき」</td></tr>
+<tr><td>shared-env-rules.md</td><td class="num">11.3 KB</td><td>skill <code>light-shared-env</code></td><td>「aichat・PlayWright・Chrome の操作・URL の取得を使うとき」。<strong>待受けの張り直しは、ローカルルールとフックで起動時に行うので、skill でも漏れない (承認時に確かめる)</strong></td></tr>
+<tr><td>test-rules.md</td><td class="num">9.0 KB</td><td>skill <code>light-test</code></td><td>「テストを書く・流す・不具合を直すとき」</td></tr>
+<tr><td>html-rules.md</td><td class="num">21.6 KB</td><td>skill <code>light-html</code></td><td>「HTML の資料を作る・直すとき」</td></tr>
+<tr><td>markdown-rules.md</td><td class="num">9.3 KB</td><td>skill <code>light-markdown</code></td><td>「HTML から Markdown を作る・html2md を流すとき」</td></tr>
+<tr><td>github-pages-rules.md</td><td class="num">6.1 KB</td><td>skill <code>light-github-pages</code></td><td>「GitHub Pages を公開する・push 後に確かめるとき」</td></tr>
+<tr><td>cloud-rules.md</td><td class="num">6.2 KB</td><td>skill <code>light-cloud</code></td><td>「クラウドの環境 (<code>CLAUDE_CODE_REMOTE</code> が true) で作業するとき」</td></tr>
+<tr><td>tutorial-rules.md</td><td class="num">4.0 KB</td><td>skill <code>light-tutorial</code></td><td>「学習資料を作るとき」</td></tr>
+<tr><td>sqlite-rules.md</td><td class="num">3.4 KB</td><td>skill <code>light-sqlite</code></td><td>「SQLite を扱うとき」。<strong>最初の試験の章にする</strong></td></tr>
+<tr><td>db-schema-rules.md</td><td class="num">3.3 KB</td><td>skill <code>light-db-schema</code></td><td>「DB のテーブル・列・索引を定義するとき」</td></tr>
+<tr><td>spec-rules.md</td><td class="num">3.1 KB</td><td>skill <code>light-spec</code></td><td>「仕様を書く・置き場を決めるとき」</td></tr>
+<tr><td>html-log-rules.md</td><td class="num">1.6 KB</td><td>skill <code>light-html-log</code></td><td>「ログを HTML で出すとき」</td></tr>
+<tr><td>performance・robustness・design・maintainability・windows-desktop・quality-review</td><td class="num">各 0.1〜1.3 KB</td><td>核 (そのまま)</td><td>見出しと適用条件だけの小さいファイル。移す効果が無い</td></tr>
+</tbody>
+</table></div>
+<p>核に残る分の見込み: 6.2 + 6.0 + 17.3 + 8.4 + 9.4 + 6.8 + 3.2 + 8 + 5 + 1.0 + 約 3 = 約 74 KB。約 2.7 万トークン (1 トークンあたり約 2.6 バイトの実測比から。<strong>見込みで、実測は移した後に /context で行う</strong>)。</p>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>手順</h1>
+<ol>
+	<li><strong>試験: 1 章だけ (sqlite) で、仕組みを確かめる。</strong>
+		<ul>
+			<li><code>skills/light-sqlite/SKILL.md</code> を作る (先頭に name と description、本文は <code>rules/sqlite-rules.md</code> を写す。<strong>この時点では元を消さない</strong>)。</li>
+			<li>ホームの skill の置き場に、実体の <code>C:</code> のパスへのシンボリックリンクを張る。<strong>シンボリックリンクの作成に権限が要るかは未確認。要るなら、本人が実行するコマンドを案内する。</strong></li>
+			<li>セッションを開き直し、skill の一覧に出るか、SQLite の作業で本文が読み込まれるかを、実環境で見る。<strong>結果を見るまで、次へ進まない</strong> (共通ルールの「自動実行に関わる変更は、実環境で動かして結果を見るまで済にしない」)。</li>
+		</ul>
+	</li>
+	<li><strong>移行: 試験が通ったら、skill にする章を 1 つずつ移す。</strong>本文を <code>skills/&lt;名前&gt;/SKILL.md</code> に書いてから、<code>rules/</code> 側の本文を消す (書き込んでから削除する順)。移すたびに、<code>common-rules.md</code> の該当章を「見出し + skill の読み先 1 行 + Codex 用のコメント」に書き換える。</li>
+	<li><strong>shell・coding は、核と skill に分ける。</strong>章の単位で分け、文は書き換えない (指示された範囲だけ実装する)。</li>
+	<li><strong>再測: /context の Memory files を測り直す。</strong>約 7.5 万から約 2.7 万になったかを、前後の数字で計画書に書く。Skills の欄が増えた分も書く。</li>
+	<li><strong>共通ルールの周知。</strong>共通ルールの変更に当たるので、変更の見出しと変わった点だけを、public ルームへ周知する (案を出して確認を得る)。</li>
+	<li><strong>追随の仕組みを直す。</strong>ローカルルール 1 の「追随の対象」に <code>skills/</code> を足す。ローカルルール 3 (章の切り出しルール) を、skill の形に書き直す。</li>
+	<li><strong>記録。</strong>status に着手・結果を反映し、詳細仕様 (<code>notes/50_spec/</code>) に、核と skill の一覧と読み込みの仕組みを書く。</li>
+</ol>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>未確認とリスク</h1>
+<ul>
+	<li><strong>skill が、確実に読み込まれるとは限らない。</strong>説明文が曖昧だと、必要な章が読み込まれない。破られると困る決まりを核に残したのは、そのため。試験で、説明文の書き方を決める。</li>
+	<li><strong>ホームの skill の置き場への、シンボリックリンクが効くかは未確認。</strong>効かなければ、実体を置き場へ写し、リポジトリ側を正とする同期の手順を足す案に変える (その場合は、改めて案を出して確認を得る)。</li>
+	<li><strong>他プロジェクトのセッションに、skill が見えるかは未確認。</strong>ホームの置き場なので見えるはずだが、試験で別のプロジェクトから確かめる。</li>
+	<li><strong>クラウド (<code>../ai-agent-rules/</code>) では、ホームの skill の置き場が無い。</strong>クラウド向けの置き場とリンクの張り方は、別の計画にする。この計画の範囲に入れない。</li>
+	<li><strong>Codex は、skill の仕組みを調べていない。</strong>18-B のとおり、<code>common-rules.md</code> のコメントから <code>skills/…/SKILL.md</code> を読ませる。</li>
+	<li><strong>同じ文を 2 か所に置かない。</strong>移す章は、移した後に <code>rules/</code> 側の本文を消す。</li>
+</ul>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+</footer>
+
+</body>
+</html>

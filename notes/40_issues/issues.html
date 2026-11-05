@@ -31,6 +31,7 @@
 	.n6.ch04 { --accent: hsl(112, 78%, 25%); --accent2: hsl(112, 58%, 55%); --soft: hsl(112, 28%, 95%); }
 	.n6.ch05 { --accent: hsl(56, 78%, 25%); --accent2: hsl(56, 58%, 55%); --soft: hsl(56, 28%, 95%); }
 	.n6.ch06 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	.n1.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
 	.n7.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
 	.n7.ch02 { --accent: hsl(233.3, 78%, 25%); --accent2: hsl(233.3, 58%, 55%); --soft: hsl(233.3, 28%, 95%); }
 	.n7.ch03 { --accent: hsl(186.7, 78%, 25%); --accent2: hsl(186.7, 58%, 55%); --soft: hsl(186.7, 28%, 95%); }
@@ -307,7 +308,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules 課題</h1>
 		<p class="lead">これから解決することを記録する。片付いたグループは <a href="issues-archive.html">issues-archive.html</a> に残す。</p>
-		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-11-03</p>
+		<p class="date">📅 作成: 2026-09-10 / 更新: 2026-11-05</p>
 	</div>
 </div>
 
@@ -489,28 +490,31 @@
 
 <section class="ch08 n12">
 	<details class="md-flat" open>
-	<summary><h1><code class="no">i261101-01</code> 失敗したままの Edit・Write の後の git commit を止める <span class="badge b-warn">着手</span></h1></summary>
+	<summary><h1><code class="no">i261101-01</code> 失敗したままの Edit・Write の後の git commit を止める <span class="badge b-ok">済</span></h1></summary>
 	<p>11/01 に 20261019-file-manager から依頼を受けた (#1727)。向こうで、Edit の失敗を見ずに git commit し、壊れたファイルが入った (向こうの振り返りの 413-A)。commit の前に会話の記録を調べ、失敗したままの Edit・Write があれば止める PreToolUse フックを、claude-hooks に組み込む。サンプル (<code>guard-commit-after-failed-edit.ts</code>) は向こうが用意済み。置き場は利用者から伝えられる。登録と試験の案・確かめていないことは、サンプルの頭のコメントにある。</p>
+		<p>11/04 に 20261019-file-manager から、失敗した Edit の直後の <code>git commit --dry-run</code> が止まらなかったと報告を受けた (#1783)。こちらで再現した。<strong>失敗した Edit と commit を、同じ応答で並べて呼ぶと止まらない</strong>。Edit の結果が会話の記録に入る前にフックが走るためとみられる。さらに、そのとき通った commit が区切りとして記録され、それより前の失敗の印が全部消えるため、続く commit も止まらなくなる。<code>--dry-run</code> も、同じ commit として区切りにしてしまう。向こうが尋ねた「止める条件」(相手のファイルが commit に載るときだけ ・ <code>--dry-run</code> は除く) は、いまのフックは見ていない。条件を変えるかは利用者の判断。</p>
 	<p><strong>やること</strong></p>
 	<ul>
 		<li><span class="badge b-ok">済</span> 利用者からサンプルの置き場を聞き、読んで計画を立てる (11/01 計画 <a href="../10_plan/i261101-01-失敗したEditの後のcommitを止める.html">i261101-01-失敗したEditの後のcommitを止める</a> を立てた。決めることは 3-A ・ 4-A ・ 5-A。承認済み)</li>
 		<li><span class="badge b-ok">済</span> テストを先に書いて組み込み、<code>settings.json</code> に登録する (11/01 ❌Red 4 件 → node ・ bun とも 140 件 ✅Green。登録して試走済み)</li>
-		<li><span class="badge b-none">未</span> 次のセッションで、実環境から確かめる (失敗した Edit の後の commit が止まる ・ Read の後は通る)</li>
-		<li><span class="badge b-none">未</span> 引き取ったことを依頼元へ知らせる (向こうがサンプルを消す)</li>
+		<li><span class="badge b-ok">済</span> 実環境から確かめる (11/03 こちらで、別の応答に分けた場合の止まる ・ Read の後は通る、を実測)</li>
+		<li><span class="badge b-ok">済</span> 引き取ったことを依頼元へ知らせる (11/04 #1782 を送った。向こうの返事は #1783)</li>
+			<li><span class="badge b-ok">済</span> 同じ応答で並べた場合と、<code>--dry-run</code> の扱いを、どう直すか決める。<code>--dry-run</code> は 14-A で実装済み。並べた場合は、11/05 に 15-A (失敗を状態ファイルに書き、commit の前に読む) を選んだ。PostToolUseFailure があることは公式資料で確かめた。11/05 に仮の測定フックで測った結果、<strong>15-A は成り立たない</strong>: old_string が合わずに失敗した Edit は <code>PreToolUse</code> も <code>PostToolUseFailure</code> も走らず、同じ応答の呼び出しは、commit の <code>PreToolUse</code> の時点では 3 秒待っても会話の記録に入っていない (調査 r261105-01 の第 3 章)。測定フックは外した。案を出し直し、11/05 に 21-A (共通ルールに「Edit・Write と commit を同じ応答に並べない」と書く。暫定対策。恒久対策は、フックからは無い) を選んだ。11/05 に 14-A の「結果がまだ記録に無い Edit」を探す部分 (働かないと分かった) を消した (全件 168 件 ✅Green)。11/05 に 21-A を共通ルールの「修正は1点ずつ、確認を重視」へ反映した。同日に public へ周知した (#1794)。依頼元の確認も取れた (#1793)。</li>
+			<li><span class="badge b-ok">済</span> 原因と条件を依頼元へ返信し、確認を得る (11/05 #1792 を送り、#1793 で close でよいと返事)</li>
 	</ul>
 	</details>
 </section>
 
 <section class="ch09 n12">
 	<details class="md-flat" open>
-	<summary><h1><code class="no">i261101-02</code> 画面の範囲を撮るコマンド (CopyFromScreen 等) を止める <span class="badge b-warn">着手</span></h1></summary>
+	<summary><h1><code class="no">i261101-02</code> 画面の範囲を撮るコマンド (CopyFromScreen 等) を止める <span class="badge b-ok">済</span></h1></summary>
 	<p>11/01 に 20261019-file-manager から依頼を受けた (#1732)。向こうで、確かめの撮影で画面の範囲を写し、ほかの窓が写った (向こうの振り返りの 416-A)。Bash ・ PowerShell のコマンドに <code>CopyFromScreen</code> などが出たら止める PreToolUse フックを、claude-hooks に組み込む。サンプル (<code>guard-screen-capture.ts</code>) は向こうが用意済み。置き場は利用者から伝えられる。登録と試験の案・止めきれない形は、サンプルの頭のコメントにある。共通ルールの「利用者に見せる前に、自分で見る」の撮る窓の項 (#1731) を、フックで守らせるもの。</p>
 	<p><strong>やること</strong></p>
 	<ul>
 		<li><span class="badge b-ok">済</span> 利用者からサンプルの置き場を聞き、読んで計画を立てる (11/02 計画 <a href="../10_plan/i261101-02-画面の範囲の撮影を止める.html">i261101-02-画面の範囲の撮影を止める</a> を立てた。決めることは 6-C ・ 7-A ・ 8-A ・ 9-A。承認済み)</li>
 		<li><span class="badge b-ok">済</span> テストを先に書いて組み込み、<code>settings.json</code> に登録する (11/02 ❌Red 8 件 → node ・ bun とも 153 件 ✅Green。登録して試走済み)</li>
-		<li><span class="badge b-none">未</span> 次のセッションで、実環境から確かめる</li>
-		<li><span class="badge b-none">未</span> 引き取ったことを依頼元へ知らせる</li>
+		<li><span class="badge b-ok">済</span> 実環境から確かめる (向こうが #1789 で問題なしと確認)</li>
+		<li><span class="badge b-ok">済</span> 依頼元へ知らせ、確認を得る (11/05 #1792 を送り、#1793 で close でよいと返事)</li>
 	</ul>
 	</details>
 </section>
@@ -550,6 +554,26 @@
 		<li><span class="badge b-none">未</span> 計画を立てる (どのフックに足すか ・ 1 回だけにする印の持ち方)</li>
 		<li><span class="badge b-none">未</span> テストを先に書いて実装し、<code>settings.json</code> の登録を確かめる</li>
 		<li><span class="badge b-none">未</span> 実環境から確かめる</li>
+	</ul>
+	</details>
+</section>
+
+<div class="groupbar">
+	<h2>共通ルールの大きさ（2026-11-05 起票）</h2>
+	<p class="count">1 件 / 未 0 / 着手 1 / 済 0</p>
+</div>
+
+<section class="ch01 n1">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261105-01</code> 共通ルールが大きく、コンテキストを圧迫している <span class="badge b-warn">着手</span></h1></summary>
+	<p>11/05 に利用者から指摘を受けた。共通ルール (<code>common-rules.md</code> と <code>rules/</code>) は約 198 KB で、<code>/context</code> の実測では Memory files が 7.5 万トークン (会話以外の固定分で最大)。調査 <a href="../01_research/r261105-01-ルールのサイズを減らす調査.html">r261105-01</a> で減らし方を調べ、決めた。16-A (常時読み込みを核だけにし、状況別の章は skill へ移す) ・ 17-A (実体は <code>skills/</code> に置き、ホームの skill の置き場へシンボリックリンク) ・ 18-B (Codex には、<code>common-rules.md</code> のコメントから <code>skills/…/SKILL.md</code> を読ませる) ・ 19-A (核だけにする。見込みは約 2.7 万トークン) ・ 20-A (名前は <code>light-</code> を付ける)。計画 <a href="../10_plan/p261105-01-共通ルールをskillに分ける.html">p261105-01</a> は 11/05 承認。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-ok">済</span> 調査と <code>/context</code> の実測、案の決定、計画の承認 (11/05)</li>
+		<li><span class="badge b-warn">着手</span> 試験: <code>light-sqlite</code> を作り、ホームの置き場にシンボリックリンクを張った。同じセッションの skill の一覧に出た (11/05)。セッションを開き直した 11/05 に、Skill の呼び出しでシンボリックリンク越しに本文が読み込まれることを確かめた。<strong>未: SQLite の作業で、呼ばずに自動で選ばれるか (説明文の効き) を確かめる</strong></li>
+		<li><span class="badge b-none">未</span> 試験が通ったら、章を 1 つずつ移す。shell ・ coding は核と skill に分ける。移すたびに <code>common-rules.md</code> を直す</li>
+		<li><span class="badge b-none">未</span> <code>/context</code> の Memory files を測り直し、前後を計画書に書く</li>
+		<li><span class="badge b-none">未</span> 共通ルールの周知 (見出しと変わった点だけ)、ローカルルール 1 ・ 3 の直し、詳細仕様 (<code>notes/50_spec/</code>) への記録</li>
 	</ul>
 	</details>
 </section>

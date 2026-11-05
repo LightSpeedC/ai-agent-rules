@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>r261105-01 ルールのサイズを減らす調査</title>
+<style>
+	:root {
+		--navy1: #12224d; --navy2: #2f5fbf; --ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa;
+		--link: #1a4fa0; --accent: var(--navy1, #12224d); --accent2: var(--navy2, #2f5fbf); --soft: #f2f5fb;
+	}
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(186.7, 78%, 25%); --accent2: hsl(186.7, 58%, 55%); --soft: hsl(186.7, 28%, 95%); }
+	.ch03 { --accent: hsl(93.3, 78%, 25%); --accent2: hsl(93.3, 58%, 55%); --soft: hsl(93.3, 28%, 95%); }
+	.ch04 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	body { margin: 0; background: #ffffff; color: var(--ink, #1c2330); font-size: 15.5px; line-height: 1.85; font-family: sans-serif; }
+	a { color: var(--link, #1a4fa0); background: transparent; }
+	.titlebar { background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; padding: 34px 30px 30px; }
+	.titlebar .inner { max-width: 1600px; margin: 0 auto; }
+	.titlebar h1 { font-size: 1.7em; margin: 0 0 6px; color: #ffffff; }
+	.titlebar .lead, .titlebar .date { margin: 4px 0; color: #e6ecf8; background: transparent; }
+	.titlebar code { background: rgba(255,255,255,0.16); color: #fff; border: none; }
+	.wrap { max-width: 1600px; margin: 0 auto; padding: 0 30px; }
+	section { background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); padding: 4px 26px 26px; margin: 34px 0; border-radius: 8px; }
+	section h1 { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 14px 20px; margin: 26px 0 20px; border-radius: 8px; font-size: 1.35em; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+	code { background: #f4f6fa; background: var(--code-bg, #f4f6fa); border: 1px solid var(--line, #d9dfe8); color: #17335f; padding: 0 4px; border-radius: 4px; }
+	.tablewrap { overflow-x: auto; }
+	table { border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08); margin: 10px 0; }
+	th { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 9px 12px; text-align: left; }
+	td { background: #ffffff; color: var(--ink, #1c2330); padding: 9px 12px; vertical-align: top; border-top: 1px solid var(--line, #d9dfe8); }
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; } td.nowrap { white-space: nowrap; }
+	.backlink { display: inline-block; background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; text-decoration: none; padding: 4px 12px; border-radius: 6px; }
+	.backlink svg { display: block; }
+	.wrap > .navwrap { margin-top: 18px; }
+	footer { max-width: 1600px; margin: 0 auto; padding: 18px 30px 30px; background: #ffffff; color: var(--ink, #1c2330); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>r261105-01 ルールのサイズを減らす調査</h1>
+		<p class="lead">共通ルール (<code>common-rules.md</code> と <code>rules/</code>) が大きく、AI エージェントのコンテキストを圧迫している。減らし方をネットで調べ、案を出す。入力: 実測したファイルの大きさ、会話の記録の使用トークン、Web 上の資料と Claude Code の公式資料。出力: この調査。</p>
+		<p class="date">📅 作成: 2026-11-05 / 更新: 2026-11-05</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+
+<section class="ch01" id="ch01">
+<h1>現状の実測 (2026-11-05)</h1>
+<ul>
+	<li>合計 約 198 KB (<code>common-rules.md</code> 6.2 KB と <code>rules/</code> の 28 ファイル)。</li>
+	<li>大きい順: html 21.6 KB ・ shell 21.5 KB ・ workflow-principles 17.3 KB ・ coding 16.4 KB ・ project-layout 13.9 KB ・ shared-env 11.3 KB ・ workflow-record 9.4 KB ・ markdown 9.3 KB ・ test 9.0 KB ・ workflow-confirm 8.4 KB。上位 10 ファイルで全体の約 7 割。</li>
+	<li>会話の記録の最初の応答の使用トークン: 新しく書き込んだ分 93,004 + キャッシュから読んだ分 36,018 = 約 129,000。これはシステムの指示・ツールの定義・共通ルール・Vault の目次などの合計で、共通ルールだけの量ではない。</li>
+	<li><strong>/context の実測 (11/05、利用者が実行)</strong>: 窓は 100 万トークン。使用は 17.6 万 (18%)。内訳は Memory files 7.5 万 (7.5%) ・ Messages 6.4 万 ・ System tools 2.8 万 ・ Skills 5,203 ・ System prompt 3,352 ・ MCP server instructions 1,002 ・ Custom agents 85。Memory files が、会話以外の固定分で最大。共通ルール 約 198 KB は、約 7.5 万トークンに当たる (1 トークンあたり約 2.6 バイト)。</li>
+	<li>必要なときだけ読み込まれる分 (deferred) は、MCP tools 40.2 万 ・ System tools 2.8 万で、窓の使用には入っていない。</li>
+</ul>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>分かったこと (ネットの資料)</h1>
+<p>下の資料はブログなどの二次資料が中心。Claude Code の公式資料で確かめたのは、フックの種類だけ (次の章)。数値は経験則で、鵜呑みにしない。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>事柄</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">取り込みでは減らない</td><td><code>@</code> で取り込んだファイルは起動時にすべて読み込まれる。章に分けても、読み込む量は減らない。減るのは、条件で読み込むものだけ</td></tr>
+<tr><td class="nowrap">条件付きの読み込み</td><td><code>.claude/rules/</code> に置き、<code>paths:</code> を付けたものは、該当するファイルを触ったときだけ読み込まれる。<code>paths:</code> が無いと毎回読み込まれる。skill は必要になったときだけ本文が読み込まれる</td></tr>
+<tr><td class="nowrap">長さの目安</td><td>1 ファイル 200 行以下。毎回効く決まりだけを置き、手順や一部にだけ効く決まりは skill か <code>paths:</code> 付きに移す</td></tr>
+<tr><td class="nowrap">増えると守られない</td><td>規則が増えると、見落としが先に増え、次に無視される。公式の上限は無く、「150 行」などは経験則。ベンチマーク (IFScale) では、よいモデルが 150 規則あたりまで高い遵守率を保つとされる</td></tr>
+<tr><td class="nowrap">止める手段</td><td>破られては困る決まりは、文でなくフックや CI で止める</td></tr>
+<tr><td class="nowrap">Codex の上限</td><td>Codex は <code>project_doc_max_bytes</code> の既定 32 KiB を超えると、続きを読み込まない。198 KB のままでは、Codex 側では途中から効かない (未実測)</td></tr>
+<tr><td class="nowrap">増え続ける</td><td>エージェントの設定ファイルは、規則が積み上がり続けるという研究がある (arXiv)</td></tr>
+</tbody>
+</table></div>
+<ul>
+	<li><a href="https://dev.to/eliran_kotzero_e1781dc487/why-your-long-claudemd-gets-ignored-and-how-to-fix-it-3hog">Why your long CLAUDE.md gets ignored and how to fix it</a></li>
+	<li><a href="https://dev.to/nishilbhave/claudemd-best-practices-the-complete-2026-guide-435j">CLAUDE.md best practices: the complete 2026 guide</a></li>
+	<li><a href="https://docs-jaan-to.pages.dev/docs/guides/perfect-claude-md">The Perfect CLAUDE.md: best practices, anti-patterns and checklist</a></li>
+	<li><a href="https://www.agentpatterns.ai/instructions/instruction-compliance-ceiling/">The Instruction Compliance Ceiling</a></li>
+	<li><a href="https://xtrace.ai/blog/agents-md-150-lines-2026">AGENTS.md Can Only Have 150 Lines in 2026</a></li>
+	<li><a href="https://codex.danielvaughan.com/2026/03/27/agents-md-bloat-problem/">The AGENTS.md Bloat Problem</a></li>
+	<li><a href="https://arxiv.org/pdf/2608.11095">Why Does CLAUDE.md Keep Growing? Catastrophic Remembering in Agentic Coding (arXiv)</a></li>
+</ul>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>フックの種類 (15-A の調査。公式資料)</h1>
+<p>課題 i261101-01 (失敗したままの Edit・Write の後の git commit を止める) の 15-A は、失敗を状態ファイルに書き、commit の前に読む案。そのためのフックの種類を、公式のフックの資料で確かめた。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>事柄</th><th>分かったこと</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">失敗を知らせるフック</td><td><code>PostToolUseFailure</code> がある。ツールの呼び出しが失敗した後に走る。<code>PostToolUse</code> は成功したときだけ走り、失敗では走らない</td></tr>
+<tr><td class="nowrap">入力の項目</td><td>共通の項目に、<code>tool_name</code> ・ <code>tool_input</code> ・ <code>tool_use_id</code> が付く。<code>PostToolUseFailure</code> の項目の細部 (エラー本文の名前など) は、資料の該当箇所を読めておらず<strong>未確認</strong></td></tr>
+<tr><td class="nowrap">並べた呼び出しの順</td><td>同じ応答で並べたツールの <code>PostToolUse</code> が、次のツールの <code>PreToolUse</code> より先に走るかは、資料に書かれていない (<strong>未確認</strong>)。同じ種類の事象に付くフックどうしは、並列で走る</td></tr>
+<tr><td class="nowrap">まとまりの終わり</td><td><code>PostToolBatch</code> がある。並べた呼び出しが全部終わった後、次にモデルを呼ぶ前に走る。終了コード 2 で、ループを止められる</td></tr>
+</tbody>
+</table></div>
+<p><strong>実測 (11/05、仮の測定フックを 3 本登録し、セッションを開き直して測った。測り終えて外した)</strong>:</p>
+<ul>
+	<li>成功した Edit は、<code>PreToolUse</code> と <code>PostToolUse</code> の両方が走った。</li>
+	<li><strong>old_string が合わずに失敗した Edit では、<code>PreToolUse</code> も <code>PostToolUseFailure</code> も走らなかった (2 回とも)。</strong>入力の検査の段階で失敗し、フックに届かないとみられる。<strong>つまり、15-A の <code>PostToolUseFailure</code> では、この種類の失敗を拾えない。</strong></li>
+	<li>同じ応答で Edit と <code>git commit --dry-run</code> を並べたとき、commit の <code>PreToolUse</code> が走った時点の会話の記録には、<strong>同じ応答の Edit と commit の呼び出しは、まだ入っていなかった。3 秒待って読み直しても、入っていなかった (2 回目の測定)。</strong>入るのは、応答のまとまりが終わった後。</li>
+	<li>したがって、commit の <code>PreToolUse</code> から同じ応答の失敗した Edit を知る手段は、いまのところ無い。<code>PostToolBatch</code> (並べた呼び出しがすべて終わった後) は、間に合わない (commit は済んでいる) が、事後の警告には使える見込み。未測定。</li>
+</ul>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>案と、選んだもの</h1>
+<div class="tablewrap"><table>
+<thead><tr><th>番号</th><th>案</th><th>種別</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">16-A</td><td>常時読み込みを、毎回要る核 (セキュリティ・確認の語・進め方の原則・シェルの要点) に絞り、状況別の章は skill へ移す。各章の「適用条件」を、そのまま skill の説明文にできる</td><td>恒久</td></tr>
+<tr><td class="nowrap">16-B</td><td>拡張子で決まる章 (html・sqlite・db-schema・markdown・tutorial 等) だけ、<code>paths:</code> 付きの rules にする。毎回効く章には使えず、16-A と併用する</td><td>恒久 (部分的)</td></tr>
+<tr><td class="nowrap">16-C</td><td>重複・経緯・例を削り、機械で止められるものはフックへ移す。規則はまた増えるので、単独では再発する</td><td>暫定</td></tr>
+<tr><td class="nowrap">16-D</td><td>先に測る。起動時の読み込み量を測り、章ごとの大きさと並べて、どこを減らすかを決める。16-A の前の準備</td><td>準備</td></tr>
+</tbody>
+</table></div>
+<p><strong>選んだもの (11/05)</strong>: 利用者は 15-A (i261101-01 の直し方。失敗を状態ファイルに書く) と 16-D (先に測る) を選んだ。16-A・16-B・16-C は、16-D の結果を見てから決める。</p>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+</footer>
+
+</body>
+</html>
