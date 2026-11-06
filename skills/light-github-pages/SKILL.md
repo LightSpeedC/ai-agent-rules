@@ -1,3 +1,8 @@
+---
+name: light-github-pages
+description: ai-agent-rules の共通ルール「GitHub Pages 公開ルール」。GitHub Pages を公開する・有効化する・HTTPS を強制する、Pages を公開しているリポジトリへ push したあとに反映を確かめる、公開したページの掲載を依頼するときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
+---
+
 # GitHub Pages 公開ルール
 
 適用条件: リポジトリの内容を GitHub Pages で公開するとき。

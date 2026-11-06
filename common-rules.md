@@ -127,8 +127,7 @@
 
 # GitHub Pages 公開ルール
 
-@rules/github-pages-rules.md
-<!-- GitHub Pages を公開するときは `rules/github-pages-rules.md` を読み、その指示に従うこと。 -->
+<!-- GitHub Pages を公開するとき、Pages を公開しているリポジトリへ push したときは、Skill ツールで `light-github-pages` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-github-pages/SKILL.md` を読む。 -->
 
 # Obsidianメモリ連携ルール
 
