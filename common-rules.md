@@ -22,8 +22,7 @@
 
 ## 共有環境の使い方
 
-@rules/shared-env-rules.md
-<!-- PlayWright・ai-chat-lite・Computer UseによるChrome操作・外部URLへのアクセス手段を使うときは `rules/shared-env-rules.md` を読み、その指示に従うこと。 -->
+<!-- PlayWright・ai-chat-lite (aichat の待受け・発言・周知)・Computer UseによるChrome操作・外部URLへのアクセス手段を使うときは、Skill ツールで `light-shared-env` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-shared-env/SKILL.md` を読む。 -->
 
 ## git の使い方
 

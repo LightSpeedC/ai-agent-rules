@@ -1,3 +1,8 @@
+---
+name: light-shared-env
+description: ai-agent-rules の共通ルール「共有環境の使い方」。ai-chat-lite (aichat の待受けを張る・張り直す・発言を読む・返信や周知を送る)、PlayWright 共有環境、Chrome の操作 (Computer Use)、URL へのアクセス手段 (WebFetch 等) を使うときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
+---
+
 # 共有環境の使い方
 
 ## PlayWright テストの実行
