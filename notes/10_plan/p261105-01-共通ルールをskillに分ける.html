@@ -43,7 +43,7 @@
 	<div class="inner">
 		<h1>p261105-01 共通ルールを skill に分けて常時読み込みを減らす</h1>
 		<p class="lead">共通ルール (<code>common-rules.md</code> と <code>rules/</code>、約 198 KB、約 7.5 万トークン) の状況別の章を skill に移し、常時読み込む分を核だけにする。入力: <code>rules/</code> の全ファイル。出力: <code>skills/</code> の <code>SKILL.md</code> 群と、ホームの skill の置き場へのシンボリックリンク、変更後の <code>common-rules.md</code>。</p>
-		<p class="date">📅 作成: 2026-11-05 / 更新: 2026-11-05</p>
+		<p class="date">📅 作成: 2026-11-05 / 更新: 2026-11-06</p>
 	</div>
 </div>
 
@@ -89,7 +89,7 @@
 <tr><td>html-rules.md</td><td class="num">21.6 KB</td><td>skill <code>light-html</code></td><td>「HTML の資料を作る・直すとき」</td></tr>
 <tr><td>markdown-rules.md</td><td class="num">9.3 KB</td><td>skill <code>light-markdown</code></td><td>「HTML から Markdown を作る・html2md を流すとき」</td></tr>
 <tr><td>github-pages-rules.md</td><td class="num">6.1 KB</td><td>skill <code>light-github-pages</code></td><td>「GitHub Pages を公開する・push 後に確かめるとき」</td></tr>
-<tr><td>cloud-rules.md</td><td class="num">6.2 KB</td><td>skill <code>light-cloud</code></td><td>「クラウドの環境 (<code>CLAUDE_CODE_REMOTE</code> が true) で作業するとき」</td></tr>
+<tr><td>cloud-rules.md</td><td class="num">6.2 KB</td><td>skill <code>light-cloud</code> → 実装の結果: 核に残した (29-A。クラウドには <code>~/.claude/skills</code> が無いため)</td><td>「クラウドの環境 (<code>CLAUDE_CODE_REMOTE</code> が true) で作業するとき」</td></tr>
 <tr><td>tutorial-rules.md</td><td class="num">4.0 KB</td><td>skill <code>light-tutorial</code></td><td>「学習資料を作るとき」</td></tr>
 <tr><td>sqlite-rules.md</td><td class="num">3.4 KB</td><td>skill <code>light-sqlite</code></td><td>「SQLite を扱うとき」。<strong>最初の試験の章にする</strong></td></tr>
 <tr><td>db-schema-rules.md</td><td class="num">3.3 KB</td><td>skill <code>light-db-schema</code></td><td>「DB のテーブル・列・索引を定義するとき」</td></tr>
