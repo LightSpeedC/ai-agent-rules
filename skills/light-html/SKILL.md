@@ -1,3 +1,8 @@
+---
+name: light-html
+description: ai-agent-rules の共通ルール「HTMLデザインルール」。HTML の資料 (README・計画・調査・課題・status・docs の公開資料) を作る・直す、資料の置き場を決める、CSS・配色・タイトルバー・見出し・目次・表・SVG 図・バッジ・callout を書く、README と資料を相互にリンクするときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
+---
+
 # HTMLデザインルール
 
 ## ドキュメントの保存場所と形式

@@ -100,8 +100,7 @@
 
 # HTMLデザインルール
 
-@rules/html-rules.md
-<!-- HTML を作成・編集するときは `rules/html-rules.md` を読み、その指示に従うこと。 -->
+<!-- HTML を作成・編集するとき、資料の置き場を決めるときは、Skill ツールで `light-html` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-html/SKILL.md` を読む。 -->
 
 # HTML でログを出力する
 
