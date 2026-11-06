@@ -51,8 +51,7 @@
 
 # DB 定義のルール
 
-@rules/db-schema-rules.md
-<!-- DB のテーブル・列・索引を定義・変更するときは `rules/db-schema-rules.md` を読み、その指示に従うこと。 -->
+<!-- DB のテーブル・列・索引を定義・変更するときは、Skill ツールで `light-db-schema` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-db-schema/SKILL.md` を読む。 -->
 
 # 設計の原則
 
