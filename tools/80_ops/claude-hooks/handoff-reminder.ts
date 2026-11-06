@@ -1,4 +1,4 @@
-// Stop フック: 会話の記録 (JSONL) が 10 MB 以上、またはコンテキストの圧縮が 3 回以上になったら、引継ぎの提案を促す (課題 i261103-02)。
+// Stop フック: 会話の記録 (JSONL) が 10 MB 以上、またはコンテキストの圧縮が 5 回以上になったら、引継ぎの提案を促す (課題 i261103-02)。
 // 共通ルール「会話の記録が大きくなったら引き継ぐ」を受け持つ。AI は記録の大きさも圧縮の回数も自分では知れない。
 // 促すのは、条件に当たった後の最初の 1 回だけ。印は、一時フォルダにセッションの記録の名前で置く (CLAUDE_HANDOFF_MARK_DIR で差し替えられる)。
 // 促した結果の Stop (stop_hook_active) では促さず、印も付けない (促し続けて止まらなくなるのを防ぐ)。
@@ -10,7 +10,7 @@ import { basename, join } from 'node:path';
 import { readInput } from './vault.ts';
 
 export const sizeLimitBytes = 10 * 1024 * 1024;
-export const compactLimit = 3;
+export const compactLimit = 5;
 
 // 圧縮後の要約の行を数える (記録の isCompactSummary)
 export function countCompactions(jsonl: string): number {
@@ -30,7 +30,7 @@ export function countCompactions(jsonl: string): number {
 export function handoffReason(bytes: number, compactions: number): string | null {
 	const causes: string[] = [];
 	if (bytes >= sizeLimitBytes) causes.push(`会話の記録が ${(bytes / 1024 / 1024).toFixed(1)} MB (10 MB 以上)`);
-	if (compactions >= compactLimit) causes.push(`コンテキストの圧縮が ${compactions} 回 (3 回以上)`);
+	if (compactions >= compactLimit) causes.push(`コンテキストの圧縮が ${compactions} 回 (${compactLimit} 回以上)`);
 	if (causes.length === 0) return null;
 	return `${causes.join('、')}になっています。作業の区切りで、利用者に引継ぎを提案してください。自分の判断でセッションを終えないでください。共通ルール「会話の記録が大きくなったら引き継ぐ」に従ってください。`;
 }

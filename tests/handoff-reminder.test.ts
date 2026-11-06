@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
-// 課題 i261103-02: 会話の記録 (JSONL) が 10 MB 以上、または圧縮が 3 回以上になったら、Stop フックで引継ぎの提案を促す。
+// 課題 i261103-02: 会話の記録 (JSONL) が 10 MB 以上、または圧縮が 5 回以上になったら、Stop フックで引継ぎの提案を促す。
 // AI は記録の大きさも圧縮の回数も自分では知れないため (共通ルール「会話の記録が大きくなったら引き継ぐ」)。
 // 促すのは、条件に当たった後の最初の 1 回だけ。促した結果の Stop (stop_hook_active) では促さない。
 const root = resolve(import.meta.dirname, '..');
@@ -48,8 +48,8 @@ function run(file: string, extra: Record<string, unknown> = {}) {
 }
 
 describe('引継ぎの提案を促す Stop フック', () => {
-	test('10 MB 未満で圧縮が 3 回未満なら促さない', () => {
-		assert.equal(run(transcript(2, 1024 * 1024)), null);
+	test('10 MB 未満で圧縮が 5 回未満なら促さない', () => {
+		assert.equal(run(transcript(4, 1024 * 1024)), null);
 	});
 
 	test('10 MB 以上なら促す', () => {
@@ -58,20 +58,20 @@ describe('引継ぎの提案を促す Stop フック', () => {
 		assert.match(out.reason, /引継ぎ/);
 	});
 
-	test('圧縮が 3 回以上なら、小さくても促す', () => {
-		const out = run(transcript(3, 1024));
+	test('圧縮が 5 回以上なら、小さくても促す', () => {
+		const out = run(transcript(5, 1024));
 		assert.equal(out.decision, 'block');
-		assert.match(out.reason, /3 回/);
+		assert.match(out.reason, /5 回/);
 	});
 
 	test('促した後の最初の 1 回だけ。同じセッションの次の Stop では促さない', () => {
-		const file = transcript(3, 1024);
+		const file = transcript(5, 1024);
 		assert.equal(run(file).decision, 'block');
 		assert.equal(run(file), null);
 	});
 
 	test('促した結果の Stop (stop_hook_active) では促さず、印も付けない', () => {
-		const file = transcript(3, 1024);
+		const file = transcript(5, 1024);
 		assert.equal(run(file, { stop_hook_active: true }), null);
 		assert.equal(run(file).decision, 'block');
 	});
