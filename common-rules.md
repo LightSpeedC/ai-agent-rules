@@ -85,8 +85,7 @@
 
 # テストのルール
 
-@rules/test-rules.md
-<!-- テストを作成・編集するときは `rules/test-rules.md` を読み、その指示に従うこと。 -->
+<!-- テストを作成・編集・実行するとき、不具合を直すとき、機能を足すときは、Skill ツールで `light-test` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-test/SKILL.md` を読む。 -->
 
 # シェル実行ルール
 
