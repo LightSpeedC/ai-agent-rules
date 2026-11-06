@@ -41,6 +41,7 @@
 
 @rules/coding-rules.md
 <!-- コード（ps1・cmd・js/ts 等）を作成・編集するときは `rules/coding-rules.md` を読み、その指示に従うこと。 -->
+<!-- cmd・bat・ps1 の文字コード、コードページ、FFI、Bun、同期 API、ログの日時、スクリプトの表示やコメントを扱うときは、Skill ツールで `light-coding-details` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-coding-details/SKILL.md` を読む。 -->
 
 # SQLite の大原則
 
