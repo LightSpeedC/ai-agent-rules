@@ -122,8 +122,7 @@
 
 # HTML→Markdown 変換ルール
 
-@rules/markdown-rules.md
-<!-- HTML を Markdown に変換するとき、または Markdown を新規作成するときは `rules/markdown-rules.md` を読み、その指示に従うこと。 -->
+<!-- HTML を Markdown に変換するとき (html2md を流すとき)、または Markdown を新規作成するときは、Skill ツールで `light-markdown` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-markdown/SKILL.md` を読む。 -->
 
 # GitHub Pages 公開ルール
 

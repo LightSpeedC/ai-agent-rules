@@ -1,3 +1,8 @@
+---
+name: light-markdown
+description: ai-agent-rules の共通ルール「HTML→Markdown 変換ルール」。HTML から Markdown を作る、html2md を流す・その指摘や警告を読む、GitHub で表示する Markdown を新しく書く、Markdown の表示崩れ (日本語の強調・リンク・SVG 図) を確かめるときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
+---
+
 # HTML→Markdown 変換ルール
 
 適用条件: 既存の HTML ドキュメントを Markdown 化するとき、または GitHub 等で表示する Markdown を新規作成するとき。
