@@ -47,8 +47,7 @@
 
 # SQLite の大原則
 
-@rules/sqlite-rules.md
-<!-- SQLite（node:sqlite・sqlite3 等）を扱うときは `rules/sqlite-rules.md` を読み、その指示に従うこと。 -->
+<!-- SQLite（node:sqlite・sqlite3 等）を扱うときは、Skill ツールで `light-sqlite` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-sqlite/SKILL.md` を読む。 -->
 
 # DB 定義のルール
 
