@@ -105,8 +105,7 @@
 
 # HTML でログを出力する
 
-@rules/html-log-rules.md
-<!-- ログを HTML で出力するときは `rules/html-log-rules.md` を読み、その指示に従うこと。 -->
+<!-- ログを HTML で出力するときは、Skill ツールで `light-html-log` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-html-log/SKILL.md` を読む。 -->
 
 # ドキュメントの作成日・更新日
 
