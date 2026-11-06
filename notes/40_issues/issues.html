@@ -575,7 +575,25 @@
 		<li><span class="badge b-none">未</span> skill とフックをホームの設定へ入れる道具を作り、ルールで自動実行させる。いまは <code>~/.claude/skills</code> へのシンボリックリンクと <code>settings.json</code> の hooks を手で張っている。別の PC やクラウドでは張られず、skill が一覧に出ない・フックが動かない。道具は張っていなければ張り、張ってあれば何もしない (冪等)。いつ実行させるか (セッション開始・ルールの更新の後 等) を決める (11/06 利用者の指摘)</li>
 		<li><span class="badge b-none">未</span> skill を足したとき、セッションを開き直さずに一覧に出るかを、CLI でも確かめる。11/06、デスクトップアプリ (Code タブ) では、<code>~/.claude/skills</code> にリンクを張った直後に <code>light-db-schema</code> が一覧に出た (開き直していない)。試験用の skill でも確かめた: リンクを張った応答の中のツール呼び出しでは出ず、次の利用者の発言を受けた時点で出た (15:03 に張り、試験後に消した)。CLI で同じか、出たあと実際に呼ばれるかは未確認。次に設定を変えるときに確かめ、確かめられたら Vault の <code>memory/</code> にプロジェクトをまたぐ事実として書く (27-A ・ 27-C)</li>
 		<li><span class="badge b-none">未</span> <code>/context</code> の Memory files を測り直し、前後を計画書に書く</li>
-		<li><span class="badge b-none">未</span> 共通ルールの周知 (見出しと変わった点だけ)、ローカルルール 1 ・ 3 の直し、詳細仕様 (<code>notes/50_spec/</code>) への記録</li>
+		<li><span class="badge b-ok">済</span> 共通ルールの周知 (#1809、11/07。圧縮回数の目安を外したことも合わせた)</li>
+		<li><span class="badge b-none">未</span> ローカルルール 1 ・ 3 の直し、詳細仕様 (<code>notes/50_spec/</code>) への記録</li>
+	</ul>
+	</details>
+</section>
+
+<div class="groupbar">
+	<h2>他プロジェクトからのルール変更依頼（2026-11-07 起票）</h2>
+	<p class="count">1 件 / 未 0 / 着手 1 / 済 0</p>
+</div>
+
+<section class="ch01 n1">
+	<details class="md-flat" open>
+	<summary><h1><code class="no">i261107-01</code> 残作業を消化させる cron が空回りし続けたら消す <span class="badge b-warn">着手</span></h1></summary>
+	<p>11/07 に ai-agent-tools から依頼を受けた (#1810)。共通ルール「cron はセッションの中だけで生きる」に、消化の cron が 3 回続けて空回り (進められる作業が無い回。判断待ち・答え待ちを含む) したら CronDelete で消す決めごとを足す。確認は取らず、消したことと残っている判断待ちを報告する。1 回でも進めば数え直す。待受けの生死を確かめる cron は対象外。張り直すのは利用者が再開を指示してから。文言と見出しはこちらで決める。利用者が着手を了承した (11/07)。</p>
+	<p><strong>やること</strong></p>
+	<ul>
+		<li><span class="badge b-ok">済</span> 文言の案を差分で出し、「反映して」を待って書き込む (核に置く 1-A。小見出し「空回りが続いたら消す」、11/07)</li>
+		<li><span class="badge b-warn">着手</span> 周知し (#1811、11/07)、依頼元 (ai-agent-tools) の確認を受ける。確認が取れるまで済にしない</li>
 	</ul>
 	</details>
 </section>
