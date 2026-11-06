@@ -118,8 +118,7 @@
 
 # 学習資料の作成ルール
 
-@rules/tutorial-rules.md
-<!-- 勉強会資料・学習資料を作成・編集するときは `rules/tutorial-rules.md` を読み、その指示に従うこと。 -->
+<!-- 勉強会資料・学習資料を作成・編集するときは、Skill ツールで `light-tutorial` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-tutorial/SKILL.md` を読む。 -->
 
 # HTML→Markdown 変換ルール
 
