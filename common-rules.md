@@ -88,6 +88,7 @@
 
 @rules/shell-rules.md
 <!-- コマンドを実行するとき、ps1・cmd・bat 等のスクリプトを書くときは `rules/shell-rules.md` を読み、その指示に従うこと。 -->
+<!-- PowerShell・cmd・ps1 を書く・動かすとき、昇格・タスクスケジューラ・残ったプロセス・検索が 0 件のときは、Skill ツールで `light-shell-details` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-shell-details/SKILL.md` を読む。 -->
 
 # クラウド作業のルール
 
