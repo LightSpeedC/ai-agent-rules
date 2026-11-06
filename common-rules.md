@@ -25,8 +25,7 @@
 
 ## git の使い方
 
-@rules/git-rules.md
-<!-- git のブランチ運用・コミット・タグ・リモートリポジトリ・.gitignore を扱うときは `rules/git-rules.md` を読み、その指示に従うこと。 -->
+<!-- git のブランチ運用・コミット・タグ・マージ・リモートリポジトリ・.gitignore を扱うとき、GitHub に投稿するときは、Skill ツールで `light-git` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-git/SKILL.md` を読む。 -->
 
 ## 記録と運用
 

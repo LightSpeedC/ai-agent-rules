@@ -1,3 +1,8 @@
+---
+name: light-git
+description: ai-agent-rules の共通ルール「git の使い方」。git のブランチ・コミットメッセージの渡し方と attribution・develop→release→master のマージ・タグ・.gitignore・リモートリポジトリの作成・push の認証を扱う、GitHub の Issue や PR やコメントに投稿するときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
+---
+
 # git の使い方
 
 ## 外部への投稿前にローカルパスを確認する
