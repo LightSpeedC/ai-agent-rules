@@ -5,8 +5,7 @@
 
 # プロジェクトフォルダ構成
 
-@rules/project-layout-rules.md
-<!-- 新規プロジェクトを作成するとき、またはファイルの置き場を決めるときは `rules/project-layout-rules.md` を読み、その指示に従うこと。 -->
+<!-- 新規プロジェクトを作成するとき、ファイルの置き場や名前を決めるとき、ローカルルールを書くときは、Skill ツールで `light-project-layout` を呼び、その指示に従うこと。Skill が使えない環境では `skills/light-project-layout/SKILL.md` を読む。 -->
 
 # ワークフロールール
 
