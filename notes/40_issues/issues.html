@@ -608,7 +608,7 @@
 
 <div class="groupbar">
 	<h2>他プロジェクトからのルール変更依頼（2026-11-07 起票）</h2>
-	<p class="count">3 件 / 未 1 / 着手 1 / 済 1</p>
+	<p class="count">3 件 / 未 1 / 着手 0 / 済 2</p>
 </div>
 
 <section class="ch01 n1">
@@ -625,13 +625,13 @@
 </section>
 
 <section class="ch01 n1">
-	<details class="md-flat" open>
-	<summary><h1><code class="no">i261107-03</code> gh の読むだけの操作を、ホームの settings.json で許可しておく <span class="badge b-warn">着手</span></h1></summary>
+	<details class="md-flat">
+	<summary><h1><code class="no">i261107-03</code> gh の読むだけの操作を、ホームの settings.json で許可しておく <span class="badge b-ok">済</span></h1></summary>
 	<p>11/07 に 20261011-claude-code-setup から依頼を受けた (セッション間のメッセージ、その利用者の指示)。Linux の VM で gh repo view ・ list ・ clone のたびに許可を求められ、「don't ask again」でもプロジェクトの <code>.claude/settings.local.json</code> にしか残らない。<code>~/.claude/settings.json</code> の <code>permissions.allow</code> に <code>Bash(gh repo view:*)</code> ・ <code>Bash(gh repo list:*)</code> ・ <code>Bash(gh repo clone:*)</code> を入れる決まりを共通ルールに足す。gh repo create ・ edit など GitHub に残る操作は許可に入れない。置き場の候補は i261107-02 の近くか、light-git の「リモートリポジトリの作成・push」の近く。文言と置き場はこちらで決める。</p>
 	<p><strong>やること</strong></p>
 	<ul>
 		<li><span class="badge b-ok">済</span> 利用者の了承を得て、文言の案を差分で出し、「反映して」を待って書き込む (skill light-git に小見出し「gh の読むだけの操作はホームで許可する」を足し、説明文にも足した。11/07)</li>
-		<li><span class="badge b-none">未</span> 周知し、依頼元 (20261011-claude-code-setup) の確認を受ける</li>
+		<li><span class="badge b-ok">済</span> 周知し、依頼元 (20261011-claude-code-setup) の確認を受ける (#1820 と SendMessage で周知し、依頼元から OK を受けた。11/07)</li>
 	</ul>
 	</details>
 </section>
