@@ -1,6 +1,6 @@
 ---
 name: light-git
-description: ai-agent-rules の共通ルール「git の使い方」。git のブランチ・コミットメッセージの渡し方と attribution・develop→release→master のマージ・タグ・.gitignore・リモートリポジトリの作成・push の認証を扱う、GitHub の Issue や PR やコメントに投稿するときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
+description: ai-agent-rules の共通ルール「git の使い方」。git のブランチ・コミットメッセージの渡し方と attribution・develop→release→master のマージ・タグ・.gitignore・リモートリポジトリの作成・push の認証・gh の読むだけの操作の許可を扱う、GitHub の Issue や PR やコメントに投稿するときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
 ---
 
 # git の使い方
@@ -79,6 +79,15 @@ description: ai-agent-rules の共通ルール「git の使い方」。git の�
 - **`gh auth status` で、gh にログインしているかを先に見る**。ログインしていなければ、本人が `gh auth login` を実行する
 - **ログイン済みでも止まるなら、git が gh の認証を使っていない**。本人が `gh auth setup-git` を 1 回実行する（ホーム配下の git の設定に書き込まれる）
 - **AI は git の設定を書き換えない**。その場の push だけを通すなら `git -c credential.helper= -c "credential.helper=!gh auth git-credential" push` を使う
+
+## gh の読むだけの操作はホームで許可する
+
+適用条件: 新しい環境 (PC・VM・クラウド) を用意するとき。`gh repo view`・`gh repo list`・`gh repo clone` で許可を求められたとき。
+
+- **`~/.claude/settings.json` の `permissions.allow` に、読むだけの操作を入れる**。`"Bash(gh repo view:*)"`・`"Bash(gh repo list:*)"`・`"Bash(gh repo clone:*)"`
+- **「don't ask again」で済ませない**。そのプロジェクトの `.claude/settings.local.json` にしか残らず、別のプロジェクトでまた聞かれる
+- **GitHub の側に残る操作 (`gh repo create`・`gh repo edit` 等) は許可に入れない**。毎回聞かれるままにする
+- **ホームの settings.json は、利用者の指示を受けてから書き換える**
 
 ## .gitignore の共通除外設定
 
