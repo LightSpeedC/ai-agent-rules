@@ -1,13 +1,16 @@
 # クラウド作業のルール
 
-適用条件: クラウドの環境（Claude Code on the web 等、毎回作り直される Linux のコンテナ）で作業するとき。Claude Code では環境変数 `CLAUDE_CODE_REMOTE` が `true` になる。
+適用条件: クラウドの環境（Claude Code on the web 等、毎回作り直される Linux のコンテナ）で作業するとき。Claude Code では環境変数 `CLAUDE_CODE_REMOTE` が `true` になる。「並べる置き場」は、作り直されない Linux の VM にも当てる。
 
 ## 前提
 
 - **環境はセッションごとに作り直される**。commit・push していない変更は残らない
 - **OS は Linux**。PowerShell・`psh` は無く、`.cmd`・`.ps1` は動かない
 - **ホーム配下の設定は無い**。ローカルでホームから読んでいる共通ルールも、そのままでは読まれない
-- **共通ルール・共有ツールはプロジェクトの隣に置く**（`../ai-agent-rules/`・`../ai-agent-tools/`）。ローカルで並べている形に合わせ、相対パスで参照できるようにする
+- **共通ルール・共有ツール・Vault はプロジェクトの隣に置く**（`../ai-agent-rules/`・`../ai-agent-tools/`・`../ai-obsidian-vault/`）。ローカルで並べている形に合わせ、相対パスで参照できるようにする
+- **Vault は読み書きできるように用意する**。日誌とメモを書き、Stop フックが commit・push するため。クラウドでは、セッションを始めるときに、リポジトリの選択欄で書き込み権限付きで選んでおく。途中で足すと許可を求められ、新しいコンテナには自動で戻らない
+- **Vault の置き場を環境変数 `AI_AGENT_OBSIDIAN_VAULT` に入れる**。フックと AI は、この変数から Vault を探す
+- **VM では、一度 clone すれば残る**。push できる認証 (gh) で clone し、ホームの `~/.claude/settings.json` の `env` に `AI_AGENT_OBSIDIAN_VAULT` を書く
 
 ## セッション開始時の準備
 
