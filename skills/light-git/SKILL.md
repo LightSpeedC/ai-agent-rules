@@ -1,6 +1,6 @@
 ---
 name: light-git
-description: ai-agent-rules の共通ルール「git の使い方」。git のブランチ・コミットメッセージの渡し方と attribution・develop→release→master のマージ・タグ・.gitignore・リモートリポジトリの作成・push の認証・gh の読むだけの操作の許可を扱う、GitHub の Issue や PR やコメントに投稿するときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
+description: ai-agent-rules の共通ルール「git の使い方」。git のブランチ・コミットメッセージの渡し方と attribution・develop→release→master のマージ・タグ・.gitignore・リモートリポジトリの作成・push の認証・gh の読むだけの操作の許可・リモートより遅れたときの取り込みを扱う、GitHub の Issue や PR やコメントに投稿するときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない。
 ---
 
 # git の使い方
@@ -71,6 +71,16 @@ description: ai-agent-rules の共通ルール「git の使い方」。git の�
 - **可視性は既定で private。ユーザが `public` と明示した場合はそのまま public で作成する**（可視性の再確認はしない）
 - **public で作成する場合も、初回コミット前の内容点検は省略しない**（「コミット前の確認」を参照）。点検で問題が見つかったときだけ作成を止めて報告する
 - pushするブランチ・GitHub側のデフォルトブランチは、ローカルの既定ブランチ（develop）に揃える。mainは作らない
+
+## リモートより遅れていたら取り込む
+
+適用条件: `git status` 等で、作業中のブランチがリモートより遅れている (`behind`) と分かったとき。
+
+- **確認を取らずに `git fetch` と `git rebase` を実行してよい**。「重大な操作の確認方法」の例外
+- **commit していない変更があるときは、`--autostash` を付ける**。変更を退避してから取り込み、取り込んだあとに戻す
+- **衝突したら、その場で止めて報告する**。自分で解決しない。`git rebase --abort` で戻すかどうかも、利用者の指示を待つ
+- **取り込んだら、何件取り込んだかを報告する** (`git log --oneline <前>..HEAD`)
+- **push はしない**。取り込むだけで終える
 
 ## push が認証で止まったら
 
