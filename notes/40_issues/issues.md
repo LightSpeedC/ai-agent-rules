@@ -225,7 +225,11 @@ README の資料一覧は2本だけで、root にある共通ルールの本体�
 - ⬜ **未** 他の PC で、ルール (clone ・ 参照先のパス) をどう用意するかを決める
 - ⬜ **未** skill とフックをホームの設定へ入れる道具を作り、ルールで自動実行させる。張っていなければ張り、張ってあれば何もしない (冪等)。いつ実行させるか (セッション開始・ルールの更新の後 等) を決める (11/06 利用者の指摘)
 - ⬜ **未** 新しいプロジェクトに、クラウドの入り口をどう入れるかを決める
-- ⬜ **未** PlayWright を隣に clone し、`check-contrast` が Linux の VM とクラウドで動くかを確かめる。クラウドでは、ブラウザに環境の Chromium (`executablePath`) を使う見込み (11/07 利用者の指摘。ai-agent-tools は、クラウドでは入り口が clone 済み)
+- ⬜ **未** PlayWright を隣に clone し、`check-contrast` が Linux の VM とクラウドで動くかを確かめる。クラウドでは、ブラウザに環境の Chromium (`executablePath`) を使う見込み (11/07 利用者の指摘。ai-agent-tools は、クラウドでは入り口が clone 済み)。OCI の VM で試した (11/07): PlayWright は GitHub にリポジトリが無く (ローカルのみ)、clone できなかった。VM には playwright もブラウザも無い。動かすには、PlayWright を GitHub に上げるかどうかの判断が要る。同日、PlayWright から返事: LightSpeedC/playwright を 11/07 に作った (private、develop のみ)。clone には認証が要り、クラウドではセッションへの追加が要る。clone のあと npm install と playwright install が要る (クラウドでは playwright install を実行せず、環境の Chromium を使う)。OCI の VM で続けた (11/07): clone と npm install は通った。ブラウザは ubuntu 用が入った (OS が公式の対象外)。check-contrast は `PLAYWRIGHT_BROWSERS_PATH=0` を決め打ちしており、ブラウザを `node_modules` の下に入れ直す必要があった。Chromium は OS のライブラリ 11 個 (atk ほか) が足りず起動しない。足すには sudo dnf install が要り、利用者の判断待ち。PlayWright 側には、bin の実行権限・package-lock.json が無い・"type" の警告がある
+
+**分かったこと**
+
+- OCI の VM で、`skills/light-*` の 14 個を `~/.claude/skills/` へシンボリックリンクで張ると、同じセッションの中で skill の一覧に出た (11/07、20261011-claude-code-setup が確かめた。呼んで中身が読めるかは未確認)。手で張っただけで、道具はまだ無い
 
 ## 他プロジェクトからのルール変更依頼（2026-11-07 起票）
 
