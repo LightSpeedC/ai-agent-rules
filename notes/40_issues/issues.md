@@ -225,7 +225,7 @@ README の資料一覧は2本だけで、root にある共通ルールの本体�
 - ⬜ **未** 他の PC で、ルール (clone ・ 参照先のパス) をどう用意するかを決める
 - ⬜ **未** skill とフックをホームの設定へ入れる道具を作り、ルールで自動実行させる。張っていなければ張り、張ってあれば何もしない (冪等)。いつ実行させるか (セッション開始・ルールの更新の後 等) を決める (11/06 利用者の指摘)
 - ⬜ **未** 新しいプロジェクトに、クラウドの入り口をどう入れるかを決める
-- ⬜ **未** PlayWright を隣に clone し、`check-contrast` が Linux の VM とクラウドで動くかを確かめる。クラウドでは、ブラウザに環境の Chromium (`executablePath`) を使う見込み (11/07 利用者の指摘。ai-agent-tools は、クラウドでは入り口が clone 済み)。OCI の VM で試した (11/07): PlayWright は GitHub にリポジトリが無く (ローカルのみ)、clone できなかった。VM には playwright もブラウザも無い。動かすには、PlayWright を GitHub に上げるかどうかの判断が要る。同日、PlayWright から返事: LightSpeedC/playwright を 11/07 に作った (private、develop のみ)。clone には認証が要り、クラウドではセッションへの追加が要る。clone のあと npm install と playwright install が要る (クラウドでは playwright install を実行せず、環境の Chromium を使う)。OCI の VM で続けた (11/07): clone と npm install は通った。ブラウザは ubuntu 用が入った (OS が公式の対象外)。check-contrast は `PLAYWRIGHT_BROWSERS_PATH=0` を決め打ちしており、ブラウザを `node_modules` の下に入れ直す必要があった。Chromium は OS のライブラリ 11 個 (atk ほか) が足りず起動しない。足すには sudo dnf install が要り、利用者の判断待ち。PlayWright 側には、bin の実行権限・package-lock.json が無い・"type" の警告がある
+- ⚠️ **着手** PlayWright を隣に clone し、`check-contrast` が Linux の VM とクラウドで動くかを確かめる。クラウドでは、ブラウザに環境の Chromium (`executablePath`) を使う見込み (11/07 利用者の指摘。ai-agent-tools は、クラウドでは入り口が clone 済み)。OCI の VM で試した (11/07): PlayWright は GitHub にリポジトリが無く (ローカルのみ)、clone できなかった。VM には playwright もブラウザも無い。動かすには、PlayWright を GitHub に上げるかどうかの判断が要る。同日、PlayWright から返事: LightSpeedC/playwright を 11/07 に作った (private、develop のみ)。clone には認証が要り、クラウドではセッションへの追加が要る。clone のあと npm install と playwright install が要る (クラウドでは playwright install を実行せず、環境の Chromium を使う)。OCI の VM で続けた (11/07): clone と npm install は通った。ブラウザは ubuntu 用が入った (OS が公式の対象外)。check-contrast は `PLAYWRIGHT_BROWSERS_PATH=0` を決め打ちしており、ブラウザを `node_modules` の下に入れ直す必要があった。Chromium は OS のライブラリ 11 個 (atk ほか) が足りず起動しない。足すには sudo dnf install が要り、利用者の判断待ち。PlayWright 側には、bin の実行権限・package-lock.json が無い・"type" の警告がある。利用者が 11 個を入れたあと、OCI の VM で check-contrast が動いた (11/07。仕込んだ低コントラストを検出し、実際の資料は明暗とも OK)。手順: gh repo clone → core.fileMode false → bin に chmod +x → npm install → `PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium` → sudo dnf install (11 個)。クラウドは未確認。PlayWright 側への Linux 対応の依頼 4 点 (実行権限・package-lock.json・"type" の警告・USAGE に Linux の手順) は、20261011-claude-code-setup が利用者の指示で送った。VM の手順は、そちらの r261012-01 の「skill を入れる」「PlayWright 共有環境を入れる」にある。クラウド (0000-work) でも試した (11/07): そのままでは動かず、node_modules に環境のブラウザ (revision 1243) へのリンクを張り、除外を変えると動いた (1.01:1 を検出)。原因は、ブラウザの置き場の決め打ち、対象が /tmp の下だと全 HTML を除外すること、版のずれ (プロジェクト 1.65.0、環境 1.63.0)。0000-work が利用者の指示で PlayWright #02 に直しを依頼した。PlayWright の直しを待つ
 
 **分かったこと**
 
@@ -233,7 +233,26 @@ README の資料一覧は2本だけで、root にある共通ルールの本体�
 
 ## 他プロジェクトからのルール変更依頼（2026-11-07 起票）
 
-1 件 / 未 0 / 着手 0 / 済 1
+3 件 / 未 1 / 着手 1 / 済 1
+
+### `i261107-04` クラウド作業のルールに、リポジトリの追加・置き場・手元への送信を足す ⬜ **未**
+
+11/07 に 0000-work (クラウド) から依頼を受けた (セッション間のメッセージ、その利用者の指示)。書き方と採否はこちらで決める。(1) セッションへのリポジトリの追加 (add_repo) で許可を求められることがある。確実に避けるには、始めるときに使うリポジトリをすべて選んでおく。`~/.claude/settings.json` の `permissions.allow` に `mcp__claude-code-remote__add_repo` を書いて効くかは未確認 (同じファイルの Stop フックは同じセッションで動いた)。非公開のリポジトリは新しいコンテナに自動では戻らない。(2) 追加したリポジトリの既定の置き場は `/home/user/<小文字のリポジトリ名>`。大文字を含む名前は置き場の登録が拒否された。(3) クラウドから手元のセッションへ送るには、利用者が手元で 1 回承認する (取り消せない)。承認後は「周知は Windows 側から出す」の例外になる。
+
+**やること**
+
+- ⬜ **未** add_repo の許可ルールが効いたかの結果を待つ (0000-work が追って送る)
+- ⬜ **未** 利用者の了承を得て、文言の案を差分で出し、「反映して」を待って書き込む
+- ⬜ **未** 周知する。依頼元はクラウドで返信できないため、確認は利用者を通して受ける
+
+### `i261107-03` gh の読むだけの操作を、ホームの settings.json で許可しておく ⚠️ **着手**
+
+11/07 に 20261011-claude-code-setup から依頼を受けた (セッション間のメッセージ、その利用者の指示)。Linux の VM で gh repo view ・ list ・ clone のたびに許可を求められ、「don't ask again」でもプロジェクトの `.claude/settings.local.json` にしか残らない。`~/.claude/settings.json` の `permissions.allow` に `Bash(gh repo view:*)` ・ `Bash(gh repo list:*)` ・ `Bash(gh repo clone:*)` を入れる決まりを共通ルールに足す。gh repo create ・ edit など GitHub に残る操作は許可に入れない。置き場の候補は i261107-02 の近くか、light-git の「リモートリポジトリの作成・push」の近く。文言と置き場はこちらで決める。
+
+**やること**
+
+- ✅ **済** 利用者の了承を得て、文言の案を差分で出し、「反映して」を待って書き込む (skill light-git に小見出し「gh の読むだけの操作はホームで許可する」を足し、説明文にも足した。11/07)
+- ⬜ **未** 周知し、依頼元 (20261011-claude-code-setup) の確認を受ける
 
 ### `i261107-01` 残作業を消化させる cron が空回りし続けたら消す ✅ **済**
 
