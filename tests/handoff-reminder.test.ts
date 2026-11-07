@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
-// 課題 i261103-02: 会話の記録 (JSONL) が 10 MB 以上になったら、Stop フックで引継ぎの提案を促す。
+// 課題 i261103-02: 会話の記録 (JSONL) が 50 MB 以上になったら、Stop フックで引継ぎの提案を促す。
 // AI は記録の大きさを自分では知れないため (共通ルール「会話の記録が大きくなったら引き継ぐ」)。圧縮の回数は見ない。
 // 促すのは、条件に当たった後の最初の 1 回だけ。促した結果の Stop (stop_hook_active) では促さない。
 const root = resolve(import.meta.dirname, '..');
@@ -24,7 +24,7 @@ after(() => {
 
 const summary = JSON.stringify({ type: 'user', isCompactSummary: true, message: { role: 'user', content: '要約' } });
 const plain = JSON.stringify({ type: 'user', message: { role: 'user', content: '発言' } });
-const big = 10 * 1024 * 1024;
+const big = 50 * 1024 * 1024;
 
 // 圧縮 compactions 回、大きさが約 bytes バイトの記録を書く。セッションごとに別名にする (印は記録の名前で持つ)
 function transcript(compactions: number, bytes: number): string {
@@ -49,17 +49,18 @@ function run(file: string, extra: Record<string, unknown> = {}) {
 }
 
 describe('引継ぎの提案を促す Stop フック', () => {
-	test('10 MB 未満なら促さない', () => {
-		assert.equal(run(transcript(0, 1024 * 1024)), null);
+	test('50 MB 未満なら促さない (10 MB を超えていても)', () => {
+		assert.equal(run(transcript(0, 11 * 1024 * 1024)), null);
 	});
 
-	test('10 MB 以上なら促す', () => {
+	test('50 MB 以上なら促す', () => {
 		const out = run(transcript(0, big));
 		assert.equal(out.decision, 'block');
 		assert.match(out.reason, /引継ぎ/);
+		assert.match(out.reason, /50 MB 以上/);
 	});
 
-	test('圧縮の回数は見ない。圧縮が多くても 10 MB 未満なら促さない', () => {
+	test('圧縮の回数は見ない。圧縮が多くても 50 MB 未満なら促さない', () => {
 		assert.equal(run(transcript(20, 1024)), null);
 	});
 
