@@ -213,18 +213,19 @@ README の資料一覧は2本だけで、root にある共通ルールの本体�
 
 ## 他の環境への配布（2026-11-07 起票）
 
-1 件 / 未 1 / 着手 0 / 済 0
+1 件 / 未 0 / 着手 1 / 済 0
 
-### `i261107-02` 他の PC ・ クラウドで、ルール ・ skill ・ フックが揃わない ⬜ **未**
+### `i261107-02` 他の PC ・ クラウドで、ルール ・ skill ・ フックが揃わない ⚠️ **着手**
 
-11/07 に利用者の指摘で分かった。いまは、この PC で手で用意したものだけが動いている。他の PC では、ホームの CLAUDE.md が参照する `T:/ai-agent-rules/` の clone と `T:` が無く、ルールも読まれない。クラウドでは、入り口 (`tools/10_setup/` と `.claude/settings.json` の SessionStart) のあるプロジェクトだけ `cloud-session-start` が `../ai-agent-rules/` を clone する。新しいプロジェクトには入り口が無い。入り口があっても、AGENTS.md の `@../ai-agent-rules/` の読み込みと、SessionStart の clone のどちらが先かは確かめていない。skill (`~/.claude/skills` へのリンク) とフック (`settings.json` の hooks) は、どちらの環境にも入らない。i261105-01 の「skill とフックを入れる道具」をここへ移した (3-A)。
+11/07 に利用者の指摘で分かった。環境は 3 種類あり、やり方が違う: (1) 他の Windows PC、(2) 作り直されない Linux の VM (OCI に作り、手で起動する。20261011-claude-code-setup が手で用意した)、(3) セッションごとに作り直されるクラウドのコンテナ (Claude Code on the web)。いまは、この PC で手で用意したものだけが動いている。他の PC では、ホームの CLAUDE.md が参照する `T:/ai-agent-rules/` の clone と `T:` が無く、ルールも読まれない。クラウドでは、入り口 (`tools/10_setup/` と `.claude/settings.json` の SessionStart) のあるプロジェクトだけ `cloud-session-start` が `../ai-agent-rules/` を clone する。新しいプロジェクトには入り口が無い。入り口があっても、AGENTS.md の `@../ai-agent-rules/` の読み込みと、SessionStart の clone のどちらが先かは確かめていない。skill (`~/.claude/skills` へのリンク) とフック (`settings.json` の hooks) は、どちらの環境にも入らない。i261105-01 の「skill とフックを入れる道具」をここへ移した (3-A)。
 
 **やること**
 
-- ⬜ **未** クラウドで、AGENTS.md の `@` 参照の読み込みと SessionStart の clone のどちらが先かを、作り直したばかりのコンテナで確かめる
+- ⚠️ **着手** クラウドで、AGENTS.md の `@` 参照の読み込みと SessionStart の clone のどちらが先かを、作り直したばかりのコンテナで確かめる。まず 20261011-claude-code-setup (OCI の VM) のセッションに、分かっていることを尋ねた (2-A、11/07)。返事: そちらは作り直されない VM で、事前に clone してホームの CLAUDE.md から読むため、順序は確かめていない。推測では、`@` はセッションの開始時に組み立てられ、SessionStart で clone した分は次のセッションから効く。実機で確かめる必要がある (試験用のリポジトリを作る 1-B)。VM の手順は、そちらの `notes/01_research/r261012-01-クラウド環境の初期手順.html` にある (clone を並べる・ホームの CLAUDE.md に `@` 1 行・PATH は末尾に足す・フックは `settings.json` に手で書いた・skill は入れていない)。0000-work (クラウド) にも尋ね、返事を受けた (11/07): プロジェクトの外を指す `@../ai-agent-rules/common-rules.md` は、clone 済みのコンテナで再開したときも、一度も展開されなかった (プロジェクト内の `@notes/90_rules/local-rules.md` は毎回展開される)。順序ではなく、プロジェクトの外の `@` が読まれないのが原因の見込み (確かめていない)。いまは AGENTS.md のコメントに従い、共通ルールを手で読んでいる。`~/.claude/settings.json` は無く、ai-agent-rules のフック (記録のコピー・Vault の注入) はクラウドに入っていない。skill も入っていない
 - ⬜ **未** 他の PC で、ルール (clone ・ 参照先のパス) をどう用意するかを決める
 - ⬜ **未** skill とフックをホームの設定へ入れる道具を作り、ルールで自動実行させる。張っていなければ張り、張ってあれば何もしない (冪等)。いつ実行させるか (セッション開始・ルールの更新の後 等) を決める (11/06 利用者の指摘)
 - ⬜ **未** 新しいプロジェクトに、クラウドの入り口をどう入れるかを決める
+- ⬜ **未** PlayWright を隣に clone し、`check-contrast` が Linux の VM とクラウドで動くかを確かめる。クラウドでは、ブラウザに環境の Chromium (`executablePath`) を使う見込み (11/07 利用者の指摘。ai-agent-tools は、クラウドでは入り口が clone 済み)
 
 ## 他プロジェクトからのルール変更依頼（2026-11-07 起票）
 

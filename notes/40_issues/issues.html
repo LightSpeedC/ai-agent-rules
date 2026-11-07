@@ -584,19 +584,20 @@
 
 <div class="groupbar">
 	<h2>他の環境への配布（2026-11-07 起票）</h2>
-	<p class="count">1 件 / 未 1 / 着手 0 / 済 0</p>
+	<p class="count">1 件 / 未 0 / 着手 1 / 済 0</p>
 </div>
 
 <section class="ch01 n1">
 	<details class="md-flat" open>
-	<summary><h1><code class="no">i261107-02</code> 他の PC ・ クラウドで、ルール ・ skill ・ フックが揃わない <span class="badge b-none">未</span></h1></summary>
-	<p>11/07 に利用者の指摘で分かった。いまは、この PC で手で用意したものだけが動いている。他の PC では、ホームの CLAUDE.md が参照する <code>T:/ai-agent-rules/</code> の clone と <code>T:</code> が無く、ルールも読まれない。クラウドでは、入り口 (<code>tools/10_setup/</code> と <code>.claude/settings.json</code> の SessionStart) のあるプロジェクトだけ <code>cloud-session-start</code> が <code>../ai-agent-rules/</code> を clone する。新しいプロジェクトには入り口が無い。入り口があっても、AGENTS.md の <code>@../ai-agent-rules/</code> の読み込みと、SessionStart の clone のどちらが先かは確かめていない。skill (<code>~/.claude/skills</code> へのリンク) とフック (<code>settings.json</code> の hooks) は、どちらの環境にも入らない。i261105-01 の「skill とフックを入れる道具」をここへ移した (3-A)。</p>
+	<summary><h1><code class="no">i261107-02</code> 他の PC ・ クラウドで、ルール ・ skill ・ フックが揃わない <span class="badge b-warn">着手</span></h1></summary>
+	<p>11/07 に利用者の指摘で分かった。環境は 3 種類あり、やり方が違う: (1) 他の Windows PC、(2) 作り直されない Linux の VM (OCI に作り、手で起動する。20261011-claude-code-setup が手で用意した)、(3) セッションごとに作り直されるクラウドのコンテナ (Claude Code on the web)。いまは、この PC で手で用意したものだけが動いている。他の PC では、ホームの CLAUDE.md が参照する <code>T:/ai-agent-rules/</code> の clone と <code>T:</code> が無く、ルールも読まれない。クラウドでは、入り口 (<code>tools/10_setup/</code> と <code>.claude/settings.json</code> の SessionStart) のあるプロジェクトだけ <code>cloud-session-start</code> が <code>../ai-agent-rules/</code> を clone する。新しいプロジェクトには入り口が無い。入り口があっても、AGENTS.md の <code>@../ai-agent-rules/</code> の読み込みと、SessionStart の clone のどちらが先かは確かめていない。skill (<code>~/.claude/skills</code> へのリンク) とフック (<code>settings.json</code> の hooks) は、どちらの環境にも入らない。i261105-01 の「skill とフックを入れる道具」をここへ移した (3-A)。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> クラウドで、AGENTS.md の <code>@</code> 参照の読み込みと SessionStart の clone のどちらが先かを、作り直したばかりのコンテナで確かめる</li>
+		<li><span class="badge b-warn">着手</span> クラウドで、AGENTS.md の <code>@</code> 参照の読み込みと SessionStart の clone のどちらが先かを、作り直したばかりのコンテナで確かめる。まず 20261011-claude-code-setup (OCI の VM) のセッションに、分かっていることを尋ねた (2-A、11/07)。返事: そちらは作り直されない VM で、事前に clone してホームの CLAUDE.md から読むため、順序は確かめていない。推測では、<code>@</code> はセッションの開始時に組み立てられ、SessionStart で clone した分は次のセッションから効く。実機で確かめる必要がある (試験用のリポジトリを作る 1-B)。VM の手順は、そちらの <code>notes/01_research/r261012-01-クラウド環境の初期手順.html</code> にある (clone を並べる・ホームの CLAUDE.md に <code>@</code> 1 行・PATH は末尾に足す・フックは <code>settings.json</code> に手で書いた・skill は入れていない)。0000-work (クラウド) にも尋ね、返事を受けた (11/07): プロジェクトの外を指す <code>@../ai-agent-rules/common-rules.md</code> は、clone 済みのコンテナで再開したときも、一度も展開されなかった (プロジェクト内の <code>@notes/90_rules/local-rules.md</code> は毎回展開される)。順序ではなく、プロジェクトの外の <code>@</code> が読まれないのが原因の見込み (確かめていない)。いまは AGENTS.md のコメントに従い、共通ルールを手で読んでいる。<code>~/.claude/settings.json</code> は無く、ai-agent-rules のフック (記録のコピー・Vault の注入) はクラウドに入っていない。skill も入っていない</li>
 		<li><span class="badge b-none">未</span> 他の PC で、ルール (clone ・ 参照先のパス) をどう用意するかを決める</li>
 		<li><span class="badge b-none">未</span> skill とフックをホームの設定へ入れる道具を作り、ルールで自動実行させる。張っていなければ張り、張ってあれば何もしない (冪等)。いつ実行させるか (セッション開始・ルールの更新の後 等) を決める (11/06 利用者の指摘)</li>
 		<li><span class="badge b-none">未</span> 新しいプロジェクトに、クラウドの入り口をどう入れるかを決める</li>
+		<li><span class="badge b-none">未</span> PlayWright を隣に clone し、<code>check-contrast</code> が Linux の VM とクラウドで動くかを確かめる。クラウドでは、ブラウザに環境の Chromium (<code>executablePath</code>) を使う見込み (11/07 利用者の指摘。ai-agent-tools は、クラウドでは入り口が clone 済み)</li>
 	</ul>
 	</details>
 </section>
