@@ -617,7 +617,7 @@
 	<p>11/07 に 0000-work (クラウド) から依頼を受けた (セッション間のメッセージ、その利用者の指示)。書き方と採否はこちらで決める。(1) セッションへのリポジトリの追加 (add_repo) で許可を求められることがある。確実に避けるには、始めるときに使うリポジトリをすべて選んでおく。<code>~/.claude/settings.json</code> の <code>permissions.allow</code> に <code>mcp__claude-code-remote__add_repo</code> を書いて効くかは未確認 (同じファイルの Stop フックは同じセッションで動いた)。非公開のリポジトリは新しいコンテナに自動では戻らない。(2) 追加したリポジトリの既定の置き場は <code>/home/user/&lt;小文字のリポジトリ名&gt;</code>。大文字を含む名前は置き場の登録が拒否された。(3) クラウドから手元のセッションへ送るには、利用者が手元で 1 回承認する (取り消せない)。承認後は「周知は Windows 側から出す」の例外になる。</p>
 	<p><strong>やること</strong></p>
 	<ul>
-		<li><span class="badge b-none">未</span> add_repo の許可ルールが効いたかの結果を待つ (0000-work が追って送る)</li>
+		<li><span class="badge b-ok">済</span> add_repo の許可ルールが効いたかの結果を待つ (11/07 続報: フックで測り、ルールがあると PermissionRequest が動かなかった。書いた同じセッションで効いた。クラウドでも <code>~/.claude/settings.json</code> のフック ・ permissions は効く。新しいリポジトリの追加 ・ 新しいコンテナ ・ 確認の表示との対応は未確認。案: 開始時のスクリプトで、既存を上書きせず足す。ツールは 1 つずつ書き、ワイルドカードは使わない。入れるかは利用者が選ぶ)</li>
 		<li><span class="badge b-none">未</span> 利用者の了承を得て、文言の案を差分で出し、「反映して」を待って書き込む</li>
 		<li><span class="badge b-none">未</span> 周知する。依頼元はクラウドで返信できないため、確認は利用者を通して受ける</li>
 	</ul>
