@@ -38,7 +38,8 @@ AIエージェント (Claude Code・Codex 等) が参照する共通ルール。
 
 ## 4. 課題
 
-- [課題](notes/40_issues/issues.md) これから解決することの記録。
+- [課題](notes/40_issues/items/) これから解決することの記録。1 件 1 ファイルで、`issue` コマンドで読み書きする (一覧は `issue view`)。
+- [旧課題](notes/40_issues/issues-legacy.md) 2026-11-08 に新しい方式へ移す前の課題の記録。書き換えない。
 
 ## 5. 仕様
 
