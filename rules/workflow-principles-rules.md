@@ -6,7 +6,8 @@
 - **`git add`・`git commit` は自動でしない**。ステージングも含め、「commitして」と指示されるまで待つ
 - **`git mv` ・ `git rm` はステージングを伴うが、ファイルの移動・削除の手段として使ってよい**。ただし `git add -N` は使わない
 - **Edit・Write と `git commit` を、同じ応答に並べない**。Edit の失敗を見る前に commit が走り、壊れたファイルが入る。フックは、同じ応答の中の失敗を知れない。結果を見てから、次の応答で commit する
-- **commit を指示されたら、載せるファイルを名指しして `git add <path>…` する**。`git add -A` ・ `git add .` ・ `git commit -a` は使わない
+- **commit を指示されたら、載せるファイルを名指しして `git add <path>…` し、commit も `git commit -m … -- <path>…` で同じファイルを名指しする**。`git add -A` ・ `git add .` ・ `git commit -a` は使わない (フックで止まる)
+- **commit にもパスを書く**。`git mv` ・ `issue set` などが先に stage したものは、パスを書かない commit に混ざる
 - **載せるのは、その指示の対象として自分が変えたファイルだけ**。commit の前に `git diff --cached --name-only` で一覧を見る
 - **一括で載せると、別のセッションや人が書き換えたファイルまで入る**
 - **`git reset` は使ってよい。ただし実行する前に、何がどうなるかを説明して確認を取る**
