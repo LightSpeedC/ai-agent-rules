@@ -404,7 +404,7 @@
 	<ul class="plain">
 		<li><strong>再開では、<code>additionalContext</code> が会話にある分と同じだと、Claude Code が捨てる</strong> (重複排除)。<code>session-start.ts</code> が、毎回違う開始時刻の行を最後に 1 回だけ入れる</li>
 		<li><strong>フックは応答を始められない</strong>。再開の張り直しは、次の発言を受けてから行う</li>
-		<li><strong><code>settings.json</code> を書き換えても、動いているセッションには効かない</strong>。次の起動・再開から有効になる</li>
+		<li><strong><code>settings.json</code> の hooks を書き換えると、動いているセッションにもすぐ効く</strong>。登録を足すのも外すのも、次のツールの呼び出しから効く (2026-11-10 に PreToolUse で実測)。フックの中身 (<code>.ts</code>) を直したときも同じ。書き換えの途中の形で、いまのセッションの作業が止まることがある</li>
 	</ul>
 </section>
 
