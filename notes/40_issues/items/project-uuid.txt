@@ -1,0 +1,3 @@
+schema: 2
+project_uuid: b38f3700c3c94a6eb0f97e415f0c5582
+project_id: ai-agent-rules

@@ -1,2 +1,0 @@
-schema: 1
-project_id: b38f3700c3c94a6eb0f97e415f0c5582
