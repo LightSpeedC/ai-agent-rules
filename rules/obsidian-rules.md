@@ -18,7 +18,10 @@
 ## 構造
 
 - **Vault のフォルダ構成はこの節に従う**。「プロジェクトフォルダ構成」は当てはめない（`notes/` を置かない）
-- **Vault のローカルルールは `rules/local-rules.md` に Markdown で書き、直下の `AGENTS.md` から取り込む**
+- **Vault のローカルルールは `rules/local-rules.md` に Markdown で書き、直下の `AGENTS.md` から取り込む**。Vault のセッションだけが行う運用 (cron・待受け等) を書き、フォルダ構成はこの節にだけ書く
+- `index.md`: 入口。各ハブ (`!memory`・`!projects`・`!rules`) へのリンクを置く
+- `about-me.md`: 利用者について (user)
+- `rules/!rules.md`: ルールの目次。共通ルールを読まない AI エージェント向けの要約を、`rules/` のノートに置いてリンクする
 - `memory/!memory.md`: 起動時に注入する目次。`- [[ノート名]] — 要約（type）`
 - `memory/<事実>.md`: 1 ノート＝1 事実。フロントマターに type（`user` / `feedback` / `project` / `reference`）を付け、`[[!memory]]` をリンクする
 - `projects/!projects.md`: プロジェクト一覧。1 行 1 件
@@ -33,6 +36,7 @@
     - `path`: プロジェクトの場所。`/` 区切り。新しく書くときは `C:/work/…` にする
     - `repo`: リポジトリの URL。無ければ `なし`
   - **本文は、親のリンク `[[!projects]]` と `- 目的: …` の行**。場所・リポジトリ・開始日は frontmatter にだけ書き、本文に重ねない
+- `plans/<計画番号>-<件名>.md`: Vault 自体の計画。プロジェクトのノートではないので、`projects/` に置かず、`!projects.md` にも載せない
 - `daily/yyyy-mm-dd.md`: 作業日誌。午前・午後の 2 節に、プロジェクトごとの要点を箇条書き
   - **1 行 1 プロジェクト。行頭にプロジェクトのノートへのリンクを置く**（`- [[<プロジェクトフォルダ名>]]: 要点`）。プロジェクト名を文字だけで書かない
   - **先頭は frontmatter (`title`・`date` は yyyy-mm-dd、`tags` は `daily`) と、`# yyyy-mm-dd` の見出し**。無いファイルに追記するときは、先に足す
