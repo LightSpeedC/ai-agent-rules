@@ -5,7 +5,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 // 課題 i261103-02: 会話の記録 (JSONL) が 50 MB 以上になったら、Stop フックで引継ぎの提案を促す。
-// AI は記録の大きさを自分では知れないため (共通ルール「会話の記録が大きくなったら引き継ぐ」)。圧縮の回数は見ない。
+// AI は記録の大きさを自分では知れないため (共通ルール「セッションを引き継ぐ」)。圧縮の回数は見ない。
 // 促すのは、条件に当たった後の最初の 1 回だけ。促した結果の Stop (stop_hook_active) では促さない。
 const root = resolve(import.meta.dirname, '..');
 const hook = join(root, 'tools/80_ops/claude-hooks/handoff-reminder.ts');
