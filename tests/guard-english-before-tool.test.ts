@@ -56,9 +56,22 @@ describe('textsSinceLastToolResult（直前のツールの結果より後のテ�
 		assert.deepEqual(textsSinceLastToolResult(jsonl), [japanese, english]);
 	});
 
-	test('ツールの結果より前のテキストは返さない', () => {
+	// 振り返り r261111-01 の 14-A: ツールの前のフックが動く時点では、同じ応答の文がまだ記録に無い。
+	// 1 つ前のツールが通っていれば、そのツールの前に書いた文も読み直す
+	test('1 つ前のツールが通っていれば、そのツールの前のテキストも返す', () => {
 		const jsonl = [user('始めて'), assistant(english), toolUse(), toolResult(), assistant(japanese)].map((l) => JSON.stringify(l)).join('\n');
-		assert.deepEqual(textsSinceLastToolResult(jsonl), [japanese]);
+		assert.deepEqual(textsSinceLastToolResult(jsonl, 'toolu_now'), [english, japanese]);
+	});
+
+	test('1 つ前のツールを止めていれば (結果がエラー)、そのツールの前のテキストは返さない', () => {
+		const denied = { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 'toolu_1', is_error: true, content: '止めた' }] } };
+		const jsonl = [user('始めて'), assistant(english), toolUse(), denied, assistant(japanese)].map((l) => JSON.stringify(l)).join('\n');
+		assert.deepEqual(textsSinceLastToolResult(jsonl, 'toolu_now'), [japanese]);
+	});
+
+	test('2 つ前のツールより前のテキストは返さない', () => {
+		const jsonl = [user('始めて'), assistant(english), toolUse(), toolResult(), toolUse(), toolResult(), assistant(japanese)].map((l) => JSON.stringify(l)).join('\n');
+		assert.deepEqual(textsSinceLastToolResult(jsonl, 'toolu_now'), [japanese]);
 	});
 
 	test('いま呼ぶツールの呼び出しがログに書かれていても、その前のテキストを返す', () => {
@@ -108,6 +121,11 @@ describe('guard-english-before-tool（PreToolUse フック）', () => {
 		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
 		const r = runHook(transcript('lagging', [user('始めて'), assistant(english), prev, assistant(japanese)]), 'toolu_now');
 		assert.equal(r.denied, false);
+	});
+
+	test('1 つ前のツールの前に書いた英文は、次のツールで止める (r261111-01 の 14-A)', () => {
+		const r = runHook(transcript('late-flush', [user('始めて'), assistant(english), toolUse(), toolResult()]), 'toolu_now');
+		assert.equal(r.denied, true);
 	});
 
 	test('会話ログが読めなければ、通す', () => {

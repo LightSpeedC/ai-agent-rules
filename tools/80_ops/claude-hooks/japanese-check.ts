@@ -70,8 +70,13 @@ export function lastTurnTexts(jsonl: string): string[] {
 // currentToolUseId を渡すと、それ以外のツールの呼び出しでも区切る (課題 i261031-08)。
 // 新しいツールを呼べている時点で、前のツールは終わっていて、その前の文はそのツールのときに判定が済んでいる。
 // 前のツールの結果がログに書かれる前にフックが動いても、前の英語の文で止めない。
+// さらに、1 つ前のツールが通っていれば (結果がエラーでなければ)、そのツールの前に書いた文も返す (振り返り r261111-01 の 14-A)。
+// ツールの前のフックが動く時点では、同じ応答の文がまだ記録に書かれていない (2026-11-11 に実測)。前のツールのときに読めなかった文を、次のツールで読む。
+// 1 つ前のツールをフックが止めていれば (結果がエラー)、その前の文は判定が済んでいるので返さない。
 export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: string): string[] {
 	let parts: string[] = [];
+	let pending: string[] = []; // 前のツールの呼び出しより前の文。結果が通れば previous に移る
+	let previous: string[] = []; // 1 つ前のツールが通ったとき、そのツールの前に書いた文
 	for (const line of jsonl.split(/\r?\n/)) {
 		if (line.trim() === '') continue;
 		let entry: any;
@@ -84,15 +89,27 @@ export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: strin
 		if (!message) continue;
 		const content = message.content;
 		if (message.role === 'user') {
+			const results = Array.isArray(content) ? content.filter((block: any) => block?.type === 'tool_result') : [];
+			const hasUserText = typeof content === 'string' || (Array.isArray(content) && content.some((block: any) => block?.type === 'text'));
+			if (currentToolUseId && results.length > 0 && !hasUserText) {
+				previous = results.some((block: any) => block.is_error) ? [] : [...pending, ...parts];
+			} else {
+				previous = [];
+			}
+			pending = [];
 			parts = [];
 		} else if (message.role === 'assistant' && Array.isArray(content)) {
 			for (const block of content) {
 				if (block?.type === 'text' && typeof block.text === 'string') parts.push(block.text);
-				else if (currentToolUseId && block?.type === 'tool_use' && block.id !== currentToolUseId) parts = [];
+				else if (currentToolUseId && block?.type === 'tool_use' && block.id !== currentToolUseId) {
+					pending = [...pending, ...parts];
+					parts = [];
+				}
 			}
 		}
 	}
-	return parts;
+	// pending (結果がまだ書かれていない前のツールより前の文) は返さない (i261031-08)。結果が書かれた後のツールで判定する
+	return [...previous, ...parts];
 }
 
 // 最後の応答の本文を、1 つの文字列にする（判定の単位ではなく、表示や確かめに使う）
