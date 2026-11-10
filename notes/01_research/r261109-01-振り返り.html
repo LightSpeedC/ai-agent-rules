@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>r261109-01 振り返り</title>
+<style>
+	:root {
+		--navy1: #12224d; --navy2: #2f5fbf; --ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa;
+		--link: #1a4fa0; --accent: var(--navy1, #12224d); --accent2: var(--navy2, #2f5fbf); --soft: #f2f5fb;
+	}
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch03 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	body { margin: 0; background: #ffffff; color: var(--ink, #1c2330); font-size: 15.5px; line-height: 1.85; font-family: sans-serif; }
+	a { color: var(--link, #1a4fa0); background: transparent; }
+	.titlebar { background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; padding: 34px 30px 30px; }
+	.titlebar .inner { max-width: 1600px; margin: 0 auto; }
+	.titlebar h1 { font-size: 1.7em; margin: 0 0 6px; color: #ffffff; }
+	.titlebar .lead, .titlebar .date { margin: 4px 0; color: #e6ecf8; background: transparent; }
+	.titlebar code { background: rgba(255,255,255,0.16); color: #fff; border: none; }
+	.wrap { max-width: 1600px; margin: 0 auto; padding: 0 30px; }
+	section { background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); padding: 4px 26px 26px; margin: 34px 0; border-radius: 8px; }
+	section h1 { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 14px 20px; margin: 26px 0 20px; border-radius: 8px; font-size: 1.35em; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+	code { background: #f4f6fa; background: var(--code-bg, #f4f6fa); border: 1px solid var(--line, #d9dfe8); color: #17335f; padding: 0 4px; border-radius: 4px; }
+	.tablewrap { overflow-x: auto; }
+	table { border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08); margin: 10px 0; }
+	th { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 9px 12px; text-align: left; }
+	td { background: #ffffff; color: var(--ink, #1c2330); padding: 9px 12px; vertical-align: top; border-top: 1px solid var(--line, #d9dfe8); }
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; } td.nowrap { white-space: nowrap; }
+	.backlink { display: inline-block; background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; text-decoration: none; padding: 4px 12px; border-radius: 6px; }
+	.backlink svg { display: block; }
+	.wrap > .navwrap { margin-top: 18px; }
+	footer { max-width: 1600px; margin: 0 auto; padding: 18px 30px 30px; background: #ffffff; color: var(--ink, #1c2330); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>r261109-01 振り返り</h1>
+		<p class="lead">前の振り返り (p261027-01) の後の失敗を拾い、ルール・フックと突き合わせる。入力: 本プロジェクトの会話の記録 (記録が残っていたのは 11/05 23 時 JST 以降の 1 本)。出力: この調査。</p>
+		<p class="date">📅 作成: 2026-11-09 / 更新: 2026-11-09</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+
+<section class="ch01" id="ch01">
+<h1>拾った失敗と、防ぐルール・フック</h1>
+<p>記録の読み取りはサブエージェントに任せ、11/08 の分は会話の中で起きたものを足した。回数は概数。ツールの結果は記録に 2 回ずつ出るため、当たり数を半分にしている。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>失敗</th><th>回数</th><th>防ぐルール・フック</th></tr></thead>
+<tbody>
+<tr><td>英語だけの文 (応答の最後・ツールの前の 1 文)</td><td class="num">約 18</td><td>⚠️ 一部 (共通ルール「AIエージェント応答の言語」、Stop と PreToolUse のフック。止まってはいるが、書くこと自体は減っていない。うち 2 回は、日本語の訳を書いた後も前の英語で止まった。課題 i261031-08 の形)</td></tr>
+<tr><td>Bash で sed・awk を使おうとして止められた</td><td class="num">約 6</td><td>✅ ある (共通ルール「シェル実行ルール」と PreToolUse のフック)</td></tr>
+<tr><td>Edit の old_string が一致しない</td><td class="num">約 3</td><td>✅ ある (共通ルール「ツールごとの文字コードの扱い」)</td></tr>
+<tr><td>載せるつもりの無いファイルが commit に混ざった (015606b に旧課題の改名、19c0a2d に課題の移動)。どちらも <code>git mv</code> ・ <code>issue set</code> が先に stage したもの。19c0a2d では、直前の <code>git diff --cached --name-only</code> に出ていたのを見落とした</td><td class="num">2</td><td>⚠️ 一部 (共通ルール「修正は1点ずつ、確認を重視」の「commit の前に一覧を見る」。ルールはあるのに破られた。フックは無い)</td></tr>
+<tr><td>Bash で <code>cd</code> し、作業の場所が移った</td><td class="num">2</td><td>⚠️ 一部 (共通ルール「シェル実行ルール」の「Bash ツールで cd しない」。ルールはあるのに破られた。フックは無い)</td></tr>
+<tr><td>確かめずに言い切った (11/07「他の PC やクラウドでも反映される」、11/08「settings.json の変更は今のセッションに効かない」。後者は実測で誤りと分かった)</td><td class="num">2</td><td>⚠️ 一部 (共通ルール「未検証の技術的挙動を、確認済みであるかのように断定しない」。後者はローカルルール「Claude フックの置き場とメンテ」の落とし穴の記述を、確かめずに引いた)</td></tr>
+<tr><td>失敗したままの Edit の後に commit しようとして止められた (うち 1 回は、わざと失敗させた確認用の Edit)</td><td class="num">2</td><td>✅ ある (PreToolUse のフック i261101-01)</td></tr>
+<tr><td>Vault の daily の追記を空けすぎて、Stop フックに促された</td><td class="num">3</td><td>✅ ある (共通ルール「Obsidianメモリ連携ルール」と Stop フック)</td></tr>
+<tr><td>共有ツールの使い方 (TOOLS-USAGE) を読み切らずに移行を進めた</td><td class="num">1</td><td>⚠️ 一部</td></tr>
+<tr><td>選択肢の番号を、案件をまたいで通さなかった</td><td class="num">1</td><td>✅ ある (共通ルール「複数の解決案がある場合の対応」)</td></tr>
+</tbody>
+</table></div>
+<p>issue の移行を 2 回戻したのは、外部ツールの不具合によるもので、AI の失敗ではない。前回あった PowerShell の <code>&lt;</code> と「分けすぎ」は、今回は見当たらなかった。</p>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>ルール化の候補</h1>
+<p>2 回以上起きたものと、ルールがあるのに破られたもの。文だけで止まらなかったものは、フックの案を先に挙げる。番号は案件をまたいだ通し番号 (前の続きの 14 から)。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>番号</th><th>失敗</th><th>案</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">14-A</td><td>commit に混ざる</td><td>恒久: PreToolUse フックで、<code>git commit</code> に <code>--</code> のパスの指定が無ければ止める。共通ルールも「<strong><code>git commit -m … -- &lt;path&gt;…</code> の形で、載せるファイルを commit にも名指しする</strong>」に変える。パスを指定した commit は、ほかに stage されたものを載せない。<code>git mv</code> などが先に stage したものも混ざらない</td></tr>
+<tr><td class="nowrap">14-B</td><td>同上</td><td>暫定: 文だけ「一覧の行数を数えて、名指ししたファイルの数と比べる」と足す。一覧を見るルールは既にあって破られたので、効く見込みは薄い</td></tr>
+<tr><td class="nowrap">15-A</td><td>Bash の <code>cd</code></td><td>恒久: PreToolUse フックで、Bash のコマンドに <code>cd</code> があれば止め、「絶対パスで渡すか <code>git -C</code> を使う」と案内する</td></tr>
+<tr><td class="nowrap">16-A</td><td>英語だけの文</td><td>恒久: 課題 i261031-08 (訳を書いた後も前の英語で止まる) を先に直す。止まり方が正しくなってから、書く回数が減るかを数える。新しい文は足さない (足しても減らなかった)</td></tr>
+<tr><td class="nowrap">17-A</td><td>確かめずに言い切った</td><td>恒久: ローカルルール「Claude フックの置き場とメンテ」の落とし穴「settings.json を書き換えても、動いているセッションには効かない」を、11/08 の実測 (書き換えた PreToolUse が同じセッションで効いた) に合わせて直す。誤った記述を引いたのが原因なので、元を直す。言い切り全般はフックで判定できず、文の追加でも防げないため、恒久の案は無い</td></tr>
+</tbody>
+</table></div>
+<p>sed・awk はフックで止まっていて害が残らないので、挙げない。TOOLS-USAGE の未読と番号の振り直しは 1 回で、その場で直したので挙げない。</p>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+</footer>
+
+</body>
+</html>
