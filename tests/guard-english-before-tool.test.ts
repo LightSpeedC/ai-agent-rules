@@ -38,8 +38,8 @@ const english = 'Checking the waiters and the cron list before continuing with t
 const japanese = '待受けと cron を確かめてから、作業を続けます。';
 
 // フックを実際に node で起動し、止めたかどうかを返す
-function runHook(transcriptPath: string): { denied: boolean; stdout: string; status: number | null } {
-	const input = JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: transcriptPath, tool_name: 'Bash', tool_input: { command: 'ls' } });
+function runHook(transcriptPath: string, toolUseId?: string): { denied: boolean; stdout: string; status: number | null } {
+	const input = JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: transcriptPath, tool_name: 'Bash', tool_input: { command: 'ls' }, tool_use_id: toolUseId });
 	const r = spawnSync('node', [hook], { input, timeout: 15000, encoding: 'utf8' });
 	let denied = false;
 	try {
@@ -65,6 +65,19 @@ describe('textsSinceLastToolResult（直前のツールの結果より後のテ�
 		const jsonl = [user('始めて'), toolUse(), toolResult(), assistant(english), toolUse()].map((l) => JSON.stringify(l)).join('\n');
 		assert.deepEqual(textsSinceLastToolResult(jsonl), [english]);
 	});
+
+	// 課題 i261031-08: 前のツールの結果がまだログに書かれていなくても、前のツールの呼び出しより前の文は見ない
+	test('前のツールの結果が書かれていなくても、前のツールの呼び出しより前のテキストは返さない', () => {
+		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
+		const jsonl = [user('始めて'), assistant(english), prev, assistant(japanese)].map((l) => JSON.stringify(l)).join('\n');
+		assert.deepEqual(textsSinceLastToolResult(jsonl, 'toolu_now'), [japanese]);
+	});
+
+	test('いま呼ぶツールの呼び出しでは区切らない', () => {
+		const now = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_now', name: 'Bash', input: {} }] } };
+		const jsonl = [user('始めて'), assistant(english), now].map((l) => JSON.stringify(l)).join('\n');
+		assert.deepEqual(textsSinceLastToolResult(jsonl, 'toolu_now'), [english]);
+	});
 });
 
 describe('guard-english-before-tool（PreToolUse フック）', () => {
@@ -89,6 +102,12 @@ describe('guard-english-before-tool（PreToolUse フック）', () => {
 	test('発言の番号（#1689）を含む英文の後のツールも止める', () => {
 		const r = runHook(transcript('issue-number', [user('始めて'), assistant('Diff matches #1689 and #1690. Committing and pushing per the local rule.')]));
 		assert.equal(r.denied, true);
+	});
+
+	test('前のツールの結果がまだ書かれていなくても、訳を書いた後のツールは通す (i261031-08)', () => {
+		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
+		const r = runHook(transcript('lagging', [user('始めて'), assistant(english), prev, assistant(japanese)]), 'toolu_now');
+		assert.equal(r.denied, false);
 	});
 
 	test('会話ログが読めなければ、通す', () => {

@@ -67,7 +67,10 @@ export function lastTurnTexts(jsonl: string): string[] {
 
 // 会話ログから、直前のツールの結果（無ければ利用者の発言）より後のテキストを、かたまりごとに取り出す（課題 i261029-01）。
 // PreToolUse で使う。いま呼ぶツールの呼び出しがログに書かれているかどうかに左右されないよう、区切りはツールの結果にする。
-export function textsSinceLastToolResult(jsonl: string): string[] {
+// currentToolUseId を渡すと、それ以外のツールの呼び出しでも区切る (課題 i261031-08)。
+// 新しいツールを呼べている時点で、前のツールは終わっていて、その前の文はそのツールのときに判定が済んでいる。
+// 前のツールの結果がログに書かれる前にフックが動いても、前の英語の文で止めない。
+export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: string): string[] {
 	let parts: string[] = [];
 	for (const line of jsonl.split(/\r?\n/)) {
 		if (line.trim() === '') continue;
@@ -85,6 +88,7 @@ export function textsSinceLastToolResult(jsonl: string): string[] {
 		} else if (message.role === 'assistant' && Array.isArray(content)) {
 			for (const block of content) {
 				if (block?.type === 'text' && typeof block.text === 'string') parts.push(block.text);
+				else if (currentToolUseId && block?.type === 'tool_use' && block.id !== currentToolUseId) parts = [];
 			}
 		}
 	}

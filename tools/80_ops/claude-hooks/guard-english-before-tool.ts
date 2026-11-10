@@ -13,7 +13,7 @@ if (!input.transcript_path) process.exit(0);
 
 let texts: string[];
 try {
-	texts = textsSinceLastToolResult(readFileSync(input.transcript_path, 'utf8'));
+	texts = textsSinceLastToolResult(readFileSync(input.transcript_path, 'utf8'), (input as { tool_use_id?: string }).tool_use_id);
 } catch {
 	process.exit(0);
 }
