@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>r261111-01 振り返り</title>
+<style>
+	:root {
+		--navy1: #12224d; --navy2: #2f5fbf; --ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa;
+		--link: #1a4fa0; --accent: var(--navy1, #12224d); --accent2: var(--navy2, #2f5fbf); --soft: #f2f5fb;
+	}
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	body { margin: 0; background: #ffffff; color: var(--ink, #1c2330); font-size: 15.5px; line-height: 1.85; font-family: sans-serif; }
+	a { color: var(--link, #1a4fa0); background: transparent; }
+	.titlebar { background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; padding: 34px 30px 30px; }
+	.titlebar .inner { max-width: 1600px; margin: 0 auto; }
+	.titlebar h1 { font-size: 1.7em; margin: 0 0 6px; color: #ffffff; }
+	.titlebar .lead, .titlebar .date { margin: 4px 0; color: #e6ecf8; background: transparent; }
+	.titlebar code { background: rgba(255,255,255,0.16); color: #fff; border: none; }
+	.wrap { max-width: 1600px; margin: 0 auto; padding: 0 30px; }
+	section { background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); padding: 4px 26px 26px; margin: 34px 0; border-radius: 8px; }
+	section h1 { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 14px 20px; margin: 26px 0 20px; border-radius: 8px; font-size: 1.35em; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+	code { background: #f4f6fa; background: var(--code-bg, #f4f6fa); border: 1px solid var(--line, #d9dfe8); color: #17335f; padding: 0 4px; border-radius: 4px; }
+	.tablewrap { overflow-x: auto; }
+	table { border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08); margin: 10px 0; }
+	th { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 9px 12px; text-align: left; }
+	td { background: #ffffff; color: var(--ink, #1c2330); padding: 9px 12px; vertical-align: top; border-top: 1px solid var(--line, #d9dfe8); }
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; } td.nowrap { white-space: nowrap; }
+	.backlink { display: inline-block; background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; text-decoration: none; padding: 4px 12px; border-radius: 6px; }
+	.backlink svg { display: block; }
+	.wrap > .navwrap { margin-top: 18px; }
+	footer { max-width: 1600px; margin: 0 auto; padding: 18px 30px 30px; background: #ffffff; color: var(--ink, #1c2330); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>r261111-01 振り返り</h1>
+		<p class="lead">前の振り返り (r261109-01) の後の失敗を拾い、ルール・フックと突き合わせる。入力: 本プロジェクトの会話の記録 (11/10 16:39 JST 以降)。出力: この調査。</p>
+		<p class="date">📅 作成: 2026-11-11 / 更新: 2026-11-11</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+
+<section class="ch01" id="ch01">
+<h1>拾った失敗と、防ぐルール・フック</h1>
+<p>記録の読み取りはサブエージェントに任せ、拾えていなかった分 (フックに止められた呼び出し・番号の重複) を会話の中で起きたものから足した。サブエージェントは二十数行を読めておらず、拾い漏れがありうる。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>失敗</th><th>回数</th><th>防ぐルール・フック</th></tr></thead>
+<tbody>
+<tr><td>英語だけの文。どちらも commit・push の直前の短い 1 文 (「Now commit+push per new rule.」「Per local rule 1/5, commit and push.」)</td><td class="num">2</td><td>⚠️ 一部 (Stop フックは止めた。ツールの前の PreToolUse フックは止めなかった。短い英文を英語と判定できていない見込み。課題 i261031-01 の形)</td></tr>
+<tr><td>Bash で <code>cd</code>・<code>sed</code>・<code>awk</code> を使おうとして止められた</td><td class="num">4</td><td>✅ ある (共通ルール「シェル実行ルール」と PreToolUse のフック)</td></tr>
+<tr><td>選択肢の番号を重ねて振った (1 番を 2 回)。決めたことを <code>issue decide new</code> で記録していなかった。利用者に問われて気づいた</td><td class="num">1</td><td>⚠️ 一部 (共通ルール「複数の解決案がある場合の対応」。ルールはあるのに破られた。<code>issue choice next</code> は、決定の移し替えが済むまで過去の番号を数えず 1 を返すため、使えない)</td></tr>
+<tr><td>送る案・差分を、利用者に「もう一度見せて」と頼まれた。案を出した後に chat の新着の報告が何度も挟まり、案が埋もれた</td><td class="num">2</td><td>❌ 無い</td></tr>
+<tr><td>依頼の確かめ方を誤った (「0L で探して 0 件」と頼み、旧番号を書き残す依頼と両立しなかった)</td><td class="num">1</td><td>⚠️ 一部 (共通ルール「課題の管理」の「何を確かめればよいかを添える」。添えたが中身を誤った)</td></tr>
+<tr><td>Edit の old_string が 2 か所に一致した</td><td class="num">1</td><td>✅ ある (Edit が止める)</td></tr>
+<tr><td>他プロジェクトからの依頼の課題を <code>--from</code> 無しで立てていて、<code>issue confirm</code> が通らなかった</td><td class="num">1</td><td>✅ ある (ローカルルール「chat 待受け・共通ルールの追随の点検」の <code>issue new --from</code>)</td></tr>
+</tbody>
+</table></div>
+<p>利用者が既存のルールを思い出させた 2 件 (進み具合のバー、次の作業の提案) は、ルールの範囲が狭かったもので、どちらもその場でルールを広げた。AI の手落ちではないので数えない。</p>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>ルール化の候補</h1>
+<p>2 回以上起きたものと、ルールがあるのに破られたもの。番号は案件をまたいだ通し番号 (この会話の続きの 11 から)。</p>
+<div class="tablewrap"><table>
+<thead><tr><th>番号</th><th>失敗</th><th>案</th></tr></thead>
+<tbody>
+<tr><td class="nowrap">11-A</td><td>英語だけの短い文</td><td>恒久: 課題 i261031-01 (英語の判定が英文を通す) に、今回の 2 文を試験の例として足し、PreToolUse で止まる判定に直す。新しい文は足さない</td></tr>
+<tr><td class="nowrap">12-A</td><td>番号の重複</td><td>恒久: 課題 i261111-01 (過去の決定を移す) を先に片付け、<code>issue choice next</code> を使えるようにする。番号を道具が振れば、重ならない</td></tr>
+<tr><td class="nowrap">12-B</td><td>同上</td><td>暫定: 移すまでの間、選択肢を出す前に、会話の中の最大の番号を数えて書く。ルールは既にあって破られたので、効く見込みは薄い</td></tr>
+<tr><td class="nowrap">13-A</td><td>案が埋もれる</td><td>恒久: 共通ルール「ai-chat-lite (AI 間チャット) の利用」か「重大な操作の確認方法」に、「送っていない案・反映していない差分があるうちに別の報告を挟んだら、報告の末尾に案を全文で出し直す」と足す</td></tr>
+<tr><td class="nowrap">13-B</td><td>同上</td><td>暫定: 報告の末尾に「送っていない案: ◯◯宛て」と名前だけ書く。頼まれたら全文を出す</td></tr>
+</tbody>
+</table></div>
+<p>確かめ方の誤りと <code>--from</code> の抜けは 1 回で、その場で直したので挙げない。</p>
+</section>
+
+</div>
+
+<footer>
+	<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+</footer>
+
+</body>
+</html>
