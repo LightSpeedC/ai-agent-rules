@@ -112,6 +112,19 @@ export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: strin
 	return [...previous, ...parts];
 }
 
+// 英語だけのかたまりを「」で囲んで並べる。止めるときの理由に添え、どの文かを探し直さずに済むようにする (課題 i261111-04)。
+// 長いかたまりは、先頭の 80 字までにして … を付ける
+const QUOTE_MAX = 80;
+export function quoteEnglish(texts: string[]): string {
+	return texts
+		.filter(isEnglishOnly)
+		.map((text) => {
+			const line = text.trim().replace(/\s+/g, ' ');
+			return '「' + (line.length > QUOTE_MAX ? line.slice(0, QUOTE_MAX) + '…' : line) + '」';
+		})
+		.join(' ');
+}
+
 // 最後の応答の本文を、1 つの文字列にする（判定の単位ではなく、表示や確かめに使う）
 export function lastAssistantText(jsonl: string): string {
 	return lastTurnTexts(jsonl).join('');

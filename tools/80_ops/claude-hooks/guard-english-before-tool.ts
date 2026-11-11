@@ -5,7 +5,7 @@
 // 会話ログが読めないときは通す（フックの不具合で作業を止めない）。
 // node でも bun でも動くよう、標準モジュールだけで書く。
 import { readFileSync } from 'node:fs';
-import { isEnglishOnly, textsSinceLastToolResult } from './japanese-check.ts';
+import { isEnglishOnly, quoteEnglish, textsSinceLastToolResult } from './japanese-check.ts';
 import { readInput } from './vault.ts';
 
 const input = await readInput();
@@ -23,6 +23,6 @@ console.log(JSON.stringify({
 	hookSpecificOutput: {
 		hookEventName: 'PreToolUse',
 		permissionDecision: 'deny',
-		permissionDecisionReason: '直前の文が英語だけです。その文の日本語訳を本文に書いてから、もう一度呼んでください（共通ルール「言語表記」の「AIエージェント応答の言語」）。',
+		permissionDecisionReason: '直前の文が英語だけです: ' + quoteEnglish(texts) + '。その文の日本語訳を本文に書いてから、もう一度呼んでください（共通ルール「言語表記」の「AIエージェント応答の言語」）。',
 	},
 }));

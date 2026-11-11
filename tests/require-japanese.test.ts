@@ -175,6 +175,14 @@ describe('require-japanese（フック全体）', () => {
 		assert.match(out.reason, /日本語で書いて/);
 	});
 
+	// 課題 i261111-04: どの文が英語かを引用して返す。探し直す間にまた英語で書くのを防ぐ
+	test('書き直させる理由に、英語だけのかたまりを引用する', () => {
+		const file = transcript('hook-quote', [user('質問'), assistant('日本語の説明です。'), assistant('This is a plain English sentence in the middle of the reply.')]);
+		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
+		assert.match(JSON.parse(r.stdout).reason, /「This is a plain English sentence in the middle of the reply\.」/);
+		assert.doesNotMatch(JSON.parse(r.stdout).reason, /日本語の説明です/);
+	});
+
 	test('日本語の応答では、何も出さない', () => {
 		const file = transcript('hook2', [user('質問'), assistant('これは日本語の応答で、十分な長さがある。英字 API が混ざっても問題ない。')]);
 		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });

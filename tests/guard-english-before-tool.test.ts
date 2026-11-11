@@ -139,4 +139,19 @@ describe('guard-english-before-tool（PreToolUse フック）', () => {
 		const reason = JSON.parse(r.stdout).hookSpecificOutput.permissionDecisionReason as string;
 		assert.match(reason, /日本語/);
 	});
+
+	// 課題 i261111-04: どの文が英語かを引用して返す
+	test('止めるときの理由に、英語だけの文を引用する', () => {
+		const r = runHook(transcript('quote', [user('始めて'), assistant(japanese), assistant(english)]));
+		const reason = JSON.parse(r.stdout).hookSpecificOutput.permissionDecisionReason as string;
+		assert.ok(reason.includes('「' + english + '」'), reason);
+		assert.ok(!reason.includes(japanese), reason);
+	});
+
+	test('長い英文は、先頭の 80 字までを引用する', () => {
+		const long = 'This sentence is intentionally written to be quite long so that the hook has to cut it short in the reason.';
+		const r = runHook(transcript('quote-long', [user('始めて'), assistant(long)]));
+		const reason = JSON.parse(r.stdout).hookSpecificOutput.permissionDecisionReason as string;
+		assert.ok(reason.includes('「' + long.slice(0, 80) + '…」'), reason);
+	});
 });

@@ -18,7 +18,9 @@ Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.
 | `obsidian-memory.ts` | （`obsidian`）Vault を同期してから、`memory/!memory.md` と `projects/!projects.md` を `additionalContext` として注入する | （入口から呼ぶ） |
 | `resume-reminder.ts` | （`resume`）再開（`resume`）・compact のとき、chat 待受けと cron の張り直しを促す。フックは応答を始められないので、「次の発言を受けたら、本題の前に張り直す」と書く。手順は共通ルールの見出し名で指す（課題 i261025-01） | （入口から呼ぶ） |
 | `guard-bash-sed-awk.ts` | Bash のコマンドの区切りごとの先頭語が `sed`・`awk` なら deny し、理由に Edit・Read を書く。引数の中の語では止めない（課題 i261025-01） | PreToolUse（matcher: Bash） |
-| `guard-english-before-tool.ts` | 直前のツールの結果（無ければターンの始め）より後のテキストに、英語だけのかたまりがあれば deny し、理由に「日本語訳を本文に書いてから呼び直す」と書く。会話ログが読めなければ通す（課題 i261029-01） | PreToolUse（matcher なし） |
+| `guard-english-before-tool.ts` | 直前のツールの結果（無ければターンの始め）より後のテキストに、英語だけのかたまりがあれば deny し、理由に、その文を「」で引用して (長ければ先頭 80 字) 「日本語訳を本文に書いてから呼び直す」と書く。1 つ前のツールが通っていれば、そのツールの前の文も読む (フックの時点では同じ応答の文がまだ記録に無いため)。会話ログが読めなければ通す（課題 i261029-01・i261031-01・i261111-04） | PreToolUse（matcher なし） |
+| `check-choice-numbers.ts` | 最後の応答に書いた選択肢の番号 (`NNN-A`。コードの中は除く) が、`issue choice next` の予約 (`~/.ai-agent-tools/numbers/uuid_<uuid>_*/choices/`) にも決定 (`decisions/`) にも無ければ、1 回だけ block して振り直しを促す。2 回目は知らせるだけ。`project-uuid.txt` の無いプロジェクトでは何もしない（課題 i261111-05） | Stop |
+| `check-leftover-processes.ts` | このセッションが起こした `tail`・`grep`・見張りの形の powershell (`-Wait`・`-Tail`・`while`・`Start-Sleep`) が残っていれば、1 回だけ block して止めるよう促す。本体 (claude-code の claude.exe) の子孫と、コマンド行にセッション ID を含む孤児を見る。親子は CIM で取る（課題 i261111-06） | Stop |
 | `guard-commit-after-failed-edit.ts` | git commit の前に会話ログを読み、失敗したままの Edit・Write があれば deny し、理由にファイル名と解き方を書く。印は、失敗の後の同じファイルへの Edit・Write か Read が通れば解ける。通った commit より前の失敗は見ない。会話ログが読めなければ通す（課題 i261101-01） | PreToolUse（matcher `Bash\|PowerShell`） |
 | `guard-screen-capture.ts` | 画面の範囲を撮る呼び出し（`CopyFromScreen`・`GetDC(0)`・`GetWindowDC(GetDesktopWindow())`）があれば deny し、窓だけを写す書き方を理由に書く。見るのは、コマンドと、そこに出た ps1・psm1・cs の中身、スクリプト（ps1・psm1・cs・cmd・bat）への Write・Edit の中身。入力が読めなければ通す（課題 i261101-02） | PreToolUse（matcher `Bash\|PowerShell\|Write\|Edit`） |
 | `guard-utc-in-record.ts` | 作業記録（パスに `_config/` を含む `.html`）への Write・Edit で、新しく書く分に `UTC` があり同じ行に `JST` が無ければ deny し、JST に換算して書くよう理由に書く。元からある行（Edit の old_string）は見ない。入力が読めなければ通す（課題 i261108-01） | PreToolUse（matcher `Edit\|Write`） |
@@ -26,7 +28,7 @@ Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.
 | `guard-git-add-all.ts` | Bash・PowerShell の `git add -A`・`--all`・`.` と `git commit -a`、`-- <パス>` でファイルを名指ししない `git commit` を deny し、名指しするよう理由に書く。引用符の中 (コミットメッセージ) の語は見ない（課題 i261109-01） | PreToolUse（matcher `Bash\|PowerShell`） |
 | `guard-bash-cd.ts` | Bash の `cd`・`pushd` を deny し、絶対パスか `git -C` を使うよう理由に書く。引用符の中の語は見ない。PowerShell は見ない（課題 i261109-02） | PreToolUse（matcher `Bash\|PowerShell`） |
 | `stop-cron-on-halt.ts` | 発言に「止めて」「止める」「中断」「ストップ」「区切りで止」があれば、`additionalContext` に、作業全体を止める指示なら CronList で確かめて CronDelete で消す・再び張るのは再開の指示のあと・特定のものを止める指示や止めることの説明なら消さない、と差し込む。「止めてよい」「止めても構わない」等の許可の言い回しは、先に取り除いて判定する。入力が読めない・prompt が無いときは何も出さない（課題 i261103-01） | UserPromptSubmit |
-| `japanese-check.ts` | 英語の判定 `isEnglishOnly`。コードブロック・コードスパン・URL・パスを除き、英字が 20 字以上で、日本語の字の数が英語の語の数より少なければ英語とみなす（課題 i261031-01）。`require-japanese.ts`（Stop）と `guard-english-before-tool.ts` が使う | （各フックから呼ぶ） |
+| `japanese-check.ts` | 英語の判定 `isEnglishOnly`。コードブロック・コードスパン・URL・パスを除き、英字が 20 字以上で、日本語の字の数が英語の語の数より少なければ英語とみなす（課題 i261031-01）。`require-japanese.ts`（Stop）と `guard-english-before-tool.ts` が使う。`quoteEnglish` は、英語だけのかたまりを「」で囲んで並べ、止めるときの理由に添える (Stop も PreToolUse も。課題 i261111-04) | （各フックから呼ぶ） |
 | `convert-after-write.ts` | Write で書いた ps1・html・cmd・bat を、`convert-encoding` で文字コードと改行を揃える（ps1 → ps1、html → html、cmd・bat → cmd）。成功は無表示、失敗は ❌ で書き換えなしを知らせる（依頼 #1672） | PostToolUse（matcher: Write） |
 
 標準モジュール（`node:fs`・`node:path`）だけで書いてある。`node` でも `bun run` でも同じファイルが動き、切り替え用のラッパーは持たない。

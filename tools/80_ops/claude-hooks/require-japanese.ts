@@ -6,7 +6,7 @@
 // node でも bun でも動くよう、標準モジュールだけで書く。
 import { readFileSync } from 'node:fs';
 import { stamped } from './jst.ts';
-import { isEnglishOnly, lastTurnTexts } from './japanese-check.ts';
+import { isEnglishOnly, lastTurnTexts, quoteEnglish } from './japanese-check.ts';
 import { readInput } from './vault.ts';
 
 const reason = '応答は日本語で書いてください。英語だけの応答を検出しました。日本語で書き直してください。技術用語・識別子・コマンドは原文のままで構いません。';
@@ -30,7 +30,7 @@ async function main(): Promise<void> {
 	}
 	console.log(JSON.stringify({
 		decision: 'block',
-		reason,
+		reason: reason + ' 英語だけの文: ' + quoteEnglish(texts),
 		systemMessage: stamped('⚠️ 英語だけの応答を、日本語で書き直させる'),
 	}));
 }
