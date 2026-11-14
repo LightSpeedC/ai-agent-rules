@@ -9,3 +9,6 @@ confirmed: false
 ---
 
 依頼 #1962。skill light-test の「試験には時間の上限を付ける」の次に、節「画面を使う作業は、ui-lock で 1 つずつにする」を足す。文言は #1962 の本文。
+
+## やること
+- [済] skill light-test に節を足した (11/14)。file-manager へ返信して確認待ち
