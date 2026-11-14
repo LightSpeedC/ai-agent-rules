@@ -143,6 +143,17 @@ describe('guard-english-before-tool（PreToolUse フック）', () => {
 		assert.equal(r.denied, true);
 	});
 
+	// 課題 i261031-08 (決定 426): 英文のあとに、その英文を「」で引いた日本語のかたまりがあれば、訳済みとして通す
+	test('英文のあとに、その英文を「」で引いた日本語のかたまりがあれば、ツールを通す (426)', () => {
+		const r = runHook(transcript('translated', [user('始めて'), assistant(english), assistant(`訳: 「${english}」→「${japanese}」`)]));
+		assert.equal(r.denied, false);
+	});
+
+	test('英文のあとに日本語のかたまりがあっても、英文を引いていなければ、止める (426)', () => {
+		const r = runHook(transcript('not-translated', [user('始めて'), assistant(english), assistant(japanese)]));
+		assert.equal(r.denied, true);
+	});
+
 	test('会話ログが読めなければ、通す', () => {
 		const r = runHook(join(work, 'missing.jsonl'));
 		assert.equal(r.status, 0);

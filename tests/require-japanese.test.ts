@@ -159,6 +159,36 @@ describe('require-japanese（フック全体）', () => {
 	const env = () => ({ ...process.env, CLAUDE_ENGLISH_MARK_DIR: join(work, 'marks') });
 	const runHook = (input: unknown) => spawnSync('node', [hook], { input: JSON.stringify(input), encoding: 'utf8', timeout: 15000, env: env() });
 
+	// 課題 i261031-08 (決定 426): 英文のあとに、その英文を「」で引いた日本語のかたまりがあれば、訳済みとして書き直させない。
+	// 止める理由が「英文を引用して訳を書く」ことなので、訳を書くときの形そのものを、訳済みの印にする
+	const quoted = 'Only intended files changed. Commit in two units.';
+	test('英文のあとに、その英文を「」で引いた日本語のかたまりがあれば、書き直させない (426)', () => {
+		const file = transcript('hook-translated', [user('質問'), assistant(quoted), assistant('その英文の訳は、「' + quoted + '」→「意図したファイルだけが変わっている。2 つに分けて commit する。」です。')]);
+		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
+		assert.equal(r.stdout, '');
+	});
+
+	test('英文のあとに日本語のかたまりがあっても、英文を引いていなければ、書き直させる (426)', () => {
+		const file = transcript('hook-not-translated', [user('質問'), assistant(quoted), assistant('作業を続けます。')]);
+		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
+		assert.equal(JSON.parse(r.stdout).decision, 'block');
+	});
+
+	test('英文より前に引いたかたまりは、訳済みとみなさない (426)', () => {
+		const file = transcript('hook-quote-before', [user('質問'), assistant('前の話の「' + quoted + '」です。'), assistant(quoted)]);
+		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
+		assert.equal(JSON.parse(r.stdout).decision, 'block');
+	});
+
+	test('訳済みの英文と、訳の無い英文が混ざれば、訳の無い方だけを引用して書き直させる (426)', () => {
+		const other = 'This second sentence has no translation anywhere in the reply.';
+		const file = transcript('hook-mixed', [user('質問'), assistant(quoted), assistant('訳: 「' + quoted + '」→「意図したファイルだけが変わっている。」'), assistant(other)]);
+		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
+		const reason = JSON.parse(r.stdout).reason as string;
+		assert.ok(reason.includes(other), reason);
+		assert.ok(!reason.includes(quoted), reason);
+	});
+
 	// 決定 420-A: ツールの前のフックが止めて訳を書かせた英文で、ターンの終わりにもう一度止めない
 	test('ツールの前のフックが止めた英文では、書き直させない (420-A)', () => {
 		const english = 'This is a plain English sentence that the tool guard already stopped.';

@@ -117,6 +117,18 @@ export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: strin
 	return [...previous, ...pending, ...parts];
 }
 
+// 訳済みの英文を除く (課題 i261031-08、決定 426)。英文のあとに、その英文の先頭 30 字ほどを含む、英語だけでないかたまりがあれば、訳済みとみなす。
+// 止める理由が「英文を引用して訳を書く」ことなので、訳を書くときの形 (「英文」→「日本語」) そのものを印にする。英文より前にあるかたまりは数えない
+const TRANSLATED_HEAD = 30;
+export function untranslated(texts: string[]): string[] {
+	const norm = (text: string) => text.trim().replace(/\s+/g, ' ');
+	return texts.filter((text, i) => {
+		if (!isEnglishOnly(text)) return true;
+		const head = norm(text).slice(0, TRANSLATED_HEAD);
+		return !texts.slice(i + 1).some((later) => !isEnglishOnly(later) && norm(later).includes(head));
+	});
+}
+
 // 止めた英文の印 (決定 420-A)。セッションの記録ごとに、一時フォルダへ文のハッシュを 1 行ずつ置く (CLAUDE_ENGLISH_MARK_DIR で差し替えられる)。
 // ツールの前のフックが止めて訳を書かせた文で、次のツールやターンの終わりに、もう一度止めないために使う
 function markFile(transcriptPath: string): string {

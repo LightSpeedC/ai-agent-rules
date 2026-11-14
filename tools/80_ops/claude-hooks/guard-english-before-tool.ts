@@ -5,7 +5,7 @@
 // 会話ログが読めないときは通す（フックの不具合で作業を止めない）。
 // node でも bun でも動くよう、標準モジュールだけで書く。
 import { readFileSync } from 'node:fs';
-import { isEnglishOnly, markEnglish, quoteEnglish, textsSinceLastToolResult, unmarked } from './japanese-check.ts';
+import { isEnglishOnly, markEnglish, quoteEnglish, textsSinceLastToolResult, unmarked, untranslated } from './japanese-check.ts';
 import { readInput } from './vault.ts';
 
 const input = await readInput();
@@ -18,7 +18,7 @@ try {
 	process.exit(0);
 }
 // 一度止めた英文は、もう止めない (決定 420-A)。止めるときに印を付ける
-texts = unmarked(input.transcript_path, texts);
+texts = untranslated(unmarked(input.transcript_path, texts));
 if (!texts.some(isEnglishOnly)) process.exit(0);
 markEnglish(input.transcript_path, texts);
 
