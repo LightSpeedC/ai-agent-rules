@@ -17,10 +17,33 @@ function blockedWord(command: string): string | undefined {
 	return undefined;
 }
 
+// 区切りごとの先頭語が ssh で、その引数の中に sed -i (-i.bak ・ -ni ・ --in-place を含む) があれば true (課題 i261113-01、依頼 #1944)。
+// ssh 先で sed -i を使うと、先頭語が ssh のため止まらず、設定ファイルの \ が消えた (11/07)。依頼は sed -i だけなので、読むだけの sed・awk は止めない
+function sshInPlaceSed(command: string): boolean {
+	for (const segment of command.split(SPLIT)) {
+		const word = segment.trim().replace(/^\(+/, '').split(/\s+/)[0] ?? '';
+		const name = (word.split(/[\\/]/).pop() ?? '').replace(/\.exe$/i, '');
+		if (name !== 'ssh') continue;
+		if (/\bsed\b.*?(\s-[A-Za-z]*i\S*|--in-place)/.test(segment)) return true;
+	}
+	return false;
+}
+
 const data = (await readInput()) as HookInput & { tool_name?: string; tool_input?: { command?: string } };
 if (data.tool_name !== 'Bash') process.exit(0);
 
-const word = blockedWord(data.tool_input?.command ?? '');
+const command = data.tool_input?.command ?? '';
+const word = blockedWord(command);
+if (word === undefined && sshInPlaceSed(command)) {
+	console.log(JSON.stringify({
+		hookSpecificOutput: {
+			hookEventName: 'PreToolUse',
+			permissionDecision: 'deny',
+			permissionDecisionReason: 'ssh の引数の中の sed -i は使わない (設定ファイルの \\ が消えた事故がある)。ファイルを手元に取り、Edit で書き換えて送る (共通ルール「シェル実行ルール」の「Bash に手が伸びる操作は、道具に置き換える」)。',
+		},
+	}));
+	process.exit(0);
+}
 if (word === undefined) process.exit(0);
 
 console.log(JSON.stringify({

@@ -127,6 +127,36 @@ describe('guard-bash-sed-awk（Bash の sed・awk を止め、Edit・Read を案
 		});
 	}
 
+	// 課題 i261113-01 (20260917-oracle-cloud の依頼 #1944): ssh 先で sed -i を使うと、フックが止めず、設定ファイルの \ が消えた
+	for (const command of [
+		'ssh host "sudo sed -i s/a/b/ /etc/x.conf"',
+		"ssh -p 22 user@host 'sudo sed -i.bak s/a/b/ f'",
+		'ssh host "sed -ni 5p f"',
+		'ssh host sed -e s/a/b/ -i f',
+		'ssh host "sed --in-place s/a/b/ f"',
+		'echo ok && ssh host "sudo sed -i s/a/b/ f"',
+		'/usr/bin/ssh.exe host "sudo sed -i s/a/b/ f"',
+	]) {
+		test(`「${command}」(ssh の引数の中の sed -i) を deny し、理由に Edit を書く`, () => {
+			const r = run(guardHook, bash(command));
+			assert.equal(r.status, 0, r.stderr);
+			const d = decision(r.stdout);
+			assert.ok(d, 'deny の出力がある');
+			assert.equal(d.permissionDecision, 'deny');
+			assert.match(d.permissionDecisionReason, /ssh/);
+			assert.match(d.permissionDecisionReason, /Edit/);
+		});
+	}
+
+	// 依頼は sed -i だけ。ssh の引数の中の sed・awk を読むだけの使い方までは、ここでは止めない
+	for (const command of ['ssh host ls', 'ssh host "grep sed /etc/x.conf"', 'ssh host "sudo systemctl restart nginx"', 'ssh host "cat /etc/x.conf"', 'scp a.txt host:/tmp/']) {
+		test(`「${command}」は止めない (sed -i を含まない)`, () => {
+			const r = run(guardHook, bash(command));
+			assert.equal(r.status, 0, r.stderr);
+			assert.equal(r.stdout, '');
+		});
+	}
+
 	test('Bash 以外のツールは、コマンドの文字があっても止めない', () => {
 		const r = run(guardHook, JSON.stringify({ tool_name: 'PowerShell', tool_input: { command: 'sed -n 1p f' } }));
 		assert.equal(r.status, 0, r.stderr);
