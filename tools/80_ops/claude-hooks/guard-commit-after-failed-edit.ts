@@ -25,8 +25,16 @@ function key(file: string): string {
 	return file.replace(/\\/g, '/').toLowerCase();
 }
 
-// 失敗したままのファイルを、記録の順に返す
-export function failedFiles(jsonl: string): string[] {
+// file が、置き場 (cwd) の中にあるか。区切りと大小を揃えて比べ、前方が同じだけの別のフォルダ (proj2) は外とする
+function isInside(file: string, cwd: string): boolean {
+	const base = key(cwd).replace(/\/+$/, '');
+	const f = key(file);
+	return f === base || f.startsWith(base + '/');
+}
+
+// 失敗したままのファイルを、記録の順に返す。cwd を渡すと、その外のパスの失敗は数えない (課題 i261114-02、決定 424-A)。
+// commit に載るのは置き場の中のファイルだけで、worktree の子が親の checkout の存在しないパスで失敗しても、載せようがないため
+export function failedFiles(jsonl: string, cwd?: string): string[] {
 	const uses = new Map<string, { name: string; file?: string; command?: string }>();
 	let failed = new Map<string, string>(); // 揃えた名前 → 元の名前
 	for (const line of jsonl.split('\n')) {
@@ -56,11 +64,12 @@ export function failedFiles(jsonl: string): string[] {
 			}
 		}
 	}
-	return [...failed.values()];
+	const all = [...failed.values()];
+	return cwd ? all.filter((file) => isInside(file, cwd)) : all;
 }
 
 if (import.meta.main ?? process.argv[1]?.replace(/\\/g, '/').endsWith('guard-commit-after-failed-edit.ts')) {
-	const data = (await readInput()) as HookInput & { tool_name?: string; tool_input?: { command?: string }; transcript_path?: string };
+	const data = (await readInput()) as HookInput & { tool_name?: string; tool_input?: { command?: string }; transcript_path?: string; cwd?: string };
 	if (data.tool_name !== 'Bash' && data.tool_name !== 'PowerShell') process.exit(0);
 	if (!isCommit(data.tool_input?.command ?? '') || !data.transcript_path) process.exit(0);
 
@@ -70,7 +79,7 @@ if (import.meta.main ?? process.argv[1]?.replace(/\\/g, '/').endsWith('guard-com
 	} catch {
 		process.exit(0);
 	}
-	const files = failedFiles(jsonl);
+	const files = failedFiles(jsonl, data.cwd);
 	if (files.length === 0) process.exit(0);
 
 	console.log(JSON.stringify({

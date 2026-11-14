@@ -43,8 +43,8 @@ const read = (file: string): Step => ({ name: 'Read', input: { file_path: file }
 const bash = (command: string, error = false): Step => ({ name: 'Bash', input: { command }, error });
 
 // フックを実際に node で起動し、止めたかどうかを返す
-function runHook(transcriptPath: string | undefined, command: string, toolName = 'Bash'): { denied: boolean; reason: string } {
-	const input = JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: transcriptPath, tool_name: toolName, tool_input: { command } });
+function runHook(transcriptPath: string | undefined, command: string, toolName = 'Bash', cwd?: string): { denied: boolean; reason: string } {
+	const input = JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: transcriptPath, tool_name: toolName, tool_input: { command }, cwd });
 	const r = spawnSync('node', [hook], { input, timeout: 15000, encoding: 'utf8' });
 	try {
 		const out = JSON.parse(r.stdout).hookSpecificOutput;
@@ -104,6 +104,45 @@ describe('guard-commit-after-failed-edit (失敗したままの Edit の後の c
 });
 
 // 課題 i261101-01、11/04 に 20261019-file-manager から報告 (#1783)。14-A で決めた。
+// 課題 i261114-02 (決定 424-A): worktree の子が、外 (親の checkout) の存在しないパスへの Edit に失敗すると、
+// 同じ絶対パスでしか解けない印が残り、commit が止まった (file-manager、11/14)。commit に載るのは置き場の中のファイルだけなので、外のパスの失敗は数えない
+describe('作業の置き場 (cwd) の外のパスの失敗 (424-A)', () => {
+	const cwd = 'W:/proj';
+
+	test('置き場の外のパスの失敗では、commit を止めない', () => {
+		const t = transcript([edit('W:/parent/src/a.ts', true)]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd).denied, false);
+	});
+
+	test('置き場の中のパスの失敗は、これまでどおり止める', () => {
+		const t = transcript([edit('W:/proj/src/a.ts', true)]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd).denied, true);
+	});
+
+	test('置き場の名前を前方に含むだけの別のフォルダ (W:/proj2) は、外とみなす', () => {
+		const t = transcript([edit('W:/proj2/a.ts', true)]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd).denied, false);
+	});
+
+	test('区切りと大小の違うパスでも、置き場の中なら止める', () => {
+		const t = transcript([edit('w:\\Proj\\src\\a.ts', true)]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', 'W:/proj/').denied, true);
+	});
+
+	test('外の失敗と中の失敗が混ざれば、中の分だけで止め、理由に外のパスを書かない', () => {
+		const t = transcript([edit('W:/parent/src/a.ts', true), edit('W:/proj/src/b.ts', true)]);
+		const r = runHook(t, 'git commit -m x', 'Bash', cwd);
+		assert.equal(r.denied, true);
+		assert.ok(r.reason.includes('W:/proj/src/b.ts'), r.reason);
+		assert.ok(!r.reason.includes('W:/parent'), r.reason);
+	});
+
+	test('cwd が渡されなければ、すべての失敗を数える (これまでどおり)', () => {
+		const t = transcript([edit('W:/parent/src/a.ts', true)]);
+		assert.equal(runHook(t, 'git commit -m x').denied, true);
+	});
+});
+
 describe('--dry-run の commit (14-A)', () => {
 	test('--dry-run の commit は、失敗した Edit があっても止めない (何も commit されないため)', () => {
 		assert.equal(runHook(transcript([edit(fileA, true)]), 'git commit --dry-run').denied, false);
