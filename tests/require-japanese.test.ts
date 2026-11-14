@@ -156,7 +156,19 @@ describe('lastAssistantText（最後の応答のテキスト）', () => {
 });
 
 describe('require-japanese（フック全体）', () => {
-	const runHook = (input: unknown) => spawnSync('node', [hook], { input: JSON.stringify(input), encoding: 'utf8', timeout: 15000 });
+	const env = () => ({ ...process.env, CLAUDE_ENGLISH_MARK_DIR: join(work, 'marks') });
+	const runHook = (input: unknown) => spawnSync('node', [hook], { input: JSON.stringify(input), encoding: 'utf8', timeout: 15000, env: env() });
+
+	// 決定 420-A: ツールの前のフックが止めて訳を書かせた英文で、ターンの終わりにもう一度止めない
+	test('ツールの前のフックが止めた英文では、書き直させない (420-A)', () => {
+		const english = 'This is a plain English sentence that the tool guard already stopped.';
+		const file = transcript('hook-marked', [user('質問'), assistant(english), assistant('訳: ツールの前のフックが止めた英文です。')]);
+		const guard = join(root, 'tools/80_ops/claude-hooks/guard-english-before-tool.ts');
+		const g = spawnSync('node', [guard], { input: JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: file, tool_use_id: 'toolu_x' }), encoding: 'utf8', timeout: 15000, env: env() });
+		assert.match(g.stdout, /deny/);
+		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
+		assert.equal(r.stdout, '');
+	});
 
 	// 途中のかたまりが英語だけなら、応答全体に日本語があっても、書き直させる
 	test('日本語の応答の途中に英語だけのかたまりがあれば、decision: block を返す', () => {

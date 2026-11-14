@@ -2,6 +2,10 @@
 // 共通ルール「言語表記」（応答は常に日本語）を機械的に確かめるために使う（課題 p261021-01）。
 // 判定の基準は課題 i261031-01 の 3-A（コードの部分を除き、日本語の字と英語の語の数を比べる）。
 // node でも bun でも動くよう、標準モジュールだけで書く。
+import { createHash } from 'node:crypto';
+import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { basename, dirname, join } from 'node:path';
 
 // 英字を含むコードの部分。判定の前に除く（コマンドや識別子を、英語の語として数えないため）（課題 i261031-01）。
 // 記号 1 つでかたまり全体を外す作りは、Markdown で書いた英文の多くを通したため、やめた。
@@ -108,8 +112,44 @@ export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: strin
 			}
 		}
 	}
-	// pending (結果がまだ書かれていない前のツールより前の文) は返さない (i261031-08)。結果が書かれた後のツールで判定する
-	return [...previous, ...parts];
+	// pending (結果がまだ書かれていない前のツールより前の文) も返す (決定 420-A)。前のツールのときに記録に無かった英文を、ここで読む。
+	// 前のツールが止めた文を 2 度止めないのは、印 (markedEnglish) で受け持つ (i261031-08)
+	return [...previous, ...pending, ...parts];
+}
+
+// 止めた英文の印 (決定 420-A)。セッションの記録ごとに、一時フォルダへ文のハッシュを 1 行ずつ置く (CLAUDE_ENGLISH_MARK_DIR で差し替えられる)。
+// ツールの前のフックが止めて訳を書かせた文で、次のツールやターンの終わりに、もう一度止めないために使う
+function markFile(transcriptPath: string): string {
+	const dir = process.env.CLAUDE_ENGLISH_MARK_DIR || join(tmpdir(), 'claude-english-marks');
+	return join(dir, basename(transcriptPath) + '.txt');
+}
+
+function markKey(text: string): string {
+	return createHash('sha1').update(text.trim().replace(/\s+/g, ' ')).digest('hex');
+}
+
+// 印の無い文だけを返す。印が読めなければ、全部を返す
+export function unmarked(transcriptPath: string, texts: string[]): string[] {
+	let marks: Set<string>;
+	try {
+		marks = new Set(readFileSync(markFile(transcriptPath), 'utf8').split(/\r?\n/));
+	} catch {
+		return texts;
+	}
+	return texts.filter((text) => !marks.has(markKey(text)));
+}
+
+// 英語だけの文に印を付ける。置けなくても止めない (次に 2 度止めることがあるだけ)
+export function markEnglish(transcriptPath: string, texts: string[]): void {
+	const keys = texts.filter(isEnglishOnly).map(markKey);
+	if (keys.length === 0) return;
+	try {
+		const file = markFile(transcriptPath);
+		mkdirSync(dirname(file), { recursive: true });
+		appendFileSync(file, keys.join('\n') + '\n');
+	} catch {
+		// 印を置けないだけ
+	}
 }
 
 // 英語だけのかたまりを「」で囲んで並べる。止めるときの理由に添え、どの文かを探し直さずに済むようにする (課題 i261111-04)。

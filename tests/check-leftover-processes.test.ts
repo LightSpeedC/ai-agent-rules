@@ -1,6 +1,6 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { findLeftovers, type Proc } from '../tools/80_ops/claude-hooks/check-leftover-processes.ts';
+import { findLeftovers, findSuspects, type Proc } from '../tools/80_ops/claude-hooks/check-leftover-processes.ts';
 
 // 課題 i261111-06: Stop フックで、このセッションが起こした tail・grep・見張りの powershell が残っていれば知らせる。
 // このセッションの本体 (claude-code の claude.exe) の子孫だけを見る。フック自身と、その子孫は数えない。
@@ -47,5 +47,37 @@ describe('findLeftovers (残ったプロセスを拾う)', () => {
 
 	test('本体が見つからなければ空', () => {
 		assert.deepEqual(findLeftovers([p(5, 0, 'bash.exe'), p(6, 5, 'tail.exe')], 6), []);
+	});
+});
+
+// 決定 421-A: #1940 の事象。背面の tail のコマンド行にセッション ID が無く、親もいないため拾えなかった。
+// 親のいない見張りのうち、このセッションの本体より後に起きたものを「このセッションのものかもしれない」として拾う
+describe('findSuspects (このセッションのものかもしれない孤児を拾う)', () => {
+	const t = (proc: Proc, Created: number): Proc => ({ ...proc, Created });
+	const timed: Proc[] = base.map((proc) => t(proc, proc.ProcessId === 10 ? 1000 : 500));
+
+	test('本体より後に起きた、親のいない tail を拾う', () => {
+		const list = [...timed, t(p(50, 997, 'tail.exe', 'tail -f a.log'), 2000)];
+		assert.deepEqual(findSuspects(list, 21).map((x) => x.ProcessId), [50]);
+	});
+
+	test('本体より前に起きた孤児は拾わない', () => {
+		const list = [...timed, t(p(51, 997, 'tail.exe', 'tail -f a.log'), 900)];
+		assert.deepEqual(findSuspects(list, 21), []);
+	});
+
+	test('親が生きている見張り (別のセッションの子) は拾わない', () => {
+		const list = [...timed, t(p(52, 30, 'tail.exe', 'tail -f a.log'), 2000)];
+		assert.deepEqual(findSuspects(list, 21), []);
+	});
+
+	test('見張りでない孤児は拾わない', () => {
+		const list = [...timed, t(p(53, 997, 'node.exe', 'node server.js'), 2000)];
+		assert.deepEqual(findSuspects(list, 21), []);
+	});
+
+	test('findLeftovers で拾ったものは重ねない', () => {
+		const list = [...timed, t(p(54, 997, 'tail.exe', 'tail -F C:/t/claude/sess-123/tasks/a.output'), 2000)];
+		assert.deepEqual(findSuspects(list, 21, 'sess-123'), []);
 	});
 });

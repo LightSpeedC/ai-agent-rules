@@ -23,6 +23,8 @@ before(() => {
 	mkdirSync(join(project, 'notes/40_issues/decisions'), { recursive: true });
 	writeFileSync(join(project, 'notes/40_issues/items/project-uuid.txt'), `schema: 2\nproject_uuid: ${uuid}\nproject_id: proj\n`);
 	writeFileSync(join(project, 'notes/40_issues/decisions/i1-d1-x.md'), '---\nlegacy_ids: [":proj:16-A"]\n---\n');
+	// 字の付かない旧番号 (:名前:NN) の形。実際の決定にある
+	writeFileSync(join(project, 'notes/40_issues/decisions/i1-d2-y.md'), '---\nlegacy_ids: :proj:14\n---\n');
 	numbers = join(work, 'numbers');
 	mkdirSync(join(numbers, `uuid_${uuid}_proj/choices/419`), { recursive: true });
 });
@@ -52,6 +54,11 @@ describe('choiceNumbers (応答から選択肢の番号を拾う)', () => {
 	test('コードの中の番号は拾わない', () => {
 		assert.deepEqual(choiceNumbers('`12-A` と\n```\n13-B\n```\n'), []);
 	});
+
+	// 引用した発言の中の番号は、ほかのプロジェクトの番号 (#1948 の 735-A 等) なので拾わない
+	test('引用 (> の行・「」) の中の番号は拾わない', () => {
+		assert.deepEqual(choiceNumbers('> 利用者が決めた (fm の決定 735-A・738-B)\n先方の「678-A」のとおり。案は 419-A。'), ['419']);
+	});
 });
 
 describe('check-choice-numbers (Stop フック)', () => {
@@ -63,6 +70,10 @@ describe('check-choice-numbers (Stop フック)', () => {
 
 	test('決定に記録済みの旧番号は、使ってよい番号として数える', () => {
 		assert.equal(run('legacy', ['前に決めた 16-A のとおりです。']).out, null);
+	});
+
+	test('字の付かない旧番号 (:名前:14) も、使ってよい番号として数える', () => {
+		assert.equal(run('legacy-bare', ['前に決めた 14-A のとおりです。']).out, null);
 	});
 
 	test('予約に無い番号があれば止めて、その番号を知らせる', () => {

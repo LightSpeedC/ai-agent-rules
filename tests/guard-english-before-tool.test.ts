@@ -40,7 +40,7 @@ const japanese = '待受けと cron を確かめてから、作業を続けま�
 // フックを実際に node で起動し、止めたかどうかを返す
 function runHook(transcriptPath: string, toolUseId?: string): { denied: boolean; stdout: string; status: number | null } {
 	const input = JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: transcriptPath, tool_name: 'Bash', tool_input: { command: 'ls' }, tool_use_id: toolUseId });
-	const r = spawnSync('node', [hook], { input, timeout: 15000, encoding: 'utf8' });
+	const r = spawnSync('node', [hook], { input, timeout: 15000, encoding: 'utf8', env: { ...process.env, CLAUDE_ENGLISH_MARK_DIR: join(work, 'marks') } });
 	let denied = false;
 	try {
 		denied = JSON.parse(r.stdout).hookSpecificOutput?.permissionDecision === 'deny';
@@ -79,11 +79,12 @@ describe('textsSinceLastToolResult（直前のツールの結果より後のテ�
 		assert.deepEqual(textsSinceLastToolResult(jsonl), [english]);
 	});
 
-	// 課題 i261031-08: 前のツールの結果がまだログに書かれていなくても、前のツールの呼び出しより前の文は見ない
-	test('前のツールの結果が書かれていなくても、前のツールの呼び出しより前のテキストは返さない', () => {
+	// 決定 420-A: 前のツールの結果がまだログに書かれていなくても、前のツールの呼び出しより前の文を返す。
+	// 前のツールのときに記録に無かった英文を、ここで読む。止めた文を 2 度止めないのは、印で受け持つ (i261031-08)
+	test('前のツールの結果が書かれていなくても、前のツールの呼び出しより前のテキストを返す (420-A)', () => {
 		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
 		const jsonl = [user('始めて'), assistant(english), prev, assistant(japanese)].map((l) => JSON.stringify(l)).join('\n');
-		assert.deepEqual(textsSinceLastToolResult(jsonl, 'toolu_now'), [japanese]);
+		assert.deepEqual(textsSinceLastToolResult(jsonl, 'toolu_now'), [english, japanese]);
 	});
 
 	test('いま呼ぶツールの呼び出しでは区切らない', () => {
@@ -117,10 +118,24 @@ describe('guard-english-before-tool（PreToolUse フック）', () => {
 		assert.equal(r.denied, true);
 	});
 
-	test('前のツールの結果がまだ書かれていなくても、訳を書いた後のツールは通す (i261031-08)', () => {
+	test('前のツールの結果がまだ書かれていなくても、止めて訳を書いた後のツールは通す (i261031-08)', () => {
 		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
+		// 前のツールのときに止めた (印が付く)
+		assert.equal(runHook(transcript('lagging', [user('始めて'), assistant(english)]), 'toolu_prev').denied, true);
 		const r = runHook(transcript('lagging', [user('始めて'), assistant(english), prev, assistant(japanese)]), 'toolu_now');
 		assert.equal(r.denied, false);
+	});
+
+	// 決定 420-A: #1940 の事象。英文がまだ記録に無いうちに前のツールが通り、その結果も書かれていない
+	test('前のツールのときに記録に無かった英文は、次のツールで止める (420-A)', () => {
+		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
+		const r = runHook(transcript('unseen', [user('始めて'), assistant(japanese), assistant(english), prev]), 'toolu_now');
+		assert.equal(r.denied, true);
+	});
+
+	test('一度止めた英文では、2 度止めない (420-A)', () => {
+		assert.equal(runHook(transcript('once', [user('始めて'), assistant(english)]), 'toolu_a').denied, true);
+		assert.equal(runHook(transcript('once', [user('始めて'), assistant(english)]), 'toolu_b').denied, false);
 	});
 
 	test('1 つ前のツールの前に書いた英文は、次のツールで止める (r261111-01 の 14-A)', () => {

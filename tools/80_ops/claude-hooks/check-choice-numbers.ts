@@ -11,8 +11,9 @@ import { stamped } from './jst.ts';
 import { lastTurnTexts } from './japanese-check.ts';
 import { readInput } from './vault.ts';
 
-// コードの部分 (コードブロック・コードスパン) は番号を拾わない
-const CODE = [/^ {0,3}```.*$[\s\S]*?(^ {0,3}```[ \t]*$|(?![\s\S]))/gm, /`[^`\n]*`/g];
+// コードの部分 (コードブロック・コードスパン) と、引用 (> の行・「」) は番号を拾わない。
+// 引用した発言の中の番号は、ほかのプロジェクトの番号のため (課題 i261111-05 の直し)
+const CODE = [/^ {0,3}```.*$[\s\S]*?(^ {0,3}```[ \t]*$|(?![\s\S]))/gm, /`[^`\n]*`/g, /^ {0,3}>.*$/gm, /「[^」\n]*」/g];
 // 前後が英数字・ハイフンでない NNN-A。課題の番号 (i261110-0r) や日付 (2026-11-11) は当たらない
 const CHOICE = /(?<![\w-])(\d{1,4})-[A-Z](?![\w-])/g;
 
@@ -49,6 +50,8 @@ function knownNumbers(projectDir: string, uuid: string): Set<string> {
 	for (const file of listDir(decisions).filter((name) => name.endsWith('.md'))) {
 		for (const m of readText(join(decisions, file)).matchAll(/(\d{1,4})-[A-Z]/g)) known.add(m[1]);
 		for (const m of readText(join(decisions, file)).matchAll(/^title: *(\d{1,4}):/gm)) known.add(m[1]);
+		// 字の付かない旧番号 (:名前:14)
+		for (const m of readText(join(decisions, file)).matchAll(/:[\w.-]+:(\d{1,4})(?![\d-])/g)) known.add(m[1]);
 	}
 	return known;
 }

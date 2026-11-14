@@ -6,7 +6,7 @@
 // node でも bun でも動くよう、標準モジュールだけで書く。
 import { readFileSync } from 'node:fs';
 import { stamped } from './jst.ts';
-import { isEnglishOnly, lastTurnTexts, quoteEnglish } from './japanese-check.ts';
+import { isEnglishOnly, lastTurnTexts, quoteEnglish, unmarked } from './japanese-check.ts';
 import { readInput } from './vault.ts';
 
 const reason = '応答は日本語で書いてください。英語だけの応答を検出しました。日本語で書き直してください。技術用語・識別子・コマンドは原文のままで構いません。';
@@ -22,6 +22,8 @@ async function main(): Promise<void> {
 	} catch {
 		return;
 	}
+	// ツールの前のフックが止めて訳を書かせた英文では、もう止めない (決定 420-A)
+	texts = unmarked(input.transcript_path, texts);
 	if (!texts.some(isEnglishOnly)) return;
 
 	if (input.stop_hook_active) {
