@@ -5,7 +5,7 @@ title: テストのルールに、画面を使う作業を ui-lock で 1 つず�
 group: 他プロジェクトからのルール変更依頼（2026-11-07 起票）
 created: 2026-11-14
 from: file-manager
-confirmed: false
+confirmed: true
 ---
 
 依頼 #1962。skill light-test の「試験には時間の上限を付ける」の次に、節「画面を使う作業は、ui-lock で 1 つずつにする」を足す。文言は #1962 の本文。
