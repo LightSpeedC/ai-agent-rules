@@ -1,6 +1,6 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { findLeftovers, findSuspects, type Proc } from '../tools/80_ops/claude-hooks/check-leftover-processes.ts';
+import { findLeftovers, findSuspects, fromPsls, type Proc } from '../tools/80_ops/claude-hooks/check-leftover-processes.ts';
 
 // 課題 i261111-06: Stop フックで、このセッションが起こした tail・grep・見張りの powershell が残っていれば知らせる。
 // このセッションの本体 (claude-code の claude.exe) の子孫だけを見る。フック自身と、その子孫は数えない。
@@ -17,6 +17,33 @@ const base: Proc[] = [
 	p(30, 1, 'claude.exe', 'C:/x/claude-code/claude.exe'), // 別のセッション
 	p(31, 30, 'tail.exe', 'tail -F other.log'),
 ];
+
+// ai-agent-tools の psls --json (依頼 #1934、i261111-08) の出力を Proc にする。CIM の代わり。
+// 1 要素は pid ・ ppid ・ name ・ exe ・ creation (JST の ISO 8601) ・ cmdline ・ memBytes で、取れない値は null
+describe('fromPsls (psls --json の出力を Proc にする)', () => {
+	test('pid・ppid・name・cmdline を Proc の名前に直し、creation を UTC のエポックからのミリ秒にする', () => {
+		const json = JSON.stringify([{ pid: 10, ppid: 1, name: 'claude.exe', exe: 'C:\\x\\claude.exe', creation: '2026-11-15T09:00:00+09:00', cmdline: 'claude.exe --x', memBytes: 5 }]);
+		assert.deepEqual(fromPsls(json), [{ ProcessId: 10, ParentProcessId: 1, Name: 'claude.exe', CommandLine: 'claude.exe --x', Created: Date.parse('2026-11-15T00:00:00Z') }]);
+	});
+
+	test('取れない値 (null) は、CommandLine は null、Created は無しにする', () => {
+		const json = JSON.stringify([{ pid: 4, ppid: 0, name: 'System', exe: null, creation: null, cmdline: null, memBytes: null }]);
+		const [proc] = fromPsls(json);
+		assert.equal(proc.CommandLine, null);
+		assert.equal(proc.Created, undefined);
+	});
+
+	test('読んだ Proc で、findSuspects が動く (起動時刻の比べ方が合う)', () => {
+		const json = JSON.stringify([
+			{ pid: 1, ppid: 0, name: 'Claude.exe', exe: null, creation: '2026-11-15T08:00:00+09:00', cmdline: 'Claude.exe', memBytes: 1 },
+			{ pid: 10, ppid: 1, name: 'claude.exe', exe: null, creation: '2026-11-15T09:00:00+09:00', cmdline: 'C:/x/claude-code/claude.exe', memBytes: 1 },
+			{ pid: 21, ppid: 10, name: 'node.exe', exe: null, creation: '2026-11-15T09:30:00+09:00', cmdline: 'node hook.ts', memBytes: 1 },
+			{ pid: 50, ppid: 997, name: 'tail.exe', exe: null, creation: '2026-11-15T09:10:00+09:00', cmdline: 'tail -f a.log', memBytes: 1 },
+			{ pid: 51, ppid: 997, name: 'tail.exe', exe: null, creation: '2026-11-15T08:30:00+09:00', cmdline: 'tail -f b.log', memBytes: 1 },
+		]);
+		assert.deepEqual(findSuspects(fromPsls(json), 21).map((x) => x.ProcessId), [50]);
+	});
+});
 
 describe('findLeftovers (残ったプロセスを拾う)', () => {
 	test('残りが無ければ空', () => {

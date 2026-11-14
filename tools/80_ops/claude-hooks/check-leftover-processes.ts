@@ -1,7 +1,7 @@
 // Stop フック: このセッションが起こした tail・grep・見張りの powershell が残っていれば知らせる (課題 i261111-06、ai-agent-tools の依頼 #1923)。
 // 共通ルール「短く終わるはずの作業は、見張る」の後始末 (見張りのプロセスを止める) を機械的に確かめる。
 // このセッションの本体は、フックから親をたどって最初に当たる claude-code の claude.exe。その子孫だけを見る (別のセッションの分には触れない)。
-// プロセスの親子は CIM (Get-CimInstance Win32_Process) で取る。psls には機械が読める出力が無いため。
+// プロセスの親子と起動時刻は、共有 CLI の psls --json で取る (i261111-06 のときは出力が無く、CIM で代わりにした。依頼 #1934 で足された)。
 // 止めるのは 1 回まで。stop_hook_active が true なら止めずに知らせるだけ。Windows 以外と、取れなかったときは何もしない。
 // node でも bun でも動くよう、標準モジュールだけで書く。
 import { execFileSync } from 'node:child_process';
@@ -84,10 +84,18 @@ function descendants(procs: Proc[], selfPid: number): Proc[] {
 	return found;
 }
 
+// psls --json (ai-agent-tools、依頼 #1934・課題 i261111-08) の出力を Proc にする。
+// 1 要素は pid ・ ppid ・ name ・ exe ・ creation (JST の ISO 8601) ・ cmdline ・ memBytes で、取れない値は null
+export function fromPsls(json: string): Proc[] {
+	return (JSON.parse(json) as Array<{ pid: number; ppid: number; name: string; creation: string | null; cmdline: string | null }>).map((p) => {
+		const created = p.creation ? Date.parse(p.creation) : NaN;
+		return { ProcessId: p.pid, ParentProcessId: p.ppid, Name: p.name, CommandLine: p.cmdline ?? null, ...(Number.isNaN(created) ? {} : { Created: created }) };
+	});
+}
+
+// psls は、ai-agent-tools の bin にある共有 CLI (PATH に入っている)。cmd 経由で呼ぶ (shell オプションは、引数の連結の警告が出るため使わない)
 function listProcesses(): Proc[] {
-	const created = "@{n='Created';e={[int64](($_.CreationDate.ToUniversalTime() - [datetime]'1970-01-01').TotalMilliseconds)}}";
-	const json = execFileSync('powershell', ['-NoProfile', '-Command', `Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,Name,CommandLine,${created} | ConvertTo-Json -Compress`], { encoding: 'utf8', maxBuffer: 1e8, timeout: 10000 });
-	return JSON.parse(json);
+	return fromPsls(execFileSync('cmd.exe', ['/c', 'psls.cmd', '--json'], { encoding: 'utf8', maxBuffer: 1e8, timeout: 10000 }));
 }
 
 // かもしれない孤児は、同じプロセスを 2 度知らせない。印はセッションごとに一時フォルダへ置く (CLAUDE_LEFTOVER_MARK_DIR で差し替えられる)
