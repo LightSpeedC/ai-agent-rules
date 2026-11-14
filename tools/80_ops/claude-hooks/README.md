@@ -28,6 +28,7 @@ Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.
 | `guard-git-add-all.ts` | Bash・PowerShell の `git add -A`・`--all`・`.` と `git commit -a`、`-- <パス>` でファイルを名指ししない `git commit` を deny し、名指しするよう理由に書く。引用符の中 (コミットメッセージ) の語は見ない（課題 i261109-01） | PreToolUse（matcher `Bash\|PowerShell`） |
 | `guard-bash-cd.ts` | Bash の `cd`・`pushd` を deny し、絶対パスか `git -C` を使うよう理由に書く。引用符の中の語は見ない。PowerShell は見ない（課題 i261109-02） | PreToolUse（matcher `Bash\|PowerShell`） |
 | `stop-cron-on-halt.ts` | 発言に「止めて」「止める」「中断」「ストップ」「区切りで止」があれば、`additionalContext` に、作業全体を止める指示なら CronList で確かめて CronDelete で消す・再び張るのは再開の指示のあと・特定のものを止める指示や止めることの説明なら消さない、と差し込む。「止めてよい」「止めても構わない」等の許可の言い回しは、先に取り除いて判定する。入力が読めない・prompt が無いときは何も出さない（課題 i261103-01） | UserPromptSubmit |
+| `remind-title-color.ts` | 発言を受けるたびに、`additionalContext` に、セッションのタイトルの状態の色 (🟢🔴🟡🟠🔵) を `set_session_title` で付け替えるよう 1 行で差し込む。止めない。入力が読めない・prompt が無いときは何も出さない（課題 i261114-01、決定 422-A） | UserPromptSubmit |
 | `japanese-check.ts` | 英語の判定 `isEnglishOnly`。コードブロック・コードスパン・URL・パスを除き、英字が 20 字以上で、日本語の字の数が英語の語の数より少なければ英語とみなす（課題 i261031-01）。`require-japanese.ts`（Stop）と `guard-english-before-tool.ts` が使う。`quoteEnglish` は、英語だけのかたまりを「」で囲んで並べ、止めるときの理由に添える (Stop も PreToolUse も。課題 i261111-04) | （各フックから呼ぶ） |
 | `convert-after-write.ts` | Write で書いた ps1・html・cmd・bat を、`convert-encoding` で文字コードと改行を揃える（ps1 → ps1、html → html、cmd・bat → cmd）。成功は無表示、失敗は ❌ で書き換えなしを知らせる（依頼 #1672） | PostToolUse（matcher: Write） |
 
