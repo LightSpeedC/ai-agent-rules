@@ -16,6 +16,10 @@ export type Proc = { ProcessId: number; ParentProcessId: number; Name: string; C
 
 const WATCH_NAMES = /^(tail|grep)(\.exe)?$/i;
 const TAIL_NAME = /^tail(\.exe)?$/i;
+const GREP_NAME = /^grep(\.exe)?$/i;
+// 見張りの grep は、tail -f の出力をすぐ流すために --line-buffered を付ける。付かない grep (パイプの途中の使い捨て) は拾わない (決定 425-A、課題 i261114-04)。
+// 11/14 に、別のセッションの grep -E "…" を 2 回拾った
+const GREP_WATCH = /--line-buffered/;
 // 見張りの tail は -f・-F・--follow を付ける。付かない tail (パイプの途中の tail -1 等) は拾わない (11/14 に別のセッションの分を拾った)
 const TAIL_FOLLOW = /(^|\s)(-[a-zA-Z]*[fF][a-zA-Z]*|--follow\S*)(\s|$)/;
 const SHELL_NAMES = /^(powershell|pwsh)(\.exe)?$/i;
@@ -27,6 +31,7 @@ function isSessionRoot(proc: Proc): boolean {
 
 function isWatcher(proc: Proc): boolean {
 	if (TAIL_NAME.test(proc.Name)) return TAIL_FOLLOW.test(proc.CommandLine ?? '');
+	if (GREP_NAME.test(proc.Name)) return GREP_WATCH.test(proc.CommandLine ?? '');
 	return WATCH_NAMES.test(proc.Name) ||(SHELL_NAMES.test(proc.Name) && WATCH_SHELL.test(proc.CommandLine ?? ''));
 }
 

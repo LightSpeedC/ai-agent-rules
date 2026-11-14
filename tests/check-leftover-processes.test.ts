@@ -28,6 +28,11 @@ describe('findLeftovers (残ったプロセスを拾う)', () => {
 		assert.deepEqual(findLeftovers(list, 21).map((x) => x.ProcessId), [13, 14]);
 	});
 
+	test('本体の子孫でも、--line-buffered の付かない grep は拾わない (425-A)', () => {
+		const list = [...base, p(18, 11, 'grep.exe', 'grep -E "a|b" x.log'), p(19, 11, 'grep.exe', 'grep --line-buffered x')];
+		assert.deepEqual(findLeftovers(list, 21).map((x) => x.ProcessId), [19]);
+	});
+
 	test('見張りの形の powershell を拾い、そうでない powershell は拾わない', () => {
 		const list = [...base, p(15, 11, 'powershell.exe', 'powershell -c "while ($true) { Start-Sleep 5 }"'), p(16, 11, 'pwsh.exe', 'pwsh -c "Get-Content a.log -Wait"'), p(17, 11, 'powershell.exe', 'powershell -c "Get-ChildItem"')];
 		assert.deepEqual(findLeftovers(list, 21).map((x) => x.ProcessId), [15, 16]);
@@ -75,6 +80,17 @@ describe('findSuspects (このセッションのものかもしれない孤児�
 	test('-f の付かない tail は拾わない', () => {
 		const list = [...timed, t(p(55, 997, 'tail.exe', '"C:\\Program Files\\Git\\usr\\bin\\tail.exe" -1'), 2000), t(p(56, 997, 'tail.exe', 'tail --follow=name a.log'), 2000)];
 		assert.deepEqual(findSuspects(list, 21).map((x) => x.ProcessId), [56]);
+	});
+
+	// 決定 425-A (課題 i261114-04): 11/14 に、別のセッションがパイプの途中で使った grep を 2 回拾った。
+	// 見張りの grep は、tail -f の出力をすぐ流すために --line-buffered を付ける。使い捨ての grep は付けない
+	test('--line-buffered の付かない grep は拾わない', () => {
+		const list = [
+			...timed,
+			t(p(57, 997, 'grep.exe', '"C:\\Program Files\\Git\\usr\\bin\\grep.exe" -E "?|^===|#1923"'), 2000),
+			t(p(58, 997, 'grep.exe', 'grep --line-buffered -E "error|warn"'), 2000),
+		];
+		assert.deepEqual(findSuspects(list, 21).map((x) => x.ProcessId), [58]);
 	});
 
 	test('見張りでない孤児は拾わない', () => {
