@@ -15,6 +15,9 @@ import { readInput } from './vault.ts';
 export type Proc = { ProcessId: number; ParentProcessId: number; Name: string; CommandLine: string | null; Created?: number };
 
 const WATCH_NAMES = /^(tail|grep)(\.exe)?$/i;
+const TAIL_NAME = /^tail(\.exe)?$/i;
+// 見張りの tail は -f・-F・--follow を付ける。付かない tail (パイプの途中の tail -1 等) は拾わない (11/14 に別のセッションの分を拾った)
+const TAIL_FOLLOW = /(^|\s)(-[a-zA-Z]*[fF][a-zA-Z]*|--follow\S*)(\s|$)/;
 const SHELL_NAMES = /^(powershell|pwsh)(\.exe)?$/i;
 const WATCH_SHELL = /-Wait\b|-Tail\b|\bwhile\b|Start-Sleep/i;
 
@@ -23,7 +26,8 @@ function isSessionRoot(proc: Proc): boolean {
 }
 
 function isWatcher(proc: Proc): boolean {
-	return WATCH_NAMES.test(proc.Name) || (SHELL_NAMES.test(proc.Name) && WATCH_SHELL.test(proc.CommandLine ?? ''));
+	if (TAIL_NAME.test(proc.Name)) return TAIL_FOLLOW.test(proc.CommandLine ?? '');
+	return WATCH_NAMES.test(proc.Name) ||(SHELL_NAMES.test(proc.Name) && WATCH_SHELL.test(proc.CommandLine ?? ''));
 }
 
 // sessionId を渡すと、親のいない孤児でも、コマンド行にその ID がある見張りを拾う。

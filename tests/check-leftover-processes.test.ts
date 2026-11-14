@@ -71,6 +71,12 @@ describe('findSuspects (このセッションのものかもしれない孤児�
 		assert.deepEqual(findSuspects(list, 21), []);
 	});
 
+	// 11/14 に、パイプの途中の tail -1 (別のセッションのもの) を拾った。見張りの tail は -f・-F・--follow を付ける
+	test('-f の付かない tail は拾わない', () => {
+		const list = [...timed, t(p(55, 997, 'tail.exe', '"C:\\Program Files\\Git\\usr\\bin\\tail.exe" -1'), 2000), t(p(56, 997, 'tail.exe', 'tail --follow=name a.log'), 2000)];
+		assert.deepEqual(findSuspects(list, 21).map((x) => x.ProcessId), [56]);
+	});
+
 	test('見張りでない孤児は拾わない', () => {
 		const list = [...timed, t(p(53, 997, 'node.exe', 'node server.js'), 2000)];
 		assert.deepEqual(findSuspects(list, 21), []);
