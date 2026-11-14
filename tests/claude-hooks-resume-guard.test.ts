@@ -157,8 +157,37 @@ describe('guard-bash-sed-awk（Bash の sed・awk を止め、Edit・Read を案
 		});
 	}
 
-	test('Bash 以外のツールは、コマンドの文字があっても止めない', () => {
-		const r = run(guardHook, JSON.stringify({ tool_name: 'PowerShell', tool_input: { command: 'sed -n 1p f' } }));
+	// 20260917-oracle-cloud の報告 #1979: PowerShell ツールの ssh は止まらず、実行された。ssh の sed -i だけは PowerShell でも止める
+	const powershell = (command: string) => JSON.stringify({ hook_event_name: 'PreToolUse', tool_name: 'PowerShell', tool_input: { command } });
+
+	for (const command of [
+		'ssh host "sudo sed -i s/a/b/ /etc/x.conf"',
+		"ssh -p 22 user@host 'sudo sed -i.bak s/a/b/ f'",
+		'ssh.exe host "sed --in-place s/a/b/ f"',
+		'ssh host "sed -ni 5p f" && echo ok',
+	]) {
+		test(`PowerShell ツールの「${command}」(ssh の引数の中の sed -i) も deny し、理由に Edit を書く`, () => {
+			const r = run(guardHook, powershell(command));
+			assert.equal(r.status, 0, r.stderr);
+			const d = decision(r.stdout);
+			assert.ok(d, 'deny の出力がある');
+			assert.equal(d.permissionDecision, 'deny');
+			assert.match(d.permissionDecisionReason, /ssh/);
+			assert.match(d.permissionDecisionReason, /Edit/);
+		});
+	}
+
+	// PowerShell では、手元の sed・awk や、sed -i を含まない ssh は、止めない (依頼は ssh の sed -i だけ)
+	for (const command of ['sed -n 1p f', 'awk "{print}" f', 'ssh host ls', 'ssh host "grep sed /etc/x.conf"', 'Get-ChildItem']) {
+		test(`PowerShell ツールの「${command}」は止めない`, () => {
+			const r = run(guardHook, powershell(command));
+			assert.equal(r.status, 0, r.stderr);
+			assert.equal(r.stdout, '');
+		});
+	}
+
+	test('Bash と PowerShell 以外のツールは、コマンドの文字があっても止めない', () => {
+		const r = run(guardHook, JSON.stringify({ tool_name: 'Read', tool_input: { command: 'ssh host "sed -i s/a/b/ f"' } }));
 		assert.equal(r.status, 0, r.stderr);
 		assert.equal(r.stdout, '');
 	});

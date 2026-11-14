@@ -1,4 +1,5 @@
 // PreToolUse フック: Bash のコマンドの先頭が sed・awk なら止め、Edit・Read を使うよう理由を返す（課題 i261025-01）。
+// ssh の引数の中の sed -i は、Bash と PowerShell の両方で止める（課題 i261113-01）。
 // 権限の拒否（settings の deny）だけでは代わりの手段が分からず、同じ失敗を 8 回繰り返したため、理由に代わりの道具を書く。
 // 判定は、区切り（&& || ; | 改行）ごとの先頭語で行う。引数の中に sed・awk という語があるだけでは止めない。
 // node でも bun でも動くよう、標準モジュールだけで書く。
@@ -30,10 +31,11 @@ function sshInPlaceSed(command: string): boolean {
 }
 
 const data = (await readInput()) as HookInput & { tool_name?: string; tool_input?: { command?: string } };
-if (data.tool_name !== 'Bash') process.exit(0);
+// ssh の引数の中の sed -i だけは、PowerShell ツールでも見る (20260917-oracle-cloud の報告 #1979)。手元の sed・awk を止めるのは Bash だけ
+if (data.tool_name !== 'Bash' && data.tool_name !== 'PowerShell') process.exit(0);
 
 const command = data.tool_input?.command ?? '';
-const word = blockedWord(command);
+const word = data.tool_name === 'Bash' ? blockedWord(command) : undefined;
 if (word === undefined && sshInPlaceSed(command)) {
 	console.log(JSON.stringify({
 		hookSpecificOutput: {
