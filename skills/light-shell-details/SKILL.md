@@ -67,6 +67,7 @@ description: ai-agent-rules の共通ルール「シェル実行ルール」の�
 - **関数は、コマンドの出力もすべて戻り値に含める**。`function F { & $exe x; return $LASTEXITCODE }` は、`$exe` が出力した行と終了コードの配列を返す。`if ((F) -ne 0)` が、**成功しても真になり**、「失敗しました」と出る（実際に起きた）。出力は `| Out-Host` で画面へ回し、戻り値は 1 つにする
 - **Windows PowerShell 5.1 はネイティブコマンド同士のパイプで、UTF-8 の非 ASCII 文字がランタイム・コードページに関係なく `?` に化ける**。`node→node` のような Bun を含まない組み合わせでも再現する（実測済み）。原因は未確認だが、pwsh 7・cmd.exe では起きない。5.1 でネイティブコマンドの出力を非 ASCII を含む形でパイプするときは、別の端末（pwsh 7・cmd.exe）で確かめる
 - **Windows PowerShell 5.1 では、`Start-Process -PassThru` で受けたプロセスの `ExitCode` が空になる**。起動の直後に `Handle` に触れておく (`$null = $p.Handle`)。出力の振り向けの有無や、終わるまでの長さに関係なく起きる (実測。pwsh 7 では起きない)
+- **PowerShell 7 の窓 (ハーネスの PowerShell ツール) から 5.1 を起動すると、`Get-FileHash`・`Get-Command` などが見つからなくなる**。`PSModulePath` に 7 の置き場が混ざったまま 5.1 に渡り、5.1 が 7 用の `Microsoft.PowerShell.Utility` を先に読もうとして失敗する (実測。7 の窓では `Get-FileHash` が見つかり、5.1 では見つからなかった)。**エラーの文言は「用語 'Get-FileHash' は認識されません」で、コマンドの綴りの誤りと見分けがつかない**。5.1 を起動する側が、`PSModulePath` を Machine と User の値に戻してから呼ぶ。`psh` が戻すのが本筋。戻るまでは、呼ぶ前に `$env:PSModulePath = ((@([Environment]::GetEnvironmentVariable('PSModulePath','User'), [Environment]::GetEnvironmentVariable('PSModulePath','Machine')) | Where-Object { $_ }) -join ';')` を実行する
 - **`&&`・`||` の後ろに代入 (`$x = …`) を置かない**。後ろに置けるのはパイプラインだけで、構文の誤りになり、前のコマンドも含めて何も実行されない
 - **`<` のリダイレクトは無い**。構文エラーになる。標準入力に渡すなら `Get-Content -Raw <path> | コマンド`、空を渡すなら `$null | コマンド`
 - **自動変数を自分の変数名に使わない**（`$HOME` `$PWD` `$input` `$args` `$PSItem` `$Matches` `$Error` `$Host` 等）。読み取り専用のものは代入がエラーになり、**元の値のまま後続が走る**。置換文字列のつもりでホームのパスをファイルに書き込んだ
