@@ -24,6 +24,15 @@ describe('remind-title-color (UserPromptSubmit フック)', () => {
 		assert.match(r.context, /🟢/);
 		assert.match(r.context, /🔴/);
 		assert.match(r.context, /セッションのタイトルに状態の色を付ける/);
+		assert.doesNotMatch(r.context, /計画・調査/); // 🟠はプロジェクトが決める色で、共通の文には出さない
+		assert.match(r.context, /空白を置かない/);
+	});
+
+	// 決定 428-A: 🟣🟠はプロジェクトが役割に決めてよい色。付いていれば、状態の促しで替えない
+	test('🟣🟠が付いていれば、プロジェクトが決めた役割の色なので替えない、と書く (428-A)', () => {
+		const r = runHook(JSON.stringify({ hook_event_name: 'UserPromptSubmit', prompt: '次を進めて' }));
+		assert.match(r.context, /🟣🟠が付いていれば/);
+		assert.match(r.context, /替えない/);
 	});
 
 	test('入力が読めなければ、何も出さない', () => {
