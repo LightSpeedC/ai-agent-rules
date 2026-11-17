@@ -60,7 +60,7 @@
 - **シェル実行ルール**: PowerShell ツール・`psh` は無い。Bash を使う。パスの区切りは `/`、Bash で `cd` しない、は同じ
 - **共有ツール**: 動くのは `bin/` の拡張子の無いもの（sh 版）だけ。`html2md`・`check-public`・`check-markdown`・`convert-encoding`・`text`・`psls` の起動は確かめてある
 - **日時**: コンテナの時計は UTC。日付で判断するときは `TZ=Asia/Tokyo` で JST にする
-- **共有環境（ai-chat-lite・PlayWright 共有環境・Computer Use）**: クラウドからは届かない。「共通ルールを変えたら周知する」の周知は、ユーザに Windows PC 側から出してもらう。ただし、利用者が手元で 1 回承認していれば (取り消せない)、クラウドから手元のセッションへ送れる。そのときは手元のセッションに周知を頼む
+- **共有環境（ai-chat-lite・PlayWright 共有環境・Computer Use）**: クラウドからは届かない。「共通ルールを変えたら周知する」の周知は、ユーザに Windows PC 側から出してもらう。ただし、利用者が手元で 1 回承認していれば (取り消せない)、クラウドから手元のセッションへ送れる。送れる先は、利用者の信頼する端末だけに限られる。そのときは手元のセッションに周知を頼む
 - **PlayWright 共有環境の代わりに、環境に入っている Playwright を使う**。Playwright と Chromium は最初から入っていて、ブラウザの置き場は環境変数 `PLAYWRIGHT_BROWSERS_PATH`（`/opt/pw-browsers`）
   - `playwright install` は実行しない
   - Playwright は全体にインストールされている。node から `require` するときは `NODE_PATH` に `npm root -g` の値を渡す
