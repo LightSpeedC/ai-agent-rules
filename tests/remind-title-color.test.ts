@@ -28,11 +28,21 @@ describe('remind-title-color (UserPromptSubmit フック)', () => {
 		assert.match(r.context, /空白を置かない/);
 	});
 
-	// 決定 428-A: 🟣🟠はプロジェクトが役割に決めてよい色。付いていれば、状態の促しで替えない
-	test('🟣🟠が付いていれば、プロジェクトが決めた役割の色なので替えない、と書く (428-A)', () => {
+	// 決定 428-A: 🟠🟣🟤はプロジェクトが役割に決めてよい色 (🟤は 2026-11-18 に追加)。付いていれば、状態の促しで替えない
+	test('🟠🟣🟤が付いていれば、プロジェクトが決めた役割の色なので替えない、と書く (428-A)', () => {
 		const r = runHook(JSON.stringify({ hook_event_name: 'UserPromptSubmit', prompt: '次を進めて' }));
-		assert.match(r.context, /🟣🟠が付いていれば/);
+		assert.match(r.context, /🟠🟣🟤が付いていれば/);
 		assert.match(r.context, /替えない/);
+	});
+
+	// 2026-11-18 の決定: 利用者が設定したタイトルは変えず、先頭の色と末尾の状況だけを足す
+	test('利用者のタイトルは変えず、先頭に色・末尾に状況だけを足す、と書く', () => {
+		const r = runHook(JSON.stringify({ hook_event_name: 'UserPromptSubmit', prompt: '次を進めて' }));
+		assert.match(r.context, /利用者が設定したタイトルは変えず/);
+		assert.match(r.context, /先頭/);
+		assert.match(r.context, /末尾/);
+		assert.match(r.context, /状況/);
+		assert.doesNotMatch(r.context, /絵文字 1 字だけを付け替える/);
 	});
 
 	test('入力が読めなければ、何も出さない', () => {
