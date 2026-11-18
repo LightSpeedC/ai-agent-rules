@@ -78,9 +78,17 @@ export function lastTurnTexts(jsonl: string): string[] {
 // ツールの前のフックが動く時点では、同じ応答の文がまだ記録に書かれていない (2026-11-11 に実測)。前のツールのときに読めなかった文を、次のツールで読む。
 // 1 つ前のツールをフックが止めていれば (結果がエラー)、その前の文は判定が済んでいるので返さない。
 export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: string): string[] {
-	let parts: string[] = [];
-	let pending: string[] = []; // 前のツールの呼び出しより前の文。結果が通れば previous に移る
-	let previous: string[] = []; // 1 つ前のツールが通ったとき、そのツールの前に書いた文
+	return routedTextsSinceLastToolResult(jsonl, currentToolUseId).map((item) => item.text);
+}
+
+// どの経路で読んだ文かを添えて返す (決定 441-A、課題 i261031-08)。止めた時点の記録に残し、訳がその時点でログに無かったかを後で確かめるために使う。
+export type RoutedText = { text: string; route: 'previous' | 'pending' | 'parts' };
+
+export function routedTextsSinceLastToolResult(jsonl: string, currentToolUseId?: string): RoutedText[] {
+	const as = (route: RoutedText['route'], items: RoutedText[]): RoutedText[] => items.map((item) => ({ text: item.text, route }));
+	let parts: RoutedText[] = [];
+	let pending: RoutedText[] = []; // 前のツールの呼び出しより前の文。結果が通れば previous に移る
+	let previous: RoutedText[] = []; // 1 つ前のツールが通ったとき、そのツールの前に書いた文
 	for (const line of jsonl.split(/\r?\n/)) {
 		if (line.trim() === '') continue;
 		let entry: any;
@@ -96,7 +104,7 @@ export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: strin
 			const results = Array.isArray(content) ? content.filter((block: any) => block?.type === 'tool_result') : [];
 			const hasUserText = typeof content === 'string' || (Array.isArray(content) && content.some((block: any) => block?.type === 'text'));
 			if (currentToolUseId && results.length > 0 && !hasUserText) {
-				previous = results.some((block: any) => block.is_error) ? [] : [...pending, ...parts];
+				previous = results.some((block: any) => block.is_error) ? [] : as('previous', [...pending, ...parts]);
 			} else {
 				previous = [];
 			}
@@ -104,9 +112,9 @@ export function textsSinceLastToolResult(jsonl: string, currentToolUseId?: strin
 			parts = [];
 		} else if (message.role === 'assistant' && Array.isArray(content)) {
 			for (const block of content) {
-				if (block?.type === 'text' && typeof block.text === 'string') parts.push(block.text);
+				if (block?.type === 'text' && typeof block.text === 'string') parts.push({ text: block.text, route: 'parts' });
 				else if (currentToolUseId && block?.type === 'tool_use' && block.id !== currentToolUseId) {
-					pending = [...pending, ...parts];
+					pending = [...pending, ...as('pending', parts)];
 					parts = [];
 				}
 			}

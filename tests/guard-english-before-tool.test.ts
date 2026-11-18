@@ -1,7 +1,7 @@
-import { test, describe, before, after } from 'node:test';
+import { test, describe, before, after, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { textsSinceLastToolResult } from '../tools/80_ops/claude-hooks/japanese-check.ts';
 
@@ -40,7 +40,7 @@ const japanese = '待受けと cron を確かめてから、作業を続けま�
 // フックを実際に node で起動し、止めたかどうかを返す
 function runHook(transcriptPath: string, toolUseId?: string): { denied: boolean; stdout: string; status: number | null } {
 	const input = JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: transcriptPath, tool_name: 'Bash', tool_input: { command: 'ls' }, tool_use_id: toolUseId });
-	const r = spawnSync('node', [hook], { input, timeout: 15000, encoding: 'utf8', env: { ...process.env, CLAUDE_ENGLISH_MARK_DIR: join(work, 'marks') } });
+	const r = spawnSync('node', [hook], { input, timeout: 15000, encoding: 'utf8', env: { ...process.env, CLAUDE_ENGLISH_MARK_DIR: join(work, 'marks'), CLAUDE_ENGLISH_LOG_DIR: join(work, 'denylogs') } });
 	let denied = false;
 	try {
 		denied = JSON.parse(r.stdout).hookSpecificOutput?.permissionDecision === 'deny';
@@ -179,5 +179,107 @@ describe('guard-english-before-tool（PreToolUse フック）', () => {
 		const r = runHook(transcript('quote-long', [user('始めて'), assistant(long)]));
 		const reason = JSON.parse(r.stdout).hookSpecificOutput.permissionDecisionReason as string;
 		assert.ok(reason.includes('「' + long.slice(0, 80) + '…」'), reason);
+	});
+});
+
+// 決定 441-A (i261031-08): 止める直前に、会話ログの末尾と、読んだ文の経路を、Git 管理外の etc/ へ残す。
+// 止まった時点でログに訳が無かったかを、あとで確かめるため。ログを残せなくても、止める動きは変えない。
+describe('止めた記録 (441-A)', () => {
+	const logDir = () => join(work, 'denylogs');
+	const logs = () => (existsSync(logDir()) ? readdirSync(logDir()).filter((f) => f.endsWith('.json')) : []);
+	const readLog = (file: string) => JSON.parse(readFileSync(join(logDir(), file), 'utf8'));
+	const prevUse = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
+
+	beforeEach(() => {
+		rmSync(logDir(), { recursive: true, force: true });
+	});
+
+	test('止めたら、1 回ごとに 1 ファイルを残す', () => {
+		const r = runHook(transcript('log-one', [user('始めて'), assistant(english)]), 'toolu_x1');
+		assert.equal(r.denied, true);
+		assert.equal(logs().length, 1);
+	});
+
+	test('止めなければ、何も残さない', () => {
+		runHook(transcript('log-none', [user('始めて'), assistant(japanese)]), 'toolu_x2');
+		assert.equal(logs().length, 0);
+	});
+
+	test('残す項目: tool_use_id・時刻 (JST)・ログの総行数・どの経路で読んだ文か・止めた英文・ログの末尾', () => {
+		runHook(transcript('log-fields', [user('始めて'), assistant(english)]), 'toolu_fields');
+		const log = readLog(logs()[0]);
+		assert.equal(log.tool_use_id, 'toolu_fields');
+		assert.match(log.time_jst, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}\+09:00$/);
+		assert.equal(log.total_lines, 2);
+		assert.deepEqual(log.texts.map((t: { route: string }) => t.route), ['parts']);
+		assert.equal(log.texts[0].text, english);
+		assert.deepEqual(log.denied, [english]);
+		assert.equal(log.tail.length, 2);
+	});
+
+	test('会話ログの末尾は 20 行までにする', () => {
+		const many = Array.from({ length: 30 }, (_, i) => user('発言 ' + i));
+		runHook(transcript('log-tail', [...many, assistant(english)]), 'toolu_tail');
+		const log = readLog(logs()[0]);
+		assert.equal(log.total_lines, 31);
+		assert.equal(log.tail.length, 20);
+		assert.ok(log.tail[19].blocks[0].text.includes('Checking the waiters'));
+	});
+
+	// rules-review の S1: 画像や大きな結果を含む 1 行が、そのまま記録に入ると、1 回で数十 MB になりうる
+	test('末尾の行のテキストは、4000 字までに切る。切ったら省いた字数を添える', () => {
+		const big = 'あ'.repeat(6000);
+		runHook(transcript('log-big', [user('始めて'), assistant(big), assistant(english)]), 'toolu_big');
+		const log = readLog(logs()[0]);
+		const text = log.tail[1].blocks[0].text as string;
+		assert.ok(text.startsWith('あ'.repeat(4000)));
+		assert.ok(text.length < 4100, String(text.length));
+		assert.match(text, /2000 字省略/);
+		assert.ok(log.tail[2].blocks[0].text.includes('Checking the waiters'));
+	});
+
+	// rules-review の Q1: このフックは全プロジェクトで動く。cwd・sessionId・結果の中身などは、記録に入れない
+	test('末尾の行には、役割とブロックの種類・テキストだけを残し、cwd や結果の中身は入れない', () => {
+		const withMeta = { type: 'assistant', cwd: 'C:/Users/example/secret', sessionId: 'sess-secret', message: { role: 'assistant', content: [{ type: 'text', text: english }] } };
+		const result = { type: 'user', cwd: 'C:/Users/example/secret', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 'toolu_1', content: 'SECRET-RESULT-BODY' }] } };
+		runHook(transcript('log-meta', [user('始めて'), result, withMeta]), 'toolu_meta');
+		const raw = readFileSync(join(logDir(), logs()[0]), 'utf8');
+		assert.ok(!raw.includes('C:/Users/example'), raw);
+		assert.ok(!raw.includes('sess-secret'), raw);
+		assert.ok(!raw.includes('SECRET-RESULT-BODY'), raw);
+		const log = JSON.parse(raw);
+		assert.deepEqual(log.tail[1].blocks, [{ type: 'tool_result', tool_use_id: 'toolu_1' }]);
+		assert.equal(log.tail[2].role, 'assistant');
+	});
+
+	test('前のツールの呼び出しより前の文は、pending として残す', () => {
+		runHook(transcript('log-pending', [user('始めて'), assistant(english), prevUse, assistant(japanese)]), 'toolu_now');
+		const log = readLog(logs()[0]);
+		assert.deepEqual(log.texts.map((t: { route: string }) => t.route), ['pending', 'parts']);
+	});
+
+	test('前のツールが通っていれば、そのツールの前の文は previous として残す', () => {
+		runHook(transcript('log-previous', [user('始めて'), assistant(english), toolUse(), toolResult(), assistant(japanese)]), 'toolu_now');
+		const log = readLog(logs()[0]);
+		assert.deepEqual(log.texts.map((t: { route: string }) => t.route), ['previous', 'parts']);
+	});
+
+	test('残すファイルは、新しい 50 件までにする', () => {
+		mkdirSync(logDir(), { recursive: true });
+		for (let i = 0; i < 55; i++) writeFileSync(join(logDir(), `2026-01-01T00-00-00-${String(i).padStart(3, '0')}-old.json`), '{}');
+		runHook(transcript('log-cap', [user('始めて'), assistant(english)]), 'toolu_cap');
+		const files = logs();
+		assert.equal(files.length, 50);
+		assert.ok(files.some((f) => f.includes('toolu_cap')), '新しい記録が消えている');
+		assert.ok(!files.some((f) => f.includes('-000-old')), '古い記録が残っている');
+	});
+
+	test('記録の置き場に書けなくても、止める動きは変えない', () => {
+		mkdirSync(work, { recursive: true });
+		writeFileSync(logDir(), 'ファイルがフォルダの場所にある');
+		const r = runHook(transcript('log-unwritable', [user('始めて'), assistant(english)]), 'toolu_unwritable');
+		assert.equal(r.status, 0);
+		assert.equal(r.denied, true);
+		rmSync(logDir(), { force: true });
 	});
 });

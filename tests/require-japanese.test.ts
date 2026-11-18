@@ -156,7 +156,8 @@ describe('lastAssistantText（最後の応答のテキスト）', () => {
 });
 
 describe('require-japanese（フック全体）', () => {
-	const env = () => ({ ...process.env, CLAUDE_ENGLISH_MARK_DIR: join(work, 'marks') });
+	// 止めた記録 (441-A) も、試験の中に置く。置かないと、全件を流すたびに本物の etc/english-deny-logs/ に試験の記録が混ざる
+	const env = () => ({ ...process.env, CLAUDE_ENGLISH_MARK_DIR: join(work, 'marks'), CLAUDE_ENGLISH_LOG_DIR: join(work, 'denylogs') });
 	const runHook = (input: unknown) => spawnSync('node', [hook], { input: JSON.stringify(input), encoding: 'utf8', timeout: 15000, env: env() });
 
 	// 課題 i261031-08 (決定 426): 英文のあとに、その英文を「」で引いた日本語のかたまりがあれば、訳済みとして書き直させない。

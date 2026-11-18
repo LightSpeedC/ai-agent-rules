@@ -5,21 +5,27 @@
 // 会話ログが読めないときは通す（フックの不具合で作業を止めない）。
 // node でも bun でも動くよう、標準モジュールだけで書く。
 import { readFileSync } from 'node:fs';
-import { isEnglishOnly, markEnglish, quoteEnglish, textsSinceLastToolResult, unmarked, untranslated } from './japanese-check.ts';
+import { recordDeny } from './english-deny-log.ts';
+import { isEnglishOnly, markEnglish, quoteEnglish, routedTextsSinceLastToolResult, unmarked, untranslated } from './japanese-check.ts';
 import { readInput } from './vault.ts';
 
 const input = await readInput();
 if (!input.transcript_path) process.exit(0);
 
-let texts: string[];
+const toolUseId = (input as { tool_use_id?: string }).tool_use_id;
+let jsonl: string;
+let routed: ReturnType<typeof routedTextsSinceLastToolResult>;
 try {
-	texts = textsSinceLastToolResult(readFileSync(input.transcript_path, 'utf8'), (input as { tool_use_id?: string }).tool_use_id);
+	jsonl = readFileSync(input.transcript_path, 'utf8');
+	routed = routedTextsSinceLastToolResult(jsonl, toolUseId);
 } catch {
 	process.exit(0);
 }
 // 一度止めた英文は、もう止めない (決定 420-A)。止めるときに印を付ける
-texts = untranslated(unmarked(input.transcript_path, texts));
+let texts = untranslated(unmarked(input.transcript_path, routed.map((item) => item.text)));
 if (!texts.some(isEnglishOnly)) process.exit(0);
+// 止めた時点のログの様子を残す (決定 441-A)。残せなくても止める
+recordDeny({ transcriptPath: input.transcript_path, toolUseId, jsonl, texts: routed, denied: texts.filter(isEnglishOnly) });
 markEnglish(input.transcript_path, texts);
 
 console.log(JSON.stringify({
