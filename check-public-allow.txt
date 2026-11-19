@@ -1,1 +1,2 @@
 tests/guard-english-before-tool.test.ts path C:/Users/example
+check-public-allow.txt path C:/Users/example
