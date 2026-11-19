@@ -42,7 +42,8 @@ function logDir(): string {
 	return process.env.CLAUDE_ENGLISH_LOG_DIR || join(dirname(fileURLToPath(import.meta.url)), '../../../etc/english-deny-logs');
 }
 
-export function recordDeny(info: { transcriptPath: string; toolUseId?: string; jsonl: string; texts: RoutedText[]; denied: string[] }): void {
+// kind: 'deny' は止めた回、'grace' は 1 度猶予して通した回 (決定 445-A)。同じ上限・同じ置き場で残す
+export function recordDeny(info: { transcriptPath: string; toolUseId?: string; jsonl: string; texts: RoutedText[]; denied: string[]; kind?: 'deny' | 'grace' }): void {
 	try {
 		const dir = logDir();
 		mkdirSync(dir, { recursive: true });
@@ -50,6 +51,7 @@ export function recordDeny(info: { transcriptPath: string; toolUseId?: string; j
 		const timeJst = new Date(Date.now() + 9 * 3600 * 1000).toISOString().replace('Z', '+09:00');
 		const id = (info.toolUseId ?? 'none').replace(/[^\w-]/g, '_');
 		const record = {
+			kind: info.kind ?? 'deny',
 			time_jst: timeJst,
 			tool_use_id: info.toolUseId ?? null,
 			transcript: basename(info.transcriptPath),
@@ -58,7 +60,7 @@ export function recordDeny(info: { transcriptPath: string; toolUseId?: string; j
 			denied: info.denied,
 			tail: lines.slice(-TAIL_LINES).map(slimLine),
 		};
-		writeFileSync(join(dir, timeJst.replace(/[:.+]/g, '-') + '-' + id + '.json'), JSON.stringify(record, null, '\t') + '\n');
+		writeFileSync(join(dir, timeJst.replace(/[:.+]/g, '-') + '-' + id + (info.kind === 'grace' ? '-grace' : '') + '.json'), JSON.stringify(record, null, '\t') + '\n');
 		// 新しい KEEP_FILES 件だけ残す (名前が時刻で始まるので、名前順が古い順)
 		const files = readdirSync(dir).filter((name) => name.endsWith('.json')).sort();
 		for (const name of files.slice(0, Math.max(0, files.length - KEEP_FILES))) rmSync(join(dir, name), { force: true });

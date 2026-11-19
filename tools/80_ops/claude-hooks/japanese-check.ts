@@ -125,16 +125,40 @@ export function routedTextsSinceLastToolResult(jsonl: string, currentToolUseId?:
 	return [...previous, ...pending, ...parts];
 }
 
-// 訳済みの英文を除く (課題 i261031-08、決定 426)。英文のあとに、その英文の先頭 30 字ほどを含む、英語だけでないかたまりがあれば、訳済みとみなす。
-// 止める理由が「英文を引用して訳を書く」ことなので、訳を書くときの形 (「英文」→「日本語」) そのものを印にする。英文より前にあるかたまりは数えない
-const TRANSLATED_HEAD = 30;
+// 訳済みの英文を除く (課題 i261031-08、決定 426・446-A)。英文のあとに、英語だけでないかたまりが 1 つでもあれば、訳済みとみなす。引用は要らない。
+// PreToolUse の時点では、直前に書いた訳が会話ログに無いことがある (2026-11-19 に 441-A の記録で確かめた。課題 i261031-08)。訳を引用で見分ける作りは、訳が見えなければ働かないため、やめた。
+// 英文より前にあるかたまりは数えない
 export function untranslated(texts: string[]): string[] {
-	const norm = (text: string) => text.trim().replace(/\s+/g, ' ');
-	return texts.filter((text, i) => {
-		if (!isEnglishOnly(text)) return true;
-		const head = norm(text).slice(0, TRANSLATED_HEAD);
-		return !texts.slice(i + 1).some((later) => !isEnglishOnly(later) && norm(later).includes(head));
-	});
+	return texts.filter((text, i) => !isEnglishOnly(text) || !texts.slice(i + 1).some((later) => !isEnglishOnly(later)));
+}
+
+// 猶予した英文の印 (決定 445-A)。前のツールのときに読めなかった英文 (経路 previous・pending) を、1 度だけ通して印を付ける。
+// 次のツールで、まだ訳済みが見えなければ止める。止めた印 (markEnglish) とは別のファイルに置く
+function graceFile(transcriptPath: string): string {
+	return markFile(transcriptPath).replace(/\.txt$/, '.grace.txt');
+}
+
+// 猶予済みの英文かどうか。印がまだ無ければ (ファイルが無い) false。読めない (権限・置き場の不具合) ときは、猶予が続かないよう、猶予済みとして扱う (止める側に倒す。rules-review の S1)
+export function isGraced(transcriptPath: string, text: string): boolean {
+	try {
+		return new Set(readFileSync(graceFile(transcriptPath), 'utf8').split(/\r?\n/)).has(markKey(text));
+	} catch (error) {
+		return (error as NodeJS.ErrnoException)?.code !== 'ENOENT';
+	}
+}
+
+// 英語だけの文に、猶予の印を付ける。置けたかを返す。置けなかったら、呼び出し側は猶予せずに止める (置けないまま猶予すると、毎回猶予になり止まらない)
+export function markGrace(transcriptPath: string, texts: string[]): boolean {
+	const keys = texts.filter(isEnglishOnly).map(markKey);
+	if (keys.length === 0) return true;
+	try {
+		const file = graceFile(transcriptPath);
+		mkdirSync(dirname(file), { recursive: true });
+		appendFileSync(file, keys.join('\n') + '\n');
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 // 止めた英文の印 (決定 420-A)。セッションの記録ごとに、一時フォルダへ文のハッシュを 1 行ずつ置く (CLAUDE_ENGLISH_MARK_DIR で差し替えられる)。

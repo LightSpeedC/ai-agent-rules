@@ -127,10 +127,38 @@ describe('guard-english-before-tool（PreToolUse フック）', () => {
 	});
 
 	// 決定 420-A: #1940 の事象。英文がまだ記録に無いうちに前のツールが通り、その結果も書かれていない
-	test('前のツールのときに記録に無かった英文は、次のツールで止める (420-A)', () => {
+	// 決定 445-A: 前のツールのときに読めなかった英文は、1 度猶予して印を付け、次のツールでまだ訳済みが見えなければ止める
+	test('前のツールのときに記録に無かった英文は、1 度猶予し、次のツールで止める (420-A・445-A)', () => {
 		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
-		const r = runHook(transcript('unseen', [user('始めて'), assistant(japanese), assistant(english), prev]), 'toolu_now');
-		assert.equal(r.denied, true);
+		const file = transcript('unseen', [user('始めて'), assistant(english), prev]);
+		assert.equal(runHook(file, 'toolu_now').denied, false);
+		assert.equal(runHook(file, 'toolu_now2').denied, true);
+	});
+
+	test('猶予した英文のあとに訳が見えれば、次のツールも通す (445-A)', () => {
+		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
+		assert.equal(runHook(transcript('grace-then-translated', [user('始めて'), assistant(english), prev]), 'toolu_now').denied, false);
+		assert.equal(runHook(transcript('grace-then-translated', [user('始めて'), assistant(english), prev, assistant(japanese)]), 'toolu_now2').denied, false);
+	});
+
+	// rules-review の S1: 猶予の印を置けないと、毎回猶予になり止まらなくなる。置けないときは、猶予せず止める
+	test('猶予の印を置けなければ、猶予せずに止める (445-A)', () => {
+		const markFile = join(work, 'marks-is-a-file');
+		writeFileSync(markFile, 'ファイルがフォルダの場所にある');
+		const file = transcript('grace-unwritable', [user('始めて'), assistant(english), toolUse(), toolResult()]);
+		const input = JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: file, tool_use_id: 'toolu_now' });
+		const r = spawnSync('node', [hook], { input, timeout: 15000, encoding: 'utf8', env: { ...process.env, CLAUDE_ENGLISH_MARK_DIR: markFile, CLAUDE_ENGLISH_LOG_DIR: join(work, 'denylogs') } });
+		assert.match(r.stdout, /deny/);
+	});
+
+	// rules-review の Q1: previous と parts に同じ英文があれば、猶予せず止める
+	test('同じ英文が、前のツールの前と直前の両方にあれば、止める (445-A)', () => {
+		const file = transcript('grace-same-both', [user('始めて'), assistant(english), toolUse(), toolResult(), assistant(english)]);
+		assert.equal(runHook(file, 'toolu_now').denied, true);
+	});
+
+	test('直前 (最後のツールの結果より後) に書いた英文は、猶予せず止める (445-A)', () => {
+		assert.equal(runHook(transcript('parts-no-grace', [user('始めて'), toolUse(), toolResult(), assistant(english)]), 'toolu_now').denied, true);
 	});
 
 	test('一度止めた英文では、2 度止めない (420-A)', () => {
@@ -138,19 +166,25 @@ describe('guard-english-before-tool（PreToolUse フック）', () => {
 		assert.equal(runHook(transcript('once', [user('始めて'), assistant(english)]), 'toolu_b').denied, false);
 	});
 
-	test('1 つ前のツールの前に書いた英文は、次のツールで止める (r261111-01 の 14-A)', () => {
-		const r = runHook(transcript('late-flush', [user('始めて'), assistant(english), toolUse(), toolResult()]), 'toolu_now');
-		assert.equal(r.denied, true);
+	test('1 つ前のツールの前に書いた英文は、1 度猶予し、次のツールで止める (r261111-01 の 14-A・445-A)', () => {
+		const file = transcript('late-flush', [user('始めて'), assistant(english), toolUse(), toolResult()]);
+		assert.equal(runHook(file, 'toolu_now').denied, false);
+		assert.equal(runHook(file, 'toolu_now2').denied, true);
 	});
 
-	// 課題 i261031-08 (決定 426): 英文のあとに、その英文を「」で引いた日本語のかたまりがあれば、訳済みとして通す
+	// 課題 i261031-08 (決定 426・446-A): 英文のあとに、英語だけでないかたまりが 1 つでもあれば、訳済みとして通す。引用は要らない
 	test('英文のあとに、その英文を「」で引いた日本語のかたまりがあれば、ツールを通す (426)', () => {
 		const r = runHook(transcript('translated', [user('始めて'), assistant(english), assistant(`訳: 「${english}」→「${japanese}」`)]));
 		assert.equal(r.denied, false);
 	});
 
-	test('英文のあとに日本語のかたまりがあっても、英文を引いていなければ、止める (426)', () => {
-		const r = runHook(transcript('not-translated', [user('始めて'), assistant(english), assistant(japanese)]));
+	test('英文のあとに日本語のかたまりがあれば、英文を引いていなくても、通す (446-A)', () => {
+		const r = runHook(transcript('not-quoted', [user('始めて'), assistant(english), assistant(japanese)]));
+		assert.equal(r.denied, false);
+	});
+
+	test('英文より前の日本語のかたまりは、訳済みとみなさない (446-A)', () => {
+		const r = runHook(transcript('japanese-before', [user('始めて'), assistant(japanese), assistant(english)]));
 		assert.equal(r.denied, true);
 	});
 
@@ -252,16 +286,30 @@ describe('止めた記録 (441-A)', () => {
 		assert.equal(log.tail[2].role, 'assistant');
 	});
 
+	// 445-A: pending・previous の英文は 1 度猶予するので、2 回目のツールで止まったときに残る
 	test('前のツールの呼び出しより前の文は、pending として残す', () => {
-		runHook(transcript('log-pending', [user('始めて'), assistant(english), prevUse, assistant(japanese)]), 'toolu_now');
-		const log = readLog(logs()[0]);
-		assert.deepEqual(log.texts.map((t: { route: string }) => t.route), ['pending', 'parts']);
+		const file = transcript('log-pending', [user('始めて'), assistant(english), prevUse]);
+		assert.equal(runHook(file, 'toolu_now').denied, false);
+		// 猶予した回も、kind: grace で 1 件残す
+		assert.equal(logs().length, 1);
+		assert.equal(readLog(logs()[0]).kind, 'grace');
+		assert.equal(runHook(file, 'toolu_now2').denied, true);
+		assert.equal(logs().length, 2);
+		const log = logs().map(readLog).find((l) => l.kind === 'deny');
+		assert.deepEqual(log.texts.map((t: { route: string }) => t.route), ['pending']);
 	});
 
 	test('前のツールが通っていれば、そのツールの前の文は previous として残す', () => {
-		runHook(transcript('log-previous', [user('始めて'), assistant(english), toolUse(), toolResult(), assistant(japanese)]), 'toolu_now');
-		const log = readLog(logs()[0]);
-		assert.deepEqual(log.texts.map((t: { route: string }) => t.route), ['previous', 'parts']);
+		const file = transcript('log-previous', [user('始めて'), assistant(english), toolUse(), toolResult()]);
+		assert.equal(runHook(file, 'toolu_now').denied, false);
+		assert.equal(runHook(file, 'toolu_now2').denied, true);
+		const log = logs().map(readLog).find((l) => l.kind === 'deny');
+		assert.deepEqual(log.texts.map((t: { route: string }) => t.route), ['previous']);
+	});
+
+	test('止めた記録の kind は deny', () => {
+		runHook(transcript('log-kind', [user('始めて'), assistant(english)]), 'toolu_kind');
+		assert.equal(readLog(logs()[0]).kind, 'deny');
 	});
 
 	test('残すファイルは、新しい 50 件までにする', () => {

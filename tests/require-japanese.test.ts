@@ -169,8 +169,21 @@ describe('require-japanese（フック全体）', () => {
 		assert.equal(r.stdout, '');
 	});
 
-	test('英文のあとに日本語のかたまりがあっても、英文を引いていなければ、書き直させる (426)', () => {
+	// 決定 446-A: 引用は要らない。英文のあとに、英語だけでないかたまりが 1 つでもあれば、訳済みとみなす
+	test('英文のあとに日本語のかたまりがあれば、英文を引いていなくても、書き直させない (446-A)', () => {
 		const file = transcript('hook-not-translated', [user('質問'), assistant(quoted), assistant('作業を続けます。')]);
+		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
+		assert.equal(r.stdout, '');
+	});
+
+	// 決定 445-A: ツールの前のフックが猶予しただけの英文は、止めた印が付かない。訳が無ければ、ターンの終わりに書き直させる
+	test('ツールの前のフックが猶予しただけの英文で、訳が無ければ、書き直させる (445-A)', () => {
+		const english = 'This is a plain English sentence that the tool guard only graced.';
+		const prev = { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 'toolu_prev', name: 'Bash', input: {} }] } };
+		const file = transcript('hook-graced', [user('質問'), assistant(english), prev]);
+		const guard = join(root, 'tools/80_ops/claude-hooks/guard-english-before-tool.ts');
+		const g = spawnSync('node', [guard], { input: JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: file, tool_use_id: 'toolu_now' }), encoding: 'utf8', timeout: 15000, env: env() });
+		assert.equal(g.stdout, '');
 		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
 		assert.equal(JSON.parse(r.stdout).decision, 'block');
 	});
@@ -193,7 +206,8 @@ describe('require-japanese（フック全体）', () => {
 	// 決定 420-A: ツールの前のフックが止めて訳を書かせた英文で、ターンの終わりにもう一度止めない
 	test('ツールの前のフックが止めた英文では、書き直させない (420-A)', () => {
 		const english = 'This is a plain English sentence that the tool guard already stopped.';
-		const file = transcript('hook-marked', [user('質問'), assistant(english), assistant('訳: ツールの前のフックが止めた英文です。')]);
+		// 446-A: 英文のあとに日本語があれば訳済みなので、ツールの前のフックが止める時点は、英文が最後の形にする
+		const file = transcript('hook-marked', [user('質問'), assistant(english)]);
 		const guard = join(root, 'tools/80_ops/claude-hooks/guard-english-before-tool.ts');
 		const g = spawnSync('node', [guard], { input: JSON.stringify({ hook_event_name: 'PreToolUse', transcript_path: file, tool_use_id: 'toolu_x' }), encoding: 'utf8', timeout: 15000, env: env() });
 		assert.match(g.stdout, /deny/);
@@ -202,8 +216,9 @@ describe('require-japanese（フック全体）', () => {
 	});
 
 	// 途中のかたまりが英語だけなら、応答全体に日本語があっても、書き直させる
-	test('日本語の応答の途中に英語だけのかたまりがあれば、decision: block を返す', () => {
-		const file = transcript('hook5', [user('質問'), assistant('日本語の説明です。'), assistant('This is a plain English sentence in the middle of the reply.'), assistant('最後は日本語。')]);
+	// 決定 446-A: 英文のあとに日本語のかたまりがあれば、訳済みとみなす。最後が英語だけなら、書き直させる
+	test('日本語の応答の最後に英語だけのかたまりがあれば、decision: block を返す', () => {
+		const file = transcript('hook5', [user('質問'), assistant('日本語の説明です。'), assistant('最後は日本語。'), assistant('This is a plain English sentence at the end of the reply.')]);
 		const r = runHook({ hook_event_name: 'Stop', transcript_path: file, stop_hook_active: false });
 		assert.equal(r.status, 0, r.stderr);
 		assert.equal(JSON.parse(r.stdout).decision, 'block');
