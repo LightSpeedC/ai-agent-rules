@@ -10,6 +10,8 @@
 
 - **会話ログ（JSONL）は、各プロジェクト直下の `etc/history/jsonl/` に自動でコピーされる**。そのプロジェクトの全セッションが対象
 - 仕組みは `~/.claude/settings.json` の `hooks`（SessionStart・Stop）。実体は ai-agent-rules プロジェクトの `tools/80_ops/claude-hooks/`
+- **会話ログ（JSONL）の保持期間は 100 年にする**。`~/.claude/settings.json` の `cleanupPeriodDays` に `36500` を設定する。既定のままだと、Claude Code が古い会話ログを消し、「失敗を振り返ってルールに返す」「セッション制限報告時の確認」が読めなくなる
+- **新しい PC・環境では、最初に `cleanupPeriodDays` を確かめる**。設定が無ければ足す
 
 ## cron はセッションの中だけで生きる
 
