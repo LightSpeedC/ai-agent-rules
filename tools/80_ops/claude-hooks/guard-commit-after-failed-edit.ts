@@ -5,7 +5,8 @@
 // 同じ応答に並べた Edit・Write の失敗は、フックから知れない (11/05 実測。調査 r261105-01)。共通ルールで並べないと決めた (21-A)。
 // 記録が読めないときは止めない (フックの不具合で commit を止め続けないため)。
 // node でも bun でも動くよう、標準モジュールだけで書く。
-import { readFileSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
+import { normalize, resolve } from 'node:path';
 import { readInput, type HookInput } from './vault.ts';
 
 const SPLIT = /&&|\|\||;|\||\n/;
@@ -22,7 +23,7 @@ export function isCommit(command: string): boolean {
 
 // Windows は大小を区別しないため、区切りと大小を揃えて比べる
 function key(file: string): string {
-	return file.replace(/\\/g, '/').toLowerCase();
+	return normalize(file).replace(/\\/g, '/').toLowerCase(); // normalize で .. を畳む (相対パスは絶対にしない)
 }
 
 // file が、置き場 (cwd) の中にあるか。区切りと大小を揃えて比べ、前方が同じだけの別のフォルダ (proj2) は外とする
@@ -34,7 +35,19 @@ function isInside(file: string, cwd: string): boolean {
 
 // 失敗したままのファイルを、記録の順に返す。cwd を渡すと、その外のパスの失敗は数えない (課題 i261114-02、決定 424-A)。
 // commit に載るのは置き場の中のファイルだけで、worktree の子が親の checkout の存在しないパスで失敗しても、載せようがないため
-export function failedFiles(jsonl: string, cwd?: string): string[] {
+// ディスクに無いパスの失敗も数えない (課題 i261119-02、file-manager の #2057)。無いファイルは壊れようがなく commit にも載らない。
+// しかも Read も Edit も通せず印が解けないため、数えると commit が全部止まる。失敗の理由の文言は見ず、フックが動く時点の有無で決める。
+// 置き場の外は、有無を調べない (isInside を先に見る)。exists は試験で差し替える
+// 在るのがフォルダなら数えない (コードレビュー。Read も Edit も通せず、印が解けない)。読めない・調べられないときも false (止めない側)
+function isFile(file: string): boolean {
+	try {
+		return statSync(file).isFile();
+	} catch {
+		return false;
+	}
+}
+
+export function failedFiles(jsonl: string, cwd?: string, exists: (file: string) => boolean = isFile): string[] {
 	const uses = new Map<string, { name: string; file?: string; command?: string }>();
 	let failed = new Map<string, string>(); // 揃えた名前 → 元の名前
 	for (const line of jsonl.split('\n')) {
@@ -65,7 +78,8 @@ export function failedFiles(jsonl: string, cwd?: string): string[] {
 		}
 	}
 	const all = [...failed.values()];
-	return cwd ? all.filter((file) => isInside(file, cwd)) : all;
+	const inside = cwd ? all.filter((file) => isInside(file, cwd)) : all;
+	return inside.filter((file) => exists(cwd ? resolve(cwd, file) : file));
 }
 
 if (import.meta.main ?? process.argv[1]?.replace(/\\/g, '/').endsWith('guard-commit-after-failed-edit.ts')) {

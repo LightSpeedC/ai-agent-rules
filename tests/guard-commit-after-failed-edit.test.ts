@@ -13,10 +13,25 @@ const hook = join(root, 'tools/80_ops/claude-hooks/guard-commit-after-failed-edi
 
 let work = '';
 let seq = 0;
+// 失敗したパスは、ディスクに在るものだけを数える (i261119-02)。試験のパスは、実ファイルにする
+let fileA = '';
+let fileB = '';
+let parentFile = '';
+let proj2File = '';
+
+function touch(file: string): string {
+	mkdirSync(join(file, '..'), { recursive: true });
+	writeFileSync(file, 'x');
+	return file;
+}
 
 before(() => {
 	mkdirSync(join(root, 'tmp'), { recursive: true });
 	work = mkdtempSync(join(root, 'tmp/guard-commit-test-'));
+	fileA = touch(join(work, 'proj/src/a.ts'));
+	fileB = touch(join(work, 'proj/src/b.ts'));
+	parentFile = touch(join(work, 'parent/src/a.ts'));
+	proj2File = touch(join(work, 'proj2/a.ts'));
 });
 
 after(() => {
@@ -53,8 +68,6 @@ function runHook(transcriptPath: string | undefined, command: string, toolName =
 		return { denied: false, reason: '' };
 	}
 }
-
-const fileA = 'W:/proj/src/a.ts';
 
 describe('guard-commit-after-failed-edit (失敗したままの Edit の後の commit を止める)', () => {
 	test('失敗したままの Edit があれば、git commit を止め、理由にファイル名を書く', () => {
@@ -94,7 +107,7 @@ describe('guard-commit-after-failed-edit (失敗したままの Edit の後の c
 	});
 
 	test('大小と区切りの違うパスを、同じファイルとみなす', () => {
-		assert.equal(runHook(transcript([edit(fileA, true), read('w:\\proj\\SRC\\a.ts')]), 'git commit -m "x"').denied, false);
+		assert.equal(runHook(transcript([edit(fileA, true), read(fileA.replace(/\//g, '\\').toUpperCase())]), 'git commit -m "x"').denied, false);
 	});
 
 	test('会話の記録が無ければ止めない', () => {
@@ -107,39 +120,91 @@ describe('guard-commit-after-failed-edit (失敗したままの Edit の後の c
 // 課題 i261114-02 (決定 424-A): worktree の子が、外 (親の checkout) の存在しないパスへの Edit に失敗すると、
 // 同じ絶対パスでしか解けない印が残り、commit が止まった (file-manager、11/14)。commit に載るのは置き場の中のファイルだけなので、外のパスの失敗は数えない
 describe('作業の置き場 (cwd) の外のパスの失敗 (424-A)', () => {
-	const cwd = 'W:/proj';
+	// 外のパスも実ファイルにして、外だから数えないことを確かめる (無いから数えない、との取り違えを防ぐ)
+	const cwd = () => join(work, 'proj');
 
 	test('置き場の外のパスの失敗では、commit を止めない', () => {
-		const t = transcript([edit('W:/parent/src/a.ts', true)]);
-		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd).denied, false);
+		const t = transcript([edit(parentFile, true)]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd()).denied, false);
 	});
 
 	test('置き場の中のパスの失敗は、これまでどおり止める', () => {
-		const t = transcript([edit('W:/proj/src/a.ts', true)]);
-		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd).denied, true);
+		const t = transcript([edit(fileA, true)]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd()).denied, true);
 	});
 
-	test('置き場の名前を前方に含むだけの別のフォルダ (W:/proj2) は、外とみなす', () => {
-		const t = transcript([edit('W:/proj2/a.ts', true)]);
-		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd).denied, false);
+	test('置き場の名前を前方に含むだけの別のフォルダ (proj2) は、外とみなす', () => {
+		const t = transcript([edit(proj2File, true)]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd()).denied, false);
 	});
 
 	test('区切りと大小の違うパスでも、置き場の中なら止める', () => {
-		const t = transcript([edit('w:\\Proj\\src\\a.ts', true)]);
-		assert.equal(runHook(t, 'git commit -m x', 'Bash', 'W:/proj/').denied, true);
+		const t = transcript([edit(fileA.replace(/\//g, '\\').toUpperCase(), true)]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', cwd() + '/').denied, true);
 	});
 
 	test('外の失敗と中の失敗が混ざれば、中の分だけで止め、理由に外のパスを書かない', () => {
-		const t = transcript([edit('W:/parent/src/a.ts', true), edit('W:/proj/src/b.ts', true)]);
-		const r = runHook(t, 'git commit -m x', 'Bash', cwd);
+		const t = transcript([edit(parentFile, true), edit(fileB, true)]);
+		const r = runHook(t, 'git commit -m x', 'Bash', cwd());
 		assert.equal(r.denied, true);
-		assert.ok(r.reason.includes('W:/proj/src/b.ts'), r.reason);
-		assert.ok(!r.reason.includes('W:/parent'), r.reason);
+		assert.ok(r.reason.includes('b.ts'), r.reason);
+		assert.ok(!r.reason.includes('parent'), r.reason);
 	});
 
 	test('cwd が渡されなければ、すべての失敗を数える (これまでどおり)', () => {
-		const t = transcript([edit('W:/parent/src/a.ts', true)]);
+		const t = transcript([edit(parentFile, true)]);
 		assert.equal(runHook(t, 'git commit -m x').denied, true);
+	});
+});
+
+// 課題 i261119-02、11/19 に file-manager から報告 (#2057)。存在しないパスへの Edit が失敗すると、Read も Edit も通せず印が解けず、
+// そのセッションの commit が全部止まった。ディスクに無いファイルは壊れようがなく、commit にも載らないため、数えない
+describe('ディスクに存在しないパスの失敗', () => {
+	test('存在しないパスへの Edit の失敗では、commit を止めない', () => {
+		const missing = join(work, 'no-such-dir', 'a.ts');
+		assert.equal(runHook(transcript([edit(missing, true)]), 'git commit -m x', 'Bash', work).denied, false);
+	});
+
+	test('存在するパスへの Edit の失敗は、これまでどおり止める', () => {
+		const exists = join(work, 'exists.ts');
+		writeFileSync(exists, 'x');
+		const r = runHook(transcript([edit(exists, true)]), 'git commit -m x', 'Bash', work);
+		assert.equal(r.denied, true);
+		assert.match(r.reason, /exists\.ts/);
+	});
+
+	test('存在しないパスの失敗と存在するパスの失敗が混ざれば、存在する分だけで止め、理由に存在しないパスを書かない', () => {
+		const exists = join(work, 'exists2.ts');
+		writeFileSync(exists, 'x');
+		const missing = join(work, 'no-such-dir', 'b.ts');
+		const r = runHook(transcript([edit(missing, true), edit(exists, true)]), 'git commit -m x', 'Bash', work);
+		assert.equal(r.denied, true);
+		assert.ok(r.reason.includes('exists2.ts'), r.reason);
+		assert.ok(!r.reason.includes('no-such-dir'), r.reason);
+	});
+
+	// レビューの指摘 (抜け出せない穴)。フォルダは Read も Edit も通せず、印が解けない
+	test('フォルダを指すパスの失敗では、commit を止めない', () => {
+		const t = transcript([{ name: 'Write', input: { file_path: join(work, 'proj'), content: 'x' }, error: true }]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', work).denied, false);
+	});
+
+	test('.. を含むパスで失敗しても、畳んだ同じパスで Edit が通れば解ける', () => {
+		const odd = work.replace(/\\/g, '/') + '/proj/src/../src/a.ts'; // join は .. を畳むので、文字列でつなぐ
+		assert.equal(runHook(transcript([edit(odd, true), edit(fileA)]), 'git commit -m x', 'Bash', work).denied, false);
+	});
+
+	test('失敗の後に、同じパスが削除されたら、止めない', () => {
+		const gone = touch(join(work, 'gone.ts'));
+		const t = transcript([edit(gone, true)]);
+		rmSync(gone);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', work).denied, false);
+	});
+
+	test('Write の失敗でも、存在しないパスなら止めない', () => {
+		const missing = join(work, 'no-such-dir', 'c.ts');
+		const t = transcript([{ name: 'Write', input: { file_path: missing, content: 'x' }, error: true }]);
+		assert.equal(runHook(t, 'git commit -m x', 'Bash', work).denied, false);
 	});
 });
 
