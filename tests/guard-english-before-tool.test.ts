@@ -274,11 +274,11 @@ describe('止めた記録 (441-A)', () => {
 
 	// rules-review の Q1: このフックは全プロジェクトで動く。cwd・sessionId・結果の中身などは、記録に入れない
 	test('末尾の行には、役割とブロックの種類・テキストだけを残し、cwd や結果の中身は入れない', () => {
-		const withMeta = { type: 'assistant', cwd: 'C:/Users/example/secret', sessionId: 'sess-secret', message: { role: 'assistant', content: [{ type: 'text', text: english }] } };
-		const result = { type: 'user', cwd: 'C:/Users/example/secret', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 'toolu_1', content: 'SECRET-RESULT-BODY' }] } };
+		const withMeta = { type: 'assistant', cwd: 'D:/dummy/secret', sessionId: 'sess-secret', message: { role: 'assistant', content: [{ type: 'text', text: english }] } };
+		const result = { type: 'user', cwd: 'D:/dummy/secret', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 'toolu_1', content: 'SECRET-RESULT-BODY' }] } };
 		runHook(transcript('log-meta', [user('始めて'), result, withMeta]), 'toolu_meta');
 		const raw = readFileSync(join(logDir(), logs()[0]), 'utf8');
-		assert.ok(!raw.includes('C:/Users/example'), raw);
+		assert.ok(!raw.includes('D:/dummy'), raw);
 		assert.ok(!raw.includes('sess-secret'), raw);
 		assert.ok(!raw.includes('SECRET-RESULT-BODY'), raw);
 		const log = JSON.parse(raw);
