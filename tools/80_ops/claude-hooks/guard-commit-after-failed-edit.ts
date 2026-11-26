@@ -11,11 +11,23 @@ import { readInput, type HookInput } from './vault.ts';
 
 const SPLIT = /&&|\|\||;|\||\n/;
 
-// 区切りごとに、先頭が git で、オプション (-c x=y ・ -C <path> 等) の後に commit があるか。--dry-run 付きは対象外
+// 区切りごとに、先頭が git・git.exe・パス付きの git・先頭の & で、および bash/sh/zsh/psh/cmd/powershell/pwsh の -c 等の中身で、オプション (-c x=y ・ -C <path> 等) の後に commit があるか。--dry-run 付きは対象外
 // --dry-run は引用符の外だけを見る。コミットメッセージの中の文字 (-m "--dry-run を直す") はオプションではない
+// 穴 5 (i261121-03): git.exe・パス付きの git・先頭の & (PowerShell の呼び出し演算子) も git とみなし、
+// bash -c "…"・sh -c '…' の中身は取り出して調べ直す (中に && があっても、中身ごと見る)
+const SHELL_C = /(?:^|[\s;&|(])(?:bash|sh|zsh|psh|cmd|powershell|pwsh)(?:\.exe)?\s+(?:[-/][\w-]+\s+)*?(?:-\w*c|-Command|\/[ck])\s+(?:"([^"]*)"|'([^']*)')/gi;
+const HEREDOC = /<<-?\s*(["']?)(\w+)\1[^\n]*\n[\s\S]*?\n\s*\2(?=\s|$)/g;
+
 export function isCommit(command: string): boolean {
+	// here-document の本文は実行されない文字列。引用符の中の bash -c も同じ (当たる位置が引用符の外のものだけを見る)
+	command = command.replace(HEREDOC, (m) => m.slice(0, m.indexOf('\n')));
+	for (const m of command.matchAll(SHELL_C)) {
+		const before = command.slice(0, m.index).replace(/"[^"]*"|'[^']*'/g, '');
+		if (/["']/.test(before)) continue;
+		if (isCommit(m[1] ?? m[2] ?? '')) return true;
+	}
 	return command.split(SPLIT).some((s) => {
-		if (!/^\s*\(*\s*git(\s+(-[cC]\s+("[^"]*"|'[^']*'|\S+)|--?[\w-]+(=\S+)?))*\s+commit\b/.test(s)) return false;
+		if (!/^\s*\(*\s*(?:&\s*)?(?:"[^"]*[\\/]git(?:\.exe)?"|'[^']*[\\/]git(?:\.exe)?'|(?:\S*[\\/])?git(?:\.exe)?)(\s+(-[cC]\s+("[^"]*"|'[^']*'|\S+)|--?[\w-]+(=\S+)?))*\s+commit(?![\w-])/.test(s)) return false;
 		const outsideQuotes = s.replace(/"[^"]*"|'[^']*'/g, ' ');
 		return !/(^|\s)--dry-run(\s|=|$)/.test(outsideQuotes);
 	});

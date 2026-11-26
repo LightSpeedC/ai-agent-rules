@@ -208,6 +208,72 @@ describe('ディスクに存在しないパスの失敗', () => {
 	});
 });
 
+// 課題 i261121-03 の穴 5: git.exe commit・& git commit・bash -c "git commit" が isCommit に当たらず、止めなかった
+describe('git の別の呼び方の commit (i261121-03 の穴 5)', () => {
+	const t = () => transcript([edit(fileA, true)]);
+
+	test('git.exe commit を止める', () => {
+		assert.equal(runHook(t(), 'git.exe commit -m "x"').denied, true);
+		assert.equal(runHook(t(), 'git.exe -C "D:/dummy/proj" commit -m "x"').denied, true);
+	});
+
+	test('PowerShell の & git commit・& "git.exe" commit を止める', () => {
+		assert.equal(runHook(t(), '& git commit -m "x"', 'PowerShell').denied, true);
+		assert.equal(runHook(t(), '& "D:/dummy/git/git.exe" commit -m "x"', 'PowerShell').denied, true);
+	});
+
+	test('bash -c "git commit ..." (sh -c・単引用符も) を止める', () => {
+		assert.equal(runHook(t(), 'bash -c "git commit -m x"').denied, true);
+		assert.equal(runHook(t(), "sh -c 'git commit -m x'").denied, true);
+		assert.equal(runHook(t(), 'bash -lc "git add a && git commit -m x"').denied, true);
+	});
+
+	test('別の呼び方でも、--dry-run の commit と、commit でないものは止めない', () => {
+		assert.equal(runHook(t(), 'git.exe commit --dry-run').denied, false);
+		assert.equal(runHook(t(), 'bash -c "git commit --dry-run"').denied, false);
+		assert.equal(runHook(t(), 'bash -c "git status"').denied, false);
+		assert.equal(runHook(t(), '& git status', 'PowerShell').denied, false);
+	});
+
+	test('別の呼び方の通った commit は区切りになる', () => {
+		assert.equal(runHook(transcript([edit(fileA, true), bash('git.exe commit -m y')]), 'git commit -m x').denied, false);
+	});
+});
+
+describe('穴 5 の追加 (psh・cmd・commit-tree・引用符)', () => {
+	const t = () => transcript([edit(fileA, true)]);
+
+	test('psh -c・cmd /c・powershell -Command・pwsh -Command の中の commit を止める', () => {
+		assert.equal(runHook(t(), 'psh -c "git commit -m x"').denied, true);
+		assert.equal(runHook(t(), 'cmd /c "git commit -m x"').denied, true);
+		assert.equal(runHook(t(), 'powershell.exe -NoProfile -Command "git commit -m x"').denied, true);
+		assert.equal(runHook(t(), 'pwsh -Command "git commit -m x"').denied, true);
+	});
+
+	test('バックスラッシュ入りのパスの & \'D:\\dummy\\git\\git.exe\' commit を止める', () => {
+		assert.equal(runHook(t(), "& 'D:\\dummy\\git\\git.exe' commit -m x", 'PowerShell').denied, true);
+	});
+
+	test('git commit-tree・commit-graph は commit ではないので止めない', () => {
+		assert.equal(runHook(t(), 'git commit-tree abc').denied, false);
+		assert.equal(runHook(t(), 'git commit-graph write').denied, false);
+	});
+
+	test('通った commit-tree・commit-graph は区切りにならない', () => {
+		assert.equal(runHook(transcript([edit(fileA, true), bash('git commit-graph write')]), 'git commit -m x').denied, true);
+		assert.equal(runHook(transcript([edit(fileA, true), bash('git commit-tree abc')]), 'git commit -m x').denied, true);
+	});
+
+	test('bash -c の中の通った commit は区切りになる', () => {
+		assert.equal(runHook(transcript([edit(fileA, true), bash('bash -c "git commit -m y"')]), 'git commit -m x').denied, false);
+	});
+
+	test('引用符の中の文字列・here-string の中の bash -c は commit とみなさない', () => {
+		assert.equal(runHook(t(), `echo "x bash -c 'git commit -m x'"`).denied, false);
+		assert.equal(runHook(t(), 'cat <<EOF\nbash -c "git commit"\nEOF').denied, false);
+	});
+});
+
 describe('--dry-run の commit (14-A)', () => {
 	test('--dry-run の commit は、失敗した Edit があっても止めない (何も commit されないため)', () => {
 		assert.equal(runHook(transcript([edit(fileA, true)]), 'git commit --dry-run').denied, false);
