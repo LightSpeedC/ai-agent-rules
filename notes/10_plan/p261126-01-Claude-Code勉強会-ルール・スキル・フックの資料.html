@@ -1,0 +1,316 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>p261126-01 Claude Code 勉強会 (ルール・スキル・フック) の資料 (読み物 9 本。プレゼンは後)</title>
+<style>
+	:root {
+		--navy1: #12224d; --navy2: #2f5fbf; --ink: #1c2330; --ink-soft: #4a5568; --line: #d9dfe8; --code-bg: #f4f6fa;
+		--link: #1a4fa0; --accent: var(--navy1, #12224d); --accent2: var(--navy2, #2f5fbf); --soft: #f2f5fb;
+	}
+	.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
+	.ch02 { --accent: hsl(210, 78%, 25%); --accent2: hsl(210, 58%, 55%); --soft: hsl(210, 28%, 95%); }
+	.ch03 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	.ch04 { --accent: hsl(70, 78%, 25%); --accent2: hsl(70, 58%, 55%); --soft: hsl(70, 28%, 95%); }
+	.ch05 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	body { margin: 0; background: #ffffff; color: var(--ink, #1c2330); font-size: 15.5px; line-height: 1.85; font-family: sans-serif; }
+	a { color: var(--link, #1a4fa0); background: transparent; }
+	.titlebar { background: #12224d; background: linear-gradient(135deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; padding: 34px 30px 30px; }
+	.titlebar .inner { max-width: 1600px; margin: 0 auto; }
+	.titlebar h1 { font-size: 1.7em; margin: 0 0 6px; color: #ffffff; }
+	.titlebar .lead, .titlebar .date { margin: 4px 0; color: #e6ecf8; background: transparent; }
+	.titlebar code { background: rgba(255,255,255,0.16); color: #fff; border: none; }
+	.wrap { max-width: 1600px; margin: 0 auto; padding: 0 30px; }
+	section { background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); padding: 4px 26px 26px; margin: 34px 0; border-radius: 8px; }
+	section h1 { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 14px 20px; margin: 26px 0 20px; border-radius: 8px; font-size: 1.35em; box-shadow: 0 3px 10px rgba(0,0,0,.18); }
+	section h2 { border-left: 6px solid var(--accent, #12224d); padding: 6px 12px; margin: 30px 0 12px; background: #f2f5fb; background: linear-gradient(90deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); font-size: 1.15em; }
+	code { background: #f4f6fa; background: var(--code-bg, #f4f6fa); border: 1px solid var(--line, #d9dfe8); color: #17335f; padding: 0 4px; border-radius: 4px; }
+	.tablewrap { overflow-x: auto; }
+	table { border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08); margin: 10px 0; }
+	th { background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf)); color: #ffffff; padding: 9px 12px; text-align: left; }
+	td { background: #ffffff; color: var(--ink, #1c2330); padding: 9px 12px; vertical-align: top; border-top: 1px solid var(--line, #d9dfe8); }
+	tr:nth-child(even) td { background: #fafbfe; }
+	td.num { text-align: right; } td.nowrap { white-space: nowrap; }
+	.callout { border-left: 6px solid var(--accent, #12224d); background: #f2f5fb; background: linear-gradient(180deg, var(--soft, #f2f5fb), #ffffff); color: var(--ink, #1c2330); padding: 8px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; }
+	.callout strong { color: var(--accent, #12224d); background: transparent; }
+	.badge { display: inline-block; color: #ffffff; padding: 0 10px; border-radius: 6px; white-space: nowrap; font-size: .9em; }
+	.b-ok { background: #1d7a3c; background: linear-gradient(100deg, #1d7a3c, #45b56c); }
+	.b-warn { background: #b8620a; background: linear-gradient(100deg, #b8620a, #f0a548); }
+	.b-none { background: #5a6472; background: linear-gradient(100deg, #5a6472, #97a1ae); }
+	.backlink { display: inline-block; background: #12224d; background: linear-gradient(100deg, var(--navy1, #12224d), var(--navy2, #2f5fbf)); color: #ffffff; text-decoration: none; padding: 4px 12px; border-radius: 6px; }
+	.backlink svg { display: block; }
+	.wrap > .navwrap { margin-top: 18px; }
+	section h3 { border-bottom: 2px dotted var(--accent2, #2f5fbf); display: inline-block; padding-bottom: 3px; margin: 20px 0 8px; color: var(--ink, #1c2330); background: transparent; font-size: 1.05em; }
+	.stage { background: #ffffff; color: var(--ink, #1c2330); border: 1px solid var(--line, #d9dfe8); border-left: 5px solid var(--accent2, #2f5fbf); border-radius: 0 8px 8px 0; padding: 4px 16px 10px; margin: 14px 0; }
+	.decisions { list-style: none; margin: 8px 0; padding: 0; }
+	.decisions li { background: #ffffff; color: var(--ink, #1c2330); border: 1px solid var(--line, #d9dfe8); border-left: 5px solid var(--accent2, #2f5fbf); border-radius: 0 8px 8px 0; padding: 6px 14px; margin: 8px 0; }
+	.stage ul { margin: 4px 0 0; padding-left: 20px; }
+	.stage li { margin: 4px 0; }
+	@media (max-width: 720px) {
+		body { font-size: 15px; line-height: 1.75; }
+		.titlebar { padding: 22px 14px 18px; }
+		.wrap { padding: 0 10px; }
+		section { padding: 2px 12px 16px; margin: 22px 0; }
+		section h1 { padding: 10px 12px; font-size: 1.2em; }
+		th, td { padding: 6px 8px; }
+		td.nowrap { white-space: normal; }
+		.stage { padding: 2px 10px 8px; }
+		.stage ul { padding-left: 16px; }
+	}
+	footer { max-width: 1600px; margin: 0 auto; padding: 18px 30px 30px; background: #ffffff; color: var(--ink, #1c2330); }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+	<div class="inner">
+		<h1>p261126-01 Claude Code 勉強会 (ルール・スキル・フック) の資料 (読み物 9 本。プレゼンは後)</h1>
+		<p class="lead">このプロジェクトが持つ共通ルール・スキル・フックを、AI エージェント (特に Claude Code) を使う開発者の同僚に学んでもらう勉強会の資料として、読み物の HTML と、それを元にしたプレゼン用の HTML (後で pptx) を作る計画。入力: <code>rules/</code>・<code>skills/</code>・<code>tools/80_ops/claude-hooks/</code>・失敗の記録 (課題・調査)・共有ツールと ai-chat-lite の README (読むだけ)。出力: <code>docs/</code> の読み物 9 本・構成案・プレゼン 1 本の HTML と、共通の CSS・JS。</p>
+		<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+	</div>
+</div>
+
+<div class="wrap">
+
+<p class="navwrap"><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+
+
+<section class="ch01" id="ch01">
+<h1>作るもの</h1>
+<p><strong>一言で</strong>: このプロジェクトのルール・スキル・フックを、Claude Code を使う開発者の同僚が「少しずつ入れていける」ように、失敗の話を軸にした読み物とスライドにする。</p>
+<div class="stage">
+<h3><code>docs/</code> の読み物 9 本 (01〜09。名前は作業 3 で決める)</h3>
+<ul><li>読み物。1 本が 1 つの段階 (ツールとチャットも、必要になった段階の章)。前へ・次へ・目次のバッジで順に読む。「いまここ」の旗は、右端に縦に固定し、各ページの段階の印から位置を決める</li><li><strong>作る順</strong>: 1</li></ul>
+</div>
+<div class="stage">
+<h3><code>docs/ZZ-構成.html</code> (名前は案)</h3>
+<ul><li>構成案。全体像とロードマップの図、対象読者、章立ての意図、書き方の方針</li><li><strong>作る順</strong>: 1</li></ul>
+</div>
+<div class="stage">
+<h3><code>docs/勉強会-プレゼン.html</code></h3>
+<ul><li>スライド。読み物の各段階を、1〜3 枚に要約する。矢印キー (と画面の押し) で進む。「いまここ」の旗は、下端のバーで常時出す</li><li><strong>作る順</strong>: 2 (読み物のレビューの後)</li></ul>
+</div>
+<div class="stage">
+<h3>pptx</h3>
+<ul><li>プレゼン HTML の見出しを 1 枚ずつ写す。別の計画にする</li><li><strong>作る順</strong>: 3 (後で)</li></ul>
+</div>
+<p>全部 <code>docs/</code> 配下。CSS は <code>docs/css/style.css</code>、JS は <code>docs/js/</code> に置いて共有し、CDN を参照しない (CSS が読めないときの代替色は、<code>&lt;link&gt;</code> の前に書く)。章アクセントと目次は、各 HTML に書く。</p>
+<p>資料を作った時点で、root の <code>README.html</code> から資料へリンクを張り、資料から README へ戻るリンクを張る (相互リンク。後回しにしない)。README.md は <code>html2md</code> で作り直し、<code>check-markdown</code> で崩れを確かめる。</p>
+<p><strong>画面の作り</strong>: JS が無効な環境は想定しない (11/26 の指示)。無効時の逃げ道は作らず、試験・撮影の対象にもしない。キャラの絵は、揺れる・傾くなど、動いてよい (<code>prefers-reduced-motion</code> の設定では止める)。狭い画面では、旗を縦固定から上端の横バーに切り替える。</p>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>構成 (案)</h1>
+
+<h2>全体像とロードマップ</h2>
+<p>読み物の先頭に、全体像の図 (ルール・スキル・フックと、共有ツール・ai-chat-lite の関係) と、ロードマップの図 (9 つの段階の道) を置く。ロードマップは、各段階の駅を結ぶ道で、「いまここ」の旗が、読んでいる段階の駅に立つ。読み進める (スクロール・スライドを進める) と、旗が次の駅へ動く。</p>
+<p>全体像は章にしない。紺 1 色のバー (虹色の章に数えない) にして、9 つの段階を 9 章にする (467-B。章の数は 473-A・474-A で 6 から 9 に変わった)。バーの位置と見た目は、作業 3 の図の一覧で決める。</p>
+
+<h2>9 つの段階</h2>
+<p>段階ごとの中身 (規模・入れる決まり・失敗・図) は、下の「9 段階の下書き」に書く。順は、学ぶ人の成長の順 (小→大)。ツールとチャットは、必要になった段階の章にする (473-A)。</p>
+<p>失敗の例は、実際の記録 (課題・調査・フックの止めた記録) から拾う。<strong>実在の個人名・社名・実体パスは使わない</strong> (460-A)。同じ失敗の話は、1 つの段階に 1 回だけ出す。</p>
+
+<h2>各段階の書き方</h2>
+<ol>
+<li>案内役のキャラが、失敗を 1 つ見せる (SVG 図、軽い動き付き)</li>
+<li>足した決まりを、1〜3 行で示す</li>
+<li>使い方・見る場所 (どの章・どのコマンド・どの README) を 1 行で示す</li>
+<li>次の段階への一言</li>
+</ol>
+<p><strong>キャラ</strong>: ルールちゃん (段階 1)・スキルちゃん (段階 5)・フックくん (段階 8) の順に登場する。関係は「ルールが増えると読み込みが重くなり、スキルに分ける。文だけで止まらないものを、フックが止める」と、全体像の図に 1 度だけ示す。</p>
+
+<h2>9 段階の下書き (素材の洗い出しと、3 プロジェクトの履歴から。作業 3)</h2>
+<p>事例は、共有ツール・チャット・ファイルマネージャの履歴を、利用者の許可 (11/26) で読むだけのサブエージェントが拾った。数字と日付は報告の引き写しで、<strong>書くときに出典 (課題・調査・commit) を開いて確かめる。数 (件数・サイズ・回数) も再計測する</strong>。会話の記録 (JSONL) は読んでいない。段階への割り当ては仮で、同じ話は重ねない。</p>
+<p><strong>出典の書き方 (5 回目のレビューの指摘)</strong>: 下書きの番号は、プロジェクト名が付いていない。出どころは、03〜05 が主に ai-agent-tools、06 が ai-chat-lite、07・08・09 がファイルマネージャとこのプロジェクト。書くときは「プロジェクト名 + 番号」に直す (決定番号も「決定 (プロジェクト名)」の形)。読み物の本文には、番号でなく事実を書き、番号は構成案 (<code>ZZ-構成.html</code>) の出典表にまとめる。読者は、他プロジェクトの番号を開けない。</p>
+<p><strong>各段階の絞り方</strong>: 失敗の一コマは、主役を 1〜2 件にし、残りは「小ネタ」「補足」に降ろす。ファイルは、読み物に書く段階で、失敗を項目ごとの子の箇条書きにし、各項目の末尾に出典を揃える。</p>
+<p><strong>実測 (サブエージェントの報告。再計測は読み物を書くときに行う)</strong>: <code>rules/</code> 16 ファイル・<code>skills/</code> 14 本・フックのファイル 26 本・<code>settings.json</code> への登録 19 コマンド (PreToolUse 9・PostToolUse 1・UserPromptSubmit 2・SessionStart 1・Stop 6)。共通ルールの常時読み込みは約 198 KB (トークン数は <code>/context</code> の表示で約 7.5 万) で、スキルへ分ける前の値。読み物に載せるときは、日付を付けて再計測する。</p>
+<div class="stage">
+<h3>01. はじめの一歩 <span class="badge b-none">段階 1</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>01-はじめの一歩.html</code> / 一人・小さく始める。ルールちゃん登場</li>
+<li><strong>入れる決まり</strong>: 応答は日本語・フルパスを出さない・commit は指示を待つ</li>
+<li><strong>失敗の一コマ</strong>: 英語だけの文が何度も混ざる (出典: 止めた記録 <code>etc/english-deny-logs</code>。回数は書くときに数える。「のちほど止める仕組みが入る」と 08 へ予告する)。載せる気の無いファイルが commit に混ざる (r261109-01)</li>
+<li><strong>図</strong>: ルールちゃんの紹介。「ルールを足す」流れ</li>
+</ul>
+</div>
+
+<div class="stage">
+<h3>02. 慣れてきたら <span class="badge b-none">段階 2</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>02-慣れてきたら.html</code> / 一人・慣れてきた</li>
+<li><strong>入れる決まり</strong>: 実行を明示する語・失敗は直し方を決めずに報告・不具合は仕様も疑う・見張る・終了コード 0 を成功の証拠にしない・複数の案は番号付きの選択肢 (A・B…) で聞く (その失敗は 04 で見せる。02 には「失敗は 04 で」と一言)・テストを先に書く (のちにスキルへ分ける、と注記)</li>
+<li><strong>失敗の一コマ</strong>: 確かめずに「効かない」と言い切り誤りだった (r261109-01)。右クリックが出ない報告を「再現しない」で閉じた (出典: 共通ルール「確認と失敗」の理由)。1 時間半気づかない 7z。全件試験の存在しない引数が、2 回とも 1 本も流れず「成功」で終わった (r261109-01 の 199-A)。空回りの cron を、一晩に約 100 回消さなかった (同 198)</li>
+<li><strong>図</strong>: 確認の語。見張りの時計。選択肢 (A・B) の聞き方</li>
+</ul>
+</div>
+
+<div class="stage">
+<h3>03. 文字化けと道具 <span class="badge b-none">段階 3</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>03-文字化けと道具.html</code> / 一人でも、標準の道具の限界に当たる。道具が生まれる</li>
+<li><strong>入れる決まり</strong>: 共有 CLI (ai-agent-tools) の最初の道具として、文字コードと改行を「組」で扱う・<code>text</code> (読む・探す・書く・置換)・<code>convert-encoding</code> (用途名で変換)・<code>psh</code> (PowerShell の出力を UTF-8 に)</li>
+<li><strong>失敗の一コマ</strong>: 標準の Edit が、読めないバイトを置き換えてエラーなしの「成功」を返す (p260907-01)。ps1・cmd・html で文字コードと改行の形が違い、毎回手で書き分けていた (p260906-01)。PowerShell 経由の出力が化ける (p260929-01。TypeScript 製から Rust の単体 exe へ作り直した)。回避しようとして作った書き方が、ウイルス対策に 3 回検知された (共通ルール「ブロックされたら回避しない」の理由)</li>
+<li><strong>図</strong>: 文字コードと改行の組。化けるしくみ。<code>psh</code> が間に立つ図</li>
+</ul>
+</div>
+
+<div class="stage">
+<h3>04. 課題と決めたことを管理する <span class="badge b-none">段階 4</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>04-課題と決めたことの管理.html</code> / 小さなチーム (複数のセッションと人)</li>
+<li><strong>入れる決まり</strong>: 課題・計画書・status・ローカルルール・実装前後のレビュー (人が読んで直す。のちに子にやらせる、と 07 へ予告 1 行)。<code>issue</code> は、03 の ai-agent-tools の道具のひとつ、と戻りの一言</li>
+<li><strong>課題の管理の変遷</strong>: 管理していなかった → 8/30 に <code>issues.html</code> の 1 ファイルへ集める → 11/3 の実測で 214 KB・1,224 行・68 件 (未・着手は 3 件)、複数セッションの書き換えが混ざる → 11/3〜5 に 1 件 1 ファイルの <code>issue</code>、状態はフォルダ (todo/doing/done/archived) で持つ (p261103-01)</li>
+<li><strong>決めたことの管理の変遷</strong>: 選択肢ルール (会話をまたぐ通し番号) → 11/8 に <code>issue decide</code> (1 件 1 ファイル。11/26 時点で 262 件) → 11/9〜10 に番号の予約 (worktree をまたいでも重ならない)</li>
+<li><strong>失敗の一コマ</strong>: 選択肢の番号が重なる (r261111-01 の 12-A)。手で付けた番号が、道具の返す番号とぶつかった (同 10・11)。31 件を「すべて読める」と ✅ にしたが本文は全部壊れていた (r261109-01)。レビュー前の計画を承認待ちに出した</li>
+<li><strong>図</strong>: 課題の管理の変遷 (管理なし → 1 ファイル → 個別ファイル)。決めたことの変遷。課題の状態 (未・着手・済)。置き場の地図</li>
+</ul>
+</div>
+
+<div class="stage">
+<h3>05. 複数プロジェクトで使う <span class="badge b-none">段階 5</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>05-複数プロジェクトで使う.html</code> / 複数プロジェクト。スキルちゃん登場</li>
+<li><strong>入れる決まり</strong>: 共有 CLI を複数プロジェクトで共有する (ai-agent-tools は 03 で登場済み)・スキルへの分割・他プロジェクトは直さない・<code>check-public</code>・<code>check-markdown</code>・<code>check-contrast</code>・<code>ui-lock</code>・<code>psls</code></li>
+<li><strong>失敗の一コマ</strong>: 共通ルールが約 198 KB で常時読み込みが重い (i261105-01)。道具の困りごとを作り手に伝えず回り道した (出典: 共通ルール「プロジェクト外へのアクセス」の理由。要確認)。公開した個人情報は履歴を書き換えないと消せない (i260912-01)。画面を使う作業が複数プロジェクトでぶつかる (ai-agent-tools の i261114-01)。試験の材料を本物の GitHub の API へ送った (r261111-01 の 13・19)</li>
+<li><strong>図</strong>: ルールとスキルの読み込み。共有 CLI の地図</li>
+</ul>
+</div>
+
+<div class="stage">
+<h3>06. AI 同士がつながる <span class="badge b-none">段階 6</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>06-AI同士がつながる.html</code> / 複数のセッションを同時に動かし始める (ai-chat-lite)</li>
+<li><strong>入れる決まり</strong>: 待受け (<code>wait</code>・<code>waiters</code>・<code>unwait</code>)・発言と周知・public ルーム</li>
+<li><strong>経緯</strong>: 待受けが 60 分で止まる (i260902-02)。サブエージェント経由で張ると 1 回で 5〜6 本立つ (i260905-04)。数え方を道具の <code>waiters</code> にした (i260903-01・02)。止める <code>unwait</code> と、サーバを落とす <code>shutdown</code> を分けた (ai-chat-lite の i261115-01)。発言番号を、GitHub の番号と取り違えない形 <code>m261117-0c</code> にした (i261110-03)。通知を読み飛ばして発言が消える (i260917-01)</li>
+<li><strong>失敗の一コマ</strong>: 他プロジェクトの待受けを止めた・確認コマンド自身を数えた・前方一致の巻き込み (i260901-07・i260903-01・02)。待受けのサブエージェントが「1 回だけ」を守らなかった (i260902-03。禁止を書き足すだけでは止まらず、親が直接張る形に着地した)</li>
+<li><strong>図</strong>: チャットの部屋。待受けの数え方。発言番号の形</li>
+</ul>
+</div>
+
+<div class="stage">
+<h3>07. 並べて動かす <span class="badge b-none">段階 7</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>07-並べて動かす.html</code> / 中規模から大規模の体制</li>
+<li><strong>入れる決まり</strong>: 親子のセッション・レビュー専用の子セッション (子にやらせるレビュー)・状態の色・引継ぎ・親子の指示の扱い。課題ごとのブランチと worktree、課題を 5 段で進める体制、決定 1076-A は、共通ルールに根拠が無いので、読み物には載せない (07 のレビューで確認)</li>
+<li><strong>体制の育ち方</strong>: 11/13 に、親・作業の子・試験の窓口の子・レビューの子の並列体制 (決定 707-A〜710-A)。1 つの課題を 5 段 (設計レビュー → 作る → ソースレビュー → 試験 → 統合) で進める。失敗のたびに細則が増え、11/26 に縮小した (決定 1076-A)</li>
+<li><strong>失敗の一コマ</strong>: 親が引継ぎで替わり、子を二重に起こした (引継ぎの節)。子のセッションが終わったのに、親が約 1.5 時間気づかなかった (ファイルマネージャのローカルルール 11 章)。送る案が埋もれた (i261111-03)</li>
+<li><strong>図</strong>: 親子セッション。課題の 5 段</li>
+</ul>
+</div>
+
+<div class="stage">
+<h3>08. 仕組みで守る <span class="badge b-none">段階 8</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>08-仕組みで守る.html</code> / 大規模。フックくん登場</li>
+<li><strong>入れる決まり</strong>: フック (止める仕組み)・失敗の振り返りからルールへ返す・クラウド作業</li>
+<li><strong>失敗の一コマ</strong>: 英語の混入が約 18 回 (r261109-01。フックは止めるが、書くこと自体は減っていない)。失敗した Edit の後の commit を止める (共通ルールの理由)。「24 回 → 27 回」「約 14 回働いた」は、記録で確かめられなかったので、読み物には載せない (08 のレビューで確認)。引継ぎを復唱前に消した (i261121-01)。主役は、最初の 2 件 (英語の混入・失敗した Edit の後の commit) に絞り、残りは小ネタ</li>
+<li><strong>図</strong>: フックの働き (止める・差し込む)。フックの代表 8 本</li>
+</ul>
+</div>
+
+<div class="stage">
+<h3>09. 画面の試験と環境の事故 <span class="badge b-none">段階 9</span></h3>
+<ul>
+<li><strong>ファイル / 規模</strong>: <code>09-画面の試験と環境の事故.html</code> / 大規模。画面を持つアプリの試験と、PC の環境 (ファイルマネージャの開発から)</li>
+<li><strong>入れる決まり</strong>: 画面の試験は人の操作に合わせる・起動した窓は起動した側が閉じる・消す戻すボタンは押さない・試験の後に残りを数える (「前からある動きを無くさない」「外の原因は全部読んでから言う」は一般の決まりなので、02・04 に置く)。対象読者は、画面を持つ Windows アプリを作る人 (冒頭に 1 行書く)</li>
+<li><strong>失敗の一コマ</strong>: 画面の試験が、押してすぐ離すクリックで通っていた (i261105-09)。メニューをキーで選んで Git Bash の窓が利用者の画面に出た (i261111-0h)。試験が残した窓 1,605 個のダイアログ (共通ルール「Windows のデスクトップアプリ」の理由)。「再現しない」で閉じない話 (覚えの期限 10 分を過ぎると黙って効かなくなった。ファイルマネージャの i261029-0g) は、02 の右クリックの話と同じ型なので、02 に 1 回だけ出す</li>
+<li><strong>環境の事故 (小ネタ)</strong>: ある PC の設定で、マウスの主ボタンが左右入れ替わっていた (i261118-0s)。ビルドの置き場が 133 GB になり、空きが 4.2 GB に (i261108-06)。試験が開いた窓が前面を取って、他の試験を覆った (11/2〜3。出典の番号は未確認)</li>
+<li><strong>図</strong>: 画面の試験の流れ (人の操作に合わせる)。窓の後始末。デグレの見つけ方</li>
+</ul>
+</div>
+
+<p><strong>フックの代表 (08 で紹介)</strong>: Bash の <code>cd</code> を止める・<code>git add -A</code> を止める・失敗した Edit の後の commit を止める・画面全体の撮影を止める・復唱前の引継ぎの削除を止める・残った見張りを数える・生成物の .md への直接 Edit を止める・英語だけの文を止める (段階 1 の話と同じ失敗なので、08 では別の例を主にする)。</p>
+<p><strong>小ネタ (各段階に 1〜2 件、重ねない)</strong>: 「訳を書いたのに英語で止められる」(08)・「見張りが 2 日残った」(08。フック <code>check-leftover-processes</code> の話)・「マージが失敗したのにタグが付いた」(02 の補足)。ウイルス対策の検知は、03 の失敗の一コマに入っているので、小ネタにしない。</p>
+<p><strong>注意</strong>: 課題の本文を全部は読んでいない (題だけのものがある)。書くときに、出典を開いて確かめる。他プロジェクトの名前が課題本文にあっても、資料では伏せる (460-A)。ai-agent-tools と ai-chat-lite は、資料の範囲に含める (11/26 の指示。458-A の「一行の紹介」を広げた)。使い方の正は、各プロジェクトの <code>TOOLS-USAGE.md</code> と <code>CHAT-USAGE.md</code> で、資料はそこから要点と実例を拾い、写しは持たない (置き場の形は、471 のあとに決める)。他プロジェクトのファイルは読むだけで、直さない。</p>
+
+</section>
+
+<section class="ch03" id="ch03">
+<h1>見せ方</h1>
+<ul>
+<li><strong>SVG 図</strong>: 共通ルール「HTMLデザインルール」の図の決まり (箱は下から上へ明るくなる縦グラデーション・id はページで一意・文字は白) に従う。軽い動き (ふわふわ・ぴょこぴょこ) は CSS だけで付け、<code>prefers-reduced-motion</code> の設定では止める</li>
+<li><strong>「いまここ」の旗</strong>: 読み物は右端に縦に固定。プレゼンは下端のバーに固定。段階の色は、章の虹色 (9 章の色相: 280 / 245 / 210 / 175 / 140 / 105 / 70 / 35 / 0) に揃える</li>
+<li><strong>配色</strong>: 背景は淡い色のみ。章の色は、共通ルールの虹色の決まりに従う。道具が作る HTML ではないので、暗い配色は持たせない</li>
+<li><strong>面白さ</strong>: キャラの吹き出し・失敗の一コマ漫画 (SVG)。ただし、読み手の役に立たない自虐や制作の事情は書かない</li>
+<li><strong>スライドの動き</strong>: 矢印キー・画面の押し・「いまここ」の旗の押しで移動。印刷用の見た目は付けない (pptx は別の計画)</li>
+</ul>
+<div class="callout"><p><strong>名前の扱い</strong> 他プロジェクトの名前は文に書くが、リンクにしない。リンクを貼ってよいのは、公開情報の出典 (URL) だけ。このプロジェクトの資料へのリンクは、<code>docs/</code> からの相対リンク (<code>../README.html</code> など) にする。</p></div>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>作業の順</h1>
+<ol>
+<li><span class="badge b-ok">済</span> <strong>課題を立て、着手にする</strong> (i261126-01。status のファイルは、<code>notes/30_status</code> を見たが、このプロジェクトに無い)</li>
+<li><span class="badge b-ok">済</span> <strong>素材の洗い出し</strong>: <code>rules/</code> ・ <code>skills/</code> ・ フックの一覧を、サブエージェント (読むだけ・役目の小さいモデル) で作る。数は実測で数え直す (フックは <code>settings.json</code> の登録数と、ファイル数を分ける)。失敗の実例は、課題・調査・フックの README から拾い、出典は課題番号で記録する。結果は <code>tmp/</code> に置き、使い終えたら消す</li>
+<li><span class="badge b-ok">済</span> <strong>見出しと図の下書き</strong> (上の「9 段階の下書き」に書いた。レビュー待ち): 9 段階の見出し・各段階の失敗の例・図の一覧を、この計画に追記して、利用者へ見せる前に、<code>rules-review</code> のレビューを通す (計画の更新。決まっていないことは、選択肢で聞く)</li>
+<li><span class="badge b-ok">済</span> <strong>共通の CSS・JS を作る</strong> (段階の色 st01〜st09 を共通 CSS に置いたのは、旗が 9 駅すべての色を要するため。章の見出し番号「01.1」は、手書きで通す) (<code>docs/css/style.css</code> と <code>docs/js/</code> の旗の JS)。読み物より先に要る。守る動き (矢印キーで進む・旗が段階の駅に立つ・JS 無効で縦に並ぶ・狭い幅で上端の横バーに切り替わる) は、JS の前に試験にする (JS 無効の試験は不要)。画面の確かめだけで済ませる部分は、その旨を記録する。旗の JS は、後のレビューの観点 (リーク・ハング) に入れる。代替色と <code>counter-reset</code> は、共通側に置かず各 HTML に書く</li>
+<li><span class="badge b-warn">着手</span> <strong>読み物の HTML を書く</strong> (01 は書いてレビュー済み。02・03 はレビュー済みで直した。04・05 はレビュー済みで直した。06 はレビュー済みで直した。07 はレビュー済みで直した。08 はレビュー済みで直した。09 はレビュー済みで直した。9 本そろった。構成案 ZZ-構成 は書いてレビュー依頼中) (9 本と構成案)。資料一覧・前へ/次へ/目次のバッジ・各章に図 1 点以上は、勉強会資料の決まりに従う。BOM 付き UTF-8 ・ LF (<code>convert-encoding --to html</code>)。<code>check-contrast</code> (共通 CSS・JS を含めて) で読めない箇所を 0 件にする。書いたら、README へ 1 本目のリンクと戻るリンクを張り、<code>html2md</code> ・ <code>check-markdown</code> を通す</li>
+<li><span class="badge b-none">未</span> <strong>レビュー</strong>: 子セッション <code>rules-review</code> に、漏れ・古い記述・誤り・図の食い違い・名前の扱い (460-A) を見せる。画面は自分で撮って見る (明るい配色で、配置・動き・「いまここ」の旗の位置。狭い幅 (旗が上端の横バーに切り替わる)・<code>prefers-reduced-motion</code> も撮る。JS 無効は撮らない)。撮るのは確かめる窓だけにする</li>
+<li><span class="badge b-none">未</span> <strong>プレゼン用の HTML を書く</strong> (<code>勉強会-プレゼン.html</code>)。同じレビューと確認を通す</li>
+<li><span class="badge b-warn">着手</span> <strong>root の README にプレゼンのリンクを足す</strong> (読み物と構成案の一覧 (AUTO:list) と、章の色相の配り直しは済み。<code>html2md</code> ・ <code>check-markdown</code> ・ <code>check-public</code> と、プレゼンのリンクは未)。README の章を 1 つ足し (469-A)、全章の色相を配り直す。章の中身は、参考の学習資料の README の一覧と同じ作り (<code>build-docs.ts</code> の <code>AUTO:list</code>。477-A)。README には、変わらない事実だけを書き、<code>docs/</code> に置く理由を 1 行足す (状態・「今は Pages にしない」は書かない)。<code>html2md</code> ・ <code>check-markdown</code> ・ <code>check-public</code> を通す。個人名・社名・メールアドレス・実体パスが無いかを、書いた本文で目視する</li>
+<li><span class="badge b-none">未</span> <strong>commit・push</strong> (ローカルルール「commit の分け方」。目的ごとに分ける)</li>
+<li><span class="badge b-none">未</span> <strong>pptx の計画</strong>を別に立てる (別の課題)</li>
+</ol>
+
+<h2>今ある動き</h2>
+<p>新しい資料を足すだけで、既存のルール・スキル・フックの動きは変えない。守る動きは無い。ただし、root の <code>README.html</code> と <code>README.md</code> は書き換える (リンクを足す)。README に状態を書かない (共通ルール「HTMLデザインルール」の「README に状態を書かない」)。</p>
+</section>
+
+<section class="ch05" id="ch05">
+<h1>決めたこと・決めること・レビュー</h1>
+
+<h2>決めたこと</h2>
+<p>利用者が選んだもの (11/26)。番号は、<code>issue choice next</code> で取ったもの。</p>
+<ul class="decisions">
+<li><strong>458-A</strong> <span class="badge b-ok">恒久</span><br>範囲は、ルール・スキル・フックの 3 つとも。全体像と 1 つずつの要点を 1 行で書き、詳細は各 README へ誘導する。共有ツール (ai-agent-tools) と ai-chat-lite も、段階の中に含める</li>
+<li><strong>459-C</strong> <span class="badge b-ok">恒久</span><br>プレゼンは、HTML の 1 ファイルのスライド (ブラウザで発表)。pptx は、後で別の計画にする</li>
+<li><strong>460-A</strong> <span class="badge b-ok">恒久</span><br>他プロジェクト名は文中に書き、リンクは貼らない。個人名・実体パス・社名・メールアドレスは伏せる</li>
+<li><strong>461-A → 466-A</strong> <span class="badge b-ok">恒久</span><br>置き場は <code>docs/</code> (新設)。共通ルール「HTMLデザインルール」の <code>docs/</code> の形 (共通 CSS・共通 JS) に従う。461-A の <code>notes/20_docs/</code> は取り下げた (<code>notes/</code> は自分たちの管理用)</li>
+<li><strong>462-A</strong> <span class="badge b-ok">恒久</span><br>3 つの仕組み (ルール・スキル・フック) を擬人化した小さなキャラが案内する</li>
+<li><strong>463-A</strong> <span class="badge b-ok">恒久</span><br>読み物を先に書き、レビューを通してから、プレゼン用を作る</li>
+<li><strong>468-A</strong> <span class="badge b-warn">暫定</span><br>今は GitHub Pages にしない (将来するかもしれない)。Pages にするとしても、公開するのがリポジトリの root (<code>/</code>) か <code>docs/</code> かは、決めていない。するときは、<code>light-github-pages</code> に従い、別の計画にする。見直す引き金は、誰かが公開を求めたとき</li>
+<li><strong>(11/26 の指示)</strong> <span class="badge b-ok">恒久</span><br>まず読み物から作る。プレゼンは、読み物の後で決める。スライドは、枚数制限なし・時間が長くなってよい。課題は i261126-01</li>
+<li><strong>(11/26 の指示)</strong> <span class="badge b-ok">恒久</span><br>資料の範囲を、ルール・スキル・フックから、共有ツール (ai-agent-tools) と AI 間チャット (ai-chat-lite) にも広げる。「一行の紹介」では済ませない</li>
+<li><strong>472 (利用者の答え)</strong> <span class="badge b-ok">恒久</span><br>ツールとチャットは、必要になった時期に開発した、と捉える。そのため、章 (読み物のページ) を増やしてよい。順番は検討が要る (473 で決める)</li>
+<li><strong>457-A</strong> <span class="badge b-ok">恒久</span><br>読み手は、AI エージェント (特に Claude Code) を使う開発者の同僚。仕組みと使い方に重きを置く</li>
+<li><strong>475-A</strong> <span class="badge b-ok">恒久</span><br>計画を承認し、作業に入る (11/26)。ファイル名は、勉強会資料の決まり (light-tutorial) どおり日本語 (<code>01-はじめの一歩.html</code>)。タイトルは「資料番号. タイトル」、章は「資料番号.章番号」、各章に図を 1 点以上。「目次」バッジは <code>../README.html</code> を指す</li>
+<li><strong>476-A</strong> <span class="badge b-ok">恒久</span><br>案内人は「クロード君」(Claude Code の擬人化)。クロード君が失敗し (困り顔・小刻みに揺れる)、ルールちゃん・スキルちゃん・フックくんが助けに来て、うまくいく (うれしい顔・ゆったり傾く)。3 体は相棒として、出番の段階 (01・05・08) に登場する。462-A の擬人化は、クロード君の相棒の形で続ける。各章は「クロード君の失敗 → 失敗の一コマ → 足した決まり → うまくいったクロード君」の順</li>
+<li><strong>(11/26 のレビューからの取り決め)</strong> <span class="badge b-ok">恒久</span><br>図の色: 白い字が載る箱は、淡い端の明度を、緑・黄緑・橙・青緑 (色相 20〜200) で 45% に抑える (白字の対比のため)。実際の出来事の記録が無い失敗は、見出しを「たとえ話」にし、吹き出しを可能性の形にする。「利用者」は、AI に頼む人 (読者) のこと、と 02 の冒頭に 1 行書く。実際の出来事は、共通ルールの理由・課題・調査の番号で出典を示す</li>
+<li><strong>(11/26 の指示)</strong> <span class="badge b-ok">恒久</span><br>処理の「背景」は、読み手に分かるよう、「背景 (バックグラウンド処理)」と書く</li>
+<li><strong>478-A</strong> <span class="badge b-ok">恒久</span><br>ZZ-構成 の出典の置き場には、共通ルールのファイル名 (<code>common-rules.md</code>・<code>rules/</code>・<code>local-rules.md</code> など) を書く。この資料はプロジェクトの構成を示すので、「ルールのファイル名を書かない」の例外にする</li>
+<li><strong>477-A</strong> <span class="badge b-ok">恒久</span><br>索引ページ (00) は作らない。README の <code>docs/</code> の章を、資料一覧にする。一覧の作りは、参考の学習資料の README (資料ごとのカード: 通し色相・題・1 行の説明・<code>docs/NN-…html</code> へのリンク) に合わせ、生成の道具 (<code>build-docs.ts</code>) に <code>AUTO:list</code> を足して作る。README へのリンクは、9 本そろってから出す</li>
+<li><strong>(11/26 の指示)</strong> <span class="badge b-ok">恒久</span><br>読み物は、1 本 (1 章) 書くたびに、<code>rules-review</code> のレビューを通す。9 本まとめてのレビューにはしない</li>
+<li><strong>(11/26 の指示)</strong> <span class="badge b-ok">恒久</span><br>JS が無効な環境は想定しない。逃げ道は作らず、試験・撮影の対象にしない。キャラの絵は、揺れる・傾くなど動いてよい。面白味を足す (キャラの案内役の案は、別に決める)</li>
+<li><strong>(11/26 の指示)</strong> <span class="badge b-ok">恒久</span><br>HTML の作りは、参考の学習資料 (JavaScript 入門) と共通ルールに合わせる。章の色は章ごとの虹色 (<code>.chNN</code>)、章番号は CSS カウンタ、前へ/次へ/目次は <code>doclink</code>、生成の道具 <code>tools/20_build/build-docs.ts</code>。SVG の箱は、単色にせず、下が暗く上が明るいグラデーション</li>
+<li><strong>474-A</strong> <span class="badge b-ok">恒久</span><br>段階 08 の画面の試験・環境の事故を、09「画面の試験と環境の事故」として切り出し、読み物は 9 本にする。色相は 9 つに配り直す (280 / 245 / 210 / 175 / 140 / 105 / 70 / 35 / 0)。08 はフックの話に絞る</li>
+<li><strong>473-A</strong> <span class="badge b-ok">恒久</span><br>読み物の順は、学ぶ人の成長の順 (小→大)。ツールとチャットは、必要になった段階の章として足し、全部で 8 本 (474-A で 9 本に) (01 はじめの一歩・02 慣れてきたら・03 文字化けと道具・04 課題と決めたことの管理・05 複数プロジェクトで使う・06 AI 同士がつながる・07 並べて動かす・08 仕組みで守る)</li>
+<li><strong>470-A</strong> <span class="badge b-ok">恒久</span><br>読み物は、勉強会資料の決まり (light-tutorial) どおりファイルを分け (数は 473-A・474-A で 6 から 9 に)、構成案を付ける。旗の JS は共有の 1 本で、各ページの段階の印から位置を決める</li>
+<li><strong>469-A</strong> <span class="badge b-ok">恒久</span><br>README に <code>docs/</code> の章を 1 つ足す (<code>docs/</code> は <code>notes/</code> のカテゴリに当たらないため)。章が増えるので、README の虹色を配り直す</li>
+<li><strong>467-B</strong> <span class="badge b-ok">恒久</span><br>章の色相は、読み物の数に合わせる (473-A・474-A で 9 つ)。「全体像」は章にせず、ミニタイトルバーの扱いにする</li>
+</ul>
+<p>利用者の指定 (原文の要点): 初心者から上級者へ、小規模から大規模へ、少しずつ入れていく。面白おかしく・かわいく。「失敗したからルールを足していく」を軸にする。SVG 図を多用し、多少動いてよい。全体像とロードマップを持ち、<strong>いま見ている所が、どの地点かを常に見せる</strong>。資料の名前は「Claude Code 勉強会 (ルール・スキル・フック)」。</p>
+
+<h2>残る決めること</h2>
+<ul>
+<li><strong>md 化</strong>: 読み物の Markdown を作るか。スライド (JS) の Markdown は作らないか</li>
+<li><strong>勉強会資料の決まりの細部</strong> (作業 3 で決める): タイトルは「資料番号. タイトル」(01. はじめの一歩) に揃える (<code>&lt;title&gt;</code>・h1・リンク・前後ナビ)。各ページの h1 (章) を何にするか (「各段階の書き方」の 4 つを章にするか)。Pages にしない間は、資料一覧ページを作らず、README の <code>docs/</code> の章に 01〜09 のバッジを並べる。章の色は、読み物ごとの章の色と、README の章の色を分けて数える</li>
+<li><strong>レビューの役の分け</strong>: 04 は人が読んで直すレビュー、07 は子セッションにやらせるレビュー、と書き分ける (04 の末尾に「のちに子にやらせる」と予告 1 行)</li>
+<li><strong>段階の内容の注記</strong>: 「テストを先に書く」はスキル (段階 5) の決まり。入れる段階を決める。段階 1 の失敗の解決 (フック) は、「のちほど止める仕組みが入る」と予告する (08 で回収)</li>
+<li>クラウド作業の置き場 (段階 8 のままか、別にするか)。作業 3 で決める</li>
+<li>pptx への変換の道具と方法 (別の計画)</li>
+</ul>
+
+<h2>レビューの結果</h2>
+<p>1 回目: 置き場・README の順・キャラの登場順・JS の逃げ道・課題・名前の目視・フックの数え方を、上へ反映した。2 回目: ⚠️6 件と推測 7 件を、上へ反映した (利用者の決めることは「残る決めること」へ)。3 回目: ⚠️3 件と推測 6 件を反映した (README の章・勉強会資料の決まりの当て方は、利用者が決めた)。4 回目 (470-A への組み替えと「6 段階の下書き」): ⚠️4 件 (出典のずれ・失敗の重なり・勉強会資料の決まりの細部・古い記述) と推測を反映した。5 回目: ⚠️3 件と推測を反映した (出典はプロジェクト名 + 番号・段階の絞り方・08 の切り出しは 474-A)。6 回目: 9 本に組み替えた版を、頼む (未了)。</p>
+</section>
+
+</div>
+
+<footer>
+<p><a class="backlink" href="../../README.html" aria-label="トップへ戻る"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8 L8 2.5 L14 8"/><path d="M3.5 7 V13.5 H12.5 V7"/></svg></a></p>
+</footer>
+
+</body>
+</html>
