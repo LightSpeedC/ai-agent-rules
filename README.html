@@ -176,13 +176,14 @@
 		padding: 18px 30px 30px;
 	}
 
-	/* 章(h1)はカテゴリごと。5 章の虹色 (280 / 210 / 140 / 70 / 0) */
+	/* 章(h1)はカテゴリごと。7 章の虹色 (280 / 233.3 / 186.7 / 140 / 93.3 / 46.7 / 0) */
 	section.ch01 { --accent: hsl(280, 78%, 25%); --accent2: hsl(280, 58%, 55%); --soft: hsl(280, 28%, 95%); }
-	section.ch02 { --accent: hsl(224, 78%, 25%); --accent2: hsl(224, 58%, 55%); --soft: hsl(224, 28%, 95%); }
-	section.ch03 { --accent: hsl(168, 78%, 25%); --accent2: hsl(168, 58%, 55%); --soft: hsl(168, 28%, 95%); }
-	section.ch04 { --accent: hsl(112, 78%, 25%); --accent2: hsl(112, 58%, 55%); --soft: hsl(112, 28%, 95%); }
-	section.ch05 { --accent: hsl(56, 78%, 25%); --accent2: hsl(56, 58%, 55%); --soft: hsl(56, 28%, 95%); }
-	section.ch06 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
+	section.ch02 { --accent: hsl(233.3, 78%, 25%); --accent2: hsl(233.3, 58%, 55%); --soft: hsl(233.3, 28%, 95%); }
+	section.ch03 { --accent: hsl(186.7, 78%, 25%); --accent2: hsl(186.7, 58%, 55%); --soft: hsl(186.7, 28%, 95%); }
+	section.ch04 { --accent: hsl(140, 78%, 25%); --accent2: hsl(140, 58%, 55%); --soft: hsl(140, 28%, 95%); }
+	section.ch05 { --accent: hsl(93.3, 78%, 25%); --accent2: hsl(93.3, 58%, 55%); --soft: hsl(93.3, 28%, 95%); }
+	section.ch06 { --accent: hsl(46.7, 78%, 25%); --accent2: hsl(46.7, 58%, 55%); --soft: hsl(46.7, 28%, 95%); }
+	section.ch07 { --accent: hsl(0, 78%, 25%); --accent2: hsl(0, 58%, 55%); --soft: hsl(0, 28%, 95%); }
 	section h1 {
 		background: #12224d; background: linear-gradient(100deg, var(--accent, #12224d), var(--accent2, #2f5fbf));
 		color: #ffffff;
@@ -200,7 +201,7 @@
 	<div class="inner">
 		<h1>ai-agent-rules</h1>
 		<p class="lead">AIエージェント (Claude Code・Codex 等) が参照する共通ルール。</p>
-		<p class="date">📅 作成: 2026-09-02 / 更新: 2026-11-03</p>
+		<p class="date">📅 作成: 2026-09-02 / 更新: 2026-11-26</p>
 	</div>
 </div>
 
@@ -209,6 +210,55 @@
 <p class="navwrap"><a class="backlink" href="../"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-label="親サイトへ戻る"><path d="M2 7.2 8 2l6 5.2"/><path d="M3.6 6.6V13h8.8V6.6"/></svg></a></p>
 
 <section class="ch01" id="ch01">
+	<h1>勉強会の資料</h1>
+	<p>AI エージェント (特に Claude Code) を使う開発者向けに、共通ルール・スキル・フックを、失敗から学ぶ形でまとめた読み物です。01 から順に読みます。</p>
+	<!-- AUTO:list -->
+	<ul class="doclist">
+		<li>
+			<a class="doclink" href="docs/01-はじめの一歩.html" style="--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);">01. はじめの一歩</a>
+			<p class="note">Claude Code を使い始めたら、まず入れる 3 つの決まり。日本語で応える・フルパスを出さない・commit は指示を待つ。失敗するクロード君が、ルールのおかげでうまくいくようになります</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/02-慣れてきたら.html" style="--accent:hsl(245,78%,25%);--accent2:hsl(245,58%,55%);--soft:hsl(245,28%,95%);">02. 慣れてきたら</a>
+			<p class="note">1 人で使うのに慣れてきたクロード君が、「やって」の取り違え・言い切りすぎ・「再現しない」・見張り忘れで失敗します。実行の合図・失敗の報告・確かめてから言う、の決まりを足します</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/03-文字化けと道具.html" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);">03. 文字化けと道具</a>
+			<p class="note">標準の道具だけでは、日本語のファイルを安全に扱えません。クロード君が文字化け・壊れた書き換え・検知に当たって、読む・変換する・PowerShell の出力を UTF-8 に揃える道具と、決まりが生まれます</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/04-課題と決めたことの管理.html" style="--accent:hsl(175,78%,25%);--accent2:hsl(175,58%,55%);--soft:hsl(175,28%,95%);">04. 課題と決めたことの管理</a>
+			<p class="note">複数のセッションと人で作業するようになると、「これから何をするか」と「何を決めたか」が散らばります。クロード君が番号を取り違えたり、確かめないまま見せたりして、課題・決定・計画の置き場と決まりが生まれます</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/05-複数プロジェクトで使う.html" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);">05. 複数プロジェクトで使う</a>
+			<p class="note">プロジェクトが増え、ルールも道具も共有するようになると、読み込みが重くなり、他のプロジェクトとぶつかります。1 章で助っ人の「スキルちゃん」が加わります。ルールの分け方・他プロジェクトとの付き合い方・公開前の確かめ・画面の取り合いの決まりを足します</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/06-AI同士がつながる.html" style="--accent:hsl(105,78%,25%);--accent2:hsl(105,58%,55%);--soft:hsl(105,28%,95%);">06. AI 同士がつながる</a>
+			<p class="note">プロジェクトごとの AI が、チャットで話し合うようになります。待受けを数える・止める・読み切る・周知 (共通ルールを変えたとき、他のプロジェクトへ知らせること) は短く、の決まりを、クロード君の失敗から足します</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/07-並べて動かす.html" style="--accent:hsl(70,78%,25%);--accent2:hsl(70,58%,55%);--soft:hsl(70,28%,95%);">07. 並べて動かす</a>
+			<p class="note">メインの AI が、別のセッション (サブエージェント) を呼んで、並べて動かすようになります。レビュー専用のセッション・状態の色・引継ぎ・セッション間の指示の扱いを、クロード君の失敗から足します</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/08-仕組みで守る.html" style="--accent:hsl(35,78%,25%);--accent2:hsl(35,58%,55%);--soft:hsl(35,28%,95%);">08. 仕組みで守る</a>
+			<p class="note">書いたルールを、AI が守れないことがあります。そこで、破ろうとしたら自動で止める仕組み (フック) を足します。助っ人の「フックくん」と一緒に、英語の混入・失敗した編集の後の commit などを止めます</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/09-画面の試験と環境の事故.html" style="--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);">09. 画面の試験と環境の事故</a>
+			<p class="note">画面を持つ Windows アプリを作る人向けの章です。画面の試験は、人の操作に合わせます。試験で起こした窓は閉じ、時間の上限を付け、外へは送りません。クロード君の失敗から、決まりを足します</p>
+		</li>
+		<li>
+			<a class="doclink" href="docs/ZZ-構成.html" style="--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);">ZZ. 構成</a>
+			<p class="note">この勉強会の読み物 9 本の、対象読者・章立ての意図・資料の約束 (用語など)・出典の置き場をまとめた付録です。本編は順に読む資料で、この付録は、全体を見渡したいときに開きます</p>
+		</li>
+	</ul>
+	<!-- /AUTO:list -->
+</section>
+
+<section class="ch02" id="ch02">
 	<h1>ルール</h1>
 	<ul class="doclist">
 		<li>
@@ -222,7 +272,7 @@
 	</ul>
 </section>
 
-<section class="ch02" id="ch02">
+<section class="ch03" id="ch03">
 	<h1>調査</h1>
 	<ul class="doclist">
 		<li>
@@ -252,7 +302,7 @@
 	</ul>
 </section>
 
-<section class="ch03" id="ch03">
+<section class="ch04" id="ch04">
 	<h1>計画</h1>
 	<ul class="doclist">
 		<li>
@@ -319,7 +369,7 @@
 	</ul>
 </section>
 
-<section class="ch04" id="ch04">
+<section class="ch05" id="ch05">
 	<h1>課題</h1>
 	<ul class="doclist">
 		<li>
@@ -333,7 +383,7 @@
 	</ul>
 </section>
 
-<section class="ch05" id="ch05">
+<section class="ch06" id="ch06">
 	<h1>仕様</h1>
 	<ul class="doclist">
 		<li>
@@ -343,7 +393,7 @@
 	</ul>
 </section>
 
-<section class="ch06" id="ch06">
+<section class="ch07" id="ch07">
 	<h1>品質レビュー</h1>
 	<ul class="doclist">
 		<li>

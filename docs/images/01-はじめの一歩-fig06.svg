@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 150" width="560" height="150" role="img" aria-label="日本語の応答に英語の文が混ざる様子の図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186.7,78%,25%)"/><stop offset="1" stop-color="hsl(186.7,58%,45%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="10" width="540" height="130" rx="12" fill="#ffffff" stroke="#d9dfe8" stroke-width="2"/>
+<rect x="24" y="24" width="250" height="30" rx="8" fill="url(#i1)"/><text x="149" y="45" fill="#fff" font-size="14" text-anchor="middle">テストを流します。</text>
+<rect x="24" y="64" width="330" height="30" rx="8" fill="url(#i2)"/><text x="189" y="85" fill="#fff" font-size="14" text-anchor="middle">Now let me run the tests.</text>
+<rect x="24" y="104" width="250" height="30" rx="8" fill="url(#i1)"/><text x="149" y="125" fill="#fff" font-size="14" text-anchor="middle">全部通りました。</text>
+<text x="380" y="85" fill="#a51f22" font-size="26">←</text><text x="415" y="85" fill="#a51f22" font-size="14">混ざった!</text>
+</svg>

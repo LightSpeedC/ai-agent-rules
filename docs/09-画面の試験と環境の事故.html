@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>09. 画面の試験と環境の事故</title>
+<style>
+/* css/style.css が読めなかったときの代替色 */
+.titlebar, section h1, th, a.doclink, .toc ol a, .badge { background: #12224d; color: #fff; }
+</style>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* AUTO:style */
+.ch01{--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);}
+.ch02{--accent:hsl(186.7,78%,25%);--accent2:hsl(186.7,58%,55%);--soft:hsl(186.7,28%,95%);}
+.ch03{--accent:hsl(93.3,78%,25%);--accent2:hsl(93.3,58%,55%);--soft:hsl(93.3,28%,95%);}
+.ch04{--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);}
+.toc ol{counter-reset:tocnum;} .toc ol li{counter-increment:tocnum;} .toc ol a::before{content:"09." counter(tocnum) " ";}
+body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::before{content:"09." counter(secnum) " ";}
+/* /AUTO:style */
+</style>
+<script src="js/study-nav.js" defer></script>
+</head>
+<body>
+<!-- AUTO:roadmap -->
+<nav class="roadmap" aria-label="ロードマップ"><ol>
+<li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
+<li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
+<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
+<li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
+<li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
+<li><a class="station" href="07-並べて動かす.html" title="07. 並べて動かす" aria-label="07. 並べて動かす" style="background:hsl(70,58%,40%);--st:hsl(70,58%,40%);">7</a></li>
+<li><a class="station" href="08-仕組みで守る.html" title="08. 仕組みで守る" aria-label="08. 仕組みで守る" style="background:hsl(35,58%,40%);--st:hsl(35,58%,40%);">8</a></li>
+<li><a class="station here" href="09-画面の試験と環境の事故.html" title="09. 画面の試験と環境の事故 (いまここ)" aria-label="09. 画面の試験と環境の事故 (いまここ)" aria-current="page" style="background:hsl(0,58%,40%);--st:hsl(0,58%,40%);">9</a></li>
+</ol></nav>
+<!-- /AUTO:roadmap -->
+
+<!-- 案内人の絵 (クロード君)。各場面から use で呼ぶ -->
+<svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="g-09-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
+<linearGradient id="g-09-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<symbol id="cl-09-sad" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-09-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-09-ck)"/>
+<circle cx="30" cy="52" r="7" fill="#fff"/><circle cx="54" cy="52" r="7" fill="#fff"/>
+<circle cx="31" cy="54" r="3" fill="#12224d"/><circle cx="55" cy="54" r="3" fill="#12224d"/>
+<path d="M22 42 L36 46 M62 42 L48 46" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<path d="M32 74 Q42 66 52 74" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M70 34 Q74 42 70 46 Q66 42 70 34 Z" fill="hsl(200,80%,70%)"/>
+</symbol>
+<symbol id="cl-09-happy" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-09-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-09-ck)"/>
+<path d="M22 54 Q30 44 38 54 M46 54 Q54 44 62 54" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+<circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
+<path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
+</symbol>
+</defs>
+</svg>
+
+<div class="titlebar"><div class="inner">
+<h1>09. 画面の試験と環境の事故</h1>
+<p class="lead">画面を持つ Windows アプリを作る人向けの章です。画面の試験は、人の操作に合わせます。試験で起こした窓は閉じ、時間の上限を付け、外へは送りません。クロード君の失敗から、決まりを足します</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+</div></div>
+
+<div class="wrap">
+<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="08-仕組みで守る.html" aria-label="前へ" title="08. 仕組みで守る" style="--accent:hsl(35,78%,25%);--accent2:hsl(35,58%,55%);--soft:hsl(35,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:toc -->
+<nav class="toc"><ol>
+<li class="ch01"><a href="#ch01">画面の試験は、人の操作に合わせる</a></li>
+<li class="ch02"><a href="#ch02">起こした窓は、起こした側が閉じる</a></li>
+<li class="ch03"><a href="#ch03">試験には、時間の上限を付ける</a></li>
+<li class="ch04"><a href="#ch04">外へ送る道具の試験は、送らない口を通す</a></li>
+</ol></nav>
+<!-- /AUTO:toc -->
+
+<section class="ch01" id="ch01">
+<h1>画面の試験は、人の操作に合わせる</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-09-sad" xlink:href="#cl-09-sad"/></svg>
+<div class="bubble"><p>試験は全部通ってるのに、実際に使うと、欄に入ったときの動きが壊れてた……。</p></div>
+</div>
+
+<p>画面を持つアプリは、マウスやキーを送って、試験します。このとき、人の操作とかけ離れた送り方をすると、本物の動きの不具合を見逃します。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 押してすぐ離す試験が、通り続けた</h3>
+<p>マウスを「押してすぐ離す」形で送る試験が、通り続けました。その間、<strong>欄に入ると全体を選ぶ動きが、10 日ほど壊れたまま</strong>でした。壊れたのは、押してから離すまでの間で、押す位置によっても結果が変わったのです。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="人の操作に合わせた、マウスの押し方の図">
+<defs>
+<linearGradient id="g-09-1a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-09-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-09-1c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+<rect x="10" y="14" width="290" height="70" rx="10" fill="url(#g-09-1a)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">押してすぐ離す</text><text x="155" y="64" fill="#fff" font-size="12" text-anchor="middle">通り続けて、壊れたまま 10 日ほど</text>
+<rect x="320" y="14" width="290" height="70" rx="10" fill="url(#g-09-1b)"/><text x="465" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">押してから、間を置いて離す</text><text x="465" y="64" fill="#fff" font-size="12" text-anchor="middle">人のクリックは 100〜200 ミリ秒</text>
+<rect x="10" y="104" width="600" height="82" rx="10" fill="url(#g-09-1c)"/><text x="310" y="128" fill="#fff" font-size="13" text-anchor="middle">時間とずれは、毎回ランダムに決める。使った値を、試験の記録に出す</text><text x="310" y="148" fill="#fff" font-size="13" text-anchor="middle">欄とボタンは、1 か所でなく、複数の位置で押す (左端・文字の上・右の空き)</text><text x="310" y="168" fill="#fff" font-size="12" text-anchor="middle">すぐ離す書き方が、試験のファイルに無いことを検査する</text>
+</svg>
+<figcaption>人の操作の時間と位置に合わせる</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>画面の試験で、マウスやキーを送るときは、<strong>押してから離すまでに間を置く</strong>。人のクリックは 100〜200 ミリ秒かかり、その間に、手が数ドット動く</li>
+<li>時間とずれは、毎回ランダムに決め、<strong>使った値を試験の記録に出す</strong> (落ちたときに、同じ押し方で再現するため)</li>
+<li>押してすぐ離す書き方をしない。共通の関数にまとめ、すぐ離す書き方が、試験のファイルに無いことを検査する</li>
+<li>欄とボタンは、<strong>1 か所でなく、複数の位置で押す</strong>。押す位置で、動きが変わる</li>
+<li>数字や英数字だけを打つ欄は、IME (日本語入力) を使わない。欄を足したら、試験で、IME がオンにならないことを確かめる</li>
+</ul>
+<p class="src">出典: 共通ルール「テストのルール」(スキル <code>light-test</code>) の「試験の操作は、人の操作の時間と位置に合わせる」、「Windows のデスクトップアプリ」の「入力欄の IME」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-09-happy" xlink:href="#cl-09-happy"/></svg>
+<div class="bubble"><p>押してから、少し間を置いて離すよ。押す場所も、いろいろ変えるね!</p></div>
+</div>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>起こした窓は、起こした側が閉じる</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-09-sad" xlink:href="#cl-09-sad"/></svg>
+<div class="bubble"><p>試験でエクスプローラーの窓をいくつも開いたら、閉じ忘れて、利用者の画面に残っちゃった……。</p></div>
+</div>
+
+<p>試験や調べで、エクスプローラー・エディタ・ブラウザなど、試験の対象でないアプリの窓を起動することがあります。起動した窓は、<strong>起動した側が必ず閉じます</strong>。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 閉じる条件から外れた窓が残り、確認のダイアログが出た</h3>
+<p>調べが、閉じる条件 (窓の題名) から外れたエクスプローラーの窓を<strong>5 つ残し</strong>ました。さらに、ごみ箱の「すべての項目を元に戻す」の確認のダイアログ (<strong>1,605 個</strong>) を、利用者の画面に残しました (2026-11-19)。窓は、移動すると題名が変わるため、題名で探すと、閉じ漏れになるのです。試験が起こしたエディタの窓も、残りました。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="起動前に窓の番号を控え、その窓だけを閉じ、残りを数える図">
+<defs>
+<linearGradient id="g-09-2a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-09-2b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-09-2c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<marker id="m-09-2a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="6" y="20" width="140" height="56" rx="10" fill="url(#g-09-2a)"/><text x="76" y="44" fill="#fff" font-size="13" text-anchor="middle">① 起動する前に</text><text x="76" y="62" fill="#fff" font-size="12" text-anchor="middle">窓の番号を控える</text>
+<rect x="166" y="20" width="140" height="56" rx="10" fill="url(#g-09-2a)"/><text x="236" y="44" fill="#fff" font-size="13" text-anchor="middle">② 起動する</text><text x="236" y="62" fill="#fff" font-size="12" text-anchor="middle">試験・調べ</text>
+<rect x="326" y="20" width="140" height="56" rx="10" fill="url(#g-09-2b)"/><text x="396" y="44" fill="#fff" font-size="13" text-anchor="middle">③ 控えた窓だけ閉じる</text><text x="396" y="62" fill="#fff" font-size="12" text-anchor="middle">題名で探さない</text>
+<rect x="486" y="20" width="128" height="56" rx="10" fill="url(#g-09-2b)"/><text x="550" y="44" fill="#fff" font-size="13" text-anchor="middle">④ 残りを数える</text><text x="550" y="62" fill="#fff" font-size="12" text-anchor="middle">報告に書く</text>
+<path d="M146 48 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-09-2a)"/>
+<path d="M306 48 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-09-2a)"/>
+<path d="M466 48 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-09-2a)"/>
+<rect x="60" y="108" width="500" height="76" rx="10" fill="url(#g-09-2c)"/><text x="310" y="132" fill="#fff" font-size="13" text-anchor="middle">消す・戻す・変えるボタン (ごみ箱・削除・上書き) を、自動で押さない</text><text x="310" y="152" fill="#fff" font-size="13" text-anchor="middle">読むだけにする。試験用のフォルダは、プロジェクトの tmp/ の下だけ</text><text x="310" y="170" fill="#fff" font-size="12" text-anchor="middle">利用者の窓・ほかのセッションの窓は、閉じない</text>
+</svg>
+<figcaption>控える → 閉じる → 数える。消す・戻すボタンは、押さない</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>起動した窓は、起動した側が必ず閉じる。<strong>起動する前に、窓の番号 (ハンドル) かプロセス番号を控える</strong>。閉じるときは、控えたその窓だけを閉じる。題名で探さない</li>
+<li>利用者の窓・ほかのセッションの窓は、閉じない</li>
+<li><strong>消す・戻す・変えるボタンを、自動で押さない</strong> (ごみ箱・削除・「すべての項目を元に戻す」・ごみ箱を空にする・上書き)。読むだけにする。試験用のフォルダで足りるときは、プロジェクトの <code>tmp/</code> の下だけを使う</li>
+<li>どうしても押すときは、押す前に、名前の完全一致・選択数・対象を確かめ、利用者に知らせてから押す</li>
+<li>窓・メニュー・子のプロセスを出す処理を足したら、「出したまま、対象のアプリを閉じる」試験を書く</li>
+<li><strong>試験・調べの後に、起動した窓・プロセスが残っていないことを確かめ、残りを数えて報告に書く</strong>。残っていたら、その試験を ❌ にする</li>
+</ul>
+<p class="src">出典: 共通ルール「Windows のデスクトップアプリ」の「試験・調べで他のアプリを起動する」(2026-11-19 の出来事)</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-09-happy" xlink:href="#cl-09-happy"/></svg>
+<div class="bubble"><p>起動する前に窓の番号を控えて、その窓だけ閉じるね。終わったら、残りを数えて報告するよ!</p></div>
+</div>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>試験には、時間の上限を付ける</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-09-sad" xlink:href="#cl-09-sad"/></svg>
+<div class="bubble"><p>15 分で終わるはずの試験が、いつまでも終わらない……。何が止まってるのか、分からないよ。</p></div>
+</div>
+
+<p>試験を一括で流すとき、1 本でも終わらない試験があると、全体が止まります。そのまま待つと、気づくのが遅れます。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 試験が残したプロセスを待ち続けて、5 時間止まった</h3>
+<p>試験が起動して<strong>残したプロセス</strong>を、<code>Start-Process -Wait</code> が待ち続け、15 分で終わる一括実行が、<strong>5 時間</strong>止まりました。<code>-Wait</code> は、子孫のプロセスの終了まで待つためです。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="試験 1 本ごとに上限を付け、超えたら子孫ごと止める図">
+<defs>
+<linearGradient id="g-09-3a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-09-3b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
+<linearGradient id="g-09-3c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<marker id="m-09-3a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="6" y="20" width="170" height="56" rx="10" fill="url(#g-09-3a)"/><text x="91" y="44" fill="#fff" font-size="13" text-anchor="middle">試験を 1 本流す</text><text x="91" y="62" fill="#fff" font-size="12" text-anchor="middle">1 本ごとに上限</text>
+<rect x="226" y="20" width="170" height="56" rx="10" fill="url(#g-09-3b)"/><text x="311" y="44" fill="#fff" font-size="13" text-anchor="middle">上限を超えたら</text><text x="311" y="62" fill="#fff" font-size="12" text-anchor="middle">プロセスごと止める</text>
+<rect x="446" y="20" width="168" height="56" rx="10" fill="url(#g-09-3c)"/><text x="530" y="44" fill="#fff" font-size="13" text-anchor="middle">⏱️ 時間切れ</text><text x="530" y="62" fill="#fff" font-size="12" text-anchor="middle">次の試験へ進む</text>
+<path d="M176 48 H224" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-09-3a)"/>
+<path d="M396 48 H444" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-09-3a)"/>
+<rect x="60" y="104" width="500" height="70" rx="10" fill="url(#g-09-3a)"/><text x="310" y="128" fill="#fff" font-size="13" text-anchor="middle">上限は、ふつうにかかる時間の数倍。待つ側が、止まったと気づける長さ</text><text x="310" y="148" fill="#fff" font-size="13" text-anchor="middle">試験が残したプロセスは、ランチャが止める</text><text x="310" y="166" fill="#fff" font-size="12" text-anchor="middle">落ちた理由が分からない試験は「揺れ」で済ませず、課題に残す</text>
+</svg>
+<figcaption>1 本ごとに上限を付ける。超えたら、止めて次へ</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>試験を一括で流すランチャでは、<strong>1 本ごとに時間の上限を付ける</strong>。超えたら、試験のプロセスを子孫ごと止め、⏱️ 時間切れとして次へ進む</li>
+<li>上限は、ふつうにかかる時間の数倍にする。止まったことに、待つ側が気づける長さにする</li>
+<li><strong>PowerShell の <code>Start-Process -Wait</code> を使わない</strong>。子孫のプロセスの終了まで待つため、残ったプロセスがあると止まる。代わりに、<code>-PassThru</code> で受け、<code>WaitForExit(ミリ秒)</code> で待つ</li>
+<li>試験が起動して残したプロセスは、ランチャが止める</li>
+<li>落ちた理由の分からない試験も、流し直すと通った揺れも、<strong>課題にして残す</strong>。失敗した試験の記録は、原因を確かめるまで消さない</li>
+<li>窓が要る試験は、非表示にできるものは非表示で回す (窓が開閉すると、作業中の画面とフォーカスを奪う)。ただし、窓の見え方や操作そのものを確かめる試験は除く</li>
+</ul>
+<p class="src">出典: 共通ルール「テストのルール」(スキル <code>light-test</code>) の「試験には時間の上限を付ける」「落ちた理由の分からない試験は、揺れで済ませず、課題にして残す」「窓が要る試験は、非表示で裏に回す」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-09-happy" xlink:href="#cl-09-happy"/></svg>
+<div class="bubble"><p>1 本ごとに上限を付けて、超えたら止めて次へ進むよ。落ちた理由が分からなくても、課題に残すね!</p></div>
+</div>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>外へ送る道具の試験は、送らない口を通す</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-09-sad" xlink:href="#cl-09-sad"/></svg>
+<div class="bubble"><p>試験を流したら、材料が、本物のサービスへ送られちゃってた……!</p></div>
+</div>
+
+<p>外のサービスへ、本文やトークン (本人確認の合言葉) を送る道具は、試験でも、本物へ送ってしまいかねません。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 試験で、材料を本物の API へ送った</h3>
+<p>道具の試験で、❌Red (実装の前に、書いた試験が失敗している状態) を見るために 1 回流したとき、<strong>材料を、本物の API へ送ってしまいました</strong>。外へ送った内容は、取り消せません。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="試験は、ローカルの受け口へ送り先を差し替えて流す図">
+<defs>
+<linearGradient id="g-09-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-09-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-09-4c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<marker id="m-09-4a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="10" y="68" width="130" height="50" rx="10" fill="url(#g-09-4c)"/><text x="75" y="98" fill="#fff" font-size="14" text-anchor="middle">試験を流す</text>
+<rect x="210" y="14" width="400" height="50" rx="10" fill="url(#g-09-4a)"/><text x="410" y="44" fill="#fff" font-size="14" text-anchor="middle">本物の API へ送る → 取り消せない</text>
+<rect x="210" y="122" width="190" height="50" rx="10" fill="url(#g-09-4b)"/><text x="305" y="152" fill="#fff" font-size="13" text-anchor="middle">送り先を差し替える口</text>
+<rect x="430" y="122" width="180" height="50" rx="10" fill="url(#g-09-4b)"/><text x="520" y="152" fill="#fff" font-size="13" text-anchor="middle">ローカルの受け口へ</text>
+<path d="M140 82 Q175 40 208 40" fill="none" stroke="#a51f22" stroke-width="2.5" marker-end="url(#m-09-4a)"/>
+<path d="M140 104 Q175 148 208 148" fill="none" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-09-4a)"/>
+<path d="M400 147 H428" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-09-4a)"/>
+</svg>
+<figcaption>赤い道 (本物へ送る) でなく、下の道 (ローカルの受け口) を通る</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>外のサービスへ本文やトークンを送る道具 (API・Web 取得) は、<strong>送り先を差し替える口</strong> (環境変数など) を道具に作る</li>
+<li>試験は、<strong>ローカルの受け口を指して</strong>流す。差し替え先はローカルだけ許し、トークンは付けない</li>
+<li>送る経路 (問題なし・異常・通信エラー) は、<strong>経路ごとに試験で通す</strong>。ローカルの受け口なら、通信エラーも作れる</li>
+<li>テストを先に書くときは、<strong>落ちるテストを書いて、落ちるのを目で見てから</strong>実装に入る。落ちるのを見ていないテストは、何も守っていない</li>
+</ul>
+<p class="src">出典: 共通ルール「テストのルール」(スキル <code>light-test</code>) の「外へ送る道具の試験は、送らない口を通して流す」「テストを先に書く」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-09-happy" xlink:href="#cl-09-happy"/></svg>
+<div class="bubble"><p>試験は、ローカルの受け口へ送るよ。本物へは、送らない!</p></div>
+</div>
+
+<div class="callout callout-tip"><p><strong>おわりに</strong> ここまで 9 本、クロード君は、失敗するたびに、ルール・課題・チャット・フックの助けを借りて、うまくいくようになりました。ルールは、失敗をきっかけに足します。自分のプロジェクトでも、同じ失敗が 2 回起きたら、決まりにして、必要なら、仕組みで守らせてください。→ <a class="doclink ref" href="01-はじめの一歩.html" style="--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);">01. はじめの一歩</a> へ戻る</p></div>
+</section>
+
+</div>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="08-仕組みで守る.html" aria-label="前へ" title="08. 仕組みで守る" style="--accent:hsl(35,78%,25%);--accent2:hsl(35,58%,55%);--soft:hsl(35,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+</body>
+</html>

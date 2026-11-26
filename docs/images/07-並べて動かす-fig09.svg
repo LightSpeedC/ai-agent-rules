@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 210" width="620" height="210" role="img" aria-label="メインの AI が替わっても、セッションを名前で追う図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="14" width="150" height="50" rx="10" fill="url(#i1)"/><text x="85" y="44" fill="#fff" font-size="13" text-anchor="middle">前のメイン</text>
+<rect x="230" y="14" width="160" height="50" rx="10" fill="url(#i2)"/><text x="310" y="38" fill="#fff" font-size="13" text-anchor="middle">引継ぎ.md</text><text x="310" y="55" fill="#fff" font-size="12" text-anchor="middle">セッションの名前と ID を書く</text>
+<rect x="460" y="14" width="150" height="50" rx="10" fill="url(#i1)"/><text x="535" y="44" fill="#fff" font-size="13" text-anchor="middle">次のメイン</text>
+<path d="M160 39 H228" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M390 39 H458" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<rect x="60" y="86" width="500" height="50" rx="10" fill="url(#i2)"/><text x="310" y="108" fill="#fff" font-size="13" text-anchor="middle">セッションを起こす前に、全セッションの一覧を「名前」で引く</text><text x="310" y="126" fill="#fff" font-size="13" text-anchor="middle">同じ役目のセッションがあれば、新しく起こさず、そこへ頼む</text>
+<rect x="60" y="150" width="500" height="46" rx="10" fill="url(#i3)"/><text x="310" y="170" fill="#fff" font-size="13" text-anchor="middle">別のセッションの知らせは、要約で済ませない。ファイルを開いて、全文を復唱する</text><text x="310" y="187" fill="#fff" font-size="12" text-anchor="middle">引継ぎ.md は commit せず、読み終えたら、復唱してから消す</text>
+</svg>

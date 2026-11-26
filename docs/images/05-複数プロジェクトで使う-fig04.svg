@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 210" width="620" height="210" role="img" aria-label="常に読む核と、必要なときだけ読むスキルの図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(150,78%,24%)"/><stop offset="1" stop-color="hsl(150,58%,40%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="14" width="250" height="62" rx="10" fill="url(#i1)"/><text x="135" y="42" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">核 = 毎回、常に読む部分</text><text x="135" y="62" fill="#fff" font-size="12" text-anchor="middle">応答の言語・機密・確認・commit の指示</text>
+<rect x="290" y="14" width="320" height="62" rx="10" fill="url(#i2)"/><text x="450" y="42" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">スキル (必要なときだけ読む)</text><text x="450" y="62" fill="#fff" font-size="12" text-anchor="middle">git・HTML・試験・SQLite・シェルの詳細 など</text>
+<rect x="290" y="104" width="320" height="46" rx="10" fill="url(#i3)"/><text x="450" y="132" fill="#fff" font-size="13" text-anchor="middle">説明文の「…ときは、必ずこの skill を呼ぶ」が引き金</text>
+<path d="M450 76 V102" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<text x="135" y="112" fill="#1c2330" font-size="13" text-anchor="middle">章の見出しは、核にも残す</text>
+<text x="135" y="132" fill="#1c2330" font-size="13" text-anchor="middle">(章があること自体が、分かるように)</text>
+<text x="310" y="184" fill="#4a5568" font-size="13" text-anchor="middle">読み込む量を減らしても、必要な章は、必要なときに読まれる</text>
+</svg>

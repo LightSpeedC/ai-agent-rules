@@ -1,0 +1,121 @@
+/* Claude Code 勉強会 (ルール・スキル・フック) の読み物の共通スタイル。
+   章の色 (.chNN) と番号の数え方は、各ページの AUTO:style に書く (tools/20_build/build-docs.ts が作る)。 */
+:root{
+	--navy1:#12224d; --navy2:#2f5fbf; --ink:#1c2330; --ink-soft:#4a5568; --line:#d9dfe8; --code-bg:#f4f6fa; --link:#1a4fa0;
+	--accent:var(--navy1); --accent2:var(--navy2); --soft:#f2f5fb;
+}
+body{margin:0;background:#ffffff;color:var(--ink,#1c2330);font-family:"Segoe UI","Yu Gothic UI","Meiryo",sans-serif;font-size:15.5px;line-height:1.85;}
+a{color:var(--link,#1a4fa0);background:transparent;}
+
+/* タイトルバー */
+.titlebar{background:#12224d;background:linear-gradient(135deg,var(--navy1,#12224d),var(--navy2,#2f5fbf));color:#fff;padding:34px 30px 30px;}
+.titlebar .inner{max-width:1600px;margin:0 auto;padding:0 30px;}
+.titlebar h1{font-size:2em;margin:0 0 6px;color:#fff;}
+.titlebar .lead,.titlebar .date{color:#e6ecf8;background:transparent;margin:4px 0;font-size:0.92em;}
+.titlebar code{background:rgba(255,255,255,0.16);color:#fff;border:none;}
+
+/* 右端の旗の幅を、本文の右に空ける */
+.wrap{max-width:1600px;margin:0 auto;padding:0 76px 0 30px;}
+footer{max-width:1600px;margin:0 auto;padding:18px 76px 30px 30px;background:#ffffff;color:var(--ink-soft,#4a5568);}
+
+/* 前へ・次へ・目次のバッジ (色は各リンクの style で、行き先の資料の色を渡す) */
+.docnav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;}
+footer .docnav{margin:0;}
+a.doclink{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:30px;padding:0 9px;border-radius:6px;background:#12224d;background:linear-gradient(100deg,var(--accent,#12224d),var(--accent2,#2f5fbf));color:#fff;text-decoration:none;box-shadow:0 2px 5px rgba(0,0,0,0.15);}
+/* 本文の中の資料間リンク: 行き先の資料の色のバッジ。文字の流れの中に置く */
+a.doclink.ref{display:inline-block;min-width:0;height:auto;padding:1px 9px;line-height:1.6;vertical-align:baseline;font-weight:700;}
+a.doclink.home{background:#12224d;background:linear-gradient(100deg,var(--navy1,#12224d),var(--navy2,#2f5fbf));color:#fff;}
+a.doclink svg{width:16px;height:16px;}
+
+/* 目次 */
+.toc ol{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:22px 0;}
+.toc ol a{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal;width:310px;max-width:100%;padding:6px 12px;border-radius:6px;font-weight:700;text-decoration:none;background:#12224d;background:linear-gradient(100deg,var(--accent,#12224d),var(--accent2,#2f5fbf));color:#fff;box-sizing:border-box;}
+
+/* 章 */
+section{margin:34px 0;padding:4px 26px 26px;border-radius:10px;background:#f2f5fb;background:linear-gradient(180deg,var(--soft,#f2f5fb),#ffffff);color:var(--ink,#1c2330);}
+section h1{font-size:1.5em;margin:26px 0 20px;padding:14px 20px;border-radius:8px;background:#12224d;background:linear-gradient(100deg,var(--accent,#12224d),var(--accent2,#2f5fbf));color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.18);}
+section h1 code{background:rgba(255,255,255,0.16);color:#fff;border:none;}
+h2{font-size:1.18em;margin:30px 0 12px;padding:6px 12px;border-left:6px solid var(--accent,#12224d);background:#f2f5fb;background:linear-gradient(90deg,var(--soft,#f2f5fb),#ffffff);color:var(--ink,#1c2330);}
+h3{font-size:1.05em;margin:20px 0 8px;padding-bottom:3px;display:inline-block;border-bottom:2px dotted var(--accent2,#2f5fbf);color:var(--ink,#1c2330);background:transparent;}
+strong{color:var(--accent,#12224d);background:transparent;}
+
+/* コード */
+code{font-family:Consolas,"BIZ UDGothic","MS Gothic",monospace;background:#f4f6fa;border:1px solid var(--line,#d9dfe8);color:#17335f;padding:0 4px;border-radius:4px;font-size:0.92em;}
+pre{background:#f4f6fa;background:linear-gradient(180deg,var(--code-bg,#f4f6fa),#ffffff);color:var(--ink,#1c2330);border:1px solid var(--line,#d9dfe8);border-left:5px solid var(--accent2,#2f5fbf);border-radius:6px;padding:13px 16px;overflow-x:auto;line-height:1.6;margin:10px 0;}
+pre code{background:transparent;border:none;padding:0;color:#17335f;font-size:0.92em;}
+
+/* 表 */
+.tablewrap{overflow-x:auto;}
+table{border-collapse:collapse;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.08);margin:10px 0;}
+th{background:#12224d;background:linear-gradient(100deg,var(--accent,#12224d),var(--accent2,#2f5fbf));color:#fff;padding:9px 12px;text-align:left;font-size:0.95em;}
+td{padding:9px 12px;border-bottom:1px solid var(--line,#d9dfe8);vertical-align:top;background:#ffffff;color:var(--ink,#1c2330);}
+tr:nth-child(even) td{background:#fafbfe;}
+
+/* バッジ */
+.badge{display:inline-block;padding:0 8px;margin-right:4px;border-radius:6px;font-size:0.82em;font-weight:700;white-space:nowrap;color:#fff;background:#12224d;background:linear-gradient(100deg,var(--accent,#12224d),var(--accent2,#2f5fbf));}
+.b-ok{background:#1d7a3c;background:linear-gradient(100deg,#1d7a3c,#45b56c);color:#fff;}
+.b-ng{background:#a51f22;background:linear-gradient(100deg,#a51f22,#e05a5c);color:#fff;}
+.b-none{background:#5a6472;background:linear-gradient(100deg,#5a6472,#97a1ae);color:#fff;}
+.b-warn{background:#b8620a;background:linear-gradient(100deg,#b8620a,#f0a548);color:#fff;}
+
+/* callout */
+.callout{border-left:6px solid var(--accent,#12224d);background:#f2f5fb;background:linear-gradient(180deg,var(--soft,#f2f5fb),#ffffff);color:var(--ink,#1c2330);border-radius:0 8px 8px 0;padding:8px 16px;margin:14px 0;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+.callout strong{color:var(--accent,#12224d);background:transparent;}
+.callout-tip{border-left-color:#1d7a3c;}
+.callout-important{border-left-color:#5b2bb5;}
+.callout-warning{border-left-color:#b8620a;}
+.callout-caution{border-left-color:#a51f22;}
+.callout .label{font-weight:700;}
+
+/* 図 */
+figure{margin:16px 0;}
+figure svg{display:block;width:100%;max-width:920px;height:auto;}
+figcaption{font-size:0.88em;color:var(--ink-soft,#4a5568);background:transparent;margin-top:4px;}
+
+/* 失敗の一コマ・案内役・出典 */
+.fail{background:#fff7ef;color:var(--ink,#1c2330);border:1px solid #f0c9a0;border-left:6px solid #a8530a;border-radius:0 8px 8px 0;padding:4px 16px 10px;margin:16px 0;}
+.fail h3{border-bottom:none;margin:10px 0 4px;}
+.say{display:flex;gap:12px;align-items:flex-start;margin:14px 0;}
+.say .chara{flex:0 0 auto;width:84px;height:auto;overflow:visible;}
+.defs-only{position:absolute;width:0;height:0;overflow:hidden;}
+/* キャラの動き: 困った顔は小刻みに揺れ、うれしい顔はゆったり傾く */
+.wobble{transform-origin:50% 95%;animation:wobble 3.6s ease-in-out infinite;}
+.sway{transform-origin:50% 95%;animation:sway 5s ease-in-out infinite;}
+@keyframes wobble{0%,100%{transform:rotate(-5deg) translateY(0);}50%{transform:rotate(5deg) translateY(-2px);}}
+@keyframes sway{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg) translateY(-3px);}}
+.say .bubble{background:#ffffff;color:var(--ink,#1c2330);border:2px solid var(--accent2,#2f5fbf);border-radius:14px;padding:6px 14px;flex:1 1 auto;}
+.src{color:var(--ink-soft,#4a5568);background:transparent;font-size:0.85em;}
+
+/* 「いまここ」の旗。本編の全駅の道を、画面の右端に縦に固定する。HTML だけで出る (JS が無効でも読める) */
+.roadmap{position:fixed;top:50%;right:8px;transform:translateY(-50%);z-index:10;background:#ffffff;color:var(--ink,#1c2330);border:1px solid var(--line,#d9dfe8);border-radius:24px;padding:8px 9px;box-shadow:0 2px 8px rgba(0,0,0,0.12);}
+.roadmap ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;}
+.roadmap li{margin:0;}
+.roadmap a.station{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;text-decoration:none;font-size:0.78em;font-weight:700;line-height:1;color:#ffffff;background:#5a6472;}
+.roadmap a.station:hover,.roadmap a.station:focus-visible{outline:2px solid var(--navy2,#2f5fbf);outline-offset:1px;}
+.roadmap a.station.here{width:34px;height:34px;margin:6px -2px;font-size:1.05em;box-shadow:0 0 0 3px #ffffff,0 0 0 6.5px var(--st,#12224d);}
+@media (prefers-reduced-motion:reduce){
+	.wobble,.sway{animation:none;}
+	*{scroll-behavior:auto !important;}
+}
+
+/* 狭い画面・低い画面 (スマホの縦・横): 旗を、上端の横バーに切り替える */
+@media (max-width:720px),(max-height:460px){
+	body{padding-top:72px;}
+	.roadmap{top:0;right:0;left:0;transform:none;border-radius:0;border-width:0 0 1px 0;padding:8px 14px;overflow-x:auto;}
+	.roadmap ol{flex-direction:row;justify-content:center;align-items:center;gap:6px;}
+	.roadmap a.station.here{margin:0 6px;}
+	.wrap,footer{padding-right:12px;}
+}
+@media (max-width:720px){
+	body{font-size:15px;line-height:1.75;}
+	.wrap,footer,.titlebar .inner{padding-left:12px;padding-right:12px;}
+	.titlebar{padding:22px 14px 18px;}
+	section{padding:4px 14px 18px;margin:22px 0;}
+	section h1{padding:10px 12px;font-size:1.2em;}
+	th,td{padding:6px 8px;}
+	.say .chara{width:64px;}
+	/* 図は 600px より小さくせず、図の中で横にずらして見せる */
+	figure{overflow-x:auto;}
+	figure svg{min-width:600px;}
+	figcaption{position:sticky;left:0;}
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 210" width="620" height="210" role="img" aria-label="UTF-8 と SJIS で、標準の道具がどう動くかの図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="10" width="290" height="34" rx="8" fill="url(#i1)"/><text x="155" y="32" fill="#fff" font-size="15" text-anchor="middle">UTF-8 (BOM の有無を問わず)</text>
+<rect x="320" y="10" width="290" height="34" rx="8" fill="url(#i2)"/><text x="465" y="32" fill="#fff" font-size="15" text-anchor="middle">SJIS (CP932)</text>
+<text x="155" y="72" fill="#1c2330" font-size="14" text-anchor="middle">Grep・Read・Edit: 正常</text>
+<text x="155" y="96" fill="#1c2330" font-size="14" text-anchor="middle">Edit は、BOM・改行を保つ</text>
+<text x="465" y="72" fill="#1c2330" font-size="14" text-anchor="middle">Read: 文字化け</text>
+<text x="465" y="96" fill="#1c2330" font-size="14" text-anchor="middle">Grep: 日本語だと一部だけ返る</text>
+<text x="465" y="120" fill="#a51f22" font-size="14" font-weight="700" text-anchor="middle">Edit・Write: 壊れる (エラーなし)</text>
+<rect x="320" y="140" width="290" height="52" rx="8" fill="url(#i3)"/><text x="465" y="162" fill="#fff" font-size="14" text-anchor="middle">読む → <tspan font-family="Consolas, monospace">text read</tspan>　探す → <tspan font-family="Consolas, monospace">text find</tspan></text><text x="465" y="182" fill="#fff" font-size="12" text-anchor="middle">直すときは、UTF-8 にしてから</text>
+</svg>

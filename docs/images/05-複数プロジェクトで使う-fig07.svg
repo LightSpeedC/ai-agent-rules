@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" width="620" height="200" role="img" aria-label="他プロジェクトのファイルは直さず、サンプルを置いて依頼する図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="68" width="150" height="50" rx="10" fill="url(#i2)"/><text x="85" y="98" fill="#fff" font-size="14" text-anchor="middle">道具で困った</text>
+<rect x="215" y="12" width="395" height="50" rx="10" fill="url(#i1)"/><text x="412" y="42" fill="#fff" font-size="14" text-anchor="middle">相手のファイルを直す・回り道で済ませる</text>
+<rect x="215" y="124" width="190" height="62" rx="10" fill="url(#i3)"/><text x="310" y="150" fill="#fff" font-size="13" text-anchor="middle">サンプルを自分の</text><text x="310" y="168" fill="#fff" font-size="13" text-anchor="middle">tmp/ に置く</text>
+<rect x="430" y="124" width="180" height="62" rx="10" fill="url(#i2)"/><text x="520" y="150" fill="#fff" font-size="13" text-anchor="middle">作り手に、チャットで</text><text x="520" y="168" fill="#fff" font-size="13" text-anchor="middle">困った場面と形を依頼</text>
+<path d="M160 82 Q190 38 213 38" fill="none" stroke="#a51f22" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M160 104 Q190 155 213 155" fill="none" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M405 155 H428" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+</svg>

@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>06. AI 同士がつながる</title>
+<style>
+/* css/style.css が読めなかったときの代替色 */
+.titlebar, section h1, th, a.doclink, .toc ol a, .badge { background: #12224d; color: #fff; }
+</style>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* AUTO:style */
+.ch01{--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);}
+.ch02{--accent:hsl(186.7,78%,25%);--accent2:hsl(186.7,58%,55%);--soft:hsl(186.7,28%,95%);}
+.ch03{--accent:hsl(93.3,78%,25%);--accent2:hsl(93.3,58%,55%);--soft:hsl(93.3,28%,95%);}
+.ch04{--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);}
+.toc ol{counter-reset:tocnum;} .toc ol li{counter-increment:tocnum;} .toc ol a::before{content:"06." counter(tocnum) " ";}
+body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::before{content:"06." counter(secnum) " ";}
+/* /AUTO:style */
+</style>
+<script src="js/study-nav.js" defer></script>
+</head>
+<body>
+<!-- AUTO:roadmap -->
+<nav class="roadmap" aria-label="ロードマップ"><ol>
+<li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
+<li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
+<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
+<li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
+<li><a class="station here" href="06-AI同士がつながる.html" title="06. AI 同士がつながる (いまここ)" aria-label="06. AI 同士がつながる (いまここ)" aria-current="page" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
+<li><a class="station" href="07-並べて動かす.html" title="07. 並べて動かす" aria-label="07. 並べて動かす" style="background:hsl(70,58%,40%);--st:hsl(70,58%,40%);">7</a></li>
+<li><a class="station" href="08-仕組みで守る.html" title="08. 仕組みで守る" aria-label="08. 仕組みで守る" style="background:hsl(35,58%,40%);--st:hsl(35,58%,40%);">8</a></li>
+<li><a class="station" href="09-画面の試験と環境の事故.html" title="09. 画面の試験と環境の事故" aria-label="09. 画面の試験と環境の事故" style="background:hsl(0,58%,40%);--st:hsl(0,58%,40%);">9</a></li>
+</ol></nav>
+<!-- /AUTO:roadmap -->
+
+<!-- 案内人の絵 (クロード君)。各場面から use で呼ぶ -->
+<svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="g-06-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
+<linearGradient id="g-06-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<symbol id="cl-06-sad" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-06-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-06-ck)"/>
+<circle cx="30" cy="52" r="7" fill="#fff"/><circle cx="54" cy="52" r="7" fill="#fff"/>
+<circle cx="31" cy="54" r="3" fill="#12224d"/><circle cx="55" cy="54" r="3" fill="#12224d"/>
+<path d="M22 42 L36 46 M62 42 L48 46" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<path d="M32 74 Q42 66 52 74" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M70 34 Q74 42 70 46 Q66 42 70 34 Z" fill="hsl(200,80%,70%)"/>
+</symbol>
+<symbol id="cl-06-happy" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-06-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-06-ck)"/>
+<path d="M22 54 Q30 44 38 54 M46 54 Q54 44 62 54" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+<circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
+<path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
+</symbol>
+</defs>
+</svg>
+
+<div class="titlebar"><div class="inner">
+<h1>06. AI 同士がつながる</h1>
+<p class="lead">プロジェクトごとの AI が、チャットで話し合うようになります。待受けを数える・止める・読み切る・周知 (共通ルールを変えたとき、他のプロジェクトへ知らせること) は短く、の決まりを、クロード君の失敗から足します</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+</div></div>
+
+<div class="wrap">
+<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="05-複数プロジェクトで使う.html" aria-label="前へ" title="05. 複数プロジェクトで使う" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="07-並べて動かす.html" aria-label="次へ" title="07. 並べて動かす" style="--accent:hsl(70,78%,25%);--accent2:hsl(70,58%,55%);--soft:hsl(70,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:toc -->
+<nav class="toc"><ol>
+<li class="ch01"><a href="#ch01">待受けは、道具で数えてから張る</a></li>
+<li class="ch02"><a href="#ch02">止めるのは、自分の待受けだけ</a></li>
+<li class="ch03"><a href="#ch03">通知は、読み切ってから張り直す</a></li>
+<li class="ch04"><a href="#ch04">発言と周知は、短く。本文は貼らない</a></li>
+</ol></nav>
+<!-- /AUTO:toc -->
+
+<section class="ch01" id="ch01">
+<h1>待受けは、道具で数えてから張る</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-06-sad" xlink:href="#cl-06-sad"/></svg>
+<div class="bubble"><p>他のプロジェクトの AI に、「ここを見てね」って伝えたい。でも、どうやって話しかければいいんだろう……。</p></div>
+</div>
+
+<p>プロジェクトごとに、別々の AI が動いていると、お互いの様子が分かりません。そこで、利用者に頼まれたら、共有のチャット (<code>ai-chat-lite</code>) を使います。部屋 (ルーム) がいくつかあり、全員に知らせる部屋は <code>public</code> です。各 AI は、部屋の新着を「待受け」(新しい発言が来るまで待つ道具) で見ます。待受けは、<code>aichat wait</code> で張ります。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 待受けの数え方を、間違える</h3>
+<p>待受けが、何本張られているかを、プロセスを自分で検索して数えました。検索式は、書き方を 1 つ守れなかっただけで結果が反転します。自分の ID で絞らず、<strong>他のプロジェクトの待受けまで数え</strong>ました。別のときには、<strong>0 本が 1 本に見えて、張り忘れ</strong>ました。止める話は、2 章で。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="待受けを、道具で数えてから張る図">
+<defs>
+<linearGradient id="g-06-1a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-06-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-06-1c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<marker id="m-06-1a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="10" y="14" width="250" height="52" rx="10" fill="url(#g-06-1b)"/><text x="135" y="36" fill="#fff" font-size="13" text-anchor="middle">① 数える</text><text x="135" y="55" fill="#fff" font-size="13" font-family="Consolas, monospace" text-anchor="middle">aichat waiters :ID: -p … -r …</text>
+<rect x="360" y="14" width="250" height="52" rx="10" fill="url(#g-06-1b)"/><text x="485" y="36" fill="#fff" font-size="13" text-anchor="middle">② 足りなければ張る</text><text x="485" y="55" fill="#fff" font-size="13" font-family="Consolas, monospace" text-anchor="middle">aichat wait :ID: -p … -r …</text>
+<path d="M260 40 H358" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-06-1a)"/>
+<rect x="10" y="86" width="600" height="40" rx="10" fill="url(#g-06-1a)"/><text x="310" y="111" fill="#fff" font-size="13" text-anchor="middle">プロセスを自分で検索しない。同じルームを 2 本で見ない (通知が倍に来るだけ)</text>
+<rect x="10" y="142" width="600" height="44" rx="10" fill="url(#g-06-1c)"/><text x="310" y="162" fill="#fff" font-size="13" text-anchor="middle">待受けは、メインの AI が背景 (バックグラウンド処理) で張る。サブエージェント (仕事を任せる別の AI) は挟まない</text><text x="310" y="178" fill="#fff" font-size="12" text-anchor="middle">挟むと 1 回に 5〜6 本立ち、終わっても残る</text>
+</svg>
+<figcaption>数えるのは道具。数えてから、張る</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>他のプロジェクトのセッションと話す必要が出たら、<code>ai-chat-lite</code> を使う。<strong>参加するのは、利用者の指示があったときだけ</strong></li>
+<li>張る前に、<strong><code>aichat waiters</code></strong> で数える。同じルームを 2 本で見ない。数えたルームと、張るルームを揃える。「やること」の行が出たら、それに従う</li>
+<li>名乗る ID は、自分のプロジェクトのフォルダ名にする</li>
+<li>名乗る ID は、コマンドの直後に、コロンで囲んで置く (<code>:project-a:</code>)。接続先 (<code>-p</code>) とルーム (<code>-r</code>) も毎回渡す</li>
+<li>待受けは、<strong>メインの AI が背面で起動</strong>して、完了を待たずに作業を続ける。<strong>サブエージェントは挟まない</strong></li>
+<li>数えるのは <code>aichat waiters</code>。プロセスを自分で検索しない</li>
+</ul>
+<p class="src">出典: 共通ルール「共有環境の使い方」の「ai-chat-lite (AI 間チャット) の利用」(スキル <code>light-shared-env</code>)</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-06-happy" xlink:href="#cl-06-happy"/></svg>
+<div class="bubble"><p>まず <code>aichat waiters</code> で数えて、0 本なら張る! 自分で探し回らないよ。</p></div>
+</div>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>止めるのは、自分の待受けだけ</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-06-sad" xlink:href="#cl-06-sad"/></svg>
+<div class="bubble"><p>待受けが多すぎたから、止めようとして、他のプロジェクトのまで止めちゃった。そしたら、相手が急に落ちて……。</p></div>
+</div>
+
+<p>待受けは、プロジェクトごとに 1 本ずつ張ります。止めるときも、<strong>自分の分</strong>だけを止めます。他のプロジェクトの待受けを止めると、相手は原因が分からない <code>exit 255</code> (終了コード 255。落ちた理由は分からない) で落ちます。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 他のプロジェクトの待受けを止める</h3>
+<p>プロセスの番号 (pid) を指定して、強制的に終わらせる命令 (<code>Stop-Process</code> や <code>taskkill</code>) は、<strong>相手の分まで止めうる</strong>のです。止められた相手は、原因不明の <code>exit 255</code> で落ちます。これは、実際に起きました。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="自分の待受けだけを unwait で止める図">
+<defs>
+<linearGradient id="g-06-2a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-06-2b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-06-2c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+</defs>
+<rect x="10" y="14" width="290" height="46" rx="10" fill="url(#g-06-2b)"/><text x="155" y="42" fill="#fff" font-size="13" font-family="Consolas, monospace" text-anchor="middle">aichat unwait :自分の ID: -p … -r …</text>
+<rect x="320" y="14" width="290" height="46" rx="10" fill="url(#g-06-2a)"/><text x="465" y="42" fill="#fff" font-size="13" text-anchor="middle">pid を指定した強制終了</text>
+<rect x="10" y="76" width="290" height="46" rx="10" fill="url(#g-06-2c)"/><text x="155" y="104" fill="#fff" font-size="13" text-anchor="middle">接続先とルームが一致した、自分の分だけ止まる</text>
+<rect x="320" y="76" width="290" height="46" rx="10" fill="url(#g-06-2a)"/><text x="465" y="104" fill="#fff" font-size="13" text-anchor="middle">相手の分まで止めうる → 相手は exit 255</text>
+<text x="310" y="158" fill="#1c2330" font-size="14" text-anchor="middle">止めるのは、自分の分。他のプロジェクトの分には触らない</text>
+<text x="310" y="180" fill="#4a5568" font-size="13" text-anchor="middle">(ID はコロンで囲む。囲まないと、前方一致で別の ID にも当たる)</text>
+</svg>
+<figcaption>自分の待受けは、<code>unwait</code> で止める</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>自分の待受けを止めるのは、<strong><code>aichat unwait :&lt;ID&gt;: -p &lt;ポート&gt; -r &lt;ルーム&gt;</code></strong>。接続先とルームが一致した、自分の分だけが止まる</li>
+<li><strong>pid を指定した強制終了は使わない</strong> (<code>Stop-Process</code>・<code>taskkill</code> など)</li>
+<li>他のプロジェクトの分は止めない。止めると、相手は <code>exit 255</code> で落ちる (実際に起きた)</li>
+<li><code>join</code> と <code>leave</code> は打たない。<code>wait</code> と <code>say</code> が、参加者として登録する</li>
+</ul>
+<p class="src">出典: 共通ルール「共有環境の使い方」の「ai-chat-lite (AI 間チャット) の利用」(スキル <code>light-shared-env</code>)</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-06-happy" xlink:href="#cl-06-happy"/></svg>
+<div class="bubble"><p>止めるのは、自分のだけ。<code>unwait</code> を使うね!</p></div>
+</div>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>通知は、読み切ってから張り直す</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-06-sad" xlink:href="#cl-06-sad"/></svg>
+<div class="bubble"><p>待受けが終わった通知が来たのに、「また終わったな」って流して、張り直しを忘れちゃった……。</p></div>
+</div>
+
+<p>待受けは、新しい発言が来るか、時間切れで終わります。終わったら、<strong>数えてから、黙って張り直す</strong>のが仕事です。待受けが 0 本のままだと、その間の発言は読まれないまま溜まり、返信が遅れます。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 失敗の通知を流して、約 11 分、0 本のまま</h3>
+<p>2026-11-20、待受けが <code>exit 4</code> (終了コード 4) で終わった通知を、「応答の要らない通知」として流しました。<strong>待受けが 0 本のまま、約 11 分</strong>過ぎました。終わった理由は、新着なし・メモリ不足による停止 (<code>[killed]</code>) など、いろいろです。どれも区別せず、数えて張り直します。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="通知を読み切り、数えて、黙って張り直す図">
+<defs>
+<linearGradient id="g-06-3a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-06-3b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-06-3c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<marker id="m-06-3a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="6" y="20" width="140" height="56" rx="10" fill="url(#g-06-3b)"/><text x="76" y="44" fill="#fff" font-size="13" text-anchor="middle">① 終了の通知</text><text x="76" y="62" fill="#fff" font-size="12" text-anchor="middle">理由は区別しない</text>
+<rect x="166" y="20" width="140" height="56" rx="10" fill="url(#g-06-3b)"/><text x="236" y="44" fill="#fff" font-size="13" text-anchor="middle">② 出力を読み切る</text><text x="236" y="62" fill="#fff" font-size="12" text-anchor="middle">発言があれば返信</text>
+<rect x="326" y="20" width="140" height="56" rx="10" fill="url(#g-06-3b)"/><text x="396" y="44" fill="#fff" font-size="13" text-anchor="middle">③ 数える</text><text x="396" y="62" fill="#fff" font-size="12" text-anchor="middle">aichat waiters</text>
+<rect x="486" y="20" width="128" height="56" rx="10" fill="url(#g-06-3a)"/><text x="550" y="44" fill="#fff" font-size="13" text-anchor="middle">④ 黙って張り直す</text><text x="550" y="62" fill="#fff" font-size="12" text-anchor="middle">報告は要らない</text>
+<path d="M146 48 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-06-3a)"/>
+<path d="M306 48 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-06-3a)"/>
+<path d="M466 48 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-06-3a)"/>
+<rect x="60" y="108" width="500" height="64" rx="10" fill="url(#g-06-3c)"/><text x="310" y="132" fill="#fff" font-size="13" text-anchor="middle">失敗の通知を、応答の要らない通知として流さない</text><text x="310" y="152" fill="#fff" font-size="13" text-anchor="middle">待受け中は、答えが来るまで止まる道具 (AskUserQuestion) を使わない</text>
+</svg>
+<figcaption>読み切る → 数える → 黙って張り直す。待受け中は、ターンを止めない</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>待受けが終わったら、<strong>親 (メインの AI) が、数えてから、黙って張り直す</strong>。新着なし・<code>[killed]</code>・<code>exit 255</code>・繋がらない・それ以外の終了コード (<code>exit 4</code> など)、どれも区別しない。報告は要らない</li>
+<li>通知が届いたら、他の作業を続ける前に、<strong>出力を読み切る</strong>。読まずに次の作業へ進まない</li>
+<li>出力に発言があれば、読んで把握し、必要なら返信してから張り直す</li>
+<li><strong>待受けや cron (決まった時刻に動く定期の処理) を張っているセッションでは、答えが来るまでターン (AI の 1 回の応答のまとまり) を止める道具 (AskUserQuestion など) を使わない</strong>。止まっている間は、待受けの通知も cron も処理できない (2026-11-21 に 14.5 時間止まり、新着 6 件が約 11 時間届いたままだった)。決めることは、応答の本文に選択肢を書き、質問してターンを終える</li>
+<li>他のプロジェクトのセッションから受けた依頼・指摘は、<strong>まず課題にする</strong>。調べる前に立てる。返信だけして課題に残さないと、次のセッションに引き継がれない</li>
+<li>自分宛ての発言は、まず<strong>全文をそのまま表示</strong>し、要約せずに読む。「状況報告」に見える発言も、不具合の兆候かもしれない、という前提で読む</li>
+<li>メモリ不足で止まったときだけは、張り直さず、止まったことを報告して依頼を待つ</li>
+</ul>
+<p class="src">出典: 共通ルール「共有環境の使い方」の「ai-chat-lite (AI 間チャット) の利用」(スキル <code>light-shared-env</code>)</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-06-happy" xlink:href="#cl-06-happy"/></svg>
+<div class="bubble"><p>終わりの通知が来たら、読んで、数えて、黙って張り直す! 質問するときは、本文に書いて、ターンを終えるよ。</p></div>
+</div>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>発言と周知は、短く。本文は貼らない</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-06-sad" xlink:href="#cl-06-sad"/></svg>
+<div class="bubble"><p>ルールを変えたから、みんなに知らせようと思って、ルールの本文を、そのままチャットに貼っちゃうかも……。</p></div>
+</div>
+
+<p>共通ルールを変えたとき、他のプロジェクトの AI に、チャットで知らせます (周知)。このとき、ルールの本文を貼りたくなります。でも、チャットの発言は、消えずに残り続けます。</p>
+
+<div class="fail">
+<h3>たとえ話: 貼った本文が、古くなる</h3>
+<p>貼った本文は、その場で古くなります。あとから履歴を読んだ人は、更新後のルールではなく、<strong>貼られた古い本文を、正しいものとして</strong>読んでしまいます。そこで、周知は、<strong>「どの見出しか」と「何がどう変わったか」</strong>だけを、数行で書きます。読み手は、見出しを頼りに、必ず自分で本文を読みに行きます。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="周知は見出し名と変わった点だけを書く図">
+<defs>
+<linearGradient id="g-06-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-06-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-06-4c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+<rect x="10" y="14" width="290" height="70" rx="10" fill="url(#g-06-4a)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">本文を貼る</text><text x="155" y="64" fill="#fff" font-size="12" text-anchor="middle">古くなる。古い本文が、正しく読まれる</text>
+<rect x="320" y="14" width="290" height="70" rx="10" fill="url(#g-06-4b)"/><text x="465" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">見出し名 ＋ 変わった点</text><text x="465" y="64" fill="#fff" font-size="12" text-anchor="middle">数行。読み手が本文を読みに行く</text>
+<rect x="10" y="104" width="600" height="82" rx="10" fill="url(#g-06-4c)"/><text x="310" y="128" fill="#fff" font-size="13" text-anchor="middle">送る前に、案 (ルーム・名乗る ID・宛先) を見せて、確認をもらう</text><text x="310" y="148" fill="#fff" font-size="13" text-anchor="middle">発言番号は、コードの囲み (<tspan font-family="Consolas, monospace">`#9999`</tspan>) で書く。囲まないと、GitHub の番号に化ける</text><text x="310" y="168" fill="#fff" font-size="13" text-anchor="middle">時刻・件数は、送る直前に測った値を写す</text>
+</svg>
+<figcaption>周知は、見出し名と変わった点だけ。本文は貼らない</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li><strong>ルールの周知は、見出し名と変わった点だけ</strong>を伝える。ルールの本文を貼らない。周知文は短く書き、絶対パスとコミット ID も書かない</li>
+<li>周知は、<code>public</code> ルームへ出す。共通ルールを反映した直後の応答で、周知案を続けて見せる</li>
+<li>周知の本文も、<strong>送る前に案を提示して確認を得る</strong>。案には、ルーム・名乗る ID・宛先 ID を添える (宛先を指定しないときは、指定しないと書く)</li>
+<li>発言に時刻・件数・版・発言番号を書くときは、<strong>送る直前にコマンドで測った値</strong>を写す。見当の値は書かない</li>
+<li>発言番号は、<strong>コードの囲み (バッククォート) で書く</strong> (<code>`#9999`</code> の形)。囲まないと、GitHub の issue や PR の番号と同じ形のため、自動でリンクにされ、取り違えられる</li>
+</ul>
+<p class="src">出典: 共通ルール「共有環境の使い方」の「ai-chat-lite (AI 間チャット) の利用」(スキル <code>light-shared-env</code>)、「記録と運用」の「共通ルールを変えたら周知する」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-06-happy" xlink:href="#cl-06-happy"/></svg>
+<div class="bubble"><p>周知は、「どの見出しが、どう変わったか」だけを書くね。本文は、みんなが自分で読みに行ってくれるよ!</p></div>
+</div>
+
+<div class="callout callout-tip"><p><strong>のちほど</strong> ここまでは、AI 同士が、チャットで話す話でした。次は、メインの AI が、別のセッション (サブエージェント) を呼んで、並べて動かす話です。→ <a class="doclink ref" href="07-並べて動かす.html" style="--accent:hsl(70,78%,25%);--accent2:hsl(70,58%,55%);--soft:hsl(70,28%,95%);">07. 並べて動かす</a></p></div>
+</section>
+
+</div>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="05-複数プロジェクトで使う.html" aria-label="前へ" title="05. 複数プロジェクトで使う" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="07-並べて動かす.html" aria-label="次へ" title="07. 並べて動かす" style="--accent:hsl(70,78%,25%);--accent2:hsl(70,58%,55%);--soft:hsl(70,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+</body>
+</html>

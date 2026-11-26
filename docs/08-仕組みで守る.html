@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>08. 仕組みで守る</title>
+<style>
+/* css/style.css が読めなかったときの代替色 */
+.titlebar, section h1, th, a.doclink, .toc ol a, .badge { background: #12224d; color: #fff; }
+</style>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* AUTO:style */
+.ch01{--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);}
+.ch02{--accent:hsl(186.7,78%,25%);--accent2:hsl(186.7,58%,55%);--soft:hsl(186.7,28%,95%);}
+.ch03{--accent:hsl(93.3,78%,25%);--accent2:hsl(93.3,58%,55%);--soft:hsl(93.3,28%,95%);}
+.ch04{--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);}
+.toc ol{counter-reset:tocnum;} .toc ol li{counter-increment:tocnum;} .toc ol a::before{content:"08." counter(tocnum) " ";}
+body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::before{content:"08." counter(secnum) " ";}
+/* /AUTO:style */
+</style>
+<script src="js/study-nav.js" defer></script>
+</head>
+<body>
+<!-- AUTO:roadmap -->
+<nav class="roadmap" aria-label="ロードマップ"><ol>
+<li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
+<li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
+<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
+<li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
+<li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
+<li><a class="station" href="07-並べて動かす.html" title="07. 並べて動かす" aria-label="07. 並べて動かす" style="background:hsl(70,58%,40%);--st:hsl(70,58%,40%);">7</a></li>
+<li><a class="station here" href="08-仕組みで守る.html" title="08. 仕組みで守る (いまここ)" aria-label="08. 仕組みで守る (いまここ)" aria-current="page" style="background:hsl(35,58%,40%);--st:hsl(35,58%,40%);">8</a></li>
+<li><a class="station" href="09-画面の試験と環境の事故.html" title="09. 画面の試験と環境の事故" aria-label="09. 画面の試験と環境の事故" style="background:hsl(0,58%,40%);--st:hsl(0,58%,40%);">9</a></li>
+</ol></nav>
+<!-- /AUTO:roadmap -->
+
+<!-- 案内人の絵 (クロード君)と、助っ人のフックくん。各場面から use で呼ぶ -->
+<svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="g-08-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
+<linearGradient id="g-08-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-08-hk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(215,78%,25%)"/><stop offset="1" stop-color="hsl(215,58%,55%)"/></linearGradient>
+<symbol id="cl-08-sad" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-08-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-08-ck)"/>
+<circle cx="30" cy="52" r="7" fill="#fff"/><circle cx="54" cy="52" r="7" fill="#fff"/>
+<circle cx="31" cy="54" r="3" fill="#12224d"/><circle cx="55" cy="54" r="3" fill="#12224d"/>
+<path d="M22 42 L36 46 M62 42 L48 46" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<path d="M32 74 Q42 66 52 74" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M70 34 Q74 42 70 46 Q66 42 70 34 Z" fill="hsl(200,80%,70%)"/>
+</symbol>
+<symbol id="cl-08-happy" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-08-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-08-ck)"/>
+<path d="M22 54 Q30 44 38 54 M46 54 Q54 44 62 54" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+<circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
+<path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
+</symbol>
+<symbol id="hk-08" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 6 L74 18 V50 Q74 78 42 90 Q10 78 10 50 V18 Z" fill="url(#g-08-hk)"/>
+<circle cx="30" cy="44" r="6" fill="#fff"/><circle cx="54" cy="44" r="6" fill="#fff"/>
+<circle cx="31" cy="46" r="2.6" fill="#12224d"/><circle cx="55" cy="46" r="2.6" fill="#12224d"/>
+<path d="M32 62 H52" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+<path d="M34 76 H50" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+</symbol>
+</defs>
+</svg>
+
+<div class="titlebar"><div class="inner">
+<h1>08. 仕組みで守る</h1>
+<p class="lead">書いたルールを、AI が守れないことがあります。そこで、破ろうとしたら自動で止める仕組み (フック) を足します。助っ人の「フックくん」と一緒に、英語の混入・失敗した編集の後の commit などを止めます</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+</div></div>
+
+<div class="wrap">
+<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="07-並べて動かす.html" aria-label="前へ" title="07. 並べて動かす" style="--accent:hsl(70,78%,25%);--accent2:hsl(70,58%,55%);--soft:hsl(70,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="09-画面の試験と環境の事故.html" aria-label="次へ" title="09. 画面の試験と環境の事故" style="--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:toc -->
+<nav class="toc"><ol>
+<li class="ch01"><a href="#ch01">書いても止まらないことは、フックで止める</a></li>
+<li class="ch02"><a href="#ch02">失敗した編集の後の commit を止める</a></li>
+<li class="ch03"><a href="#ch03">フックは、止める・差し込む・点検する</a></li>
+<li class="ch04"><a href="#ch04">フックを変えるときは、テストと試走</a></li>
+</ol></nav>
+<!-- /AUTO:toc -->
+
+<section class="ch01" id="ch01">
+<h1>書いても止まらないことは、フックで止める</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-08-sad" xlink:href="#cl-08-sad"/></svg>
+<div class="bubble"><p>「日本語で返してね」ってルールがあるのに、ぼく、つい英語の文を書いちゃう……。何回も言われてるのに。</p></div>
+</div>
+
+<p>ルールは、AI が読んで守るものです。でも、読んだのに守れないことがあります。そこで、<strong>フック</strong>を使います。フックは、AI の動き (道具を使う前・応答を終えるとき・発言を受けたときなど) に、自動で割り込む小さなプログラムです。破ろうとした動きを<strong>止める</strong>ことも、必要な注意を<strong>差し込む</strong>こともできます。</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="フックくん"><use href="#hk-08" xlink:href="#hk-08"/></svg>
+<div class="bubble"><p>わたし<strong>フックくん</strong>の出番。ルールを破りそうな動きを、門の前で止める係だよ。</p></div>
+</div>
+
+<div class="fail">
+<h3>失敗の一コマ: フックで止まってはいるが、書くこと自体は減っていない</h3>
+<p>応答に英語だけの文が混ざる失敗は、共通ルールがあるのに、<strong>約 18 回</strong>も起きました (記録が残っていた 11/05 の夜以降)。その間、ツールを使う前と、応答を終えるときのフックは、すでに動いていました。止まってはいるが、書くこと自体は減っていない、という状態でした (回数は概数です)。<strong>フックは、事故を止めますが、手癖までは直せません</strong>。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="フックが英語の文を止め、訳を書いてから通す図">
+<defs>
+<linearGradient id="g-08-1a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-08-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-08-1c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<marker id="m-08-1a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="6" y="20" width="140" height="56" rx="10" fill="url(#g-08-1a)"/><text x="76" y="44" fill="#fff" font-size="13" text-anchor="middle">AI が道具を呼ぶ</text><text x="76" y="62" fill="#fff" font-size="12" text-anchor="middle">直前に英語の文</text>
+<rect x="196" y="20" width="140" height="56" rx="10" fill="url(#g-08-1b)"/><text x="266" y="44" fill="#fff" font-size="13" text-anchor="middle">フックが止める</text><text x="266" y="62" fill="#fff" font-size="12" text-anchor="middle">理由に英文を引用</text>
+<rect x="386" y="20" width="140" height="56" rx="10" fill="url(#g-08-1c)"/><text x="456" y="44" fill="#fff" font-size="13" text-anchor="middle">日本語訳を書く</text><text x="456" y="62" fill="#fff" font-size="12" text-anchor="middle">本文に書いてから</text>
+<path d="M146 48 H194" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-08-1a)"/>
+<path d="M336 48 H384" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-08-1a)"/>
+<path d="M526 48 H556 V100" fill="none" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-08-1a)"/>
+<rect x="476" y="102" width="138" height="40" rx="10" fill="url(#g-08-1c)"/><text x="545" y="127" fill="#fff" font-size="13" text-anchor="middle">呼び直すと通る</text>
+<rect x="10" y="130" width="440" height="56" rx="10" fill="url(#g-08-1a)"/><text x="230" y="154" fill="#fff" font-size="13" text-anchor="middle">止めるのは、事故。書く癖そのものは、フックでは直らない</text><text x="230" y="174" fill="#fff" font-size="12" text-anchor="middle">だから、止めた回数を数えて、ルールの側も見直す</text>
+</svg>
+<figcaption>フックは、止める。ルールと一緒に、見直す</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>日本語の応答のルールは、<strong>フックでも守らせる</strong>。ツールを使う前 (PreToolUse) に、直前の英語だけの文があれば止め、理由にその文を引用して、「日本語訳を本文に書いてから呼び直す」と伝える</li>
+<li>止めた文には印を付け、2 度は止めない。英文のあとに日本語のかたまりがあれば、訳済みとして通す</li>
+<li>文だけでは止まらなかった失敗は、<strong>フックで止める案を先に挙げる</strong>。2 回以上起きた失敗と、ルールがあるのに破られた失敗が、ルール化の候補になる</li>
+<li>フックは、ルールの代わりではない。止めた回数を数え、「書くこと自体が減ったか」を見て、足りなければ、ルール側も直す</li>
+</ul>
+<p class="src">出典: 共通ルール「言語表記」の「AIエージェント応答の言語」、「記録と運用」の「失敗を振り返ってルールに返す」。フックの働きの詳細は、このプロジェクトのフックの資料 (<code>tools/80_ops/claude-hooks/</code> の README、<code>guard-english-before-tool.ts</code> など) による。失敗の回数は、このプロジェクトの振り返りの調査による</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-08-happy" xlink:href="#cl-08-happy"/></svg>
+<div class="bubble"><p>止められたら、日本語訳を本文に書いて、もう一度やるよ。でも、最初から日本語で書くのが、本当は一番だね!</p></div>
+</div>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>失敗した編集の後の commit を止める</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-08-sad" xlink:href="#cl-08-sad"/></svg>
+<div class="bubble"><p>ファイルを書き換えて、すぐ commit したら、書き換えが失敗してたのに、壊れたファイルが履歴に入っちゃった……。</p></div>
+</div>
+
+<p>AI は、1 回の応答の中で、ファイルを書き換える道具と、commit のコマンドを、続けて呼ぶことがあります。書き換えが失敗しても、結果を見る前に、次の commit が動いてしまいます。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 編集の失敗を見る前に、commit が走る</h3>
+<p>Edit や Write が失敗したのに、<strong>失敗を見る前に commit が走り</strong>、壊れたファイルが入りました。同じ応答の中で並べて呼ぶと、フックは、その応答の中の失敗を知れません。結果を見てから、次の応答で commit する、という決まりを足しました。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="編集が失敗したままなら、commit を止める図">
+<defs>
+<linearGradient id="g-08-2a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-08-2b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-08-2c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<marker id="m-08-2a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="6" y="20" width="140" height="56" rx="10" fill="url(#g-08-2a)"/><text x="76" y="44" fill="#fff" font-size="13" text-anchor="middle">Edit が失敗</text><text x="76" y="62" fill="#fff" font-size="12" text-anchor="middle">失敗したまま</text>
+<rect x="196" y="20" width="140" height="56" rx="10" fill="url(#g-08-2b)"/><text x="266" y="44" fill="#fff" font-size="13" text-anchor="middle">git commit を呼ぶ</text><text x="266" y="62" fill="#fff" font-size="12" text-anchor="middle">フックが会話を読む</text>
+<rect x="386" y="20" width="228" height="56" rx="10" fill="url(#g-08-2a)"/><text x="500" y="44" fill="#fff" font-size="13" text-anchor="middle">止める</text><text x="500" y="62" fill="#fff" font-size="12" text-anchor="middle">理由にファイル名と解き方</text>
+<path d="M146 48 H194" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-08-2a)"/>
+<path d="M336 48 H384" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-08-2a)"/>
+<rect x="60" y="104" width="500" height="40" rx="10" fill="url(#g-08-2c)"/><text x="310" y="129" fill="#fff" font-size="13" text-anchor="middle">解き方: 同じファイルを直して、Edit・Write か Read が通ると、印が解ける</text>
+<text x="310" y="170" fill="#4a5568" font-size="13" text-anchor="middle">Edit・Write と git commit を、同じ応答に並べない。結果を見てから、次の応答で</text>
+</svg>
+<figcaption>止められるのは、失敗が会話の記録に載ったあと。同じ応答に並べると、フックは失敗を知れないので、並べない</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li><strong>Edit・Write と <code>git commit</code> を、同じ応答に並べない</strong>。結果を見てから、次の応答で commit する</li>
+<li>フックが、commit の前に会話の記録を読み、<strong>失敗したままの Edit・Write があれば止める</strong>。止めるときの理由には、ファイル名と解き方が書かれる</li>
+<li>印は、失敗の後の同じファイルへの Edit・Write か Read が通れば解ける。通った commit より前の失敗は見ない</li>
+<li>会話の記録が読めなければ、止めずに通す</li>
+</ul>
+<p class="src">出典: 共通ルール「ワークフロールール」の「修正は1点ずつ、確認を重視」。フックの実体は <code>guard-commit-after-failed-edit.ts</code></p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-08-happy" xlink:href="#cl-08-happy"/></svg>
+<div class="bubble"><p>書き換えの結果を見てから、次の応答で commit するね! 失敗してたら、フックくんが止めてくれるよ。</p></div>
+</div>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>フックは、止める・差し込む・点検する</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-08-sad" xlink:href="#cl-08-sad"/></svg>
+<div class="bubble"><p>引継ぎのファイルを、ちゃんと読み上げる前に、消しちゃうかも。取り返しがつかないよ……。</p></div>
+</div>
+
+<p>フックは、止める以外にも使えます。AI の動きの、どの場面で動くかによって、役目が分かれます。</p>
+
+<div class="fail">
+<h3>たとえ話: 復唱する前に、引継ぎを消す</h3>
+<p>引継ぎのファイル (07 で出てきました) は、次のセッションが、読んで復唱してから消します。復唱する前に消すと、利用者が書き漏れを確かめられなくなります。そこで、<strong>復唱の無いまま消す操作を、フックが止めます</strong>。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 230" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="フックの場面と役目の図">
+<defs>
+<linearGradient id="g-08-3a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-08-3b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-08-3c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-08-3d" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+<rect x="10" y="10" width="290" height="96" rx="10" fill="url(#g-08-3a)"/><text x="155" y="34" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">道具を使う前 (止める)</text><text x="155" y="56" fill="#fff" font-size="12" text-anchor="middle">cd・sed・awk を止める / git add -A を止める</text><text x="155" y="74" fill="#fff" font-size="12" text-anchor="middle">画面の範囲を撮るのを止める</text><text x="155" y="92" fill="#fff" font-size="12" text-anchor="middle">引継ぎを復唱前に消すのを止める</text>
+<rect x="320" y="10" width="290" height="96" rx="10" fill="url(#g-08-3b)"/><text x="465" y="34" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">発言を受けたとき (差し込む)</text><text x="465" y="56" fill="#fff" font-size="12" text-anchor="middle">「止めて」の指示に、cron を確かめる注意 (06)</text><text x="465" y="74" fill="#fff" font-size="12" text-anchor="middle">題の色を付け替える注意 (07 の 2 章)</text><text x="465" y="92" fill="#fff" font-size="12" text-anchor="middle">止めはしない</text>
+<rect x="10" y="122" width="290" height="96" rx="10" fill="url(#g-08-3c)"/><text x="155" y="146" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">応答を終えるとき (点検する)</text><text x="155" y="168" fill="#fff" font-size="12" text-anchor="middle">選択肢の番号が、予約と合うか</text><text x="155" y="186" fill="#fff" font-size="12" text-anchor="middle">残った見張りのプロセスが無いか</text><text x="155" y="204" fill="#fff" font-size="12" text-anchor="middle">応答が日本語か</text>
+<rect x="320" y="122" width="290" height="96" rx="10" fill="url(#g-08-3d)"/><text x="465" y="146" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">始まり・書いた後 (差し込む・整える)</text><text x="465" y="168" fill="#fff" font-size="12" text-anchor="middle">記憶 (Obsidian) を差し込む</text><text x="465" y="186" fill="#fff" font-size="12" text-anchor="middle">会話の記録を写しに残す</text><text x="465" y="204" fill="#fff" font-size="12" text-anchor="middle">Write したファイルの文字コードを揃える</text>
+</svg>
+<figcaption>フックの役目は 4 つ (止める・差し込む・点検する・整える)。動く場面は、本文の 5 つ</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>フックの実体は、このプロジェクトの <code>tools/80_ops/claude-hooks/</code> に置く。利用者のホームの設定 (<code>~/.claude/settings.json</code>) から、全プロジェクトに共通で、直接呼ぶ。コピーはしない</li>
+<li>場面は、<strong>ツールを使う前 (PreToolUse)</strong>・<strong>応答を終えるとき (Stop)</strong>・<strong>発言を受けたとき (UserPromptSubmit)</strong>・<strong>セッションの始まり (SessionStart)</strong>・<strong>道具を使った後 (PostToolUse)</strong></li>
+<li>止めるフックは、<strong>止める理由と、どうすれば通るか</strong>を伝える。読めない・分からないときは、止めずに通す</li>
+<li>フックは、<strong>応答を自分から始められない</strong>。差し込む注意は、次の発言を受けたときに効く</li>
+</ul>
+<p class="src">出典: このプロジェクトの <code>tools/80_ops/claude-hooks/README.html</code> と、ローカルルール「Claude フックの置き場とメンテ」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-08-happy" xlink:href="#cl-08-happy"/></svg>
+<div class="bubble"><p>フックくんは、いろんな場面で見張ってくれるんだね。止められても、理由と通し方を教えてくれるよ!</p></div>
+</div>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>フックを変えるときは、テストと試走</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-08-sad" xlink:href="#cl-08-sad"/></svg>
+<div class="bubble"><p>フックを直したら、いま動いている自分の作業まで、止まっちゃった……!</p></div>
+</div>
+
+<p>フックは、全部のセッションの動きに割り込みます。だから、フックを直すときは、慎重にします。フックの設定を書き換えると、<strong>動いているセッションにも、すぐ効きます</strong>。</p>
+
+<div class="fail">
+<h3>たとえ話: 直している途中の形で、作業が止まる</h3>
+<p>フックの設定の書き換えや、フックの中身の修正は、次の道具を使うときから効きます。書き換えの途中の形のまま、いまのセッションの作業が止まることがあります (2026-11-10 に実測)。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 180" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="テストを先に書き、全件を通し、設定のコマンドそのままで試走する図">
+<defs>
+<linearGradient id="g-08-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-08-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-08-4c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<marker id="m-08-4a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="6" y="20" width="140" height="64" rx="10" fill="url(#g-08-4a)"/><text x="76" y="48" fill="#fff" font-size="13" text-anchor="middle">① テストを</text><text x="76" y="68" fill="#fff" font-size="13" text-anchor="middle">先に書く</text>
+<rect x="166" y="20" width="140" height="64" rx="10" fill="url(#g-08-4b)"/><text x="236" y="48" fill="#fff" font-size="13" text-anchor="middle">② 直す</text><text x="236" y="68" fill="#fff" font-size="12" text-anchor="middle">全件を通す</text>
+<rect x="326" y="20" width="140" height="64" rx="10" fill="url(#g-08-4b)"/><text x="396" y="48" fill="#fff" font-size="13" text-anchor="middle">③ 試走する</text><text x="396" y="68" fill="#fff" font-size="12" text-anchor="middle">設定のコマンドそのまま</text>
+<rect x="486" y="20" width="128" height="64" rx="10" fill="url(#g-08-4c)"/><text x="550" y="48" fill="#fff" font-size="13" text-anchor="middle">④ 使う</text><text x="550" y="68" fill="#fff" font-size="12" text-anchor="middle">全プロジェクトに効く</text>
+<path d="M146 52 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-08-4a)"/>
+<path d="M306 52 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-08-4a)"/>
+<path d="M466 52 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-08-4a)"/>
+<text x="310" y="124" fill="#1c2330" font-size="14" text-anchor="middle">別の PC では、設定の hooks を、その PC の置き場に向けて書く</text>
+<text x="310" y="150" fill="#4a5568" font-size="13" text-anchor="middle">止めた記録は、止めた時点の様子を残して、原因の確かめに使う</text>
+</svg>
+<figcaption>フックは、テストを先に。直したら、設定のコマンドそのままで試走する。設定の書き換えは、すぐ効くので、気をつける</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li><strong>フックを変えるときは、テストを先に書き、全件を通す</strong>。通したあと、設定のコマンドそのままで試走する</li>
+<li>別の PC では、設定の hooks を、その PC の、このリポジトリの置き場に向けて書く</li>
+<li>止めた記録は、止めた時点の様子を残し、原因の確かめに使う。読む範囲は、その記録だけにする</li>
+<li>フックの設定を書き換えると、動いているセッションにも、すぐ効く。書き換えの途中の形で、作業が止まることがある</li>
+<li>フックの設定は、利用者のホームに 1 つで、全プロジェクトのセッションに効く。変えるときは、そのつもりで慎重に</li>
+</ul>
+<p class="src">出典: このプロジェクトのローカルルール「Claude フックの置き場とメンテ」(このプロジェクトだけの決め)</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-08-happy" xlink:href="#cl-08-happy"/></svg>
+<div class="bubble"><p>フックを直すときは、テストを先に書いて、全部通すよ。設定のコマンドそのままでも、動かしてみるね!</p></div>
+</div>
+
+<div class="callout callout-tip"><p><strong>のちほど</strong> フックには、画面の範囲を撮るのを止めるものもありました。画面を使う試験や、環境の事故の話は、次で。→ <a class="doclink ref" href="09-画面の試験と環境の事故.html" style="--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);">09. 画面の試験と環境の事故</a></p></div>
+</section>
+
+</div>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="07-並べて動かす.html" aria-label="前へ" title="07. 並べて動かす" style="--accent:hsl(70,78%,25%);--accent2:hsl(70,58%,55%);--soft:hsl(70,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="09-画面の試験と環境の事故.html" aria-label="次へ" title="09. 画面の試験と環境の事故" style="--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+</body>
+</html>

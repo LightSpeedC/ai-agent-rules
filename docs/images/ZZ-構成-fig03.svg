@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 170" width="620" height="170" role="img" aria-label="失敗の一コマとたとえ話の分け方の図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="14" width="290" height="70" rx="10" fill="url(#i1)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">失敗の一コマ</text><text x="155" y="64" fill="#fff" font-size="12" text-anchor="middle">実際に起きた出来事 (記録がある)</text>
+<rect x="320" y="14" width="290" height="70" rx="10" fill="url(#i2)"/><text x="465" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">たとえ話</text><text x="465" y="64" fill="#fff" font-size="12" text-anchor="middle">記録の無い、一般的な事情の説明</text>
+<rect x="60" y="104" width="500" height="50" rx="10" fill="url(#i3)"/><text x="310" y="134" fill="#fff" font-size="13" text-anchor="middle">どちらも、足した決まりの根拠は、共通ルールの「理由」</text>
+</svg>

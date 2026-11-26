@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" width="620" height="200" role="img" aria-label="待受けを、道具で数えてから張る図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="14" width="250" height="52" rx="10" fill="url(#i2)"/><text x="135" y="36" fill="#fff" font-size="13" text-anchor="middle">① 数える</text><text x="135" y="55" fill="#fff" font-size="13" font-family="Consolas, monospace" text-anchor="middle">aichat waiters :ID: -p … -r …</text>
+<rect x="360" y="14" width="250" height="52" rx="10" fill="url(#i2)"/><text x="485" y="36" fill="#fff" font-size="13" text-anchor="middle">② 足りなければ張る</text><text x="485" y="55" fill="#fff" font-size="13" font-family="Consolas, monospace" text-anchor="middle">aichat wait :ID: -p … -r …</text>
+<path d="M260 40 H358" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<rect x="10" y="86" width="600" height="40" rx="10" fill="url(#i1)"/><text x="310" y="111" fill="#fff" font-size="13" text-anchor="middle">プロセスを自分で検索しない。同じルームを 2 本で見ない (通知が倍に来るだけ)</text>
+<rect x="10" y="142" width="600" height="44" rx="10" fill="url(#i3)"/><text x="310" y="162" fill="#fff" font-size="13" text-anchor="middle">待受けは、メインの AI が背景 (バックグラウンド処理) で張る。サブエージェント (仕事を任せる別の AI) は挟まない</text><text x="310" y="178" fill="#fff" font-size="12" text-anchor="middle">挟むと 1 回に 5〜6 本立ち、終わっても残る</text>
+</svg>

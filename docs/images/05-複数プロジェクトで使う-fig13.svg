@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="ui-lock で、画面を使う作業を 1 つずつにする図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="20" width="150" height="44" rx="10" fill="url(#i2)"/><text x="85" y="48" fill="#fff" font-size="13" text-anchor="middle">プロジェクト A の試験</text>
+<rect x="10" y="80" width="150" height="44" rx="10" fill="url(#i2)"/><text x="85" y="108" fill="#fff" font-size="13" text-anchor="middle">プロジェクト B の試験</text>
+<rect x="225" y="38" width="170" height="68" rx="10" fill="url(#i3)"/><text x="310" y="68" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">ui-lock</text><text x="310" y="90" fill="#fff" font-size="12" text-anchor="middle">1 つずつ通す</text>
+<rect x="460" y="38" width="150" height="68" rx="10" fill="url(#i2)"/><text x="535" y="68" fill="#fff" font-size="14" text-anchor="middle">画面・マウス・</text><text x="535" y="88" fill="#fff" font-size="14" text-anchor="middle">キー・前面の窓</text>
+<path d="M160 42 L223 62" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M160 102 L223 82" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M395 72 H458" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<rect x="110" y="146" width="400" height="34" rx="10" fill="url(#i1)"/><text x="310" y="168" fill="#fff" font-size="13" text-anchor="middle">上限 (--timeout) を渡す。放置されても、画面を止め続けない</text>
+</svg>

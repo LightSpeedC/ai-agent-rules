@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>ZZ. 構成</title>
+<style>
+/* css/style.css が読めなかったときの代替色 */
+.titlebar, section h1, th, a.doclink, .toc ol a, .badge { background: #12224d; color: #fff; }
+</style>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* AUTO:style */
+.ch01{--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);}
+.ch02{--accent:hsl(186.7,78%,25%);--accent2:hsl(186.7,58%,55%);--soft:hsl(186.7,28%,95%);}
+.ch03{--accent:hsl(93.3,78%,25%);--accent2:hsl(93.3,58%,55%);--soft:hsl(93.3,28%,95%);}
+.ch04{--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);}
+.toc ol{counter-reset:tocnum;} .toc ol li{counter-increment:tocnum;} .toc ol a::before{content:"ZZ." counter(tocnum) " ";}
+body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::before{content:"ZZ." counter(secnum) " ";}
+/* /AUTO:style */
+</style>
+<script src="js/study-nav.js" defer></script>
+</head>
+<body>
+
+<div class="titlebar"><div class="inner">
+<h1>ZZ. 構成</h1>
+<p class="lead">この勉強会の読み物 9 本の、対象読者・章立ての意図・資料の約束 (用語など)・出典の置き場をまとめた付録です。本編は順に読む資料で、この付録は、全体を見渡したいときに開きます</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+</div></div>
+
+<div class="wrap">
+<!-- AUTO:nav --><p class="docnav"><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:toc -->
+<nav class="toc"><ol>
+<li class="ch01"><a href="#ch01">対象読者と、読み方</a></li>
+<li class="ch02"><a href="#ch02">9 本の章立てと、意図</a></li>
+<li class="ch03"><a href="#ch03">資料の約束</a></li>
+<li class="ch04"><a href="#ch04">出典の置き場</a></li>
+</ol></nav>
+<!-- /AUTO:toc -->
+
+<section class="ch01" id="ch01">
+<h1>対象読者と、読み方</h1>
+
+<p>対象は、<strong>AI エージェント (特に Claude Code) を使って開発する人</strong>です。1 人で使い始めた人から、複数のプロジェクトと複数のセッションで使う人までを、1 本の道筋に並べました。「この資料の利用者」は、AI に頼む人 (あなた) のことです。</p>
+
+<p>01〜07 は、使う規模が大きくなる順 (小 → 大) です。08 と 09 は、規模の軸ではなく、仕組みの話と、画面を持つアプリ向けの話です。まず 01 から順に読みます。自分のいまの規模に近い章から読んでも、構いません。</p>
+
+<figure>
+<svg viewBox="0 0 620 210" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="各章の 4 つの場面の図">
+<defs>
+<linearGradient id="g-zz-1a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-zz-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-zz-1c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-zz-1d" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<marker id="m-zz-1a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="6" y="20" width="140" height="64" rx="10" fill="url(#g-zz-1a)"/><text x="76" y="48" fill="#fff" font-size="13" text-anchor="middle">クロード君が</text><text x="76" y="68" fill="#fff" font-size="13" text-anchor="middle">困る</text>
+<rect x="166" y="20" width="140" height="64" rx="10" fill="url(#g-zz-1b)"/><text x="236" y="48" fill="#fff" font-size="13" text-anchor="middle">失敗の一コマ</text><text x="236" y="68" fill="#fff" font-size="12" text-anchor="middle">または、たとえ話</text>
+<rect x="326" y="20" width="140" height="64" rx="10" fill="url(#g-zz-1c)"/><text x="396" y="48" fill="#fff" font-size="13" text-anchor="middle">足した決まり</text><text x="396" y="68" fill="#fff" font-size="12" text-anchor="middle">図と出典つき</text>
+<rect x="486" y="20" width="128" height="64" rx="10" fill="url(#g-zz-1d)"/><text x="550" y="48" fill="#fff" font-size="13" text-anchor="middle">うまくいった</text><text x="550" y="68" fill="#fff" font-size="13" text-anchor="middle">クロード君</text>
+<path d="M146 52 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-zz-1a)"/>
+<path d="M306 52 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-zz-1a)"/>
+<path d="M466 52 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-zz-1a)"/>
+<text x="310" y="124" fill="#1c2330" font-size="14" text-anchor="middle">どの章も、この 4 つの場面の順で進む</text>
+<text x="310" y="150" fill="#4a5568" font-size="13" text-anchor="middle">案内役は、失敗する AI の「クロード君」。助っ人は、ルールちゃん (01)・スキルちゃん (05)・フックくん (08)</text>
+<text x="310" y="176" fill="#4a5568" font-size="13" text-anchor="middle">章の最後に、次の章への「のちほど」がある</text>
+</svg>
+<figcaption>どの章も、失敗から決まりが生まれる形で書いてある</figcaption>
+</figure>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>9 本の章立てと、意図</h1>
+
+<p>各本の主役の決まりを、1 行で示します。</p>
+
+<ul>
+<li><a class="doclink ref" href="01-はじめの一歩.html" style="--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);">01. はじめの一歩</a>: 1 人で使い始める。ルールが失敗から増えること、日本語で応える、フルパスを出さない、commit は指示を待つ</li>
+<li><a class="doclink ref" href="02-慣れてきたら.html" style="--accent:hsl(245,78%,25%);--accent2:hsl(245,58%,55%);--soft:hsl(245,28%,95%);">02. 慣れてきたら</a>: 実行の合図は決まった言葉だけ、失敗したら直し方を決めずに報告する、確かめてから言い切る、仕様も疑う、短い作業は見張る</li>
+<li><a class="doclink ref" href="03-文字化けと道具.html" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);">03. 文字化けと道具</a>: 文字コードと改行を「組」で扱う道具 (<code>text</code>・<code>convert-encoding</code>・<code>psh</code>)、ブロックを回避しない</li>
+<li><a class="doclink ref" href="04-課題と決めたことの管理.html" style="--accent:hsl(175,78%,25%);--accent2:hsl(175,58%,55%);--soft:hsl(175,28%,95%);">04. 課題と決めたことの管理</a>: 課題は 1 件 1 ファイル、決めることは番号付きの選択肢 (A・B・C)、計画と承認が先、書いた資料はレビューを通す</li>
+<li><a class="doclink ref" href="05-複数プロジェクトで使う.html" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);">05. 複数プロジェクトで使う</a>: ルールを核とスキルに分ける、他プロジェクトは直さない、公開前に確かめる、画面を使う作業は 1 つずつ</li>
+<li><a class="doclink ref" href="06-AI同士がつながる.html" style="--accent:hsl(105,78%,25%);--accent2:hsl(105,58%,55%);--soft:hsl(105,28%,95%);">06. AI 同士がつながる</a>: チャットの待受けを数える・止める・読み切る、周知は短く</li>
+<li><a class="doclink ref" href="07-並べて動かす.html" style="--accent:hsl(70,78%,25%);--accent2:hsl(70,58%,55%);--soft:hsl(70,28%,95%);">07. 並べて動かす</a>: レビュー専用のセッション (サブエージェント)、状態の色、引継ぎ、セッション間の指示</li>
+<li><a class="doclink ref" href="08-仕組みで守る.html" style="--accent:hsl(35,78%,25%);--accent2:hsl(35,58%,55%);--soft:hsl(35,28%,95%);">08. 仕組みで守る</a>: フックで止める (英語の混入・失敗した編集の後の commit)、フックの場面と変え方</li>
+<li><a class="doclink ref" href="09-画面の試験と環境の事故.html" style="--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);">09. 画面の試験と環境の事故</a>: 画面の試験は人の操作に合わせる、起こした窓は閉じる、時間の上限、外へ送らない口</li>
+</ul>
+
+<figure>
+<svg viewBox="0 0 620 170" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="01 から 07 は規模が大きくなる順、08 と 09 は別枠の図">
+<defs>
+<linearGradient id="g-zz-2a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-zz-2b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<linearGradient id="g-zz-2c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
+<linearGradient id="g-zz-2d" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+</defs>
+<rect x="6" y="14" width="196" height="64" rx="10" fill="url(#g-zz-2a)"/><text x="104" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">1 人で使う</text><text x="104" y="62" fill="#fff" font-size="12" text-anchor="middle">01・02・03</text>
+<rect x="212" y="14" width="196" height="64" rx="10" fill="url(#g-zz-2b)"/><text x="310" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">課題・決定・ルールの共有</text><text x="310" y="62" fill="#fff" font-size="12" text-anchor="middle">04・05</text>
+<rect x="418" y="14" width="196" height="64" rx="10" fill="url(#g-zz-2c)"/><text x="516" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">複数のセッション</text><text x="516" y="62" fill="#fff" font-size="12" text-anchor="middle">06・07</text>
+<rect x="110" y="94" width="400" height="64" rx="10" fill="url(#g-zz-2d)"/><text x="310" y="122" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">別枠: 仕組みで守る (08)・画面を持つアプリ (09)</text><text x="310" y="142" fill="#fff" font-size="12" text-anchor="middle">どの規模でも、必要になったときに読む</text>
+</svg>
+<figcaption>01〜07 は、規模が大きくなる順。08・09 は、別枠</figcaption>
+</figure>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>資料の約束</h1>
+
+<ul>
+<li><strong>「失敗の一コマ」と「たとえ話」</strong>。実際に起きた出来事 (記録がある) は、「失敗の一コマ」です。記録の無い一般的な事情の説明は、「たとえ話」です。吹き出しも、記録の無い話は、可能性の形で書いてあります</li>
+<li><strong>「セッション (サブエージェント)」と「メインの AI」</strong>。「セッション (サブエージェント)」は、メインの AI が呼んで作業させる別の AI です。「メインの AI」は、それを呼ぶ側です。「別のセッション」は、メインとは別に動く、独立したセッションを指します</li>
+<li><strong>「背景 (バックグラウンド処理)」</strong>。処理の「背景」は、この形で書きます。「利用者」は、AI に頼む人です</li>
+<li><strong>「このプロジェクトだけの決め」</strong>は、「ローカルルール」と明記してあります。共通ルールの決まりとは、区別してください</li>
+<li><strong>他のプロジェクトの名前</strong>は文中に書きますが、リンクは貼りません</li>
+</ul>
+
+<figure>
+<svg viewBox="0 0 620 170" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="失敗の一コマとたとえ話の分け方の図">
+<defs>
+<linearGradient id="g-zz-3a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-zz-3b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-zz-3c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+<rect x="10" y="14" width="290" height="70" rx="10" fill="url(#g-zz-3a)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">失敗の一コマ</text><text x="155" y="64" fill="#fff" font-size="12" text-anchor="middle">実際に起きた出来事 (記録がある)</text>
+<rect x="320" y="14" width="290" height="70" rx="10" fill="url(#g-zz-3b)"/><text x="465" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">たとえ話</text><text x="465" y="64" fill="#fff" font-size="12" text-anchor="middle">記録の無い、一般的な事情の説明</text>
+<rect x="60" y="104" width="500" height="50" rx="10" fill="url(#g-zz-3c)"/><text x="310" y="134" fill="#fff" font-size="13" text-anchor="middle">どちらも、足した決まりの根拠は、共通ルールの「理由」</text>
+</svg>
+<figcaption>出来事に記録があるかで、2 つを分ける</figcaption>
+</figure>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>出典の置き場</h1>
+
+<p>各章の「出典」には、共通ルールの章の名前を書いてあります。共通ルールの実体は、このプロジェクト (<code>ai-agent-rules</code>) の、次の 4 か所にあります。ほかに、別のプロジェクトが 2 つあります。</p>
+
+<ul>
+<li><strong>共通ルールの本体と章</strong>: <code>common-rules.md</code> と <code>rules/</code> (毎回読む部分)</li>
+<li><strong>状況別の章 (スキル)</strong>: <code>skills/light-*/SKILL.md</code>。出典に「スキル <code>light-xxx</code>」とあるものは、ここ</li>
+<li><strong>フック</strong>: <code>tools/80_ops/claude-hooks/</code> (README に、各フックの役目の表がある)</li>
+<li><strong>ローカルルール</strong>: <code>notes/90_rules/local-rules.md</code> (このプロジェクトだけの決め。章の切り出しルール・フックの置き場とメンテなど)</li>
+<li><strong>別のプロジェクト (2 つ)</strong>: 共有 CLI (<code>ai-agent-tools</code>) と、AI 間チャット (<code>ai-chat-lite</code>) は、別のプロジェクト。使い方は、それぞれの資料を見る</li>
+</ul>
+
+<figure>
+<svg viewBox="0 0 620 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="共通ルール・スキル・フック・ローカルルールの置き場の地図">
+<defs>
+<linearGradient id="g-zz-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-zz-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-zz-4c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-zz-4d" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+</defs>
+<rect x="10" y="14" width="290" height="66" rx="10" fill="url(#g-zz-4a)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">共通ルール</text><text x="155" y="62" fill="#fff" font-size="12" text-anchor="middle">common-rules.md ・ rules/</text>
+<rect x="320" y="14" width="290" height="66" rx="10" fill="url(#g-zz-4b)"/><text x="465" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">スキル</text><text x="465" y="62" fill="#fff" font-size="12" text-anchor="middle">skills/light-*/SKILL.md</text>
+<rect x="10" y="100" width="290" height="66" rx="10" fill="url(#g-zz-4c)"/><text x="155" y="128" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">フック</text><text x="155" y="148" fill="#fff" font-size="12" text-anchor="middle">tools/80_ops/claude-hooks/</text>
+<rect x="320" y="100" width="290" height="66" rx="10" fill="url(#g-zz-4d)"/><text x="465" y="128" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">ローカルルール</text><text x="465" y="148" fill="#fff" font-size="12" text-anchor="middle">notes/90_rules/local-rules.md</text>
+</svg>
+<figcaption>出典の置き場は、このプロジェクトの 4 か所</figcaption>
+</figure>
+
+<h3>各本の出典</h3>
+<ul>
+<li>01: 共通ルール「ワークフロールール」「言語表記」「セキュリティルール」</li>
+<li>02: 「確認と失敗」「ワークフロールール」「シェル実行ルール」</li>
+<li>03: 「コーディングルール」「シェル実行ルール」</li>
+<li>04: 「ワークフロールール」(課題の管理・複数の解決案・機能の追加と変更の順序・レビュー)</li>
+<li>05: 「セキュリティルール」「確認と失敗」、ローカルルール、スキル <code>light-test</code></li>
+<li>06: 「共有環境の使い方」(スキル <code>light-shared-env</code>)、「記録と運用」</li>
+<li>07: 「ワークフロールール」「記録と運用」「共有環境の使い方」</li>
+<li>08: 「言語表記」「記録と運用」「ワークフロールール」、フックの README (<code>README.html</code>)、ローカルルール</li>
+<li>09: 「Windows のデスクトップアプリ」、スキル <code>light-test</code></li>
+</ul>
+</section>
+
+</div>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+</body>
+</html>

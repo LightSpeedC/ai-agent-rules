@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="課題の管理が、管理なし、1 ファイル、1 件 1 ファイルと変わった図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(220,16%,30%)"/><stop offset="1" stop-color="hsl(220,14%,52%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="20" width="170" height="64" rx="10" fill="url(#i1)"/><text x="95" y="48" fill="#fff" font-size="14" text-anchor="middle">① 1 つのファイル</text><text x="95" y="68" fill="#fff" font-size="12" text-anchor="middle">issues.html に全部</text>
+<rect x="225" y="20" width="170" height="64" rx="10" fill="url(#i2)"/><text x="310" y="48" fill="#fff" font-size="14" text-anchor="middle">② 1 件が長くなる</text><text x="310" y="68" fill="#fff" font-size="12" text-anchor="middle">読む・直す・追うがつらい</text>
+<rect x="440" y="20" width="170" height="64" rx="10" fill="url(#i3)"/><text x="525" y="48" fill="#fff" font-size="14" text-anchor="middle">③ 1 件 1 ファイル</text><text x="525" y="68" fill="#fff" font-size="12" text-anchor="middle">issue の道具で読み書き</text>
+<path d="M180 52 H223" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M395 52 H438" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<text x="310" y="124" fill="#1c2330" font-size="14" text-anchor="middle">状態は 3 段階: <tspan font-weight="700">未</tspan> → <tspan font-weight="700">着手</tspan> → <tspan font-weight="700">済</tspan></text>
+<text x="310" y="150" fill="#4a5568" font-size="13" text-anchor="middle">済になっても、消さずに残す</text>
+<text x="310" y="172" fill="#4a5568" font-size="13" text-anchor="middle">課題の番号は「i ＋ 日付 ＋ 連番」(例: i261126-01)</text>
+</svg>

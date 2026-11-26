@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="powershell を直に呼ぶと化け、psh を通すと UTF-8 で出る図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="14" width="150" height="46" rx="10" fill="url(#i3)"/><text x="85" y="42" fill="#fff" font-size="14" text-anchor="middle">powershell を直に</text>
+<rect x="225" y="14" width="170" height="46" rx="10" fill="url(#i3)"/><text x="310" y="42" fill="#fff" font-size="14" text-anchor="middle">.NET 製の exe</text>
+<rect x="450" y="14" width="160" height="46" rx="10" fill="url(#i1)"/><text x="530" y="42" fill="#fff" font-size="14" text-anchor="middle">CP932 で出る → 化ける</text>
+<path d="M160 37 H223" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M395 37 H448" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<rect x="10" y="110" width="150" height="46" rx="10" fill="url(#i2)"/><text x="85" y="138" fill="#fff" font-size="14" text-anchor="middle"><tspan font-family="Consolas, monospace">psh</tspan> を通す</text>
+<rect x="225" y="110" width="170" height="46" rx="10" fill="url(#i3)"/><text x="310" y="138" fill="#fff" font-size="14" text-anchor="middle">PowerShell (5.1 / 7)</text>
+<rect x="450" y="110" width="160" height="46" rx="10" fill="url(#i2)"/><text x="530" y="138" fill="#fff" font-size="14" text-anchor="middle">UTF-8 で出る</text>
+<path d="M160 133 H223" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M395 133 H448" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<text x="310" y="180" fill="#4a5568" font-size="13" text-anchor="middle">psh が、受け側で出力の文字コードを読み分ける</text>
+</svg>

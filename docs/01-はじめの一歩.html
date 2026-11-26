@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>01. はじめの一歩</title>
+<style>
+/* css/style.css が読めなかったときの代替色 */
+.titlebar, section h1, th, a.doclink, .toc ol a, .badge { background: #12224d; color: #fff; }
+</style>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* AUTO:style */
+.ch01{--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);}
+.ch02{--accent:hsl(186.7,78%,25%);--accent2:hsl(186.7,58%,55%);--soft:hsl(186.7,28%,95%);}
+.ch03{--accent:hsl(93.3,78%,25%);--accent2:hsl(93.3,58%,55%);--soft:hsl(93.3,28%,95%);}
+.ch04{--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);}
+.toc ol{counter-reset:tocnum;} .toc ol li{counter-increment:tocnum;} .toc ol a::before{content:"01." counter(tocnum) " ";}
+body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::before{content:"01." counter(secnum) " ";}
+/* /AUTO:style */
+</style>
+<script src="js/study-nav.js" defer></script>
+</head>
+<body>
+<!-- AUTO:roadmap -->
+<nav class="roadmap" aria-label="ロードマップ"><ol>
+<li><a class="station here" href="01-はじめの一歩.html" title="01. はじめの一歩 (いまここ)" aria-label="01. はじめの一歩 (いまここ)" aria-current="page" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
+<li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
+<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
+<li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
+<li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
+<li><a class="station" href="07-並べて動かす.html" title="07. 並べて動かす" aria-label="07. 並べて動かす" style="background:hsl(70,58%,40%);--st:hsl(70,58%,40%);">7</a></li>
+<li><a class="station" href="08-仕組みで守る.html" title="08. 仕組みで守る" aria-label="08. 仕組みで守る" style="background:hsl(35,58%,40%);--st:hsl(35,58%,40%);">8</a></li>
+<li><a class="station" href="09-画面の試験と環境の事故.html" title="09. 画面の試験と環境の事故" aria-label="09. 画面の試験と環境の事故" style="background:hsl(0,58%,40%);--st:hsl(0,58%,40%);">9</a></li>
+</ol></nav>
+<!-- /AUTO:roadmap -->
+
+<!-- 案内人の絵 (クロード君・ルールちゃん)。各場面から use で呼ぶ -->
+<svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="g-01-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
+<linearGradient id="g-01-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-01-rl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<symbol id="cl-01-sad" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-01-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-01-ck)"/>
+<circle cx="30" cy="52" r="7" fill="#fff"/><circle cx="54" cy="52" r="7" fill="#fff"/>
+<circle cx="31" cy="54" r="3" fill="#12224d"/><circle cx="55" cy="54" r="3" fill="#12224d"/>
+<path d="M22 42 L36 46 M62 42 L48 46" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<path d="M32 74 Q42 66 52 74" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M70 34 Q74 42 70 46 Q66 42 70 34 Z" fill="hsl(200,80%,70%)"/>
+</symbol>
+<symbol id="cl-01-happy" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-01-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-01-ck)"/>
+<path d="M22 54 Q30 44 38 54 M46 54 Q54 44 62 54" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+<circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
+<path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
+</symbol>
+<symbol id="rl-01" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<rect x="8" y="14" width="68" height="74" rx="14" fill="url(#g-01-rl)"/>
+<circle cx="30" cy="46" r="6" fill="#fff"/><circle cx="54" cy="46" r="6" fill="#fff"/>
+<circle cx="31" cy="47" r="2.6" fill="#12224d"/><circle cx="55" cy="47" r="2.6" fill="#12224d"/>
+<path d="M32 66 Q42 76 52 66" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<rect x="22" y="2" width="40" height="16" rx="4" fill="#fff"/>
+<path d="M28 8 H56 M28 13 H48" stroke="hsl(280,58%,45%)" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+</defs>
+</svg>
+
+<div class="titlebar"><div class="inner">
+<h1>01. はじめの一歩</h1>
+<p class="lead">Claude Code を使い始めたら、まず入れる 3 つの決まり。日本語で応える・フルパスを出さない・commit は指示を待つ。失敗するクロード君が、ルールのおかげでうまくいくようになります</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+</div></div>
+
+<div class="wrap">
+<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="next" href="02-慣れてきたら.html" aria-label="次へ" title="02. 慣れてきたら" style="--accent:hsl(245,78%,25%);--accent2:hsl(245,58%,55%);--soft:hsl(245,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:toc -->
+<nav class="toc"><ol>
+<li class="ch01"><a href="#ch01">ルールは、失敗から増える</a></li>
+<li class="ch02"><a href="#ch02">日本語で応える</a></li>
+<li class="ch03"><a href="#ch03">フルパスを出さない</a></li>
+<li class="ch04"><a href="#ch04">commit は指示を待つ</a></li>
+</ol></nav>
+<!-- /AUTO:toc -->
+
+<section class="ch01" id="ch01">
+<h1>ルールは、失敗から増える</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君"><use href="#cl-01-sad" xlink:href="#cl-01-sad"/></svg>
+<div class="bubble"><p>ぼくは<strong>クロード君</strong>。Claude Code の案内人です。頼まれたことは、何でもやるよ。……でも、よく<strong>失敗</strong>しちゃうんだ。</p></div>
+</div>
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-01" xlink:href="#rl-01"/></svg>
+<div class="bubble"><p>そこで、わたし<strong>ルールちゃん</strong>の出番。「こうしてね」を書いた紙です。クロード君が失敗するたびに、多くの紙が 1 枚ずつ増えました。</p></div>
+</div>
+
+<p>AI エージェント (Claude Code) は、頼めば何でもしてくれます。便利ですが、同じ間違いを何度もすることもあります。そのたびに「次からこうして」と口で頼むのでは、続きません。</p>
+<p>そこで、頼みごとを<strong>ルール</strong>として文章に書き、毎回読ませます。このプロジェクトの共通ルールは、多くが<strong>失敗をきっかけに</strong>増えてきました (設計や他プロジェクトからの依頼で足した章もあります)。この資料は、その順に読んでいきます。まず、使い始めた日から入れておきたい 3 つです。</p>
+
+<figure>
+<svg viewBox="0 0 620 150" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="失敗してルールを足し、次から防げる流れの図">
+<defs>
+<linearGradient id="g-01-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<marker id="m-01-1a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="10" y="30" width="130" height="64" rx="10" fill="url(#g-01-1b)"/><text x="75" y="68" fill="#fff" font-size="16" text-anchor="middle">失敗する</text>
+<rect x="170" y="30" width="130" height="64" rx="10" fill="url(#g-01-1b)"/><text x="235" y="68" fill="#fff" font-size="16" text-anchor="middle">原因を調べる</text>
+<rect x="330" y="30" width="130" height="64" rx="10" fill="url(#g-01-1b)"/><text x="395" y="68" fill="#fff" font-size="16" text-anchor="middle">ルールを足す</text>
+<rect x="490" y="30" width="120" height="64" rx="10" fill="url(#g-01-1b)"/><text x="550" y="68" fill="#fff" font-size="16" text-anchor="middle">次から防ぐ</text>
+<path d="M140 62 H168" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-01-1a)"/>
+<path d="M300 62 H328" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-01-1a)"/>
+<path d="M460 62 H488" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-01-1a)"/>
+<path d="M550 94 Q550 134 310 134 Q70 134 75 98" fill="none" stroke="#4a5568" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#m-01-1a)"/>
+<text x="310" y="124" fill="#4a5568" font-size="12" text-anchor="middle">それでも破られたら、次の失敗として数える</text>
+</svg>
+<figcaption>ルールは、失敗をきっかけに足す</figcaption>
+</figure>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>日本語で応える</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-01-sad" xlink:href="#cl-01-sad"/></svg>
+<div class="bubble"><p>日本語で頼まれたのに、「Now let me run the tests.」って、つい英語で書いちゃった……。</p></div>
+</div>
+
+<div class="fail">
+<h3>失敗の一コマ: 英語が混ざる</h3>
+<p>日本語で頼んでいるのに、応答の途中に英語の文が混ざります。作業の途中の短い報告 (「次は〜します」) や、要約の後や、ツールの呼び出しが続く間に、特に起きやすい失敗でした。しかも、何度もです。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 560 150" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="日本語の応答に英語の文が混ざる様子の図">
+<defs>
+<linearGradient id="g-01-2a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186.7,78%,25%)"/><stop offset="1" stop-color="hsl(186.7,58%,45%)"/></linearGradient>
+<linearGradient id="g-01-2b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
+</defs>
+<rect x="10" y="10" width="540" height="130" rx="12" fill="#ffffff" stroke="#d9dfe8" stroke-width="2"/>
+<rect x="24" y="24" width="250" height="30" rx="8" fill="url(#g-01-2a)"/><text x="149" y="45" fill="#fff" font-size="14" text-anchor="middle">テストを流します。</text>
+<rect x="24" y="64" width="330" height="30" rx="8" fill="url(#g-01-2b)"/><text x="189" y="85" fill="#fff" font-size="14" text-anchor="middle">Now let me run the tests.</text>
+<rect x="24" y="104" width="250" height="30" rx="8" fill="url(#g-01-2a)"/><text x="149" y="125" fill="#fff" font-size="14" text-anchor="middle">全部通りました。</text>
+<text x="380" y="85" fill="#a51f22" font-size="26">←</text><text x="415" y="85" fill="#a51f22" font-size="14">混ざった!</text>
+</svg>
+<figcaption>橙の 1 行が、英語だけの文</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>応答・返答は、常に<strong>日本語</strong>で書く。技術用語・識別子・コマンドは、原文のままでよい</li>
+<li>応答の本文だけでなく、<strong>考えている途中の文</strong>も日本語にする</li>
+<li>途中の短い報告 (「〜します」「次は〜」) も日本語にする</li>
+<li>英語の文を書いてしまったら、<strong>気づいたその応答の中に、日本語の訳を書く</strong></li>
+</ul>
+<p class="src">出典: 共通ルール「言語表記」の「AIエージェント応答の言語」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-01-happy" xlink:href="#cl-01-happy"/></svg>
+<div class="bubble"><p>ルールちゃんのおかげで、「テストを流します」って日本語で話せたよ! 英語が出たら、すぐ訳を付ける。でも、まず日本語で書くのが先!</p></div>
+</div>
+
+<div class="callout callout-tip"><p><strong>のちほど</strong> 文章のルールだけでは、この失敗は減りませんでした。止める仕組み (フック) を足すことになります。その話は <a class="doclink ref" href="08-仕組みで守る.html" style="--accent:hsl(35,78%,25%);--accent2:hsl(35,58%,55%);--soft:hsl(35,28%,95%);">08. 仕組みで守る</a> で。</p></div>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>フルパスを出さない</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-01-sad" xlink:href="#cl-01-sad"/></svg>
+<div class="bubble"><p>ファイルの場所を教えようとして、ユーザのフォルダの下のパスを、名前ごとそのまま書いちゃうかも……。</p></div>
+</div>
+
+<div class="fail">
+<h3>たとえ話: パスから名前が漏れる</h3>
+<p>AI が作業の経過を答えるとき、ファイルの場所を、<strong>ユーザのフォルダの下の、名前を含むパス</strong>のまま書きます。会話は記録として残ります。ユーザの名前が、そのまま記録にも応答にも載ります。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 580 150" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="フルパスの代わりに ~ や環境変数を使う図">
+<defs>
+<linearGradient id="g-01-3a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93.3,78%,25%)"/><stop offset="1" stop-color="hsl(93.3,58%,45%)"/></linearGradient>
+<linearGradient id="g-01-3b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-01-3c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93.3,30%,86%)"/><stop offset="1" stop-color="hsl(93.3,30%,97%)"/></linearGradient>
+<marker id="m-01-3a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="10" y="20" width="270" height="44" rx="8" fill="url(#g-01-3b)"/><text x="145" y="48" fill="#fff" font-size="13" text-anchor="middle">〈ユーザフォルダ〉\〈名前〉\work\a.txt</text>
+<rect x="300" y="20" width="270" height="44" rx="8" fill="url(#g-01-3a)"/><text x="435" y="48" fill="#fff" font-size="13" text-anchor="middle">work/a.txt (プロジェクトからの相対)</text>
+<path d="M283 42 H297" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-01-3a)"/>
+<text x="145" y="86" fill="#a51f22" font-size="13" text-anchor="middle">名前が記録に残る</text>
+<text x="435" y="86" fill="#1d7a3c" font-size="13" text-anchor="middle">名前は出ない</text>
+<rect x="10" y="100" width="560" height="38" rx="8" fill="url(#g-01-3c)" stroke="#d9dfe8" stroke-width="2"/>
+<text x="290" y="125" fill="#1c2330" font-size="13" text-anchor="middle">場所は相対パスで。ユーザのフォルダそのものを指すときだけ、~ か環境変数</text>
+</svg>
+<figcaption>名前の入ったパスは、相対パスに置き換える (ユーザのフォルダを指すときは ~ や環境変数)</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>場所を示すときは、<strong>プロジェクトからの相対パス</strong>にする</li>
+<li>ユーザのフォルダの下のパスは、そのまま書かない。ユーザのフォルダそのものを指す必要があるときだけ、<code>~</code> や <code>$env:USERPROFILE</code> を使う</li>
+<li>コマンドの文字列も、会話の記録に残る。コマンドの中にも書かない</li>
+<li>試験や資料のダミーのパスも、ユーザフォルダの形にしない (別のドライブの架空の名前にする)</li>
+</ul>
+<p class="src">出典: 共通ルール「セキュリティルール」の「フルパスを出さない」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-01-happy" xlink:href="#cl-01-happy"/></svg>
+<div class="bubble"><p>「work/a.txt」みたいに、プロジェクトからの相対パスで言えば、名前は出ない。ユーザのフォルダそのものを指すときだけ、~ を使うんだね!</p></div>
+</div>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>commit は指示を待つ</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-01-sad" xlink:href="#cl-01-sad"/></svg>
+<div class="bubble"><p>変更はしてたけど commit する予定じゃない c.ts まで、commit に入っちゃった……。気づいたときには、履歴に残ってたんだ。</p></div>
+</div>
+
+<div class="fail">
+<h3>失敗の一コマ: 載せる気の無いファイルが commit に混ざる</h3>
+<p>変更はしていても、commit する予定ではなかったファイルが、commit に入っていました。別の道具が、先に「ステージ」(git add で載せた状態) に載せていたからです。気づかずにまとめて commit すると、載せる気の無いものまで履歴に残ります。同じ形で、2 回起きました。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 600 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="先に別の道具が載せたファイルが commit に混ざる図と、commit にもパスを書く図">
+<defs>
+<linearGradient id="g-01-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-01-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
+<linearGradient id="g-01-4c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
+<linearGradient id="g-01-4d" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,30%,86%)"/><stop offset="1" stop-color="hsl(0,30%,97%)"/></linearGradient>
+</defs>
+<text x="150" y="20" fill="#a51f22" font-size="14" text-anchor="middle">パスを書かずに commit</text>
+<rect x="20" y="30" width="80" height="34" rx="6" fill="url(#g-01-4a)"/><text x="60" y="52" fill="#fff" font-size="13" text-anchor="middle">a.ts</text>
+<rect x="110" y="30" width="80" height="34" rx="6" fill="url(#g-01-4a)"/><text x="150" y="52" fill="#fff" font-size="13" text-anchor="middle">b.ts</text>
+<rect x="200" y="30" width="80" height="34" rx="6" fill="url(#g-01-4b)"/><text x="240" y="52" fill="#fff" font-size="13" text-anchor="middle">c.ts</text>
+<text x="150" y="86" fill="#a51f22" font-size="13" text-anchor="middle">別の道具 (git mv など) が、</text>
+<text x="150" y="104" fill="#a51f22" font-size="13" text-anchor="middle">c.ts を先に載せていた → 一緒に入る</text>
+<text x="450" y="20" fill="#1d7a3c" font-size="14" text-anchor="middle">commit にもパスを書く</text>
+<rect x="320" y="30" width="80" height="34" rx="6" fill="url(#g-01-4c)"/><text x="360" y="52" fill="#fff" font-size="13" text-anchor="middle">a.ts</text>
+<rect x="410" y="30" width="80" height="34" rx="6" fill="url(#g-01-4c)"/><text x="450" y="52" fill="#fff" font-size="13" text-anchor="middle">b.ts</text>
+<rect x="500" y="30" width="80" height="34" rx="6" fill="#ffffff" stroke="#97a1ae" stroke-width="2" stroke-dasharray="5 4"/><text x="540" y="52" fill="#5a6472" font-size="13" text-anchor="middle">c.ts</text>
+<text x="450" y="86" fill="#1d7a3c" font-size="13" text-anchor="middle">git commit … -- a.ts b.ts</text>
+<text x="450" y="104" fill="#1d7a3c" font-size="13" text-anchor="middle">名指しした分だけが入る</text>
+<rect x="20" y="130" width="560" height="44" rx="8" fill="url(#g-01-4d)" stroke="#d9dfe8" stroke-width="2"/>
+<text x="300" y="157" fill="#1c2330" font-size="13" text-anchor="middle">add も commit も名指しし、commit の前に載せる一覧を見る</text>
+</svg>
+<figcaption>載せるファイルを、add でも commit でも、名前で選ぶ</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li><code>git add</code> と <code>git commit</code> は、自動でしない。<strong>「commit して」と指示されるまで待つ</strong></li>
+<li>指示を受けたら、載せるファイルを<strong>名指し</strong>して <code>git add</code> する。<code>git add -A</code> や <code>git add .</code> は使わない</li>
+<li><strong>commit にもパスを書く</strong> (<code>git commit -m … -- &lt;パス&gt;…</code>)。<code>git mv</code> などが先に載せたものは、パスを書かない commit に混ざる</li>
+<li>commit の前に、<code>git diff --cached --name-only</code> で、載せる一覧を見る</li>
+<li>指示は 1 回きり。次の作業の commit には、また指示を待つ</li>
+</ul>
+<p class="src">出典: 共通ルール「ワークフロールール」の「修正は1点ずつ、確認を重視」</p>
+<p>理由は単純です。commit を確認できないと、問題が起きたときに原因を探せません。確認してから載せれば、直すのも簡単です。なお、プロジェクトによっては、ローカルルールで、この運用を別に決めてもかまいません (たとえば、決まった単位で自動に commit する)。</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-01-happy" xlink:href="#cl-01-happy"/></svg>
+<div class="bubble"><p>「commit して」って言われるまで待って、載せるファイルは名前で選ぶ。これなら、c.ts は入らないね!</p></div>
+</div>
+
+<div class="callout"><p><strong>次の一歩</strong> 3 つとも入れたら、少し慣れてきます。次は、もっと細かい決まり (実行の合図・失敗の報告) を足します。→ <a class="doclink ref" href="02-慣れてきたら.html" style="--accent:hsl(245,78%,25%);--accent2:hsl(245,58%,55%);--soft:hsl(245,28%,95%);">02. 慣れてきたら</a></p></div>
+</section>
+
+</div>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="next" href="02-慣れてきたら.html" aria-label="次へ" title="02. 慣れてきたら" style="--accent:hsl(245,78%,25%);--accent2:hsl(245,58%,55%);--soft:hsl(245,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+</body>
+</html>

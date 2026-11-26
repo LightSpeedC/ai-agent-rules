@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>05. 複数プロジェクトで使う</title>
+<style>
+/* css/style.css が読めなかったときの代替色 */
+.titlebar, section h1, th, a.doclink, .toc ol a, .badge { background: #12224d; color: #fff; }
+</style>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* AUTO:style */
+.ch01{--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);}
+.ch02{--accent:hsl(186.7,78%,25%);--accent2:hsl(186.7,58%,55%);--soft:hsl(186.7,28%,95%);}
+.ch03{--accent:hsl(93.3,78%,25%);--accent2:hsl(93.3,58%,55%);--soft:hsl(93.3,28%,95%);}
+.ch04{--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);}
+.toc ol{counter-reset:tocnum;} .toc ol li{counter-increment:tocnum;} .toc ol a::before{content:"05." counter(tocnum) " ";}
+body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::before{content:"05." counter(secnum) " ";}
+/* /AUTO:style */
+</style>
+<script src="js/study-nav.js" defer></script>
+</head>
+<body>
+<!-- AUTO:roadmap -->
+<nav class="roadmap" aria-label="ロードマップ"><ol>
+<li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
+<li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
+<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
+<li><a class="station here" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う (いまここ)" aria-label="05. 複数プロジェクトで使う (いまここ)" aria-current="page" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
+<li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
+<li><a class="station" href="07-並べて動かす.html" title="07. 並べて動かす" aria-label="07. 並べて動かす" style="background:hsl(70,58%,40%);--st:hsl(70,58%,40%);">7</a></li>
+<li><a class="station" href="08-仕組みで守る.html" title="08. 仕組みで守る" aria-label="08. 仕組みで守る" style="background:hsl(35,58%,40%);--st:hsl(35,58%,40%);">8</a></li>
+<li><a class="station" href="09-画面の試験と環境の事故.html" title="09. 画面の試験と環境の事故" aria-label="09. 画面の試験と環境の事故" style="background:hsl(0,58%,40%);--st:hsl(0,58%,40%);">9</a></li>
+</ol></nav>
+<!-- /AUTO:roadmap -->
+
+<!-- 案内人の絵 (クロード君)と、助っ人のスキルちゃん。各場面から use で呼ぶ -->
+<svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="g-05-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
+<linearGradient id="g-05-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-05-sk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(150,78%,24%)"/><stop offset="1" stop-color="hsl(150,58%,40%)"/></linearGradient>
+<symbol id="cl-05-sad" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-05-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-05-ck)"/>
+<circle cx="30" cy="52" r="7" fill="#fff"/><circle cx="54" cy="52" r="7" fill="#fff"/>
+<circle cx="31" cy="54" r="3" fill="#12224d"/><circle cx="55" cy="54" r="3" fill="#12224d"/>
+<path d="M22 42 L36 46 M62 42 L48 46" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<path d="M32 74 Q42 66 52 74" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M70 34 Q74 42 70 46 Q66 42 70 34 Z" fill="hsl(200,80%,70%)"/>
+</symbol>
+<symbol id="cl-05-happy" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-05-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-05-ck)"/>
+<path d="M22 54 Q30 44 38 54 M46 54 Q54 44 62 54" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+<circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
+<path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
+</symbol>
+<symbol id="sk-05" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<rect x="12" y="14" width="60" height="74" rx="8" fill="url(#g-05-sk)"/>
+<rect x="18" y="20" width="4" height="62" rx="2" fill="#fff" opacity="0.6"/>
+<circle cx="38" cy="46" r="6" fill="#fff"/><circle cx="58" cy="46" r="6" fill="#fff"/>
+<circle cx="39" cy="48" r="2.6" fill="#12224d"/><circle cx="59" cy="48" r="2.6" fill="#12224d"/>
+<path d="M38 64 Q48 74 58 64" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<path d="M62 6 L64 12 L70 14 L64 16 L62 22 L60 16 L54 14 L60 12 Z" fill="url(#g-05-ks)"/>
+</symbol>
+</defs>
+</svg>
+
+<div class="titlebar"><div class="inner">
+<h1>05. 複数プロジェクトで使う</h1>
+<p class="lead">プロジェクトが増え、ルールも道具も共有するようになると、読み込みが重くなり、他のプロジェクトとぶつかります。1 章で助っ人の「スキルちゃん」が加わります。ルールの分け方・他プロジェクトとの付き合い方・公開前の確かめ・画面の取り合いの決まりを足します</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+</div></div>
+
+<div class="wrap">
+<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="04-課題と決めたことの管理.html" aria-label="前へ" title="04. 課題と決めたことの管理" style="--accent:hsl(175,78%,25%);--accent2:hsl(175,58%,55%);--soft:hsl(175,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="06-AI同士がつながる.html" aria-label="次へ" title="06. AI 同士がつながる" style="--accent:hsl(105,78%,25%);--accent2:hsl(105,58%,55%);--soft:hsl(105,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:toc -->
+<nav class="toc"><ol>
+<li class="ch01"><a href="#ch01">ルールは、核とスキルに分ける</a></li>
+<li class="ch02"><a href="#ch02">他プロジェクトは直さない。困ったら、作り手に頼む</a></li>
+<li class="ch03"><a href="#ch03">公開する前に、確かめる</a></li>
+<li class="ch04"><a href="#ch04">画面を使う作業は、1 つずつ</a></li>
+</ol></nav>
+<!-- /AUTO:toc -->
+
+<section class="ch01" id="ch01">
+<h1>ルールは、核とスキルに分ける</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-05-sad" xlink:href="#cl-05-sad"/></svg>
+<div class="bubble"><p>ルールの紙が増えすぎて、毎回ぜんぶ読むだけで、頭がいっぱいになっちゃう……。</p></div>
+</div>
+
+<p>共通ルールは、AI が仕事を始めるたびに読み込みます。章が増えると、読み込む量も増えます。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: ルールが重すぎて、常時の読み込みが重い</h3>
+<p>共通ルール (本体と章のファイルの合計) は、11/05 の実測で約 <strong>198 KB</strong> になりました。メモリのファイル全体では、約 7.5 万トークン (トークン = AI が読む文字の単位) でした。毎回ぜんぶ読むには、重すぎます。しかも、いま行う作業に効かない章も、毎回読み込まれます。分けたあとの共通ルールの合計は、11/26 に数えて約 <strong>120 KB</strong> です。</p>
+</div>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="スキルちゃん"><use href="#sk-05" xlink:href="#sk-05"/></svg>
+<div class="bubble"><p>わたし<strong>スキルちゃん</strong>の出番! 状況ごとの章を、わたしにしまっておいて。その作業をするときだけ、開いて読んでね。</p></div>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 210" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="常に読む核と、必要なときだけ読むスキルの図">
+<defs>
+<linearGradient id="g-05-1a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-05-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(150,78%,24%)"/><stop offset="1" stop-color="hsl(150,58%,40%)"/></linearGradient>
+<linearGradient id="g-05-1c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<marker id="m-05-1a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="10" y="14" width="250" height="62" rx="10" fill="url(#g-05-1a)"/><text x="135" y="42" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">核 = 毎回、常に読む部分</text><text x="135" y="62" fill="#fff" font-size="12" text-anchor="middle">応答の言語・機密・確認・commit の指示</text>
+<rect x="290" y="14" width="320" height="62" rx="10" fill="url(#g-05-1b)"/><text x="450" y="42" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">スキル (必要なときだけ読む)</text><text x="450" y="62" fill="#fff" font-size="12" text-anchor="middle">git・HTML・試験・SQLite・シェルの詳細 など</text>
+<rect x="290" y="104" width="320" height="46" rx="10" fill="url(#g-05-1c)"/><text x="450" y="132" fill="#fff" font-size="13" text-anchor="middle">説明文の「…ときは、必ずこの skill を呼ぶ」が引き金</text>
+<path d="M450 76 V102" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-05-1a)"/>
+<text x="135" y="112" fill="#1c2330" font-size="13" text-anchor="middle">章の見出しは、核にも残す</text>
+<text x="135" y="132" fill="#1c2330" font-size="13" text-anchor="middle">(章があること自体が、分かるように)</text>
+<text x="310" y="184" fill="#4a5568" font-size="13" text-anchor="middle">読み込む量を減らしても、必要な章は、必要なときに読まれる</text>
+</svg>
+<figcaption>核は常に、スキルは呼ばれたときだけ</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>状況別の章は、<strong>スキル (<code>skills/light-*/SKILL.md</code>)</strong> に移す。<strong>毎回効く章</strong> (応答の言語・機密情報・確認・commit の指示など) は、核に残す</li>
+<li>移しても、<strong>見出しは核にも残す</strong>。見出しを消すと、その章があること自体が分からなくなる</li>
+<li>スキルの説明文は、「◯◯ときは、答える前に必ずこの skill を呼んで本文を読む。本文には説明文に無い決まりがあり、一般知識では代われない」の形で書く。要点を並べない</li>
+<li>スキルは、ホームの置き場にシンボリックリンク (別の場所にある実体を指す、名前だけのファイル) を張って、全プロジェクトから使う</li>
+</ul>
+<p class="src">出典: このプロジェクトのローカルルール「章の切り出しルール」(このプロジェクトだけの決め。そのまま他のプロジェクトに当てる決まりではない)</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-05-happy" xlink:href="#cl-05-happy"/></svg>
+<div class="bubble"><p>毎回読むのは、核だけ。git や HTML をいじるときは、スキルちゃんを呼んで、その章を開くよ!</p></div>
+</div>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>他プロジェクトは直さない。困ったら、作り手に頼む</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-05-sad" xlink:href="#cl-05-sad"/></svg>
+<div class="bubble"><p>共有の道具がうまく動かなかったから、別のやり方で済ませちゃった。作った人には、まだ言ってない……。</p></div>
+</div>
+
+<p>プロジェクトが増えると、道具・ルール・フックは、他のプロジェクトのものを借りて使います。借りたものを、使う側が勝手に直すと、持ち主の知らない所で、動きが変わります。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 回り道で済ませかけた</h3>
+<p>共有の道具に、<strong>0 件で止まる動き</strong>や、<strong>答え待ちの案まで決定として移す動き</strong>がありました。作り手に知らせず、回り道 (手で書き換える・別の道具で代わりにする) で今の作業を済ませかけました。作り手は、困りごとを知らないままです。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="他プロジェクトのファイルは直さず、サンプルを置いて依頼する図">
+<defs>
+<linearGradient id="g-05-2a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-05-2b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-05-2c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<marker id="m-05-2a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="10" y="68" width="150" height="50" rx="10" fill="url(#g-05-2b)"/><text x="85" y="98" fill="#fff" font-size="14" text-anchor="middle">道具で困った</text>
+<rect x="215" y="12" width="395" height="50" rx="10" fill="url(#g-05-2a)"/><text x="412" y="42" fill="#fff" font-size="14" text-anchor="middle">相手のファイルを直す・回り道で済ませる</text>
+<rect x="215" y="124" width="190" height="62" rx="10" fill="url(#g-05-2c)"/><text x="310" y="150" fill="#fff" font-size="13" text-anchor="middle">サンプルを自分の</text><text x="310" y="168" fill="#fff" font-size="13" text-anchor="middle">tmp/ に置く</text>
+<rect x="430" y="124" width="180" height="62" rx="10" fill="url(#g-05-2b)"/><text x="520" y="150" fill="#fff" font-size="13" text-anchor="middle">作り手に、チャットで</text><text x="520" y="168" fill="#fff" font-size="13" text-anchor="middle">困った場面と形を依頼</text>
+<path d="M160 82 Q190 38 213 38" fill="none" stroke="#a51f22" stroke-width="2.5" marker-end="url(#m-05-2a)"/>
+<path d="M160 104 Q190 155 213 155" fill="none" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-05-2a)"/>
+<path d="M405 155 H428" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-05-2a)"/>
+</svg>
+<figcaption>赤い道 (直す・回り道) でなく、下の道 (サンプルを置いて依頼) を通る</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>読み書き・探索・実行は、<strong>カレントのプロジェクトのフォルダの中</strong>に限る。外を見る必要が出たら、対象のパスと目的を示して、先に確認する。ただし、用途を決めた共有の道具 (03 の <code>ai-agent-tools</code> など) は、確認なしで使ってよい</li>
+<li>「調べてよい」は、<strong>読み取りの許可</strong>。書き込み・修正・実行には、別に許可を取る</li>
+<li><strong>他のプロジェクトのファイルは、直さない</strong>。直す必要が見つかったら、サンプルを自分の <code>tmp/</code> に置き、チャットで依頼する (チャットは 06 で出てきます。依頼文には絶対パスを書かず、置き場は利用者が相手に伝える)</li>
+<li><strong>共有の道具で困ったら、回り道で済ませず、作り手のプロジェクトに依頼する</strong>。足りない機能・誤った動き・使いにくさが当たる。回り道で済ませたときも、依頼は出す</li>
+<li>文書や応答から、他のプロジェクトのファイルへ、リンクを貼らない (プロジェクト名を文中に書くのはよい)</li>
+</ul>
+<p class="src">出典: 共通ルール「セキュリティルール」の「プロジェクトフォルダ外へのアクセス」(2026-11-11 の出来事)</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-05-happy" xlink:href="#cl-05-happy"/></svg>
+<div class="bubble"><p>他の人のものは、さわらない。困ったら、「ここで、こう困ったよ」って、作った人に伝えるね!</p></div>
+</div>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>公開する前に、確かめる</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-05-sad" xlink:href="#cl-05-sad"/></svg>
+<div class="bubble"><p>うっかり、個人名や、パスワードの入ったファイルを、ぜんぶ commit しちゃったら、どうしよう……。</p></div>
+</div>
+
+<p>他のプロジェクトとも、世の中とも、つながるようになると、書いたものが外に出る機会が増えます。一度 commit すると、履歴に残ります。あとから消すには、履歴を書き換える必要があります。</p>
+
+<div class="fail">
+<h3>たとえ話: 個人情報が、履歴に入る</h3>
+<p>公開するつもりのないプロジェクトでも、あとから public にするかもしれません。最初の commit の前に確かめておかないと、名前やメールアドレスが、履歴に残り続けます。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="commit の前に確かめる 3 つの図">
+<defs>
+<linearGradient id="g-05-3a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-05-3b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<linearGradient id="g-05-3c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+<rect x="10" y="14" width="190" height="84" rx="10" fill="url(#g-05-3b)"/><text x="105" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">個人情報</text><text x="105" y="64" fill="#fff" font-size="12" text-anchor="middle">個人名・メールアドレス</text><text x="105" y="82" fill="#fff" font-size="12" text-anchor="middle">認証情報</text>
+<rect x="215" y="14" width="190" height="84" rx="10" fill="url(#g-05-3a)"/><text x="310" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">実体パス</text><text x="310" y="64" fill="#fff" font-size="12" text-anchor="middle">ユーザフォルダの形の</text><text x="310" y="82" fill="#fff" font-size="12" text-anchor="middle">パス</text>
+<rect x="420" y="14" width="190" height="84" rx="10" fill="url(#g-05-3c)"/><text x="515" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">追跡されるファイル</text><text x="515" y="64" fill="#fff" font-size="12" text-anchor="middle">除外したつもりのものが</text><text x="515" y="82" fill="#fff" font-size="12" text-anchor="middle">入っていないか</text>
+<text x="310" y="132" fill="#1c2330" font-size="14" text-anchor="middle">最初の commit の前に、公開してもよい内容かを確かめて、報告する</text>
+<text x="310" y="158" fill="#4a5568" font-size="13" text-anchor="middle">共有の道具 (check-public など) で、機械的に確かめる</text>
+<text x="310" y="180" fill="#4a5568" font-size="13" text-anchor="middle">2 回目からは、新しく追跡に入るファイルだけを見ればよい</text>
+</svg>
+<figcaption>最初の commit の前に、3 つを確かめる</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li><strong>最初の commit の前に</strong>、公開しても困らない内容かを確かめて、報告する (個人名・メールアドレス・認証情報、実体パス、追跡されているファイル)</li>
+<li>2 回目以降は、<strong>新しく追跡に入るファイル</strong>だけを見ればよい</li>
+<li>メッセージに件数を書くなら、書く直前に数える。メッセージの誤りは、履歴の積み直しが要る</li>
+<li>確かめる道具は、共有の <code>check-public</code>。HTML の色が読めるかは <code>check-contrast</code>、Markdown の崩れは <code>check-markdown</code> (どれも ai-agent-tools の共有の道具)</li>
+</ul>
+<p class="src">出典: 共通ルール「確認と失敗」の「コミット前の確認」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-05-happy" xlink:href="#cl-05-happy"/></svg>
+<div class="bubble"><p>最初の commit の前に、「公開しても大丈夫?」を道具で確かめて、報告するよ!</p></div>
+</div>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>画面を使う作業は、1 つずつ</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-05-sad" xlink:href="#cl-05-sad"/></svg>
+<div class="bubble"><p>ボタンを押そうとしたら、別のプロジェクトの窓が前に出てきて、違う所を押しちゃった……。</p></div>
+</div>
+
+<p>AI は、画面を見て、マウスやキーを動かす試験もします。ところが、画面・マウス・キー・前面の窓は、1 つしかありません。複数のプロジェクトが同時に使うと、取り合いになります。</p>
+
+<div class="fail">
+<h3>たとえ話: 同じ画面を、同時に使う</h3>
+<p>別のプロジェクトの作業と競合すると、<strong>押す位置がずれる・前面が奪われる・試験が揺れる</strong>、ということが起きます。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="ui-lock で、画面を使う作業を 1 つずつにする図">
+<defs>
+<linearGradient id="g-05-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-05-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<linearGradient id="g-05-4c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
+<marker id="m-05-4a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="10" y="20" width="150" height="44" rx="10" fill="url(#g-05-4b)"/><text x="85" y="48" fill="#fff" font-size="13" text-anchor="middle">プロジェクト A の試験</text>
+<rect x="10" y="80" width="150" height="44" rx="10" fill="url(#g-05-4b)"/><text x="85" y="108" fill="#fff" font-size="13" text-anchor="middle">プロジェクト B の試験</text>
+<rect x="225" y="38" width="170" height="68" rx="10" fill="url(#g-05-4c)"/><text x="310" y="68" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">ui-lock</text><text x="310" y="90" fill="#fff" font-size="12" text-anchor="middle">1 つずつ通す</text>
+<rect x="460" y="38" width="150" height="68" rx="10" fill="url(#g-05-4b)"/><text x="535" y="68" fill="#fff" font-size="14" text-anchor="middle">画面・マウス・</text><text x="535" y="88" fill="#fff" font-size="14" text-anchor="middle">キー・前面の窓</text>
+<path d="M160 42 L223 62" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-05-4a)"/>
+<path d="M160 102 L223 82" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-05-4a)"/>
+<path d="M395 72 H458" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-05-4a)"/>
+<rect x="110" y="146" width="400" height="34" rx="10" fill="url(#g-05-4a)"/><text x="310" y="168" fill="#fff" font-size="13" text-anchor="middle">上限 (--timeout) を渡す。放置されても、画面を止め続けない</text>
+</svg>
+<figcaption>画面を使う作業は、共通のロックで包んで、1 つずつ流す</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>画面を使う作業は、<strong>共有の <code>ui-lock</code> で包んで流す</strong> (<code>ui-lock run --timeout 10m -- &lt;コマンド&gt;</code>)。全プロジェクト共通のロックを取り、終わったら放す</li>
+<li><strong>上限 (<code>--timeout</code>) を必ず渡す</strong>。過ぎたら、子のプロセスごと止めてロックを放す</li>
+<li><strong>プロジェクトごとのロックを作らない</strong>。持つと、プロジェクトをまたいだ競合が残る</li>
+<li>ui-lock の中で、同じロックを取り直さない</li>
+</ul>
+<p class="src">出典: 共通ルール「テストのルール」(スキル <code>light-test</code>) の「画面を使う作業は、ui-lock で 1 つずつにする」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-05-happy" xlink:href="#cl-05-happy"/></svg>
+<div class="bubble"><p>画面を使うときは、順番を待つよ。ロックを取って、終わったら放すね!</p></div>
+</div>
+
+<div class="callout callout-tip"><p><strong>のちほど</strong> ここまでは、AI がそれぞれ、自分のプロジェクトの中で動く話でした。次は、AI 同士が、チャットで話し合う話です。→ <a class="doclink ref" href="06-AI同士がつながる.html" style="--accent:hsl(105,78%,25%);--accent2:hsl(105,58%,55%);--soft:hsl(105,28%,95%);">06. AI 同士がつながる</a></p></div>
+</section>
+
+</div>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="04-課題と決めたことの管理.html" aria-label="前へ" title="04. 課題と決めたことの管理" style="--accent:hsl(175,78%,25%);--accent2:hsl(175,58%,55%);--soft:hsl(175,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="06-AI同士がつながる.html" aria-label="次へ" title="06. AI 同士がつながる" style="--accent:hsl(105,78%,25%);--accent2:hsl(105,58%,55%);--soft:hsl(105,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+</body>
+</html>

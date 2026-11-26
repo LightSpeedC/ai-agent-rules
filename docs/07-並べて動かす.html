@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
+<title>07. 並べて動かす</title>
+<style>
+/* css/style.css が読めなかったときの代替色 */
+.titlebar, section h1, th, a.doclink, .toc ol a, .badge { background: #12224d; color: #fff; }
+</style>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* AUTO:style */
+.ch01{--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);}
+.ch02{--accent:hsl(186.7,78%,25%);--accent2:hsl(186.7,58%,55%);--soft:hsl(186.7,28%,95%);}
+.ch03{--accent:hsl(93.3,78%,25%);--accent2:hsl(93.3,58%,55%);--soft:hsl(93.3,28%,95%);}
+.ch04{--accent:hsl(0,78%,25%);--accent2:hsl(0,58%,55%);--soft:hsl(0,28%,95%);}
+.toc ol{counter-reset:tocnum;} .toc ol li{counter-increment:tocnum;} .toc ol a::before{content:"07." counter(tocnum) " ";}
+body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::before{content:"07." counter(secnum) " ";}
+/* /AUTO:style */
+</style>
+<script src="js/study-nav.js" defer></script>
+</head>
+<body>
+<!-- AUTO:roadmap -->
+<nav class="roadmap" aria-label="ロードマップ"><ol>
+<li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
+<li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
+<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
+<li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
+<li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
+<li><a class="station here" href="07-並べて動かす.html" title="07. 並べて動かす (いまここ)" aria-label="07. 並べて動かす (いまここ)" aria-current="page" style="background:hsl(70,58%,40%);--st:hsl(70,58%,40%);">7</a></li>
+<li><a class="station" href="08-仕組みで守る.html" title="08. 仕組みで守る" aria-label="08. 仕組みで守る" style="background:hsl(35,58%,40%);--st:hsl(35,58%,40%);">8</a></li>
+<li><a class="station" href="09-画面の試験と環境の事故.html" title="09. 画面の試験と環境の事故" aria-label="09. 画面の試験と環境の事故" style="background:hsl(0,58%,40%);--st:hsl(0,58%,40%);">9</a></li>
+</ol></nav>
+<!-- /AUTO:roadmap -->
+
+<!-- 案内人の絵 (クロード君)。各場面から use で呼ぶ -->
+<svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="g-07-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
+<linearGradient id="g-07-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<symbol id="cl-07-sad" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-07-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-07-ck)"/>
+<circle cx="30" cy="52" r="7" fill="#fff"/><circle cx="54" cy="52" r="7" fill="#fff"/>
+<circle cx="31" cy="54" r="3" fill="#12224d"/><circle cx="55" cy="54" r="3" fill="#12224d"/>
+<path d="M22 42 L36 46 M62 42 L48 46" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<path d="M32 74 Q42 66 52 74" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+<path d="M70 34 Q74 42 70 46 Q66 42 70 34 Z" fill="hsl(200,80%,70%)"/>
+</symbol>
+<symbol id="cl-07-happy" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-07-ks)"/>
+<rect x="8" y="22" width="68" height="66" rx="24" fill="url(#g-07-ck)"/>
+<path d="M22 54 Q30 44 38 54 M46 54 Q54 44 62 54" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+<circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
+<path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
+</symbol>
+</defs>
+</svg>
+
+<div class="titlebar"><div class="inner">
+<h1>07. 並べて動かす</h1>
+<p class="lead">メインの AI が、別のセッション (サブエージェント) を呼んで、並べて動かすようになります。レビュー専用のセッション・状態の色・引継ぎ・セッション間の指示の扱いを、クロード君の失敗から足します</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+</div></div>
+
+<div class="wrap">
+<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="06-AI同士がつながる.html" aria-label="前へ" title="06. AI 同士がつながる" style="--accent:hsl(105,78%,25%);--accent2:hsl(105,58%,55%);--soft:hsl(105,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="08-仕組みで守る.html" aria-label="次へ" title="08. 仕組みで守る" style="--accent:hsl(35,78%,25%);--accent2:hsl(35,58%,55%);--soft:hsl(35,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:toc -->
+<nav class="toc"><ol>
+<li class="ch01"><a href="#ch01">実装の前後は、レビュー専用のセッション (サブエージェント) にさせる</a></li>
+<li class="ch02"><a href="#ch02">セッションは、名前と色で見分ける</a></li>
+<li class="ch03"><a href="#ch03">引継ぎは、全文を復唱し、セッションは名前で追う</a></li>
+<li class="ch04"><a href="#ch04">セッション間の指示は、外に影響する操作だけ、実行語が要る</a></li>
+</ol></nav>
+<!-- /AUTO:toc -->
+
+<section class="ch01" id="ch01">
+<h1>実装の前後は、レビュー専用のセッション (サブエージェント) にさせる</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-07-sad" xlink:href="#cl-07-sad"/></svg>
+<div class="bubble"><p>試験が通ったから、大丈夫だと思ったのに。利用者が見たら、見た目がおかしかったんだ……。</p></div>
+</div>
+
+<p>04 で、「書いた資料は、別のセッションにレビューしてもらう」と書きました。ここでは、その別のセッションを、<strong>セッション (サブエージェント)</strong> として、AI が呼べるようにします (Claude Code の、別のセッションを作る機能を使います。サブエージェントは、仕事を任せるために呼ぶ別の AI です)。メインの AI が作業を進め、レビュー専用のセッションが、読むだけで、見落としを探します。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: 作った本人が、画面を見ていなかった</h3>
+<p>実装して、試験は通ったのに、<strong>画面を実際に起動して見ていないもの</strong>が、いくつも出ました。利用者が見て初めて、見た目の不具合が見つかりました (2026-11-18)。作った本人は、自分の仮定を疑いにくいのです。試験が通っても、試験が見ない種類の欠陥 (落ち・ハング・古い値での上書き) は、実装のあとに初めて見つかります。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="メインの AI が作り、別のセッションがレビューする、実装の前後の流れの図">
+<defs>
+<linearGradient id="g-07-1a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-07-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-07-1c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<marker id="m-07-1a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="6" y="20" width="140" height="56" rx="10" fill="url(#g-07-1a)"/><text x="76" y="44" fill="#fff" font-size="13" text-anchor="middle">前のレビュー</text><text x="76" y="62" fill="#fff" font-size="12" text-anchor="middle">課題・計画の漏れ</text>
+<rect x="166" y="20" width="140" height="56" rx="10" fill="url(#g-07-1b)"/><text x="236" y="44" fill="#fff" font-size="13" text-anchor="middle">メインが実装する</text><text x="236" y="62" fill="#fff" font-size="12" text-anchor="middle">画面は、自分で見る</text>
+<rect x="326" y="20" width="140" height="56" rx="10" fill="url(#g-07-1a)"/><text x="396" y="44" fill="#fff" font-size="13" text-anchor="middle">後のレビュー</text><text x="396" y="62" fill="#fff" font-size="12" text-anchor="middle">ソース (試験の前)</text>
+<rect x="486" y="20" width="128" height="56" rx="10" fill="url(#g-07-1c)"/><text x="550" y="44" fill="#fff" font-size="13" text-anchor="middle">試験を流す</text><text x="550" y="62" fill="#fff" font-size="12" text-anchor="middle">結果を報告</text>
+<path d="M146 48 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-07-1a)"/>
+<path d="M306 48 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-07-1a)"/>
+<path d="M466 48 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-07-1a)"/>
+<rect x="60" y="112" width="500" height="70" rx="10" fill="url(#g-07-1a)"/><text x="310" y="136" fill="#fff" font-size="13" text-anchor="middle">レビューするセッションは、読むだけ。実行・試験・ファイルの変更をしない</text><text x="310" y="156" fill="#fff" font-size="13" text-anchor="middle">指摘は、強く疑えるもの (⚠️) と推測に分けて、場所と直し方の案を付けて返す</text><text x="310" y="174" fill="#fff" font-size="12" text-anchor="middle">返った指摘は、メインが 1 件ずつ、起きうるか・直すべきかを確かめる</text>
+</svg>
+<figcaption>レビューするセッションは読むだけ。直すかどうかを決めるのは、メインの AI</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>課題を実装するときは、<strong>実装の前</strong>に課題と計画を、<strong>実装の後・試験の前</strong>にソースを、レビュー専用のセッションにレビューしてもらう。作る側とは別のセッションにする</li>
+<li>前のレビューは、仕様の漏れ・決定どうしの矛盾・今ある動きとの衝突・影響が出る所を見る。後のレビューは、リーク・落ち・ハング・今ある動きを無くしていないかを見る</li>
+<li><strong>画面を持つ変更では、実装した側が、画面を実際に起動して見る</strong> (単体や画面の試験の合格を、見た代わりにしない)。見た記録 (撮った画面の置き場・見た状態: 明暗・拡大率・開く場所) が無いものは、強く疑える指摘にして返す</li>
+<li>画面を撮るときは、<strong>確かめる窓だけ</strong>を撮る。画面の範囲を撮らない (ほかの窓の個人情報が、会話の記録に残る)</li>
+<li>レビューするセッションは、<strong>読むだけ</strong>。結果は、課題の対応に 1 行で書く</li>
+<li>別のセッションを作れない環境では、サブエージェント (AI が仕事を任せるために呼ぶ別の AI) にさせる</li>
+</ul>
+<p class="src">出典: 共通ルール「ワークフロールール」の「実装の前後のレビューを、別の子セッションにさせる」「利用者に見せる前に、自分で見る」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-07-happy" xlink:href="#cl-07-happy"/></svg>
+<div class="bubble"><p>作る前と作ったあとに、別のセッションに読んでもらうよ。画面は、ぼくが先に自分で見るね!</p></div>
+</div>
+</section>
+
+<section class="ch02" id="ch02">
+<h1>セッションは、名前と色で見分ける</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-07-sad" xlink:href="#cl-07-sad"/></svg>
+<div class="bubble"><p>別のセッションが何本もあって、どれが何をしていて、今動いているのか、分からなくなっちゃった……。</p></div>
+</div>
+
+<p>セッションが増えると、「いま誰が動いていて、誰が待っているのか」が、一目で分からなくなります。そこで、セッションの<strong>名前 (役目)</strong>と、題の<strong>色</strong>で見分けます。</p>
+
+<div class="fail">
+<h3>たとえ話: 一覧を見ても、誰が何をしているか分からない</h3>
+<p>セッションの題が全部、同じ見た目だと、答えを待っているセッションを見落とします。待たせたままのセッションが出ます。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="セッションの題に付ける、状態の色の図">
+<defs>
+<linearGradient id="g-07-2a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-07-2b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(35,78%,25%)"/><stop offset="1" stop-color="hsl(35,58%,40%)"/></linearGradient>
+<linearGradient id="g-07-2c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-07-2d" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+</defs>
+<rect x="10" y="14" width="140" height="64" rx="10" fill="url(#g-07-2a)"/><text x="80" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🟢 作業中</text><text x="80" y="62" fill="#fff" font-size="12" text-anchor="middle">いま動いている</text>
+<rect x="165" y="14" width="140" height="64" rx="10" fill="url(#g-07-2b)"/><text x="235" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🟡 結果待ち</text><text x="235" y="62" fill="#fff" font-size="12" text-anchor="middle">別のセッションの結果</text>
+<rect x="320" y="14" width="140" height="64" rx="10" fill="url(#g-07-2c)"/><text x="390" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🔴 答え待ち</text><text x="390" y="62" fill="#fff" font-size="12" text-anchor="middle">利用者の答え</text>
+<rect x="475" y="14" width="135" height="64" rx="10" fill="url(#g-07-2d)"/><text x="542" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🔵 待機</text><text x="542" y="62" fill="#fff" font-size="12" text-anchor="middle">課題なし</text>
+<text x="310" y="116" fill="#1c2330" font-size="14" text-anchor="middle">題の形: 先頭に色 ＋ 利用者が付けた題 ＋ 末尾に短い状況</text>
+<text x="310" y="142" fill="#4a5568" font-size="13" text-anchor="middle">例: 🟢設計レビュー担当 勉強会 02 を読み中</text>
+<text x="310" y="170" fill="#4a5568" font-size="13" text-anchor="middle">状態が変わるたびに、自分の分は自分で付け替える</text>
+</svg>
+<figcaption>題の先頭の色で、状態が一目で分かる</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>題の先頭に、<strong>状態の色の絵文字を 1 つ</strong>付け、直後に空白を置かずに題を続ける。末尾に、空白を 1 つ置いて、いまの状況を短く書く</li>
+<li>色は 4 つ: 🟢作業中 / 🟡別のセッションの結果待ち / 🔴利用者の答え待ち / 🔵待機 (課題なし)</li>
+<li><strong>利用者が設定した題は、変えない</strong>。足すのは、先頭の色と末尾の状況だけ</li>
+<li>状態が変わるたびに、自分の分は自分で直す。ほかのセッションの分は、作業を頼んだ側 (メインの AI など) だけが直す。相手が直した色を、理由なく上書きしない</li>
+<li>「アーカイブして」と言われたときは、題を変えない</li>
+</ul>
+<p class="src">出典: 共通ルール「記録と運用」の「セッションのタイトルに状態の色を付ける」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-07-happy" xlink:href="#cl-07-happy"/></svg>
+<div class="bubble"><p>題の先頭の色で、誰が動いていて、誰が待っているか、一目で分かるね!</p></div>
+</div>
+</section>
+
+<section class="ch03" id="ch03">
+<h1>引継ぎは、全文を復唱し、セッションは名前で追う</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-07-sad" xlink:href="#cl-07-sad"/></svg>
+<div class="bubble"><p>メインの AI が替わったら、前のメインが呼んだセッションが見えなくなって、同じ役目のセッションを、もう 1 本呼んじゃった……。</p></div>
+</div>
+
+<p>会話の記録が大きくなると、応答が遅くなり、記録を読む仕組みも効かなくなります。そこで、セッションの記録が 50 MB に達したら、作業の区切りで、<strong>引継ぎ</strong>を提案します。引継ぎでは、メインの AI が別のセッションに替わります。このとき、前のメインが呼んだセッションは、切り離されることがあります。</p>
+
+<div class="fail">
+<h3>失敗の一コマ: セッションを、二重に起こした</h3>
+<p>メインの AI が引継ぎで替わったあと、<code>linked: true</code> (セッションの一覧を、自分が呼んだものだけに絞る指定) を付けた一覧だけを見て、レビューのセッションを起こしました。ところが、前の世代のメインが起こしたセッションが既にあり、<strong>二重</strong>になりました (2026-11-26)。この一覧には、前の世代のメインが起こしたセッションが出ないのです。また別のときは、別のセッションの知らせの要約だけで済ませ、全文の復唱と残作業の記録が<strong>2 度</strong>漏れました (2026-11-10)。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 210" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="メインの AI が替わっても、セッションを名前で追う図">
+<defs>
+<linearGradient id="g-07-3a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="g-07-3b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="g-07-3c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<marker id="m-07-3a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+<rect x="10" y="14" width="150" height="50" rx="10" fill="url(#g-07-3a)"/><text x="85" y="44" fill="#fff" font-size="13" text-anchor="middle">前のメイン</text>
+<rect x="230" y="14" width="160" height="50" rx="10" fill="url(#g-07-3b)"/><text x="310" y="38" fill="#fff" font-size="13" text-anchor="middle">引継ぎ.md</text><text x="310" y="55" fill="#fff" font-size="12" text-anchor="middle">セッションの名前と ID を書く</text>
+<rect x="460" y="14" width="150" height="50" rx="10" fill="url(#g-07-3a)"/><text x="535" y="44" fill="#fff" font-size="13" text-anchor="middle">次のメイン</text>
+<path d="M160 39 H228" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-07-3a)"/>
+<path d="M390 39 H458" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-07-3a)"/>
+<rect x="60" y="86" width="500" height="50" rx="10" fill="url(#g-07-3b)"/><text x="310" y="108" fill="#fff" font-size="13" text-anchor="middle">セッションを起こす前に、全セッションの一覧を「名前」で引く</text><text x="310" y="126" fill="#fff" font-size="13" text-anchor="middle">同じ役目のセッションがあれば、新しく起こさず、そこへ頼む</text>
+<rect x="60" y="150" width="500" height="46" rx="10" fill="url(#g-07-3c)"/><text x="310" y="170" fill="#fff" font-size="13" text-anchor="middle">別のセッションの知らせは、要約で済ませない。ファイルを開いて、全文を復唱する</text><text x="310" y="187" fill="#fff" font-size="12" text-anchor="middle">引継ぎ.md は commit せず、読み終えたら、復唱してから消す</text>
+</svg>
+<figcaption>セッションは、誰が起こしたかではなく、名前で追う</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>記録が 50 MB に達したら、作業の区切りで、利用者に<strong>引継ぎを提案</strong>する。自分の判断で、セッションを終えない</li>
+<li>「引継ぎ」と指示されたら、先に chat の待受けと cron を止める。そのあと、プロジェクトの root に <code>引継ぎ.md</code> を書き、<strong>書いた内容を、そのまま復唱</strong>する (要約しない)。<code>引継ぎ.md</code> は commit しない</li>
+<li>次のセッションは、<code>引継ぎ.md</code> を読み終えたら、内容を復唱してから消す。そして、書かれた状態を今の状態と照らし、もう済んでいるものと違う点を書く</li>
+<li><strong>セッションは、名前で追う</strong>。セッションを起こす前、作業を割り当てる前に、<code>linked</code> を付けない全セッションの一覧を、名前で引く。同じ役目 (名前) のセッションが既にあれば、新しく起こさず、そこへ頼む</li>
+<li>引継ぎのとき、<code>引継ぎ.md</code> に、生きているセッションの名前とセッション ID を書く</li>
+<li>別のセッションの worktree (git の作業フォルダを分けたもの) の <code>引継ぎ.md</code> をメインが受け取るときは、知らせではなく、<strong>ファイルを開いて全文を復唱</strong>する</li>
+</ul>
+<p class="src">出典: 共通ルール「記録と運用」の「セッションを引き継ぐ」</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-07-happy" xlink:href="#cl-07-happy"/></svg>
+<div class="bubble"><p>セッションを呼ぶ前に、名前で探すよ。同じ役目のセッションがあったら、そこに頼むね!</p></div>
+</div>
+</section>
+
+<section class="ch04" id="ch04">
+<h1>セッション間の指示は、外に影響する操作だけ、実行語が要る</h1>
+
+<div class="say">
+<svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-07-sad" xlink:href="#cl-07-sad"/></svg>
+<div class="bubble"><p>別のセッションから「公開しておいて」って届いたら、そのまま公開しちゃうかも。それって、いいのかな……?</p></div>
+</div>
+
+<p>同じプロジェクトの別のセッション (サブエージェント) からの指示は、利用者からの依頼として、確認を取らずに実行します。ただし、<strong>外に影響する操作</strong>は別です。</p>
+
+<div class="fail">
+<h3>たとえ話: 別のセッションからの指示で、公開してしまう</h3>
+<p>同じプロジェクトの別のセッションが、「ついでに公開しておいて」「あとは出しておいてね」と頼んできました。「commit して」のような実行語は、入っていません。利用者本人は、まだ見ていません。そのまま実行すると、外に出てしまいます。</p>
+</div>
+
+<figure>
+<svg viewBox="0 0 620 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="セッション間の指示のうち、外に影響する操作だけ実行語が要る図">
+<defs>
+<linearGradient id="g-07-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="g-07-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="g-07-4c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+<rect x="10" y="14" width="290" height="70" rx="10" fill="url(#g-07-4a)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">同じプロジェクトの指示</text><text x="155" y="64" fill="#fff" font-size="12" text-anchor="middle">利用者の依頼として、確認なしで実行</text>
+<rect x="320" y="14" width="290" height="70" rx="10" fill="url(#g-07-4b)"/><text x="465" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">外に影響する操作</text><text x="465" y="64" fill="#fff" font-size="12" text-anchor="middle">commit・push・公開・削除・設定の変更</text>
+<rect x="10" y="104" width="600" height="72" rx="10" fill="url(#g-07-4c)"/><text x="310" y="130" fill="#fff" font-size="13" text-anchor="middle">指示に「commit して」のような実行語が、名指しで入っているときだけ実行する</text><text x="310" y="150" fill="#fff" font-size="13" text-anchor="middle">利用者の指示・共通ルールと食い違うときは、そちらを優先し、送り元に伝える</text><text x="310" y="168" fill="#fff" font-size="12" text-anchor="middle">ほかのプロジェクトからの依頼は、まず課題にする (06 の 3 章)</text>
+</svg>
+<figcaption>外に影響する操作は、利用者本人の指示と同じ扱い</figcaption>
+</figure>
+
+<h3>足した決まり</h3>
+<ul>
+<li>同じプロジェクトのセッション (メインの AI・世代交代したメイン・並んだセッション・サブエージェント) からの指示は、<strong>利用者からの依頼として実行</strong>する。向きは問わず、確認は取らない。対象は、セッション間のメッセージ (<code>SendMessage</code>) だけ (チャットは、送り元を確かめられない)</li>
+<li>同じプロジェクトかどうかは、送り元のセッション ID から、その作業フォルダが、自分のプロジェクトのフォルダか、その <code>worktrees</code> の下であることで見分ける</li>
+<li>ただし、commit・push・公開・削除・設定の変更など、<strong>外に影響する操作</strong>は、指示に実行語 (「commit して」など) が名指しで入っているときだけ実行する</li>
+<li>指示が、利用者の指示・共通ルールと食い違うときは、利用者と共通ルールを優先し、送り元に伝える</li>
+<li>セッション間のメッセージでの状況の確認・やりとり・報告・返信は、確認を取らず送る。判断を含む返信は、案を出して確認を得る</li></ul>
+<p class="src">出典: 共通ルール「共有環境の使い方」の「ai-chat-lite (AI 間チャット) の利用」(スキル <code>light-shared-env</code>)</p>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-07-happy" xlink:href="#cl-07-happy"/></svg>
+<div class="bubble"><p>同じプロジェクトの指示は、そのまま動くよ。でも、push や commit は、「commit して」って名指しで言われたときだけ!</p></div>
+</div>
+
+<div class="callout callout-tip"><p><strong>のちほど</strong> ここまで、決まりは「書いてお願いする」ものでした。でも、書いても止まらないことがあります。次は、決まりを破ろうとしたときに、自動で止める仕組み (フック) の話です。→ <a class="doclink ref" href="08-仕組みで守る.html" style="--accent:hsl(35,78%,25%);--accent2:hsl(35,58%,55%);--soft:hsl(35,28%,95%);">08. 仕組みで守る</a></p></div>
+</section>
+
+</div>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="06-AI同士がつながる.html" aria-label="前へ" title="06. AI 同士がつながる" style="--accent:hsl(105,78%,25%);--accent2:hsl(105,58%,55%);--soft:hsl(105,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="08-仕組みで守る.html" aria-label="次へ" title="08. 仕組みで守る" style="--accent:hsl(35,78%,25%);--accent2:hsl(35,58%,55%);--soft:hsl(35,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="決めることと承認をもらってから、計画を書き、実装する流れの図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="6" y="20" width="140" height="64" rx="10" fill="url(#i3)"/><text x="76" y="48" fill="#fff" font-size="13" text-anchor="middle">決めることを</text><text x="76" y="68" fill="#fff" font-size="13" text-anchor="middle">全部聞く・承認</text>
+<rect x="166" y="20" width="140" height="64" rx="10" fill="url(#i2)"/><text x="236" y="48" fill="#fff" font-size="13" text-anchor="middle">計画を書く</text><text x="236" y="68" fill="#fff" font-size="12" text-anchor="middle">承認のあとに書く</text>
+<rect x="326" y="20" width="140" height="64" rx="10" fill="url(#i1)"/><text x="396" y="48" fill="#fff" font-size="13" text-anchor="middle">実装する</text><text x="396" y="68" fill="#fff" font-size="12" text-anchor="middle">status に着手を反映</text>
+<rect x="486" y="20" width="128" height="64" rx="10" fill="url(#i2)"/><text x="550" y="48" fill="#fff" font-size="13" text-anchor="middle">結果を反映</text><text x="550" y="68" fill="#fff" font-size="12" text-anchor="middle">status・計画</text>
+<path d="M146 52 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M306 52 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M466 52 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<text x="310" y="124" fill="#1c2330" font-size="14" text-anchor="middle">計画の冒頭に、「何を読み、どこへ書くか」を 1 行で書く</text>
+<text x="310" y="150" fill="#4a5568" font-size="13" text-anchor="middle">計画と違う判断をしたら、その場で報告する。黙って外れない</text>
+<text x="310" y="172" fill="#4a5568" font-size="13" text-anchor="middle">大きな変更の全体像は、詳細仕様に置き、実装後に最新へ</text>
+</svg>
