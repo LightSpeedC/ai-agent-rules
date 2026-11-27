@@ -1,2 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="クロード君 (困っている)">
-	<rect width="100%" height="100%" fill="#ffffff"/><use href="#cl-09-sad" xlink:href="#cl-09-sad"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="試験 1 本ごとに上限を付け、超えたら子孫ごと止める図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="6" y="20" width="170" height="56" rx="10" fill="url(#i1)"/><text x="91" y="44" fill="#fff" font-size="13" text-anchor="middle">試験を 1 本流す</text><text x="91" y="62" fill="#fff" font-size="12" text-anchor="middle">1 本ごとに上限</text>
+<rect x="226" y="20" width="170" height="56" rx="10" fill="url(#i2)"/><text x="311" y="44" fill="#fff" font-size="13" text-anchor="middle">上限を超えたら</text><text x="311" y="62" fill="#fff" font-size="12" text-anchor="middle">プロセスごと止める</text>
+<rect x="446" y="20" width="168" height="56" rx="10" fill="url(#i3)"/><text x="530" y="44" fill="#fff" font-size="13" text-anchor="middle">⏱️ 時間切れ</text><text x="530" y="62" fill="#fff" font-size="12" text-anchor="middle">次の試験へ進む</text>
+<path d="M176 48 H224" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M396 48 H444" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<rect x="60" y="104" width="500" height="70" rx="10" fill="url(#i1)"/><text x="310" y="128" fill="#fff" font-size="13" text-anchor="middle">上限は、ふつうにかかる時間の数倍。待つ側が、止まったと気づける長さ</text><text x="310" y="148" fill="#fff" font-size="13" text-anchor="middle">試験が残したプロセスは、ランチャが止める</text><text x="310" y="166" fill="#fff" font-size="12" text-anchor="middle">落ちた理由が分からない試験は「揺れ」で済ませず、課題に残す</text>
+</svg>

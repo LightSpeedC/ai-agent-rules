@@ -1,14 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="ファイルの種類ごとの、文字コードと改行の組の図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
-<defs>
-<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
-<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
-<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
-</defs>
-	<rect width="100%" height="100%" fill="#ffffff"/>
-<text x="310" y="22" fill="#1c2330" font-size="14" font-weight="700" text-anchor="middle">convert-encoding &lt;ファイル&gt; --to 用途名</text>
-<rect x="10" y="40" width="190" height="88" rx="10" fill="url(#i1)"/><text x="105" y="68" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">ps1</text><text x="105" y="92" fill="#fff" font-size="13" text-anchor="middle">BOM 付き UTF-8</text><text x="105" y="112" fill="#fff" font-size="13" text-anchor="middle">＋ CRLF</text>
-<rect x="215" y="40" width="190" height="88" rx="10" fill="url(#i3)"/><text x="310" y="68" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">cmd</text><text x="310" y="92" fill="#fff" font-size="13" text-anchor="middle">SJIS (CP932)</text><text x="310" y="112" fill="#fff" font-size="13" text-anchor="middle">＋ CRLF</text>
-<rect x="420" y="40" width="190" height="88" rx="10" fill="url(#i2)"/><text x="515" y="68" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">html</text><text x="515" y="92" fill="#fff" font-size="13" text-anchor="middle">BOM 付き UTF-8</text><text x="515" y="112" fill="#fff" font-size="13" text-anchor="middle">＋ LF</text>
-<text x="310" y="156" fill="#4a5568" font-size="13" text-anchor="middle">用途名を渡すと、文字コードと改行の両方が決まる</text>
-<text x="310" y="176" fill="#4a5568" font-size="13" text-anchor="middle">変換後が元と同じなら、ファイルに触らない (何度流してもよい)</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="クロード君 (困っている)">
+	<rect width="100%" height="100%" fill="#ffffff"/><use href="#cl-03-sad" xlink:href="#cl-03-sad"/></svg>

@@ -37,11 +37,12 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </ol></nav>
 <!-- /AUTO:roadmap -->
 
-<!-- 案内人の絵 (クロード君)。各場面から use で呼ぶ -->
+<!-- 案内人の絵 (クロード君・ルールちゃん)。各場面から use で呼ぶ -->
 <svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
 <defs>
 <linearGradient id="g-06-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
 <linearGradient id="g-06-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-06-rl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
 <symbol id="cl-06-sad" viewBox="0 0 84 96">
 <ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
 <path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-06-ks)"/>
@@ -60,13 +61,22 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
 <path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
 </symbol>
+<symbol id="rl-06" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<rect x="8" y="14" width="68" height="74" rx="14" fill="url(#g-06-rl)"/>
+<circle cx="30" cy="46" r="6" fill="#fff"/><circle cx="54" cy="46" r="6" fill="#fff"/>
+<circle cx="31" cy="47" r="2.6" fill="#12224d"/><circle cx="55" cy="47" r="2.6" fill="#12224d"/>
+<path d="M32 66 Q42 76 52 66" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<rect x="22" y="2" width="40" height="16" rx="4" fill="#fff"/>
+<path d="M28 8 H56 M28 13 H48" stroke="hsl(280,58%,45%)" stroke-width="2" stroke-linecap="round"/>
+</symbol>
 </defs>
 </svg>
 
 <div class="titlebar"><div class="inner">
 <h1>06. AI 同士がつながる</h1>
 <p class="lead">プロジェクトごとの AI が、チャットで話し合うようになります。待受けを数える・止める・読み切る・周知 (共通ルールを変えたとき、他のプロジェクトへ知らせること) は短く、の決まりを、クロード君の失敗から足します</p>
-<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 </div></div>
 
 <div class="wrap">
@@ -111,6 +121,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>数えるのは道具。数えてから、張る</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-06" xlink:href="#rl-06"/></svg>
+<div class="bubble"><p>「待受けは、道具で数えてから張ってね」って、スキルに入れておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>
@@ -160,6 +175,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>自分の待受けは、<code>unwait</code> で止める</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-06" xlink:href="#rl-06"/></svg>
+<div class="bubble"><p>「止めるのは、自分の待受けだけにしてね」って、スキルに入れておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>
@@ -211,6 +231,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>読み切る → 数える → 黙って張り直す。待受け中は、ターンを止めない</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-06" xlink:href="#rl-06"/></svg>
+<div class="bubble"><p>「通知は、読み切ってから張り直してね」って、スキルに入れておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>待受けが終わったら、<strong>親 (メインの AI) が、数えてから、黙って張り直す</strong>。新着なし・<code>[killed]</code>・<code>exit 255</code>・繋がらない・それ以外の終了コード (<code>exit 4</code> など)、どれも区別しない。報告は要らない</li>
@@ -257,6 +282,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>周知は、見出し名と変わった点だけ。本文は貼らない</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-06" xlink:href="#rl-06"/></svg>
+<div class="bubble"><p>「発言は短く、本文は貼らないでね」って、スキルに入れておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>

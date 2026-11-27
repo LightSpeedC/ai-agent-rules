@@ -37,11 +37,12 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </ol></nav>
 <!-- /AUTO:roadmap -->
 
-<!-- 案内人の絵 (クロード君)。各場面から use で呼ぶ -->
+<!-- 案内人の絵 (クロード君・ルールちゃん)。各場面から use で呼ぶ -->
 <svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
 <defs>
 <linearGradient id="g-07-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
 <linearGradient id="g-07-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-07-rl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
 <symbol id="cl-07-sad" viewBox="0 0 84 96">
 <ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
 <path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-07-ks)"/>
@@ -60,13 +61,22 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
 <path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
 </symbol>
+<symbol id="rl-07" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<rect x="8" y="14" width="68" height="74" rx="14" fill="url(#g-07-rl)"/>
+<circle cx="30" cy="46" r="6" fill="#fff"/><circle cx="54" cy="46" r="6" fill="#fff"/>
+<circle cx="31" cy="47" r="2.6" fill="#12224d"/><circle cx="55" cy="47" r="2.6" fill="#12224d"/>
+<path d="M32 66 Q42 76 52 66" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<rect x="22" y="2" width="40" height="16" rx="4" fill="#fff"/>
+<path d="M28 8 H56 M28 13 H48" stroke="hsl(280,58%,45%)" stroke-width="2" stroke-linecap="round"/>
+</symbol>
 </defs>
 </svg>
 
 <div class="titlebar"><div class="inner">
 <h1>07. 並べて動かす</h1>
 <p class="lead">メインの AI が、別のセッション (サブエージェント) を呼んで、並べて動かすようになります。レビュー専用のセッション・状態の色・引継ぎ・セッション間の指示の扱いを、クロード君の失敗から足します</p>
-<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 </div></div>
 
 <div class="wrap">
@@ -114,6 +124,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>レビューするセッションは読むだけ。直すかどうかを決めるのは、メインの AI</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-07" xlink:href="#rl-07"/></svg>
+<div class="bubble"><p>「実装の前後は、レビュー専用のセッションにさせてね」って、1 枚足しておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>
@@ -166,6 +181,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>題の先頭の色で、状態が一目で分かる</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-07" xlink:href="#rl-07"/></svg>
+<div class="bubble"><p>「セッションは、名前と色で見分けてね」って、1 枚足しておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>題の先頭に、<strong>状態の色の絵文字を 1 つ</strong>付け、直後に空白を置かずに題を続ける。末尾に、空白を 1 つ置いて、いまの状況を短く書く</li>
@@ -216,6 +236,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>セッションは、誰が起こしたかではなく、名前で追う</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-07" xlink:href="#rl-07"/></svg>
+<div class="bubble"><p>「引継ぎは、全文を復唱して、セッションは名前で追ってね」って、1 枚足しておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>記録が 50 MB に達したら、作業の区切りで、利用者に<strong>引継ぎを提案</strong>する。自分の判断で、セッションを終えない</li>
@@ -261,6 +286,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>外に影響する操作は、利用者本人の指示と同じ扱い</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-07" xlink:href="#rl-07"/></svg>
+<div class="bubble"><p>「外に影響する操作には、実行語を求めてね」って、スキルに入れておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>

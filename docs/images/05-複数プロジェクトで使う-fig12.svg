@@ -1,2 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="クロード君 (困っている)">
-	<rect width="100%" height="100%" fill="#ffffff"/><use href="#cl-05-sad" xlink:href="#cl-05-sad"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" width="620" height="200" role="img" aria-label="commit の前に確かめる 3 つの図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="14" width="190" height="84" rx="10" fill="url(#i2)"/><text x="105" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">個人情報</text><text x="105" y="64" fill="#fff" font-size="12" text-anchor="middle">個人名・メールアドレス</text><text x="105" y="82" fill="#fff" font-size="12" text-anchor="middle">認証情報</text>
+<rect x="215" y="14" width="190" height="84" rx="10" fill="url(#i1)"/><text x="310" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">実体パス</text><text x="310" y="64" fill="#fff" font-size="12" text-anchor="middle">ユーザフォルダの形の</text><text x="310" y="82" fill="#fff" font-size="12" text-anchor="middle">パス</text>
+<rect x="420" y="14" width="190" height="84" rx="10" fill="url(#i3)"/><text x="515" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">追跡されるファイル</text><text x="515" y="64" fill="#fff" font-size="12" text-anchor="middle">除外したつもりのものが</text><text x="515" y="82" fill="#fff" font-size="12" text-anchor="middle">入っていないか</text>
+<text x="310" y="132" fill="#1c2330" font-size="14" text-anchor="middle">最初の commit の前に、公開してもよい内容かを確かめて、報告する</text>
+<text x="310" y="158" fill="#4a5568" font-size="13" text-anchor="middle">共有の道具 (check-public など) で、機械的に確かめる</text>
+<text x="310" y="180" fill="#4a5568" font-size="13" text-anchor="middle">2 回目からは、新しく追跡に入るファイルだけを見ればよい</text>
+</svg>

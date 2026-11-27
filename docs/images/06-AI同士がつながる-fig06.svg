@@ -1,14 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="自分の待受けだけを unwait で止める図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
-<defs>
-<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
-<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
-<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
-</defs>
-	<rect width="100%" height="100%" fill="#ffffff"/>
-<rect x="10" y="14" width="290" height="46" rx="10" fill="url(#i2)"/><text x="155" y="42" fill="#fff" font-size="13" font-family="Consolas, monospace" text-anchor="middle">aichat unwait :自分の ID: -p … -r …</text>
-<rect x="320" y="14" width="290" height="46" rx="10" fill="url(#i1)"/><text x="465" y="42" fill="#fff" font-size="13" text-anchor="middle">pid を指定した強制終了</text>
-<rect x="10" y="76" width="290" height="46" rx="10" fill="url(#i3)"/><text x="155" y="104" fill="#fff" font-size="13" text-anchor="middle">接続先とルームが一致した、自分の分だけ止まる</text>
-<rect x="320" y="76" width="290" height="46" rx="10" fill="url(#i1)"/><text x="465" y="104" fill="#fff" font-size="13" text-anchor="middle">相手の分まで止めうる → 相手は exit 255</text>
-<text x="310" y="158" fill="#1c2330" font-size="14" text-anchor="middle">止めるのは、自分の分。他のプロジェクトの分には触らない</text>
-<text x="310" y="180" fill="#4a5568" font-size="13" text-anchor="middle">(ID はコロンで囲む。囲まないと、前方一致で別の ID にも当たる)</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="クロード君 (困っている)">
+	<rect width="100%" height="100%" fill="#ffffff"/><use href="#cl-06-sad" xlink:href="#cl-06-sad"/></svg>

@@ -1,11 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="セッション間の指示のうち、外に影響する操作だけ実行語が要る図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
-<defs>
-<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
-<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
-<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
-</defs>
-	<rect width="100%" height="100%" fill="#ffffff"/>
-<rect x="10" y="14" width="290" height="70" rx="10" fill="url(#i1)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">同じプロジェクトの指示</text><text x="155" y="64" fill="#fff" font-size="12" text-anchor="middle">利用者の依頼として、確認なしで実行</text>
-<rect x="320" y="14" width="290" height="70" rx="10" fill="url(#i2)"/><text x="465" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">外に影響する操作</text><text x="465" y="64" fill="#fff" font-size="12" text-anchor="middle">commit・push・公開・削除・設定の変更</text>
-<rect x="10" y="104" width="600" height="72" rx="10" fill="url(#i3)"/><text x="310" y="130" fill="#fff" font-size="13" text-anchor="middle">指示に「commit して」のような実行語が、名指しで入っているときだけ実行する</text><text x="310" y="150" fill="#fff" font-size="13" text-anchor="middle">利用者の指示・共通ルールと食い違うときは、そちらを優先し、送り元に伝える</text><text x="310" y="168" fill="#fff" font-size="12" text-anchor="middle">ほかのプロジェクトからの依頼は、まず課題にする (06 の 3 章)</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="ルールちゃん">
+	<rect width="100%" height="100%" fill="#ffffff"/><use href="#rl-07" xlink:href="#rl-07"/></svg>

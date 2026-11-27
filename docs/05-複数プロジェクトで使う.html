@@ -42,6 +42,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <defs>
 <linearGradient id="g-05-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
 <linearGradient id="g-05-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-05-rl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
 <linearGradient id="g-05-sk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(150,78%,24%)"/><stop offset="1" stop-color="hsl(150,58%,40%)"/></linearGradient>
 <symbol id="cl-05-sad" viewBox="0 0 84 96">
 <ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
@@ -70,13 +71,22 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <path d="M38 64 Q48 74 58 64" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 <path d="M62 6 L64 12 L70 14 L64 16 L62 22 L60 16 L54 14 L60 12 Z" fill="url(#g-05-ks)"/>
 </symbol>
+<symbol id="rl-05" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<rect x="8" y="14" width="68" height="74" rx="14" fill="url(#g-05-rl)"/>
+<circle cx="30" cy="46" r="6" fill="#fff"/><circle cx="54" cy="46" r="6" fill="#fff"/>
+<circle cx="31" cy="47" r="2.6" fill="#12224d"/><circle cx="55" cy="47" r="2.6" fill="#12224d"/>
+<path d="M32 66 Q42 76 52 66" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<rect x="22" y="2" width="40" height="16" rx="4" fill="#fff"/>
+<path d="M28 8 H56 M28 13 H48" stroke="hsl(280,58%,45%)" stroke-width="2" stroke-linecap="round"/>
+</symbol>
 </defs>
 </svg>
 
 <div class="titlebar"><div class="inner">
 <h1>05. 複数プロジェクトで使う</h1>
 <p class="lead">プロジェクトが増え、ルールも道具も共有するようになると、読み込みが重くなり、他のプロジェクトとぶつかります。1 章で助っ人の「スキルちゃん」が加わります。ルールの分け方・他プロジェクトとの付き合い方・公開前の確かめ・画面の取り合いの決まりを足します</p>
-<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 </div></div>
 
 <div class="wrap">
@@ -129,6 +139,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>核は常に、スキルは呼ばれたときだけ</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-05" xlink:href="#rl-05"/></svg>
+<div class="bubble"><p>このプロジェクトでは、状況別の決まりを、スキルに分けておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>状況別の章は、<strong>スキル (<code>skills/light-*/SKILL.md</code>)</strong> に移す。<strong>毎回効く章</strong> (応答の言語・機密情報・確認・commit の指示など) は、核に残す</li>
@@ -178,6 +193,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>赤い道 (直す・回り道) でなく、下の道 (サンプルを置いて依頼) を通る</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-05" xlink:href="#rl-05"/></svg>
+<div class="bubble"><p>「他プロジェクトは直さず、作り手に頼んでね」って、1 枚足しておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>読み書き・探索・実行は、<strong>カレントのプロジェクトのフォルダの中</strong>に限る。外を見る必要が出たら、対象のパスと目的を示して、先に確認する。ただし、用途を決めた共有の道具 (03 の <code>ai-agent-tools</code> など) は、確認なしで使ってよい</li>
@@ -225,6 +245,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>最初の commit の前に、3 つを確かめる</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-05" xlink:href="#rl-05"/></svg>
+<div class="bubble"><p>「公開する前に、中身を確かめてね」って、1 枚足しておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>
@@ -275,6 +300,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>画面を使う作業は、共通のロックで包んで、1 つずつ流す</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-05" xlink:href="#rl-05"/></svg>
+<div class="bubble"><p>「画面を使う作業は、1 つずつにしてね」って、スキルに入れておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>

@@ -1,2 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="クロード君 (うれしい)">
-	<rect width="100%" height="100%" fill="#ffffff"/><use href="#cl-07-happy" xlink:href="#cl-07-happy"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" width="620" height="200" role="img" aria-label="セッションの題に付ける、状態の色の図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(35,78%,25%)"/><stop offset="1" stop-color="hsl(35,58%,40%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="i4" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="14" width="140" height="64" rx="10" fill="url(#i1)"/><text x="80" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🟢 作業中</text><text x="80" y="62" fill="#fff" font-size="12" text-anchor="middle">いま動いている</text>
+<rect x="165" y="14" width="140" height="64" rx="10" fill="url(#i2)"/><text x="235" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🟡 結果待ち</text><text x="235" y="62" fill="#fff" font-size="12" text-anchor="middle">別のセッションの結果</text>
+<rect x="320" y="14" width="140" height="64" rx="10" fill="url(#i3)"/><text x="390" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🔴 答え待ち</text><text x="390" y="62" fill="#fff" font-size="12" text-anchor="middle">利用者の答え</text>
+<rect x="475" y="14" width="135" height="64" rx="10" fill="url(#i4)"/><text x="542" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🔵 待機</text><text x="542" y="62" fill="#fff" font-size="12" text-anchor="middle">課題なし</text>
+<text x="310" y="116" fill="#1c2330" font-size="14" text-anchor="middle">題の形: 先頭に色 ＋ 利用者が付けた題 ＋ 末尾に短い状況</text>
+<text x="310" y="142" fill="#4a5568" font-size="13" text-anchor="middle">例: 🟢設計レビュー担当 勉強会 02 を読み中</text>
+<text x="310" y="170" fill="#4a5568" font-size="13" text-anchor="middle">状態が変わるたびに、自分の分は自分で付け替える</text>
+</svg>

@@ -1,2 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="クロード君 (うれしい)">
-	<rect width="100%" height="100%" fill="#ffffff"/><use href="#cl-09-happy" xlink:href="#cl-09-happy"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" width="620" height="200" role="img" aria-label="起動前に窓の番号を控え、その窓だけを閉じ、残りを数える図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="6" y="20" width="140" height="56" rx="10" fill="url(#i1)"/><text x="76" y="44" fill="#fff" font-size="13" text-anchor="middle">① 起動する前に</text><text x="76" y="62" fill="#fff" font-size="12" text-anchor="middle">窓の番号を控える</text>
+<rect x="166" y="20" width="140" height="56" rx="10" fill="url(#i1)"/><text x="236" y="44" fill="#fff" font-size="13" text-anchor="middle">② 起動する</text><text x="236" y="62" fill="#fff" font-size="12" text-anchor="middle">試験・調べ</text>
+<rect x="326" y="20" width="140" height="56" rx="10" fill="url(#i2)"/><text x="396" y="44" fill="#fff" font-size="13" text-anchor="middle">③ 控えた窓だけ閉じる</text><text x="396" y="62" fill="#fff" font-size="12" text-anchor="middle">題名で探さない</text>
+<rect x="486" y="20" width="128" height="56" rx="10" fill="url(#i2)"/><text x="550" y="44" fill="#fff" font-size="13" text-anchor="middle">④ 残りを数える</text><text x="550" y="62" fill="#fff" font-size="12" text-anchor="middle">報告に書く</text>
+<path d="M146 48 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M306 48 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<path d="M466 48 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
+<rect x="60" y="108" width="500" height="76" rx="10" fill="url(#i3)"/><text x="310" y="132" fill="#fff" font-size="13" text-anchor="middle">消す・戻す・変えるボタン (ごみ箱・削除・上書き) を、自動で押さない</text><text x="310" y="152" fill="#fff" font-size="13" text-anchor="middle">読むだけにする。試験用のフォルダは、プロジェクトの tmp/ の下だけ</text><text x="310" y="170" fill="#fff" font-size="12" text-anchor="middle">利用者の窓・ほかのセッションの窓は、閉じない</text>
+</svg>

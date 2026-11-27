@@ -38,11 +38,12 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </ol></nav>
 <!-- /AUTO:roadmap -->
 
-<!-- 案内人の絵 (クロード君)。各場面から use で呼ぶ -->
+<!-- 案内人の絵 (クロード君・ルールちゃん)。各場面から use で呼ぶ -->
 <svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
 <defs>
 <linearGradient id="g-02-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
 <linearGradient id="g-02-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-02-rl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
 <symbol id="cl-02-sad" viewBox="0 0 84 96">
 <ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
 <path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-02-ks)"/>
@@ -61,13 +62,22 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
 <path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
 </symbol>
+<symbol id="rl-02" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<rect x="8" y="14" width="68" height="74" rx="14" fill="url(#g-02-rl)"/>
+<circle cx="30" cy="46" r="6" fill="#fff"/><circle cx="54" cy="46" r="6" fill="#fff"/>
+<circle cx="31" cy="47" r="2.6" fill="#12224d"/><circle cx="55" cy="47" r="2.6" fill="#12224d"/>
+<path d="M32 66 Q42 76 52 66" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<rect x="22" y="2" width="40" height="16" rx="4" fill="#fff"/>
+<path d="M28 8 H56 M28 13 H48" stroke="hsl(280,58%,45%)" stroke-width="2" stroke-linecap="round"/>
+</symbol>
 </defs>
 </svg>
 
 <div class="titlebar"><div class="inner">
 <h1>02. 慣れてきたら</h1>
 <p class="lead">1 人で使うのに慣れてきたクロード君が、「やって」の取り違え・言い切りすぎ・「再現しない」・見張り忘れで失敗します。実行の合図・失敗の報告・確かめてから言う、の決まりを足します</p>
-<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 </div></div>
 
 <div class="wrap">
@@ -119,6 +129,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>実行を明示する語は、決まった一覧だけ (図は抜粋。「等」で広げない)</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-02" xlink:href="#rl-02"/></svg>
+<div class="bubble"><p>「実行は、決まった言葉で指示されてから」って、1 枚足しておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li><strong>実行を明示する語は、決まった一覧だけ</strong>。「決める」「OK」「進めて」「やって」「その案で」は、方針の合意であって、実行の許可ではない</li>
@@ -168,6 +183,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>報告は 3 つだけ。それぞれの直し方の結果も書く</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-02" xlink:href="#rl-02"/></svg>
+<div class="bubble"><p>「失敗したら、直し方を決めずに報告してね」って、1 枚足しておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>失敗に気づいたら、<strong>直し方を自分で決めない</strong>。起きたことを報告し、どう直すかの指示を待つ</li>
@@ -215,6 +235,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>言い切る前に、測る。測れなければ、そう書く</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-02" xlink:href="#rl-02"/></svg>
+<div class="bubble"><p>「確かめていないことは、断定しないでね」って、1 枚足しておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>コメント・記憶・一般論からの推測を、<strong>実測したかのように言い切らない</strong>。「〜のはず」「未確認だが」と書くか、断定する前に測る</li>
@@ -261,6 +286,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>赤い道 (閉じる) でなく、下の道 (仕様を疑う) を通る</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-02" xlink:href="#rl-02"/></svg>
+<div class="bubble"><p>「仕様も疑ってね」って、1 枚足しておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>「仕様だから不具合ではない」で閉じない。<strong>報告された動きを起こす仕様</strong>を探し、仕様・決定・課題・試験の期待を読んで、利用者の方針と食い違わないかを見る</li>
@@ -306,6 +336,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>成功かどうかは、成果物 (できたファイル・ログの終わりの行) で確かめる</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-02" xlink:href="#rl-02"/></svg>
+<div class="bubble"><p>「短い作業は、終わりの知らせを待つだけにしないでね」って、1 枚足しておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>

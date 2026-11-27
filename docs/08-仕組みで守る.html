@@ -42,6 +42,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <defs>
 <linearGradient id="g-08-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
 <linearGradient id="g-08-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-08-rl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
 <linearGradient id="g-08-hk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(215,78%,25%)"/><stop offset="1" stop-color="hsl(215,58%,55%)"/></linearGradient>
 <symbol id="cl-08-sad" viewBox="0 0 84 96">
 <ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
@@ -69,13 +70,22 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <path d="M32 62 H52" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
 <path d="M34 76 H50" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
 </symbol>
+<symbol id="rl-08" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<rect x="8" y="14" width="68" height="74" rx="14" fill="url(#g-08-rl)"/>
+<circle cx="30" cy="46" r="6" fill="#fff"/><circle cx="54" cy="46" r="6" fill="#fff"/>
+<circle cx="31" cy="47" r="2.6" fill="#12224d"/><circle cx="55" cy="47" r="2.6" fill="#12224d"/>
+<path d="M32 66 Q42 76 52 66" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<rect x="22" y="2" width="40" height="16" rx="4" fill="#fff"/>
+<path d="M28 8 H56 M28 13 H48" stroke="hsl(280,58%,45%)" stroke-width="2" stroke-linecap="round"/>
+</symbol>
 </defs>
 </svg>
 
 <div class="titlebar"><div class="inner">
 <h1>08. 仕組みで守る</h1>
 <p class="lead">書いたルールを、AI が守れないことがあります。そこで、破ろうとしたら自動で止める仕組み (フック) を足します。助っ人の「フックくん」と一緒に、英語の混入・失敗した編集の後の commit などを止めます</p>
-<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 </div></div>
 
 <div class="wrap">
@@ -129,6 +139,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>フックは、止める。ルールと一緒に、見直す</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-08" xlink:href="#rl-08"/></svg>
+<div class="bubble"><p>「書いても止まらないことは、仕組みに任せてね」って、フックで止めておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>日本語の応答のルールは、<strong>フックでも守らせる</strong>。ツールを使う前 (PreToolUse) に、直前の英語だけの文があれば止め、理由にその文を引用して、「日本語訳を本文に書いてから呼び直す」と伝える</li>
@@ -178,6 +193,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>止められるのは、失敗が会話の記録に載ったあと。同じ応答に並べると、フックは失敗を知れないので、並べない</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-08" xlink:href="#rl-08"/></svg>
+<div class="bubble"><p>「失敗した編集の後の commit は、通さないでね」って、フックで止めておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li><strong>Edit・Write と <code>git commit</code> を、同じ応答に並べない</strong>。結果を見てから、次の応答で commit する</li>
@@ -223,6 +243,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>フックの役目は 4 つ (止める・差し込む・点検する・整える)。動く場面は、本文の 5 つ</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-08" xlink:href="#rl-08"/></svg>
+<div class="bubble"><p>フックには、止める・差し込む・点検する、の 3 種類があるよ。使い分けてね。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>
@@ -274,6 +299,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>フックは、テストを先に。直したら、設定のコマンドそのままで試走する。設定の書き換えは、すぐ効くので、気をつける</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-08" xlink:href="#rl-08"/></svg>
+<div class="bubble"><p>「フックを変えるときは、テストと試走をしてね」って、このプロジェクトの決めに足しておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>

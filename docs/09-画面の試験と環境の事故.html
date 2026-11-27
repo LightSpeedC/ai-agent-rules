@@ -37,11 +37,12 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </ol></nav>
 <!-- /AUTO:roadmap -->
 
-<!-- 案内人の絵 (クロード君)。各場面から use で呼ぶ -->
+<!-- 案内人の絵 (クロード君・ルールちゃん)。各場面から use で呼ぶ -->
 <svg class="defs-only" width="0" height="0" aria-hidden="true" focusable="false">
 <defs>
 <linearGradient id="g-09-ck" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(18,78%,32%)"/><stop offset="1" stop-color="hsl(18,70%,62%)"/></linearGradient>
 <linearGradient id="g-09-ks" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(40,85%,38%)"/><stop offset="1" stop-color="hsl(48,90%,62%)"/></linearGradient>
+<linearGradient id="g-09-rl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
 <symbol id="cl-09-sad" viewBox="0 0 84 96">
 <ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
 <path d="M42 2 L45 10 L53 12 L45 15 L42 23 L39 15 L31 12 L39 10 Z" fill="url(#g-09-ks)"/>
@@ -60,13 +61,22 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <circle cx="22" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/><circle cx="62" cy="64" r="5" fill="hsl(350,80%,75%)" opacity="0.85"/>
 <path d="M32 68 Q42 82 52 68 Z" fill="#fff"/>
 </symbol>
+<symbol id="rl-09" viewBox="0 0 84 96">
+<ellipse cx="42" cy="92" rx="26" ry="3.5" fill="#1c2330" opacity="0.12"/>
+<rect x="8" y="14" width="68" height="74" rx="14" fill="url(#g-09-rl)"/>
+<circle cx="30" cy="46" r="6" fill="#fff"/><circle cx="54" cy="46" r="6" fill="#fff"/>
+<circle cx="31" cy="47" r="2.6" fill="#12224d"/><circle cx="55" cy="47" r="2.6" fill="#12224d"/>
+<path d="M32 66 Q42 76 52 66" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<rect x="22" y="2" width="40" height="16" rx="4" fill="#fff"/>
+<path d="M28 8 H56 M28 13 H48" stroke="hsl(280,58%,45%)" stroke-width="2" stroke-linecap="round"/>
+</symbol>
 </defs>
 </svg>
 
 <div class="titlebar"><div class="inner">
 <h1>09. 画面の試験と環境の事故</h1>
 <p class="lead">画面を持つ Windows アプリを作る人向けの章です。画面の試験は、人の操作に合わせます。試験で起こした窓は閉じ、時間の上限を付け、外へは送りません。クロード君の失敗から、決まりを足します</p>
-<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 </div></div>
 
 <div class="wrap">
@@ -108,6 +118,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>人の操作の時間と位置に合わせる</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-09" xlink:href="#rl-09"/></svg>
+<div class="bubble"><p>「画面の試験は、人の操作に合わせてね」って、スキルに入れておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>
@@ -160,6 +175,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <figcaption>控える → 閉じる → 数える。消す・戻すボタンは、押さない</figcaption>
 </figure>
 
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-09" xlink:href="#rl-09"/></svg>
+<div class="bubble"><p>「起こした窓は、起こした側が閉じてね」って、1 枚足しておくよ。</p></div>
+</div>
+
 <h3>足した決まり</h3>
 <ul>
 <li>起動した窓は、起動した側が必ず閉じる。<strong>起動する前に、窓の番号 (ハンドル) かプロセス番号を控える</strong>。閉じるときは、控えたその窓だけを閉じる。題名で探さない</li>
@@ -209,6 +229,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>1 本ごとに上限を付ける。超えたら、止めて次へ</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-09" xlink:href="#rl-09"/></svg>
+<div class="bubble"><p>「試験には、時間の上限を付けてね」って、スキルに入れておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>
@@ -260,6 +285,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 <figcaption>赤い道 (本物へ送る) でなく、下の道 (ローカルの受け口) を通る</figcaption>
 </figure>
+
+<div class="say">
+<svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-09" xlink:href="#rl-09"/></svg>
+<div class="bubble"><p>「外へ送る道具の試験は、送らない口を通してね」って、スキルに入れておくよ。</p></div>
+</div>
 
 <h3>足した決まり</h3>
 <ul>

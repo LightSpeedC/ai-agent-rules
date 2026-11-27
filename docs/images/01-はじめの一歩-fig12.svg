@@ -1,23 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 190" width="600" height="190" role="img" aria-label="先に別の道具が載せたファイルが commit に混ざる図と、commit にもパスを書く図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
-<defs>
-<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
-<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
-<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
-<linearGradient id="i4" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,30%,86%)"/><stop offset="1" stop-color="hsl(0,30%,97%)"/></linearGradient>
-</defs>
-	<rect width="100%" height="100%" fill="#ffffff"/>
-<text x="150" y="20" fill="#a51f22" font-size="14" text-anchor="middle">パスを書かずに commit</text>
-<rect x="20" y="30" width="80" height="34" rx="6" fill="url(#i1)"/><text x="60" y="52" fill="#fff" font-size="13" text-anchor="middle">a.ts</text>
-<rect x="110" y="30" width="80" height="34" rx="6" fill="url(#i1)"/><text x="150" y="52" fill="#fff" font-size="13" text-anchor="middle">b.ts</text>
-<rect x="200" y="30" width="80" height="34" rx="6" fill="url(#i2)"/><text x="240" y="52" fill="#fff" font-size="13" text-anchor="middle">c.ts</text>
-<text x="150" y="86" fill="#a51f22" font-size="13" text-anchor="middle">別の道具 (git mv など) が、</text>
-<text x="150" y="104" fill="#a51f22" font-size="13" text-anchor="middle">c.ts を先に載せていた → 一緒に入る</text>
-<text x="450" y="20" fill="#1d7a3c" font-size="14" text-anchor="middle">commit にもパスを書く</text>
-<rect x="320" y="30" width="80" height="34" rx="6" fill="url(#i3)"/><text x="360" y="52" fill="#fff" font-size="13" text-anchor="middle">a.ts</text>
-<rect x="410" y="30" width="80" height="34" rx="6" fill="url(#i3)"/><text x="450" y="52" fill="#fff" font-size="13" text-anchor="middle">b.ts</text>
-<rect x="500" y="30" width="80" height="34" rx="6" fill="#ffffff" stroke="#97a1ae" stroke-width="2" stroke-dasharray="5 4"/><text x="540" y="52" fill="#5a6472" font-size="13" text-anchor="middle">c.ts</text>
-<text x="450" y="86" fill="#1d7a3c" font-size="13" text-anchor="middle">git commit … -- a.ts b.ts</text>
-<text x="450" y="104" fill="#1d7a3c" font-size="13" text-anchor="middle">名指しした分だけが入る</text>
-<rect x="20" y="130" width="560" height="44" rx="8" fill="url(#i4)" stroke="#d9dfe8" stroke-width="2"/>
-<text x="300" y="157" fill="#1c2330" font-size="13" text-anchor="middle">add も commit も名指しし、commit の前に載せる一覧を見る</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="クロード君 (うれしい)">
+	<rect width="100%" height="100%" fill="#ffffff"/><use href="#cl-01-happy" xlink:href="#cl-01-happy"/></svg>

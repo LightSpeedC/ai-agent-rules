@@ -1,2 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="クロード君 (困っている)">
-	<rect width="100%" height="100%" fill="#ffffff"/><use href="#cl-08-sad" xlink:href="#cl-08-sad"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 230" width="620" height="230" role="img" aria-label="フックの場面と役目の図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+<defs>
+<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
+<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
+<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(93,78%,25%)"/><stop offset="1" stop-color="hsl(93,58%,45%)"/></linearGradient>
+<linearGradient id="i4" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
+</defs>
+	<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="10" y="10" width="290" height="96" rx="10" fill="url(#i1)"/><text x="155" y="34" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">道具を使う前 (止める)</text><text x="155" y="56" fill="#fff" font-size="12" text-anchor="middle">cd・sed・awk を止める / git add -A を止める</text><text x="155" y="74" fill="#fff" font-size="12" text-anchor="middle">画面の範囲を撮るのを止める</text><text x="155" y="92" fill="#fff" font-size="12" text-anchor="middle">引継ぎを復唱前に消すのを止める</text>
+<rect x="320" y="10" width="290" height="96" rx="10" fill="url(#i2)"/><text x="465" y="34" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">発言を受けたとき (差し込む)</text><text x="465" y="56" fill="#fff" font-size="12" text-anchor="middle">「止めて」の指示に、cron を確かめる注意 (06)</text><text x="465" y="74" fill="#fff" font-size="12" text-anchor="middle">題の色を付け替える注意 (07 の 2 章)</text><text x="465" y="92" fill="#fff" font-size="12" text-anchor="middle">止めはしない</text>
+<rect x="10" y="122" width="290" height="96" rx="10" fill="url(#i3)"/><text x="155" y="146" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">応答を終えるとき (点検する)</text><text x="155" y="168" fill="#fff" font-size="12" text-anchor="middle">選択肢の番号が、予約と合うか</text><text x="155" y="186" fill="#fff" font-size="12" text-anchor="middle">残った見張りのプロセスが無いか</text><text x="155" y="204" fill="#fff" font-size="12" text-anchor="middle">応答が日本語か</text>
+<rect x="320" y="122" width="290" height="96" rx="10" fill="url(#i4)"/><text x="465" y="146" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">始まり・書いた後 (差し込む・整える)</text><text x="465" y="168" fill="#fff" font-size="12" text-anchor="middle">記憶 (Obsidian) を差し込む</text><text x="465" y="186" fill="#fff" font-size="12" text-anchor="middle">会話の記録を写しに残す</text><text x="465" y="204" fill="#fff" font-size="12" text-anchor="middle">Write したファイルの文字コードを揃える</text>
+</svg>

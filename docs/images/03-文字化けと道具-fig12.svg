@@ -1,16 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 190" width="620" height="190" role="img" aria-label="止められたら、回避せず、2 回目で報告に切り替える図" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
-<defs>
-<linearGradient id="i1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
-<linearGradient id="i2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
-<linearGradient id="i3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
-<marker id="i4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
-</defs>
-	<rect width="100%" height="100%" fill="#ffffff"/>
-<rect x="10" y="62" width="130" height="50" rx="10" fill="url(#i2)"/><text x="75" y="92" fill="#fff" font-size="14" text-anchor="middle">止められた</text>
-<rect x="210" y="14" width="400" height="50" rx="10" fill="url(#i1)"/><text x="410" y="44" fill="#fff" font-size="14" text-anchor="middle">分割・エンコードで通す → 難読化。検知が強まる</text>
-<rect x="210" y="118" width="190" height="50" rx="10" fill="url(#i2)"/><text x="305" y="148" fill="#fff" font-size="14" text-anchor="middle">専用の道具を使う</text>
-<rect x="430" y="118" width="180" height="50" rx="10" fill="url(#i3)"/><text x="520" y="148" fill="#fff" font-size="14" text-anchor="middle">2 回で通らなければ報告</text>
-<path d="M140 78 Q175 40 208 40" fill="none" stroke="#a51f22" stroke-width="2.5" marker-end="url(#i4)"/>
-<path d="M140 96 Q175 143 208 143" fill="none" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
-<path d="M400 143 H428" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 96" width="84" height="96" role="img" aria-label="ルールちゃん">
+	<rect width="100%" height="100%" fill="#ffffff"/><use href="#rl-03" xlink:href="#rl-03"/></svg>
