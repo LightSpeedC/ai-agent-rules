@@ -68,7 +68,7 @@
 	<div class="inner">
 		<h1>p261126-01 Claude Code 勉強会 (ルール・スキル・フック) の資料 (読み物 9 本。プレゼンは後)</h1>
 		<p class="lead">このプロジェクトが持つ共通ルール・スキル・フックを、AI エージェント (特に Claude Code) を使う開発者の同僚に学んでもらう勉強会の資料として、読み物の HTML と、それを元にしたプレゼン用の HTML (後で pptx) を作る計画。入力: <code>rules/</code>・<code>skills/</code>・<code>tools/80_ops/claude-hooks/</code>・失敗の記録 (課題・調査)・共有ツールと ai-chat-lite の README (読むだけ)。出力: <code>docs/</code> の読み物 9 本・構成案・プレゼン 1 本の HTML と、共通の CSS・JS。</p>
-		<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-26</p>
+		<p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 	</div>
 </div>
 
@@ -246,7 +246,7 @@
 <li><span class="badge b-ok">済</span> <strong>素材の洗い出し</strong>: <code>rules/</code> ・ <code>skills/</code> ・ フックの一覧を、サブエージェント (読むだけ・役目の小さいモデル) で作る。数は実測で数え直す (フックは <code>settings.json</code> の登録数と、ファイル数を分ける)。失敗の実例は、課題・調査・フックの README から拾い、出典は課題番号で記録する。結果は <code>tmp/</code> に置き、使い終えたら消す</li>
 <li><span class="badge b-ok">済</span> <strong>見出しと図の下書き</strong> (上の「9 段階の下書き」に書いた。レビュー待ち): 9 段階の見出し・各段階の失敗の例・図の一覧を、この計画に追記して、利用者へ見せる前に、<code>rules-review</code> のレビューを通す (計画の更新。決まっていないことは、選択肢で聞く)</li>
 <li><span class="badge b-ok">済</span> <strong>共通の CSS・JS を作る</strong> (段階の色 st01〜st09 を共通 CSS に置いたのは、旗が 9 駅すべての色を要するため。章の見出し番号「01.1」は、手書きで通す) (<code>docs/css/style.css</code> と <code>docs/js/</code> の旗の JS)。読み物より先に要る。守る動き (矢印キーで進む・旗が段階の駅に立つ・JS 無効で縦に並ぶ・狭い幅で上端の横バーに切り替わる) は、JS の前に試験にする (JS 無効の試験は不要)。画面の確かめだけで済ませる部分は、その旨を記録する。旗の JS は、後のレビューの観点 (リーク・ハング) に入れる。代替色と <code>counter-reset</code> は、共通側に置かず各 HTML に書く</li>
-<li><span class="badge b-warn">着手</span> <strong>読み物の HTML を書く</strong> (01 は書いてレビュー済み。02・03 はレビュー済みで直した。04・05 はレビュー済みで直した。06 はレビュー済みで直した。07 はレビュー済みで直した。08 はレビュー済みで直した。09 はレビュー済みで直した。9 本そろった。構成案 ZZ-構成 は書いてレビュー依頼中) (9 本と構成案)。資料一覧・前へ/次へ/目次のバッジ・各章に図 1 点以上は、勉強会資料の決まりに従う。BOM 付き UTF-8 ・ LF (<code>convert-encoding --to html</code>)。<code>check-contrast</code> (共通 CSS・JS を含めて) で読めない箇所を 0 件にする。書いたら、README へ 1 本目のリンクと戻るリンクを張り、<code>html2md</code> ・ <code>check-markdown</code> を通す</li>
+<li><span class="badge b-warn">着手</span> <strong>読み物の HTML を書く</strong> (01 は書いてレビュー済み。02・03 はレビュー済みで直した。04・05 はレビュー済みで直した。06 はレビュー済みで直した。07 はレビュー済みで直した。08 はレビュー済みで直した。09 はレビュー済みで直した。9 本そろった。構成案 ZZ-構成 は書いてレビュー依頼中。11/27 に全章へルールちゃんの吹き出しを足し、レビューして直した) (9 本と構成案)。資料一覧・前へ/次へ/目次のバッジ・各章に図 1 点以上は、勉強会資料の決まりに従う。BOM 付き UTF-8 ・ LF (<code>convert-encoding --to html</code>)。<code>check-contrast</code> (共通 CSS・JS を含めて) で読めない箇所を 0 件にする。書いたら、README へ 1 本目のリンクと戻るリンクを張り、<code>html2md</code> ・ <code>check-markdown</code> を通す</li>
 <li><span class="badge b-none">未</span> <strong>レビュー</strong>: 子セッション <code>rules-review</code> に、漏れ・古い記述・誤り・図の食い違い・名前の扱い (460-A) を見せる。画面は自分で撮って見る (明るい配色で、配置・動き・「いまここ」の旗の位置。狭い幅 (旗が上端の横バーに切り替わる)・<code>prefers-reduced-motion</code> も撮る。JS 無効は撮らない)。撮るのは確かめる窓だけにする</li>
 <li><span class="badge b-none">未</span> <strong>プレゼン用の HTML を書く</strong> (<code>勉強会-プレゼン.html</code>)。同じレビューと確認を通す</li>
 <li><span class="badge b-warn">着手</span> <strong>root の README にプレゼンのリンクを足す</strong> (読み物と構成案の一覧 (AUTO:list) と、章の色相の配り直しは済み。<code>html2md</code> ・ <code>check-markdown</code> ・ <code>check-public</code> と、プレゼンのリンクは未)。README の章を 1 つ足し (469-A)、全章の色相を配り直す。章の中身は、参考の学習資料の README の一覧と同じ作り (<code>build-docs.ts</code> の <code>AUTO:list</code>。477-A)。README には、変わらない事実だけを書き、<code>docs/</code> に置く理由を 1 行足す (状態・「今は Pages にしない」は書かない)。<code>html2md</code> ・ <code>check-markdown</code> ・ <code>check-public</code> を通す。個人名・社名・メールアドレス・実体パスが無いかを、書いた本文で目視する</li>
@@ -286,6 +286,8 @@
 <li><strong>(11/26 の指示)</strong> <span class="badge b-ok">恒久</span><br>HTML の作りは、参考の学習資料 (JavaScript 入門) と共通ルールに合わせる。章の色は章ごとの虹色 (<code>.chNN</code>)、章番号は CSS カウンタ、前へ/次へ/目次は <code>doclink</code>、生成の道具 <code>tools/20_build/build-docs.ts</code>。SVG の箱は、単色にせず、下が暗く上が明るいグラデーション</li>
 <li><strong>474-A</strong> <span class="badge b-ok">恒久</span><br>段階 08 の画面の試験・環境の事故を、09「画面の試験と環境の事故」として切り出し、読み物は 9 本にする。色相は 9 つに配り直す (280 / 245 / 210 / 175 / 140 / 105 / 70 / 35 / 0)。08 はフックの話に絞る</li>
 <li><strong>473-A</strong> <span class="badge b-ok">恒久</span><br>読み物の順は、学ぶ人の成長の順 (小→大)。ツールとチャットは、必要になった段階の章として足し、全部で 8 本 (474-A で 9 本に) (01 はじめの一歩・02 慣れてきたら・03 文字化けと道具・04 課題と決めたことの管理・05 複数プロジェクトで使う・06 AI 同士がつながる・07 並べて動かす・08 仕組みで守る)</li>
+<li><strong>479-C</strong> <span class="badge b-ok">恒久</span><br>「いまここ」の旗は、旗をやめて、いまの駅の丸を大きくし、太い輪を付ける。旗が前の駅の丸に重なって見えにくかったため</li>
+<li><strong>(11/27 の指示)</strong> <span class="badge b-ok">恒久</span><br>各章は「クロード君の失敗 → ルールちゃんの一言 → 足した決まり (詳しい説明) → うまくいったクロード君」の順にする。一言の吹き出しは、「足した決まり」の直前に置く。言い回しは置き場で分ける: 共通ルール本体は「1 枚足しておくよ」、スキルは「スキルに入れておくよ」、フックは「フックで止めておくよ」、プロジェクトの決めは「このプロジェクトの決めに足しておくよ」。01〜09 の全 36 章に反映し、<code>rules-review</code> のレビューを通した (commit d0fc9ac)</li>
 <li><strong>470-A</strong> <span class="badge b-ok">恒久</span><br>読み物は、勉強会資料の決まり (light-tutorial) どおりファイルを分け (数は 473-A・474-A で 6 から 9 に)、構成案を付ける。旗の JS は共有の 1 本で、各ページの段階の印から位置を決める</li>
 <li><strong>469-A</strong> <span class="badge b-ok">恒久</span><br>README に <code>docs/</code> の章を 1 つ足す (<code>docs/</code> は <code>notes/</code> のカテゴリに当たらないため)。章が増えるので、README の虹色を配り直す</li>
 <li><strong>467-B</strong> <span class="badge b-ok">恒久</span><br>章の色相は、読み物の数に合わせる (473-A・474-A で 9 つ)。「全体像」は章にせず、ミニタイトルバーの扱いにする</li>
