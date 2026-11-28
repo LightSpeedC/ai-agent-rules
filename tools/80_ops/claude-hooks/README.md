@@ -2,7 +2,7 @@
 
 Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.claude/settings.json` がこのフォルダのファイルを直接指すので、コピーは要らない。
 
-> 📅 作成: 2026-10-03 / 更新: 2026-11-19
+> 📅 作成: 2026-10-03 / 更新: 2026-11-28
 
 [README](../../../README.md)
 
@@ -23,7 +23,7 @@ Claude Code のフック（SessionStart・Stop）を TypeScript で持つ。`~/.
 | `check-leftover-processes.ts` | このセッションが起こした `tail`・`grep`・見張りの形の powershell (`-Wait`・`-Tail`・`while`・`Start-Sleep`) が残っていれば、1 回だけ block して止めるよう促す。`tail` は `-f`・`-F`・`--follow` 付き、`grep` は `--line-buffered` 付きだけを見張りとみなす (パイプの途中の使い捨てを拾わないため)。本体 (claude-code の claude.exe) の子孫と、コマンド行にセッション ID を含む孤児を見る。親のいない見張りのうち、このセッションの本体より後に起きたものは、「別のセッションのものかもしれない」と 1 回だけ知らせる。親子と起動時刻は、共有 CLI の `psls --json` で取る（課題 i261111-06・i261114-04・i261111-08） | Stop |
 | `guard-commit-after-failed-edit.ts` | git commit の前に会話ログを読み、失敗したままの Edit・Write があれば deny し、理由にファイル名と解き方を書く。印は、失敗の後の同じファイルへの Edit・Write か Read が通れば解ける。通った commit より前の失敗は見ない。入力に作業の置き場 (`cwd`) があれば、その外のパスの失敗は数えない (worktree の子が親の checkout のパスで失敗しても止まらない)。フックが動く時点でディスクに無いパス・フォルダを指すパスの失敗も数えない (Read も Edit も通せず、印が解けずに commit が全部止まるため)。会話ログが読めなければ通す（課題 i261101-01・i261114-02・i261119-02） | PreToolUse（matcher `Bash\|PowerShell`） |
 | `guard-handoff-delete.ts` | 引継ぎ*.md を消す・移す・上書きする操作 (`Remove-Item`・`rm`・`del`・`git rm`・`Move-Item`・`mv`・`ren`・`>`・`Set-Content` 等。`psh -c`・`cmd /c` の中も見る) の前に、会話ログ全体の応答の本文に、そのファイルの全見出しがあるかを確かめ、無ければ deny する。見出しも復唱の行も、全角半角・強調・段・引用の違いを正規化して比べる。ファイルの更新より前の復唱は数えない。理由文に、足りない見出しを 3 件まで書く。PreToolUse の時点では、同じ応答でツールの前に書いた文が記録に無いため、復唱と削除を同じ応答に並べると止まる (止めたあとは、復唱を書いていれば、呼び直せば通る)。同じファイル・同じセッションで 3 回止めたら、4 回目は通して警告する (決定 451-B)。ファイルが無い・見出しが 0 件・会話ログが読めない・パスを解決できないときは通す。対象は、名前が 引継ぎ で始まる .md だけ (フォルダ名や名前の途中の 引継ぎ は対象外)。語は、コマンドの位置 (行頭・区切り・`-c`・`xargs` の後等) だけを見て、書き込み系 (`Set-Content`・`Out-File`・`tee`) は、書き込み先が同じ区切りの中にあるときだけ数える。止めた回数は、ファイルの更新時刻ごとに数え、復唱が通ったら消す。対象外 (数えないもの): Write・Edit ツール、追記 (`>>`・`Add-Content`・`tee -a`)、フォルダごと消す操作・`git clean`・`git stash -u`、パスが変数だけの書き方、コミットメッセージ・ヒアドキュメントの中の記述、`1>` のリダイレクト、空白を含む引用符つきの絶対パス、`cp`・`copy` の移動先、Git Bash 形式のパス (`/c/work/…`)。復唱の確かめは、見出しだけを並べても通る (本文の復唱は確かめられない)（課題 i261121-01、20260824-ai-pc-public の依頼 #2073） | PreToolUse（matcher `Bash\|PowerShell`） |
-| `guard-screen-capture.ts` | 画面の範囲を撮る呼び出し（`CopyFromScreen`・`GetDC(0)`・`GetWindowDC(GetDesktopWindow())`）があれば deny し、窓だけを写す書き方を理由に書く。見るのは、コマンドと、そこに出た ps1・psm1・cs の中身、スクリプト（ps1・psm1・cs・cmd・bat）への Write・Edit の中身。入力が読めなければ通す（課題 i261101-02） | PreToolUse（matcher `Bash\|PowerShell\|Write\|Edit`） |
+| `guard-screen-capture.ts` | 画面の範囲を撮る呼び出し（`CopyFromScreen`・`GetDC(0)`・`GetWindowDC(GetDesktopWindow())`）があれば deny し、窓だけを写す書き方を理由に書く。見るのは、コマンドと、そこに出た ps1・psm1・cs の中身、スクリプト（ps1・psm1・cs・cmd・bat）への Write・Edit の中身。入力が読めなければ通す（課題 i261101-02）。例外は 1 本だけ: コマンドに出た `tools/40_test/vm-shot.ps1` は中身を検査しない（VM の画面の試験用。ユーザが用意し、専用 VM での全画面の撮影を許可した。課題 i261128-01・決定 480-A）。名前の似たものと置き場の違うもの、Write・Edit は従来どおり止める | PreToolUse（matcher `Bash\|PowerShell\|Write\|Edit`） |
 | `guard-utc-in-record.ts` | 作業記録（パスに `_config/` を含む `.html`）への Write・Edit で、新しく書く分に `UTC` があり同じ行に `JST` が無ければ deny し、JST に換算して書くよう理由に書く。元からある行（Edit の old_string）は見ない。入力が読めなければ通す（課題 i261108-01） | PreToolUse（matcher `Edit\|Write`） |
 | `guard-generated-md.ts` | `.md` への Write・Edit で、同じフォルダに同じ名前の `.html`（正本）があれば deny し、正本を直して html2md で作り直すよう理由に書く。`.html` が無い `.md`（手で書く Markdown）は通す。入力が読めなければ通す（課題 i261108-03） | PreToolUse（matcher `Edit\|Write`） |
 | `guard-git-add-all.ts` | Bash・PowerShell の `git add -A`・`--all`・`.` と `git commit -a`、`-- <パス>` でファイルを名指ししない `git commit` を deny し、名指しするよう理由に書く。引用符の中 (コミットメッセージ) の語は見ない（課題 i261109-01） | PreToolUse（matcher `Bash\|PowerShell`） |

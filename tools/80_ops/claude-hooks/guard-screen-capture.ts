@@ -8,6 +8,7 @@
 //   - Bash ・ PowerShell のコマンドの文字列と、そこに出た .ps1 ・ .psm1 ・ .cs のファイルの中身
 //   - Write の content ・ Edit の new_string。書く先がスクリプト (.ps1 ・ .psm1 ・ .cs ・ .cmd ・ .bat) のときだけ
 // 止め方 (8-A): deny。入力が読めないときは通す。
+// 例外 (i261128-01・480-A): コマンドに出た tools/40_test/vm-shot.ps1 は中身を検査しない (下の VM_SHOT_EXEMPT)。
 
 import { readFileSync } from 'node:fs';
 import { argv } from 'node:process';
@@ -21,6 +22,12 @@ export const PATTERNS: { name: string; re: RegExp }[] = [
 const SCRIPT_EXT = /\.(ps1|psm1|cs|cmd|bat)$/i;
 const SCRIPT_IN_COMMAND = /[^\s"'`]+\.(ps1|psm1|cs)\b/gi;
 
+// 例外 (課題 i261128-01・決定 480-A): VM の画面の試験用に、ユーザが用意した撮影スクリプト 1 本だけは、
+// コマンドに出ても中身を検査しない。専用 VM でユーザが全画面の撮影を許可した (fm の依頼)。
+// 区切りを / に揃えたあと、`tools/40_test/vm-shot.ps1` で終わり、直前が区切りか行頭のものだけ。
+// 名前の似たもの (not-vm-shot.ps1) と、置き場の違うものは対象外。コマンド自体の語と、Write ・ Edit の検査は変えない。
+const VM_SHOT_EXEMPT = /(^|\/)tools\/40_test\/vm-shot\.ps1$/i;
+
 export function findWord(text: string): string | undefined {
 	return PATTERNS.find((p) => p.re.test(text))?.name;
 }
@@ -32,6 +39,7 @@ export function check(toolName: string, toolInput: Record<string, unknown>, read
 		const w = findWord(command);
 		if (w) return { word: w, where: 'コマンド' };
 		for (const m of command.matchAll(SCRIPT_IN_COMMAND)) {
+			if (VM_SHOT_EXEMPT.test(m[0].replaceAll('\\', '/'))) continue;
 			const body = readText(m[0]);
 			const w2 = body === undefined ? undefined : findWord(body);
 			if (w2) return { word: w2, where: m[0] };
