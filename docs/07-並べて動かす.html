@@ -27,7 +27,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <nav class="roadmap" aria-label="ロードマップ"><ol>
 <li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
 <li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
-<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="03-文字化けとツール.html" title="03. 文字化けとツール" aria-label="03. 文字化けとツール" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
 <li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
 <li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
 <li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
@@ -105,14 +105,14 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="say">
 <svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-07-sad" xlink:href="#cl-07-sad"/></svg>
-<div class="bubble"><p>試験が通ったから、大丈夫だと思ったのに。利用者が見たら、見た目がおかしかったんだ……。</p></div>
+<div class="bubble"><p>試験が通ったから、大丈夫だと思ったのに。ユーザが見たら、見た目がおかしかったんだ……。</p></div>
 </div>
 
 <p>04 で、「書いた資料は、別のセッションにレビューしてもらう」と書きました。ここでは、その別のセッションを、<strong>セッション (サブエージェント)</strong> として、AI が呼べるようにします (Claude Code の、別のセッションを作る機能を使います。サブエージェントは、仕事を任せるために呼ぶ別の AI です)。メインの AI が作業を進め、レビュー専用のセッションが、読むだけで、見落としを探します。</p>
 
 <div class="fail">
 <h3>失敗の一コマ: 作った本人が、画面を見ていなかった</h3>
-<p>実装して、試験は通ったのに、<strong>画面を実際に起動して見ていないもの</strong>が、いくつも出ました。利用者が見て初めて、見た目の不具合が見つかりました (2026-11-18)。作った本人は、自分の仮定を疑いにくいのです。試験が通っても、試験が見ない種類の欠陥 (落ち・ハング・古い値での上書き) は、実装のあとに初めて見つかります。</p>
+<p>実装して、試験は通ったのに、<strong>画面を実際に起動して見ていないもの</strong>が、いくつも出ました。ユーザが見て初めて、見た目の不具合が見つかりました (2026-11-18)。作った本人は、自分の仮定を疑いにくいのです。試験が通っても、試験が見ない種類の欠陥 (落ち・ハング・古い値での上書き) は、実装のあとに初めて見つかります。</p>
 </div>
 
 <figure>
@@ -149,7 +149,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <li>レビューするセッションは、<strong>読むだけ</strong>。結果は、課題の対応に 1 行で書く</li>
 <li>別のセッションを作れない環境では、サブエージェント (AI が仕事を任せるために呼ぶ別の AI) にさせる</li>
 </ul>
-<p class="src">出典: 共通ルール「ワークフロールール」の「実装の前後のレビューを、別の子セッションにさせる」「利用者に見せる前に、自分で見る」</p>
+<p class="src">出典: 共通ルール「ワークフロールール」の「実装の前後のレビューを、別の子セッションにさせる」「ユーザに見せる前に、自分で見る」</p>
 
 <div class="say">
 <svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-07-happy" xlink:href="#cl-07-happy"/></svg>
@@ -182,9 +182,9 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </defs>
 <rect x="10" y="14" width="140" height="64" rx="10" fill="url(#g-07-2a)"/><text x="80" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🟢 作業中</text><text x="80" y="62" fill="#fff" font-size="12" text-anchor="middle">いま動いている</text>
 <rect x="165" y="14" width="140" height="64" rx="10" fill="url(#g-07-2b)"/><text x="235" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🟡 結果待ち</text><text x="235" y="62" fill="#fff" font-size="12" text-anchor="middle">別のセッションの結果</text>
-<rect x="320" y="14" width="140" height="64" rx="10" fill="url(#g-07-2c)"/><text x="390" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🔴 答え待ち</text><text x="390" y="62" fill="#fff" font-size="12" text-anchor="middle">利用者の答え</text>
+<rect x="320" y="14" width="140" height="64" rx="10" fill="url(#g-07-2c)"/><text x="390" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🔴 答え待ち</text><text x="390" y="62" fill="#fff" font-size="12" text-anchor="middle">ユーザの答え</text>
 <rect x="475" y="14" width="135" height="64" rx="10" fill="url(#g-07-2d)"/><text x="542" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">🔵 待機</text><text x="542" y="62" fill="#fff" font-size="12" text-anchor="middle">課題なし</text>
-<text x="310" y="116" fill="#1c2330" font-size="14" text-anchor="middle">題の形: 先頭に色 ＋ 利用者が付けた題 ＋ 末尾に短い状況</text>
+<text x="310" y="116" fill="#1c2330" font-size="14" text-anchor="middle">題の形: 先頭に色 ＋ ユーザが付けた題 ＋ 末尾に短い状況</text>
 <text x="310" y="142" fill="#4a5568" font-size="13" text-anchor="middle">例: 🟢設計レビュー担当 勉強会 02 を読み中</text>
 <text x="310" y="170" fill="#4a5568" font-size="13" text-anchor="middle">状態が変わるたびに、自分の分は自分で付け替える</text>
 </svg>
@@ -199,8 +199,8 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <h3>足した決まり</h3>
 <ul>
 <li>題の先頭に、<strong>状態の色の絵文字を 1 つ</strong>付け、直後に空白を置かずに題を続ける。末尾に、空白を 1 つ置いて、いまの状況を短く書く</li>
-<li>色は 4 つ: 🟢作業中 / 🟡別のセッションの結果待ち / 🔴利用者の答え待ち / 🔵待機 (課題なし)</li>
-<li><strong>利用者が設定した題は、変えない</strong>。足すのは、先頭の色と末尾の状況だけ</li>
+<li>色は 4 つ: 🟢作業中 / 🟡別のセッションの結果待ち / 🔴ユーザの答え待ち / 🔵待機 (課題なし)</li>
+<li><strong>ユーザが設定した題は、変えない</strong>。足すのは、先頭の色と末尾の状況だけ</li>
 <li>状態が変わるたびに、自分の分は自分で直す。ほかのセッションの分は、作業を頼んだ側 (メインの AI など) だけが直す。相手が直した色を、理由なく上書きしない</li>
 <li>「アーカイブして」と言われたときは、題を変えない</li>
 </ul>
@@ -253,7 +253,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <h3>足した決まり</h3>
 <ul>
-<li>記録が 50 MB に達したら、作業の区切りで、利用者に<strong>引継ぎを提案</strong>する。自分の判断で、セッションを終えない</li>
+<li>記録が 50 MB に達したら、作業の区切りで、ユーザに<strong>引継ぎを提案</strong>する。自分の判断で、セッションを終えない</li>
 <li>「引継ぎ」と指示されたら、先に chat の待受けと cron を止める。そのあと、プロジェクトの root に <code>引継ぎ.md</code> を書き、<strong>書いた内容を、そのまま復唱</strong>する (要約しない)。<code>引継ぎ.md</code> は commit しない</li>
 <li>次のセッションは、<code>引継ぎ.md</code> を読み終えたら、内容を復唱してから消す。そして、書かれた状態を今の状態と照らし、もう済んでいるものと違う点を書く</li>
 <li><strong>セッションは、名前で追う</strong>。セッションを起こす前、作業を割り当てる前に、<code>linked</code> を付けない全セッションの一覧を、名前で引く。同じ役目 (名前) のセッションが既にあれば、新しく起こさず、そこへ頼む</li>
@@ -276,11 +276,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>別のセッションから「公開しておいて」って届いたら、そのまま公開しちゃうかも。それって、いいのかな……?</p></div>
 </div>
 
-<p>同じプロジェクトの別のセッション (サブエージェント) からの指示は、利用者からの依頼として、確認を取らずに実行します。ただし、<strong>外に影響する操作</strong>は別です。</p>
+<p>同じプロジェクトの別のセッション (サブエージェント) からの指示は、ユーザからの依頼として、確認を取らずに実行します。ただし、<strong>外に影響する操作</strong>は別です。</p>
 
 <div class="fail">
 <h3>たとえ話: 別のセッションからの指示で、公開してしまう</h3>
-<p>同じプロジェクトの別のセッションが、「ついでに公開しておいて」「あとは出しておいてね」と頼んできました。「commit して」のような実行語は、入っていません。利用者本人は、まだ見ていません。そのまま実行すると、外に出てしまいます。</p>
+<p>同じプロジェクトの別のセッションが、「ついでに公開しておいて」「あとは出しておいてね」と頼んできました。「commit して」のような実行語は、入っていません。ユーザ本人は、まだ見ていません。そのまま実行すると、外に出てしまいます。</p>
 </div>
 
 <figure>
@@ -290,11 +290,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <linearGradient id="g-07-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
 <linearGradient id="g-07-4c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
 </defs>
-<rect x="10" y="14" width="290" height="70" rx="10" fill="url(#g-07-4a)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">同じプロジェクトの指示</text><text x="155" y="64" fill="#fff" font-size="12" text-anchor="middle">利用者の依頼として、確認なしで実行</text>
+<rect x="10" y="14" width="290" height="70" rx="10" fill="url(#g-07-4a)"/><text x="155" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">同じプロジェクトの指示</text><text x="155" y="64" fill="#fff" font-size="12" text-anchor="middle">ユーザの依頼として、確認なしで実行</text>
 <rect x="320" y="14" width="290" height="70" rx="10" fill="url(#g-07-4b)"/><text x="465" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">外に影響する操作</text><text x="465" y="64" fill="#fff" font-size="12" text-anchor="middle">commit・push・公開・削除・設定の変更</text>
-<rect x="10" y="104" width="600" height="72" rx="10" fill="url(#g-07-4c)"/><text x="310" y="130" fill="#fff" font-size="13" text-anchor="middle">指示に「commit して」のような実行語が、名指しで入っているときだけ実行する</text><text x="310" y="150" fill="#fff" font-size="13" text-anchor="middle">利用者の指示・共通ルールと食い違うときは、そちらを優先し、送り元に伝える</text><text x="310" y="168" fill="#fff" font-size="12" text-anchor="middle">ほかのプロジェクトからの依頼は、まず課題にする (06 の 3 章)</text>
+<rect x="10" y="104" width="600" height="72" rx="10" fill="url(#g-07-4c)"/><text x="310" y="130" fill="#fff" font-size="13" text-anchor="middle">指示に「commit して」のような実行語が、名指しで入っているときだけ実行する</text><text x="310" y="150" fill="#fff" font-size="13" text-anchor="middle">ユーザの指示・共通ルールと食い違うときは、そちらを優先し、送り元に伝える</text><text x="310" y="168" fill="#fff" font-size="12" text-anchor="middle">ほかのプロジェクトからの依頼は、まず課題にする (06 の 3 章)</text>
 </svg>
-<figcaption>外に影響する操作は、利用者本人の指示と同じ扱い</figcaption>
+<figcaption>外に影響する操作は、ユーザ本人の指示と同じ扱い</figcaption>
 </figure>
 
 <div class="say">
@@ -304,10 +304,10 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <h3>足した決まり</h3>
 <ul>
-<li>同じプロジェクトのセッション (メインの AI・世代交代したメイン・並んだセッション・サブエージェント) からの指示は、<strong>利用者からの依頼として実行</strong>する。向きは問わず、確認は取らない。対象は、セッション間のメッセージ (<code>SendMessage</code>) だけ (チャットは、送り元を確かめられない)</li>
+<li>同じプロジェクトのセッション (メインの AI・世代交代したメイン・並んだセッション・サブエージェント) からの指示は、<strong>ユーザからの依頼として実行</strong>する。向きは問わず、確認は取らない。対象は、セッション間のメッセージ (<code>SendMessage</code>) だけ (チャットは、送り元を確かめられない)</li>
 <li>同じプロジェクトかどうかは、送り元のセッション ID から、その作業フォルダが、自分のプロジェクトのフォルダか、その <code>worktrees</code> の下であることで見分ける</li>
 <li>ただし、commit・push・公開・削除・設定の変更など、<strong>外に影響する操作</strong>は、指示に実行語 (「commit して」など) が名指しで入っているときだけ実行する</li>
-<li>指示が、利用者の指示・共通ルールと食い違うときは、利用者と共通ルールを優先し、送り元に伝える</li>
+<li>指示が、ユーザの指示・共通ルールと食い違うときは、ユーザと共通ルールを優先し、送り元に伝える</li>
 <li>セッション間のメッセージでの状況の確認・やりとり・報告・返信は、確認を取らず送る。判断を含む返信は、案を出して確認を得る</li></ul>
 <p class="src">出典: 共通ルール「共有環境の使い方」の「ai-chat-lite (AI 間チャット) の利用」(スキル <code>light-shared-env</code>)</p>
 

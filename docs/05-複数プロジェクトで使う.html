@@ -27,7 +27,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <nav class="roadmap" aria-label="ロードマップ"><ol>
 <li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
 <li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
-<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="03-文字化けとツール.html" title="03. 文字化けとツール" aria-label="03. 文字化けとツール" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
 <li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
 <li><a class="station here" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う (いまここ)" aria-label="05. 複数プロジェクトで使う (いまここ)" aria-current="page" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
 <li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
@@ -85,7 +85,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="titlebar"><div class="inner">
 <h1>05. 複数プロジェクトで使う</h1>
-<p class="lead">プロジェクトが増え、ルールも道具も共有するようになると、読み込みが重くなり、他のプロジェクトとぶつかります。1 章で助っ人の「スキルちゃん」が加わります。ルールの分け方・他プロジェクトとの付き合い方・公開前の確かめ・画面の取り合いの決まりを足します</p>
+<p class="lead">プロジェクトが増え、ルールもツールも共有するようになると、読み込みが重くなり、他のプロジェクトとぶつかります。1 章で助っ人の「スキルちゃん」が加わります。ルールの分け方・他プロジェクトとの付き合い方・公開前の確かめ・画面の取り合いの決まりを足します</p>
 <p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 </div></div>
 
@@ -164,14 +164,14 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="say">
 <svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-05-sad" xlink:href="#cl-05-sad"/></svg>
-<div class="bubble"><p>共有の道具がうまく動かなかったから、別のやり方で済ませちゃった。作った人には、まだ言ってない……。</p></div>
+<div class="bubble"><p>共有のツールがうまく動かなかったから、別のやり方で済ませちゃった。作った人には、まだ言ってない……。</p></div>
 </div>
 
-<p>プロジェクトが増えると、道具・ルール・フックは、他のプロジェクトのものを借りて使います。借りたものを、使う側が勝手に直すと、持ち主の知らない所で、動きが変わります。</p>
+<p>プロジェクトが増えると、ツール・ルール・フックは、他のプロジェクトのものを借りて使います。借りたものを、使う側が勝手に直すと、持ち主の知らない所で、動きが変わります。</p>
 
 <div class="fail">
 <h3>失敗の一コマ: 回り道で済ませかけた</h3>
-<p>共有の道具に、<strong>0 件で止まる動き</strong>や、<strong>答え待ちの案まで決定として移す動き</strong>がありました。作り手に知らせず、回り道 (手で書き換える・別の道具で代わりにする) で今の作業を済ませかけました。作り手は、困りごとを知らないままです。</p>
+<p>共有のツールに、<strong>0 件で止まる動き</strong>や、<strong>答え待ちの案まで決定として移す動き</strong>がありました。作り手に知らせず、回り道 (手で書き換える・別のツールで代わりにする) で今の作業を済ませかけました。作り手は、困りごとを知らないままです。</p>
 </div>
 
 <figure>
@@ -182,7 +182,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <linearGradient id="g-05-2c" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
 <marker id="m-05-2a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
 </defs>
-<rect x="10" y="68" width="150" height="50" rx="10" fill="url(#g-05-2b)"/><text x="85" y="98" fill="#fff" font-size="14" text-anchor="middle">道具で困った</text>
+<rect x="10" y="68" width="150" height="50" rx="10" fill="url(#g-05-2b)"/><text x="85" y="98" fill="#fff" font-size="14" text-anchor="middle">ツールで困った</text>
 <rect x="215" y="12" width="395" height="50" rx="10" fill="url(#g-05-2a)"/><text x="412" y="42" fill="#fff" font-size="14" text-anchor="middle">相手のファイルを直す・回り道で済ませる</text>
 <rect x="215" y="124" width="190" height="62" rx="10" fill="url(#g-05-2c)"/><text x="310" y="150" fill="#fff" font-size="13" text-anchor="middle">サンプルを自分の</text><text x="310" y="168" fill="#fff" font-size="13" text-anchor="middle">tmp/ に置く</text>
 <rect x="430" y="124" width="180" height="62" rx="10" fill="url(#g-05-2b)"/><text x="520" y="150" fill="#fff" font-size="13" text-anchor="middle">作り手に、チャットで</text><text x="520" y="168" fill="#fff" font-size="13" text-anchor="middle">困った場面と形を依頼</text>
@@ -200,10 +200,10 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <h3>足した決まり</h3>
 <ul>
-<li>読み書き・探索・実行は、<strong>カレントのプロジェクトのフォルダの中</strong>に限る。外を見る必要が出たら、対象のパスと目的を示して、先に確認する。ただし、用途を決めた共有の道具 (03 の <code>ai-agent-tools</code> など) は、確認なしで使ってよい</li>
+<li>読み書き・探索・実行は、<strong>カレントのプロジェクトのフォルダの中</strong>に限る。外を見る必要が出たら、対象のパスと目的を示して、先に確認する。ただし、用途を決めた共有のツール (03 の <code>ai-agent-tools</code> など) は、確認なしで使ってよい</li>
 <li>「調べてよい」は、<strong>読み取りの許可</strong>。書き込み・修正・実行には、別に許可を取る</li>
-<li><strong>他のプロジェクトのファイルは、直さない</strong>。直す必要が見つかったら、サンプルを自分の <code>tmp/</code> に置き、チャットで依頼する (チャットは 06 で出てきます。依頼文には絶対パスを書かず、置き場は利用者が相手に伝える)</li>
-<li><strong>共有の道具で困ったら、回り道で済ませず、作り手のプロジェクトに依頼する</strong>。足りない機能・誤った動き・使いにくさが当たる。回り道で済ませたときも、依頼は出す</li>
+<li><strong>他のプロジェクトのファイルは、直さない</strong>。直す必要が見つかったら、サンプルを自分の <code>tmp/</code> に置き、チャットで依頼する (チャットは 06 で出てきます。依頼文には絶対パスを書かず、置き場はユーザが相手に伝える)</li>
+<li><strong>共有のツールで困ったら、回り道で済ませず、作り手のプロジェクトに依頼する</strong>。足りない機能・誤った動き・使いにくさが当たる。回り道で済ませたときも、依頼は出す</li>
 <li>文書や応答から、他のプロジェクトのファイルへ、リンクを貼らない (プロジェクト名を文中に書くのはよい)</li>
 </ul>
 <p class="src">出典: 共通ルール「セキュリティルール」の「プロジェクトフォルダ外へのアクセス」(2026-11-11 の出来事)</p>
@@ -240,7 +240,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <rect x="215" y="14" width="190" height="84" rx="10" fill="url(#g-05-3a)"/><text x="310" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">実体パス</text><text x="310" y="64" fill="#fff" font-size="12" text-anchor="middle">ユーザフォルダの形の</text><text x="310" y="82" fill="#fff" font-size="12" text-anchor="middle">パス</text>
 <rect x="420" y="14" width="190" height="84" rx="10" fill="url(#g-05-3c)"/><text x="515" y="42" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">追跡されるファイル</text><text x="515" y="64" fill="#fff" font-size="12" text-anchor="middle">除外したつもりのものが</text><text x="515" y="82" fill="#fff" font-size="12" text-anchor="middle">入っていないか</text>
 <text x="310" y="132" fill="#1c2330" font-size="14" text-anchor="middle">最初の commit の前に、公開してもよい内容かを確かめて、報告する</text>
-<text x="310" y="158" fill="#4a5568" font-size="13" text-anchor="middle">共有の道具 (check-public など) で、機械的に確かめる</text>
+<text x="310" y="158" fill="#4a5568" font-size="13" text-anchor="middle">共有のツール (check-public など) で、機械的に確かめる</text>
 <text x="310" y="180" fill="#4a5568" font-size="13" text-anchor="middle">2 回目からは、新しく追跡に入るファイルだけを見ればよい</text>
 </svg>
 <figcaption>最初の commit の前に、3 つを確かめる</figcaption>
@@ -256,13 +256,13 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <li><strong>最初の commit の前に</strong>、公開しても困らない内容かを確かめて、報告する (個人名・メールアドレス・認証情報、実体パス、追跡されているファイル)</li>
 <li>2 回目以降は、<strong>新しく追跡に入るファイル</strong>だけを見ればよい</li>
 <li>メッセージに件数を書くなら、書く直前に数える。メッセージの誤りは、履歴の積み直しが要る</li>
-<li>確かめる道具は、共有の <code>check-public</code>。HTML の色が読めるかは <code>check-contrast</code>、Markdown の崩れは <code>check-markdown</code> (どれも ai-agent-tools の共有の道具)</li>
+<li>確かめるツールは、共有の <code>check-public</code>。HTML の色が読めるかは <code>check-contrast</code>、Markdown の崩れは <code>check-markdown</code> (どれも ai-agent-tools の共有のツール)</li>
 </ul>
 <p class="src">出典: 共通ルール「確認と失敗」の「コミット前の確認」</p>
 
 <div class="say">
 <svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-05-happy" xlink:href="#cl-05-happy"/></svg>
-<div class="bubble"><p>最初の commit の前に、「公開しても大丈夫?」を道具で確かめて、報告するよ!</p></div>
+<div class="bubble"><p>最初の commit の前に、「公開しても大丈夫?」をツールで確かめて、報告するよ!</p></div>
 </div>
 </section>
 

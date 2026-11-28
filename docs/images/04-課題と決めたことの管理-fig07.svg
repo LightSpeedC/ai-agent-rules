@@ -7,7 +7,7 @@
 </defs>
 	<rect width="100%" height="100%" fill="#ffffff"/>
 <rect x="10" y="14" width="290" height="46" rx="10" fill="url(#i1)"/><text x="155" y="42" fill="#fff" font-size="14" text-anchor="middle">記憶で番号を書く → 取り違え</text>
-<rect x="320" y="14" width="290" height="46" rx="10" fill="url(#i2)"/><text x="465" y="42" fill="#fff" font-size="14" text-anchor="middle">道具で番号を取る (<tspan font-family="Consolas, monospace">issue choice next</tspan>)</text>
+<rect x="320" y="14" width="290" height="46" rx="10" fill="url(#i2)"/><text x="465" y="42" fill="#fff" font-size="14" text-anchor="middle">ツールで番号を取る (<tspan font-family="Consolas, monospace">issue choice next</tspan>)</text>
 <path d="M465 60 V82" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
 <text x="465" y="102" fill="#1c2330" font-size="14" text-anchor="middle">別のセッションをまたいでも重ならない</text>
 <rect x="10" y="124" width="600" height="60" rx="10" fill="url(#i3)"/>

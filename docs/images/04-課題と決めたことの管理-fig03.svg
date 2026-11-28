@@ -8,7 +8,7 @@
 	<rect width="100%" height="100%" fill="#ffffff"/>
 <rect x="10" y="20" width="170" height="64" rx="10" fill="url(#i1)"/><text x="95" y="48" fill="#fff" font-size="14" text-anchor="middle">① 1 つのファイル</text><text x="95" y="68" fill="#fff" font-size="12" text-anchor="middle">issues.html に全部</text>
 <rect x="225" y="20" width="170" height="64" rx="10" fill="url(#i2)"/><text x="310" y="48" fill="#fff" font-size="14" text-anchor="middle">② 1 件が長くなる</text><text x="310" y="68" fill="#fff" font-size="12" text-anchor="middle">読む・直す・追うがつらい</text>
-<rect x="440" y="20" width="170" height="64" rx="10" fill="url(#i3)"/><text x="525" y="48" fill="#fff" font-size="14" text-anchor="middle">③ 1 件 1 ファイル</text><text x="525" y="68" fill="#fff" font-size="12" text-anchor="middle">issue の道具で読み書き</text>
+<rect x="440" y="20" width="170" height="64" rx="10" fill="url(#i3)"/><text x="525" y="48" fill="#fff" font-size="14" text-anchor="middle">③ 1 件 1 ファイル</text><text x="525" y="68" fill="#fff" font-size="12" text-anchor="middle">issue のツールで読み書き</text>
 <path d="M180 52 H223" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
 <path d="M395 52 H438" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
 <text x="310" y="124" fill="#1c2330" font-size="14" text-anchor="middle">状態は 3 段階: <tspan font-weight="700">未</tspan> → <tspan font-weight="700">着手</tspan> → <tspan font-weight="700">済</tspan></text>

@@ -27,7 +27,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <nav class="roadmap" aria-label="ロードマップ"><ol>
 <li><a class="station here" href="01-はじめの一歩.html" title="01. はじめの一歩 (いまここ)" aria-label="01. はじめの一歩 (いまここ)" aria-current="page" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
 <li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
-<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="03-文字化けとツール.html" title="03. 文字化けとツール" aria-label="03. 文字化けとツール" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
 <li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
 <li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
 <li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
@@ -237,11 +237,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="fail">
 <h3>失敗の一コマ: 載せる気の無いファイルが commit に混ざる</h3>
-<p>変更はしていても、commit する予定ではなかったファイルが、commit に入っていました。別の道具が、先に「ステージ」(git add で載せた状態) に載せていたからです。気づかずにまとめて commit すると、載せる気の無いものまで履歴に残ります。同じ形で、2 回起きました。</p>
+<p>変更はしていても、commit する予定ではなかったファイルが、commit に入っていました。別のツールが、先に「ステージ」(git add で載せた状態) に載せていたからです。気づかずにまとめて commit すると、載せる気の無いものまで履歴に残ります。同じ形で、2 回起きました。</p>
 </div>
 
 <figure>
-<svg viewBox="0 0 600 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="先に別の道具が載せたファイルが commit に混ざる図と、commit にもパスを書く図">
+<svg viewBox="0 0 600 190" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="先に別のツールが載せたファイルが commit に混ざる図と、commit にもパスを書く図">
 <defs>
 <linearGradient id="g-01-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
 <linearGradient id="g-01-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(25,78%,25%)"/><stop offset="1" stop-color="hsl(25,58%,45%)"/></linearGradient>
@@ -252,7 +252,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <rect x="20" y="30" width="80" height="34" rx="6" fill="url(#g-01-4a)"/><text x="60" y="52" fill="#fff" font-size="13" text-anchor="middle">a.ts</text>
 <rect x="110" y="30" width="80" height="34" rx="6" fill="url(#g-01-4a)"/><text x="150" y="52" fill="#fff" font-size="13" text-anchor="middle">b.ts</text>
 <rect x="200" y="30" width="80" height="34" rx="6" fill="url(#g-01-4b)"/><text x="240" y="52" fill="#fff" font-size="13" text-anchor="middle">c.ts</text>
-<text x="150" y="86" fill="#a51f22" font-size="13" text-anchor="middle">別の道具 (git mv など) が、</text>
+<text x="150" y="86" fill="#a51f22" font-size="13" text-anchor="middle">別のツール (git mv など) が、</text>
 <text x="150" y="104" fill="#a51f22" font-size="13" text-anchor="middle">c.ts を先に載せていた → 一緒に入る</text>
 <text x="450" y="20" fill="#1d7a3c" font-size="14" text-anchor="middle">commit にもパスを書く</text>
 <rect x="320" y="30" width="80" height="34" rx="6" fill="url(#g-01-4c)"/><text x="360" y="52" fill="#fff" font-size="13" text-anchor="middle">a.ts</text>

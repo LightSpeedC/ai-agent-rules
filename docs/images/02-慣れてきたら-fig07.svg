@@ -10,6 +10,6 @@
 <rect x="440" y="20" width="170" height="64" rx="10" fill="url(#i1)"/><text x="525" y="48" fill="#fff" font-size="14" text-anchor="middle">③ 選べる直し方</text><text x="525" y="68" fill="#fff" font-size="12" text-anchor="middle">戻す・進める・別の形</text>
 <path d="M180 52 H223" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i3)"/>
 <path d="M395 52 H438" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i3)"/>
-<rect x="150" y="108" width="320" height="38" rx="10" fill="url(#i2)"/><text x="310" y="132" fill="#fff" font-size="14" text-anchor="middle">選ぶのは、利用者。急いで消さない</text>
+<rect x="150" y="108" width="320" height="38" rx="10" fill="url(#i2)"/><text x="310" y="132" fill="#fff" font-size="14" text-anchor="middle">選ぶのは、ユーザ。急いで消さない</text>
 <path d="M525 84 V108 H470" fill="none" stroke="#4a5568" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#i3)"/>
 </svg>

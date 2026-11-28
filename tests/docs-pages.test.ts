@@ -12,7 +12,7 @@ const docs = join(root, 'docs');
 const pages = readdirSync(docs).filter((f) => /^\d\d-.*\.html$/.test(f)).sort();
 
 const CANON = [
-	'01-はじめの一歩.html', '02-慣れてきたら.html', '03-文字化けと道具.html', '04-課題と決めたことの管理.html', '05-複数プロジェクトで使う.html',
+	'01-はじめの一歩.html', '02-慣れてきたら.html', '03-文字化けとツール.html', '04-課題と決めたことの管理.html', '05-複数プロジェクトで使う.html',
 	'06-AI同士がつながる.html', '07-並べて動かす.html', '08-仕組みで守る.html', '09-画面の試験と環境の事故.html',
 ];
 

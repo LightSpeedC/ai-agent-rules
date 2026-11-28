@@ -27,7 +27,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <nav class="roadmap" aria-label="ロードマップ"><ol>
 <li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
 <li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
-<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="03-文字化けとツール.html" title="03. 文字化けとツール" aria-label="03. 文字化けとツール" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
 <li><a class="station here" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理 (いまここ)" aria-label="04. 課題と決めたことの管理 (いまここ)" aria-current="page" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
 <li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
 <li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
@@ -80,7 +80,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </div></div>
 
 <div class="wrap">
-<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="03-文字化けと道具.html" aria-label="前へ" title="03. 文字化けと道具" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="05-複数プロジェクトで使う.html" aria-label="次へ" title="05. 複数プロジェクトで使う" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="03-文字化けとツール.html" aria-label="前へ" title="03. 文字化けとツール" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="05-複数プロジェクトで使う.html" aria-label="次へ" title="05. 複数プロジェクトで使う" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
 <!-- AUTO:toc -->
 <nav class="toc"><ol>
 <li class="ch01"><a href="#ch01">課題は、1 件 1 ファイルで持つ</a></li>
@@ -98,7 +98,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>やることをメモしておいたら、増えすぎて、どこに何を書いたか分からなくなっちゃった……。</p></div>
 </div>
 
-<p>「これから解決すること」は、課題 (issue) として記録します。最初は、1 つの HTML ファイル (<code>issues.html</code>) に全部を書きました。1 件が長くなってくると、1 件ごとに別のファイルへ分ける方式 (<code>issue</code>) に移してよい、と決めました。いまは、<code>issue</code> という共有の道具 (03 の仲間です) で読み書きします。</p>
+<p>「これから解決すること」は、課題 (issue) として記録します。最初は、1 つの HTML ファイル (<code>issues.html</code>) に全部を書きました。1 件が長くなってくると、1 件ごとに別のファイルへ分ける方式 (<code>issue</code>) に移してよい、と決めました。いまは、<code>issue</code> という共有のツール (03 の仲間です) で読み書きします。</p>
 
 <div class="fail">
 <h3>たとえ話: 1 つのファイルに、全部を書く</h3>
@@ -115,7 +115,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </defs>
 <rect x="10" y="20" width="170" height="64" rx="10" fill="url(#g-04-1a)"/><text x="95" y="48" fill="#fff" font-size="14" text-anchor="middle">① 1 つのファイル</text><text x="95" y="68" fill="#fff" font-size="12" text-anchor="middle">issues.html に全部</text>
 <rect x="225" y="20" width="170" height="64" rx="10" fill="url(#g-04-1b)"/><text x="310" y="48" fill="#fff" font-size="14" text-anchor="middle">② 1 件が長くなる</text><text x="310" y="68" fill="#fff" font-size="12" text-anchor="middle">読む・直す・追うがつらい</text>
-<rect x="440" y="20" width="170" height="64" rx="10" fill="url(#g-04-1c)"/><text x="525" y="48" fill="#fff" font-size="14" text-anchor="middle">③ 1 件 1 ファイル</text><text x="525" y="68" fill="#fff" font-size="12" text-anchor="middle">issue の道具で読み書き</text>
+<rect x="440" y="20" width="170" height="64" rx="10" fill="url(#g-04-1c)"/><text x="525" y="48" fill="#fff" font-size="14" text-anchor="middle">③ 1 件 1 ファイル</text><text x="525" y="68" fill="#fff" font-size="12" text-anchor="middle">issue のツールで読み書き</text>
 <path d="M180 52 H223" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-04-1a)"/>
 <path d="M395 52 H438" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-04-1a)"/>
 <text x="310" y="124" fill="#1c2330" font-size="14" text-anchor="middle">状態は 3 段階: <tspan font-weight="700">未</tspan> → <tspan font-weight="700">着手</tspan> → <tspan font-weight="700">済</tspan></text>
@@ -132,7 +132,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <h3>足した決まり</h3>
 <ul>
-<li>課題は <code>notes/40_issues/</code> に置き、グループ (章) で束ねる。移す前は <code>issues.html</code> の 1 ファイル、移したあとは 1 件 1 ファイル (<code>issue</code> で読み書き)。<strong>移行は、利用者に頼まれてから</strong>始め、移したあとは元の方式へ戻さない。移す前に、課題の状態が正しいかを確かめる</li>
+<li>課題は <code>notes/40_issues/</code> に置き、グループ (章) で束ねる。移す前は <code>issues.html</code> の 1 ファイル、移したあとは 1 件 1 ファイル (<code>issue</code> で読み書き)。<strong>移行は、ユーザに頼まれてから</strong>始め、移したあとは元の方式へ戻さない。移す前に、課題の状態が正しいかを確かめる</li>
 <li>グループごと片付いたら、保管 (<code>archived</code> フォルダ) へ移す。移すときに、本文を書き換えない</li>
 <li>番号は <strong><code>i</code> ＋ 立てた日 (<code>yymmdd</code>) ＋ 連番</strong> (<code>i261126-01</code>)</li>
 <li>状態は<strong>未・着手・済</strong>の 3 段階。済んだ課題は消さず、済で残す</li>
@@ -157,11 +157,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>「1-A」って書いたら、前の話の「1-A」と、同じ番号になっちゃった……。</p></div>
 </div>
 
-<p>直し方が 2 つ以上あるとき、AI は、実装する前に、案を並べて利用者に選んでもらいます。案には、<strong>A・B・C…</strong>と記号を付けます。案の記号は、ア・イ・ウで聞くことも、1・2・3 で聞くこともあり、そろっていませんでした。そこで、<strong>ルールにして、A・B・C に落ち着きました</strong>。決める点が複数あるときは、<code>1-A</code>・<code>2-B</code> のように番号を振ります。こうすると、「1 は A、2 は B で」と、一部だけ答えられます。</p>
+<p>直し方が 2 つ以上あるとき、AI は、実装する前に、案を並べてユーザに選んでもらいます。案には、<strong>A・B・C…</strong>と記号を付けます。案の記号は、ア・イ・ウで聞くことも、1・2・3 で聞くこともあり、そろっていませんでした。そこで、<strong>ルールにして、A・B・C に落ち着きました</strong>。決める点が複数あるときは、<code>1-A</code>・<code>2-B</code> のように番号を振ります。こうすると、「1 は A、2 は B で」と、一部だけ答えられます。</p>
 
 <div class="fail">
 <h3>失敗の一コマ: 選択肢の番号が重なる</h3>
-<p>複数の案件を同時に進めていると、番号が重なります。一覧を見ずに、<strong>記憶や見当で番号を書いて</strong>、別の項目と取り違えました。また、題を「番号 問い」(コロンなし) と書いたため、道具が使った番号として数えませんでした。番号の重複は、振り返りの記録にも残っています。選んだ結果は、決定として 1 件 1 ファイルに残し (<code>issue decide</code>)、番号の取り違えを防ぎます。</p>
+<p>複数の案件を同時に進めていると、番号が重なります。一覧を見ずに、<strong>記憶や見当で番号を書いて</strong>、別の項目と取り違えました。また、題を「番号 問い」(コロンなし) と書いたため、ツールが使った番号として数えませんでした。番号の重複は、振り返りの記録にも残っています。選んだ結果は、決定として 1 件 1 ファイルに残し (<code>issue decide</code>)、番号の取り違えを防ぎます。</p>
 </div>
 
 <figure>
@@ -173,14 +173,14 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <marker id="m-04-2a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#4a5568"/></marker>
 </defs>
 <rect x="10" y="14" width="290" height="46" rx="10" fill="url(#g-04-2a)"/><text x="155" y="42" fill="#fff" font-size="14" text-anchor="middle">記憶で番号を書く → 取り違え</text>
-<rect x="320" y="14" width="290" height="46" rx="10" fill="url(#g-04-2b)"/><text x="465" y="42" fill="#fff" font-size="14" text-anchor="middle">道具で番号を取る (<tspan font-family="Consolas, monospace">issue choice next</tspan>)</text>
+<rect x="320" y="14" width="290" height="46" rx="10" fill="url(#g-04-2b)"/><text x="465" y="42" fill="#fff" font-size="14" text-anchor="middle">ツールで番号を取る (<tspan font-family="Consolas, monospace">issue choice next</tspan>)</text>
 <path d="M465 60 V82" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-04-2a)"/>
 <text x="465" y="102" fill="#1c2330" font-size="14" text-anchor="middle">別のセッションをまたいでも重ならない</text>
 <rect x="10" y="124" width="600" height="60" rx="10" fill="url(#g-04-2c)"/>
 <text x="310" y="150" fill="#fff" font-size="14" text-anchor="middle">案を出す前に、その直前の 1 行へ「課題番号と題」を書く。推す案を A に。なぜ推すかを 1 行添える</text>
 <text x="310" y="171" fill="#fff" font-size="13" text-anchor="middle">恒久対策と暫定対策は分けて書く。「何もしない」は案に混ぜない</text>
 </svg>
-<figcaption>番号は、道具が取る。案を出すときの書き方も決まっている</figcaption>
+<figcaption>番号は、ツールが取る。案を出すときの書き方も決まっている</figcaption>
 </figure>
 
 <div class="say">
@@ -193,7 +193,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <li>解決できる案が 2 つ以上あれば、<strong>実装する前に、案を提示して選んでもらう</strong>。独断で 1 つを選ばない</li>
 <li>案の記号は、<strong>A・B・C…にそろえる</strong> (ア・イ・ウや 1・2・3 は使わない)。<strong>推す案を A</strong> にする。なぜ推すかを 1 行添える</li>
 <li>決める点が複数あるときは、<code>1-A</code> <code>2-B</code> の形で番号を振る。複数の案件を同時に進めるときは、<strong>案件をまたいで通し番号</strong>にする</li>
-<li>番号は、<code>issue</code> の決定の仕組みに移したプロジェクトでは、<strong>道具 (<code>issue choice next</code>) で取る</strong>。移していないプロジェクトは、会話の中の最大の番号に 1 を足す。どちらも、一覧を出してから指し、記憶や見当で書かない</li>
+<li>番号は、<code>issue</code> の決定の仕組みに移したプロジェクトでは、<strong>ツール (<code>issue choice next</code>) で取る</strong>。移していないプロジェクトは、会話の中の最大の番号に 1 を足す。どちらも、一覧を出してから指し、記憶や見当で書かない</li>
 <li>選んだ結果は、決定として 1 件 1 ファイルに残す (<code>issue decide</code>)。決定の題は <strong><code>番号: 問い</code></strong> (コロンあり) の形で書く</li>
 <li>恒久対策と暫定対策を分けて書く。同じ事象が再発するなら暫定。解決しない案 (何もしない・一部だけ直す) は、選択肢に混ぜない</li>
 </ul>
@@ -201,7 +201,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="say">
 <svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-04-happy" xlink:href="#cl-04-happy"/></svg>
-<div class="bubble"><p>番号は道具で取って、案の前に「何の決めることか」を 1 行で書くね。おすすめは、いつも A!</p></div>
+<div class="bubble"><p>番号はツールで取って、案の前に「何の決めることか」を 1 行で書くね。おすすめは、いつも A!</p></div>
 </div>
 </section>
 
@@ -217,7 +217,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="fail">
 <h3>たとえ話: 作ってから、計画を書く</h3>
-<p>作り終えたあとで穴が見つかると、手戻りは大きくなります。もう 1 つ、聞くことの順番にも決まりがあります。<strong>決めることを、先に全部聞く</strong>。作業の途中で、決めることを聞くために止めると、その間ずっと、利用者を待たせます。</p>
+<p>作り終えたあとで穴が見つかると、手戻りは大きくなります。もう 1 つ、聞くことの順番にも決まりがあります。<strong>決めることを、先に全部聞く</strong>。作業の途中で、決めることを聞くために止めると、その間ずっと、ユーザを待たせます。</p>
 </div>
 
 <figure>
@@ -271,7 +271,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>計画を書いて「承認してください」って出したら、あとから漏れが見つかって……。</p></div>
 </div>
 
-<p>自分で書いたものの漏れには、自分では気づきにくいものです。課題・計画・決定・調査などの資料は、利用者へ見せる前に、<strong>別のセッション (レビュー専用)</strong> に読んでもらいます。レビューする側は、読むだけです。実行・試験・ファイルの変更はしません。</p>
+<p>自分で書いたものの漏れには、自分では気づきにくいものです。課題・計画・決定・調査などの資料は、ユーザへ見せる前に、<strong>別のセッション (レビュー専用)</strong> に読んでもらいます。レビューする側は、読むだけです。実行・試験・ファイルの変更はしません。</p>
 
 <div class="fail">
 <h3>失敗の一コマ: レビューの前に、承認を待つ</h3>
@@ -279,7 +279,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </div>
 
 <figure>
-<svg viewBox="0 0 620 170" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="書いた資料を、レビュー専用のセッションに読んでもらってから利用者に見せる図">
+<svg viewBox="0 0 620 170" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="書いた資料を、レビュー専用のセッションに読んでもらってからユーザに見せる図">
 <defs>
 <linearGradient id="g-04-4a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(210,78%,25%)"/><stop offset="1" stop-color="hsl(210,58%,55%)"/></linearGradient>
 <linearGradient id="g-04-4b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(280,78%,25%)"/><stop offset="1" stop-color="hsl(280,58%,55%)"/></linearGradient>
@@ -288,7 +288,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </defs>
 <rect x="10" y="20" width="150" height="56" rx="10" fill="url(#g-04-4a)"/><text x="85" y="54" fill="#fff" font-size="14" text-anchor="middle">資料を書く</text>
 <rect x="235" y="20" width="170" height="56" rx="10" fill="url(#g-04-4b)"/><text x="320" y="46" fill="#fff" font-size="14" text-anchor="middle">レビュー専用の</text><text x="320" y="66" fill="#fff" font-size="14" text-anchor="middle">別のセッション</text>
-<rect x="480" y="20" width="130" height="56" rx="10" fill="url(#g-04-4c)"/><text x="545" y="54" fill="#fff" font-size="14" text-anchor="middle">利用者に見せる</text>
+<rect x="480" y="20" width="130" height="56" rx="10" fill="url(#g-04-4c)"/><text x="545" y="54" fill="#fff" font-size="14" text-anchor="middle">ユーザに見せる</text>
 <path d="M160 48 H233" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-04-4a)"/>
 <path d="M405 48 H478" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-04-4a)"/>
 <text x="320" y="112" fill="#1c2330" font-size="14" text-anchor="middle">漏れ・食い違い・古い記述・根拠のない断定・番号や数の誤りを見る</text>
@@ -304,10 +304,10 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <h3>足した決まり</h3>
 <ul>
-<li>課題・決定・計画・調査・仕様の資料・試験のスクリプトと結果などを書いたら、<strong>利用者へ見せる前</strong>に、レビュー専用のセッションに読んでもらう</li>
+<li>課題・決定・計画・調査・仕様の資料・試験のスクリプトと結果などを書いたら、<strong>ユーザへ見せる前</strong>に、レビュー専用のセッションに読んでもらう</li>
 <li>実装の<strong>前</strong>には、課題と計画の漏れをレビューしてもらう。実装の<strong>後</strong>、試験の前には、ソースをレビューしてもらう</li>
 <li>返ってきた指摘は、<strong>書いた側が 1 件ずつ</strong>、起きうるか・直すべきかを確かめる。直すものは直し、直さないものは条件を記録する</li>
-<li>返らないときは「レビュー未了」と記録して先へ進んでよい。ただし、利用者に見せる資料は、未了のまま見せない</li>
+<li>返らないときは「レビュー未了」と記録して先へ進んでよい。ただし、ユーザに見せる資料は、未了のまま見せない</li>
 </ul>
 <p class="src">出典: 共通ルール「ワークフロールール」の「書いた資料は、見せる前にレビューを通す」「実装の前後のレビューを、別の子セッションにさせる」</p>
 
@@ -320,6 +320,6 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </section>
 
 </div>
-<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="03-文字化けと道具.html" aria-label="前へ" title="03. 文字化けと道具" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="05-複数プロジェクトで使う.html" aria-label="次へ" title="05. 複数プロジェクトで使う" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="03-文字化けとツール.html" aria-label="前へ" title="03. 文字化けとツール" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="05-複数プロジェクトで使う.html" aria-label="次へ" title="05. 複数プロジェクトで使う" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
 </body>
 </html>

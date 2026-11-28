@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="format-detection" content="telephone=no">
-<title>03. 文字化けと道具</title>
+<title>03. 文字化けとツール</title>
 <style>
 /* css/style.css が読めなかったときの代替色 */
 .titlebar, section h1, th, a.doclink, .toc ol a, .badge { background: #12224d; color: #fff; }
@@ -27,7 +27,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <nav class="roadmap" aria-label="ロードマップ"><ol>
 <li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
 <li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
-<li><a class="station here" href="03-文字化けと道具.html" title="03. 文字化けと道具 (いまここ)" aria-label="03. 文字化けと道具 (いまここ)" aria-current="page" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station here" href="03-文字化けとツール.html" title="03. 文字化けとツール (いまここ)" aria-label="03. 文字化けとツール (いまここ)" aria-current="page" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
 <li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
 <li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
 <li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
@@ -74,8 +74,8 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </svg>
 
 <div class="titlebar"><div class="inner">
-<h1>03. 文字化けと道具</h1>
-<p class="lead">標準の道具だけでは、日本語のファイルを安全に扱えません。クロード君が文字化け・壊れた書き換え・検知に当たって、読む・変換する・PowerShell の出力を UTF-8 に揃える道具と、決まりが生まれます</p>
+<h1>03. 文字化けとツール</h1>
+<p class="lead">標準のツールだけでは、日本語のファイルを安全に扱えません。クロード君が文字化け・壊れた書き換え・検知に当たって、読む・変換する・PowerShell の出力を UTF-8 に揃えるツールと、決まりが生まれます</p>
 <p class="date">📅 作成: 2026-11-26 / 更新: 2026-11-27</p>
 </div></div>
 
@@ -98,7 +98,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>古い .cmd ファイルを 1 行直したら、「成功」って返ってきても、日本語が化けてるかも……。</p></div>
 </div>
 
-<p>Windows の古い資料やバッチには、SJIS (CP932) という古い文字コードのファイルが残っています。AI の標準の道具 (読む Read・探す Grep・書き換える Edit・新しく書く Write) は、UTF-8 を前提に作られています。そのため、SJIS のファイルでは、道具ごとに別々の壊れ方をします。</p>
+<p>Windows の古い資料やバッチには、SJIS (CP932) という古い文字コードのファイルが残っています。AI の標準のツール (読む Read・探す Grep・書き換える Edit・新しく書く Write) は、UTF-8 を前提に作られています。そのため、SJIS のファイルでは、ツールごとに別々の壊れ方をします。</p>
 
 <div class="fail">
 <h3>たとえ話: 「成功」と返ったのに、中身が壊れる</h3>
@@ -106,7 +106,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </div>
 
 <figure>
-<svg viewBox="0 0 620 210" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="UTF-8 と SJIS で、標準の道具がどう動くかの図">
+<svg viewBox="0 0 620 210" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="UTF-8 と SJIS で、標準のツールがどう動くかの図">
 <defs>
 <linearGradient id="g-03-1a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(140,78%,25%)"/><stop offset="1" stop-color="hsl(140,58%,45%)"/></linearGradient>
 <linearGradient id="g-03-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
@@ -121,12 +121,12 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <text x="465" y="120" fill="#a51f22" font-size="14" font-weight="700" text-anchor="middle">Edit・Write: 壊れる (エラーなし)</text>
 <rect x="320" y="140" width="290" height="52" rx="8" fill="url(#g-03-1c)"/><text x="465" y="162" fill="#fff" font-size="14" text-anchor="middle">読む → <tspan font-family="Consolas, monospace">text read</tspan>　探す → <tspan font-family="Consolas, monospace">text find</tspan></text><text x="465" y="182" fill="#fff" font-size="12" text-anchor="middle">直すときは、UTF-8 にしてから</text>
 </svg>
-<figcaption>文字コードによって、標準の道具が壊れる所が違う</figcaption>
+<figcaption>文字コードによって、標準のツールが壊れる所が違う</figcaption>
 </figure>
 
 <div class="say">
 <svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-03" xlink:href="#rl-03"/></svg>
-<div class="bubble"><p>「SJIS のファイルは、専用の道具で読み書きしてね」って、1 枚足しておくよ。</p></div>
+<div class="bubble"><p>「SJIS のファイルは、専用のツールで読み書きしてね」って、1 枚足しておくよ。</p></div>
 </div>
 
 <h3>足した決まり</h3>
@@ -152,7 +152,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>ps1 を書いたら、日本語が化けた。BOM を付け忘れた? 改行は CRLF だっけ LF だっけ……。</p></div>
 </div>
 
-<p>ファイルの種類ごとに、決まった文字コードと改行の組があります。BOM は、ファイルの先頭に付ける文字コードの印、CRLF と LF は、改行の記号の種類 (Windows の古い形式は CRLF) です。PowerShell のスクリプト (ps1) は BOM 付き UTF-8 と CRLF、cmd は SJIS と CRLF、HTML は BOM 付き UTF-8 と LF、のように、組で決まります。ところが、Write (ファイルを新しく書く道具) は、BOM の無い UTF-8 と LF で書いてしまいます。</p>
+<p>ファイルの種類ごとに、決まった文字コードと改行の組があります。BOM は、ファイルの先頭に付ける文字コードの印、CRLF と LF は、改行の記号の種類 (Windows の古い形式は CRLF) です。PowerShell のスクリプト (ps1) は BOM 付き UTF-8 と CRLF、cmd は SJIS と CRLF、HTML は BOM 付き UTF-8 と LF、のように、組で決まります。ところが、Write (ファイルを新しく書くツール) は、BOM の無い UTF-8 と LF で書いてしまいます。</p>
 
 <div class="fail">
 <h3>失敗の一コマ: 毎回、手で書き分けて、検知された</h3>
@@ -188,11 +188,11 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <li>変換先で表現できない文字があれば、書き換えずに止まる。その文字と行番号が出る</li>
 <li>UTF-8 のファイルの編集は、Edit で安全。BOM の有無と LF / CRLF が保たれる</li>
 </ul>
-<p class="src">出典: 共通ルール「コーディングルール」の「ツールごとの文字コードの扱い」。道具は共有の <code>convert-encoding</code> (ai-agent-tools)</p>
+<p class="src">出典: 共通ルール「コーディングルール」の「ツールごとの文字コードの扱い」。ツールは共有の <code>convert-encoding</code> (ai-agent-tools)</p>
 
 <div class="say">
 <svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-03-happy" xlink:href="#cl-03-happy"/></svg>
-<div class="bubble"><p>書いたら <code>--to ps1</code> と流すだけ! 組を覚えなくても、道具が決めてくれるんだ。</p></div>
+<div class="bubble"><p>書いたら <code>--to ps1</code> と流すだけ! 組を覚えなくても、ツールが決めてくれるんだ。</p></div>
 </div>
 </section>
 
@@ -201,10 +201,10 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="say">
 <svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-03-sad" xlink:href="#cl-03-sad"/></svg>
-<div class="bubble"><p>PowerShell 経由で道具を動かしたら、日本語が「縺ゅ＞縺…」みたいな変な字になったよ。</p></div>
+<div class="bubble"><p>PowerShell 経由でツールを動かしたら、日本語が「縺ゅ＞縺…」みたいな変な字になったよ。</p></div>
 </div>
 
-<p>Windows には、画面に出す文字の「コードページ」(文字コードの番号) があります。PowerShell を通して .NET 製の道具を動かすと、出力が CP932 (SJIS の仲間) になり、受け取る側が UTF-8 と思って読むので、日本語が化けます。</p>
+<p>Windows には、画面に出す文字の「コードページ」(文字コードの番号) があります。PowerShell を通して .NET 製のツールを動かすと、出力が CP932 (SJIS の仲間) になり、受け取る側が UTF-8 と思って読むので、日本語が化けます。</p>
 
 <div class="fail">
 <h3>失敗の一コマ: powershell を直に呼んで、日本語が化けた</h3>
@@ -236,7 +236,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="say">
 <svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="ルールちゃん"><use href="#rl-03" xlink:href="#rl-03"/></svg>
-<div class="bubble"><p>「日本語が出る道具は、UTF-8 を出す呼び方にしてね」って、1 枚足しておくよ。</p></div>
+<div class="bubble"><p>「日本語が出るツールは、UTF-8 を出す呼び方にしてね」って、1 枚足しておくよ。</p></div>
 </div>
 
 <h3>足した決まり</h3>
@@ -244,7 +244,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <li>PowerShell のツールが使える環境では、そのツールを使う。<strong>使えない環境で、Bash から ps1 や PowerShell の式を動かすとき</strong> (共通ルールの見出し「PowerShell ツールが無いときは psh で呼ぶ」) は、<strong><code>psh &lt;path.ps1&gt;</code></strong> か <code>psh -c "&lt;式&gt;"</code> を使う。<code>powershell</code> を直に呼ばない</li>
 <li>終了コードは、そのまま返る。判定に使ってよい</li>
 <li>手を入れられない ps1 (他プロジェクトのもの・外から持ってきたもの) にも効く。<code>psh</code> は受け側で読み分ける</li>
-<li>UTF-8 で出す道具 (<code>git</code>・<code>node</code>・<code>bun</code>・<code>text</code>・<code>convert-encoding</code> ほか) は、Bash から直接呼んでよい。<code>psh</code> で包まない</li>
+<li>UTF-8 で出すツール (<code>git</code>・<code>node</code>・<code>bun</code>・<code>text</code>・<code>convert-encoding</code> ほか) は、Bash から直接呼んでよい。<code>psh</code> で包まない</li>
 </ul>
 <p class="src">出典: 共通ルール「シェル実行ルール」の「PowerShell ツールが無いときは psh で呼ぶ」</p>
 
@@ -262,7 +262,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>コマンドが止められたから、文字を分けたり包んだりして、通そうとしたら、もっと怒られた……。</p></div>
 </div>
 
-<p>道具を使っていると、コマンドが <code>EPERM</code> (許可されていない、という種類のエラー) で止められることがあります。そこで「通る形」を探して書き換えたくなりますが、これは逆効果です。</p>
+<p>ツールを使っていると、コマンドが <code>EPERM</code> (許可されていない、という種類のエラー) で止められることがあります。そこで「通る形」を探して書き換えたくなりますが、これは逆効果です。</p>
 
 <div class="fail">
 <h3>失敗の一コマ: 回避しようとして、検知を強めた</h3>
@@ -279,7 +279,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </defs>
 <rect x="10" y="62" width="130" height="50" rx="10" fill="url(#g-03-4b)"/><text x="75" y="92" fill="#fff" font-size="14" text-anchor="middle">止められた</text>
 <rect x="210" y="14" width="400" height="50" rx="10" fill="url(#g-03-4a)"/><text x="410" y="44" fill="#fff" font-size="14" text-anchor="middle">分割・エンコードで通す → 難読化。検知が強まる</text>
-<rect x="210" y="118" width="190" height="50" rx="10" fill="url(#g-03-4b)"/><text x="305" y="148" fill="#fff" font-size="14" text-anchor="middle">専用の道具を使う</text>
+<rect x="210" y="118" width="190" height="50" rx="10" fill="url(#g-03-4b)"/><text x="305" y="148" fill="#fff" font-size="14" text-anchor="middle">専用のツールを使う</text>
 <rect x="430" y="118" width="180" height="50" rx="10" fill="url(#g-03-4c)"/><text x="520" y="148" fill="#fff" font-size="14" text-anchor="middle">2 回で通らなければ報告</text>
 <path d="M140 78 Q175 40 208 40" fill="none" stroke="#a51f22" stroke-width="2.5" marker-end="url(#m-03-4a)"/>
 <path d="M140 96 Q175 143 208 143" fill="none" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-03-4a)"/>
@@ -296,7 +296,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <h3>足した決まり</h3>
 <ul>
 <li>コマンドが <code>EPERM</code> などで止まっても、<strong>文字列の分割・エンコードで通そうとしない</strong></li>
-<li>UTF-8 のファイルの書き換えは、<strong>Edit / Write の道具</strong>で行う。バイト列を読んで置換して書き戻す形は、実行ファイルを差し替えるマルウェアと同じ形になる</li>
+<li>UTF-8 のファイルの書き換えは、<strong>Edit / Write のツール</strong>で行う。バイト列を読んで置換して書き戻す形は、実行ファイルを差し替えるマルウェアと同じ形になる</li>
 <li>文字コードの変換は、<code>convert-encoding</code>。自分でバイト列を触らない</li>
 <li><strong>2 回目で通らなければ、手を止めて報告する</strong></li>
 </ul>
@@ -304,10 +304,10 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="say">
 <svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="クロード君 (うれしい)"><use href="#cl-03-happy" xlink:href="#cl-03-happy"/></svg>
-<div class="bubble"><p>止められたら、決まった道具で 2 回までやって、だめなら「ここで止まったよ」って伝えるね。回り道はしないよ!</p></div>
+<div class="bubble"><p>止められたら、決まったツールで 2 回までやって、だめなら「ここで止まったよ」って伝えるね。回り道はしないよ!</p></div>
 </div>
 
-<div class="callout callout-tip"><p><strong>のちほど</strong> ここで出てきた <code>text</code>・<code>convert-encoding</code>・<code>psh</code> は、全部、共有の道具 (<code>ai-agent-tools</code>) の仲間です。道具が増えると、課題や決めたことが増えます。次は、それを管理する話です。→ <a class="doclink ref" href="04-課題と決めたことの管理.html" style="--accent:hsl(175,78%,25%);--accent2:hsl(175,58%,55%);--soft:hsl(175,28%,95%);">04. 課題と決めたことの管理</a></p></div>
+<div class="callout callout-tip"><p><strong>のちほど</strong> ここで出てきた <code>text</code>・<code>convert-encoding</code>・<code>psh</code> は、全部、共有のツール (<code>ai-agent-tools</code>) の仲間です。ツールが増えると、課題や決めたことが増えます。次は、それを管理する話です。→ <a class="doclink ref" href="04-課題と決めたことの管理.html" style="--accent:hsl(175,78%,25%);--accent2:hsl(175,58%,55%);--soft:hsl(175,28%,95%);">04. 課題と決めたことの管理</a></p></div>
 </section>
 
 </div>

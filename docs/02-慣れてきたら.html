@@ -28,7 +28,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <nav class="roadmap" aria-label="ロードマップ"><ol>
 <li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
 <li><a class="station here" href="02-慣れてきたら.html" title="02. 慣れてきたら (いまここ)" aria-label="02. 慣れてきたら (いまここ)" aria-current="page" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
-<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="03-文字化けとツール.html" title="03. 文字化けとツール" aria-label="03. 文字化けとツール" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
 <li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
 <li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
 <li><a class="station" href="06-AI同士がつながる.html" title="06. AI 同士がつながる" aria-label="06. AI 同士がつながる" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
@@ -81,7 +81,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </div></div>
 
 <div class="wrap">
-<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="01-はじめの一歩.html" aria-label="前へ" title="01. はじめの一歩" style="--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="03-文字化けと道具.html" aria-label="次へ" title="03. 文字化けと道具" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
+<!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="01-はじめの一歩.html" aria-label="前へ" title="01. はじめの一歩" style="--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="03-文字化けとツール.html" aria-label="次へ" title="03. 文字化けとツール" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
 <!-- AUTO:toc -->
 <nav class="toc"><ol>
 <li class="ch01"><a href="#ch01">実行の合図は、決まった言葉だけ</a></li>
@@ -100,7 +100,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>ぼくは AI のクロード君。「いいよ」って言われて、ファイルを消しちゃう……なんてこと、ありうるよね。「消さなくていいよ」、だった。「いいよ」は、実行の合図じゃないんだ。</p></div>
 </div>
 
-<p>慣れてくると、会話は短くなります。「OK」「進めて」「やって」の一言で、AI が動いてしまうこともあります。取り消しにくい操作 (削除・commit・push) では、これが事故のもとです。「消して」「反映して」のように決まった言葉で頼む指示と、「その方針でいいよ」という合意は、別のものだからです。なお、この資料の「利用者」は、AI に頼む人 (あなた) のことです。</p>
+<p>慣れてくると、会話は短くなります。「OK」「進めて」「やって」の一言で、AI が動いてしまうこともあります。取り消しにくい操作 (削除・commit・push) では、これが事故のもとです。「消して」「反映して」のように決まった言葉で頼む指示と、「その方針でいいよ」という合意は、別のものだからです。なお、この資料の「ユーザ」は、AI に頼む人 (あなた) のことです。</p>
 
 <div class="fail">
 <h3>たとえ話: 方針の合意を、実行の許可と取る</h3>
@@ -158,7 +158,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>書き込みに失敗したら、すぐ元に戻したくなるよね。でも、自分で戻すと、もっとぐちゃぐちゃになるかも……。</p></div>
 </div>
 
-<p>慣れてくると、失敗してもすぐ自分で直したくなります。でも、直し方を選ぶのは、利用者です。「戻す」のが正しいとは限りません。進めたほうが早いことも、別の形にしたほうがいいこともあります。</p>
+<p>慣れてくると、失敗してもすぐ自分で直したくなります。でも、直し方を選ぶのは、ユーザです。「戻す」のが正しいとは限りません。進めたほうが早いことも、別の形にしたほうがいいこともあります。</p>
 
 <div class="fail">
 <h3>たとえ話: 急いで戻して、状態を悪くする</h3>
@@ -177,7 +177,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <rect x="440" y="20" width="170" height="64" rx="10" fill="url(#g-02-2a)"/><text x="525" y="48" fill="#fff" font-size="14" text-anchor="middle">③ 選べる直し方</text><text x="525" y="68" fill="#fff" font-size="12" text-anchor="middle">戻す・進める・別の形</text>
 <path d="M180 52 H223" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-02-2a)"/>
 <path d="M395 52 H438" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-02-2a)"/>
-<rect x="150" y="108" width="320" height="38" rx="10" fill="url(#g-02-2b)"/><text x="310" y="132" fill="#fff" font-size="14" text-anchor="middle">選ぶのは、利用者。急いで消さない</text>
+<rect x="150" y="108" width="320" height="38" rx="10" fill="url(#g-02-2b)"/><text x="310" y="132" fill="#fff" font-size="14" text-anchor="middle">選ぶのは、ユーザ。急いで消さない</text>
 <path d="M525 84 V108 H470" fill="none" stroke="#4a5568" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#m-02-2a)"/>
 </svg>
 <figcaption>報告は 3 つだけ。それぞれの直し方の結果も書く</figcaption>
@@ -214,7 +214,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <div class="fail">
 <h3>失敗の一コマ: 未検証の前提から、指摘してしまう</h3>
-<p>「Node はコンソールの出力コードページ (文字コードの設定) を自動で書き換える」と思い込み、そこから「別の道具と動きが不揃いになる」と指摘しました。あとで実測したら、前提が誤りでした。コード上のコメント・記憶・一般論は、実測ではありません。</p>
+<p>「Node はコンソールの出力コードページ (文字コードの設定) を自動で書き換える」と思い込み、そこから「別のツールと動きが不揃いになる」と指摘しました。あとで実測したら、前提が誤りでした。コード上のコメント・記憶・一般論は、実測ではありません。</p>
 </div>
 
 <figure>
@@ -293,8 +293,8 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 
 <h3>足した決まり</h3>
 <ul>
-<li>「仕様だから不具合ではない」で閉じない。<strong>報告された動きを起こす仕様</strong>を探し、仕様・決定・課題・試験の期待を読んで、利用者の方針と食い違わないかを見る</li>
-<li>食い違えば、<strong>仕様の不具合</strong>として課題にする。直し方は、選択肢で利用者に聞く</li>
+<li>「仕様だから不具合ではない」で閉じない。<strong>報告された動きを起こす仕様</strong>を探し、仕様・決定・課題・試験の期待を読んで、ユーザの方針と食い違わないかを見る</li>
+<li>食い違えば、<strong>仕様の不具合</strong>として課題にする。直し方は、選択肢でユーザに聞く</li>
 <li>同じ報告が 2 回以上あれば、「再現しない」で閉じない。同じ動きを仕様として持つ道を、全部洗い出す</li>
 <li><strong>試験が、報告された動きを期待として固定していないか</strong>も見る。試験が仕様を守る側に回ると、不具合を隠す</li>
 </ul>
@@ -357,10 +357,10 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <div class="bubble"><p>流す前に「終わるのは、このくらい」って言って、見込みの倍を超えたら止めるね。「0 で終わった」だけでは、成功って言わないよ!</p></div>
 </div>
 
-<div class="callout callout-tip"><p><strong>ルールちゃんより</strong> 01 の 3 枚に、この資料で 5 枚、ルールの紙が増えました。<br><strong>のちほど</strong> 「テストを先に書く」決まりは、スキル (<code>light-test</code>) に入っています。スキルの話は <a class="doclink ref" href="05-複数プロジェクトで使う.html" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);">05. 複数プロジェクトで使う</a> で。次は、道具を作る話です。→ <a class="doclink ref" href="03-文字化けと道具.html" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);">03. 文字化けと道具</a></p></div>
+<div class="callout callout-tip"><p><strong>ルールちゃんより</strong> 01 の 3 枚に、この資料で 5 枚、ルールの紙が増えました。<br><strong>のちほど</strong> 「テストを先に書く」決まりは、スキル (<code>light-test</code>) に入っています。スキルの話は <a class="doclink ref" href="05-複数プロジェクトで使う.html" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);">05. 複数プロジェクトで使う</a> で。次は、ツールを作る話です。→ <a class="doclink ref" href="03-文字化けとツール.html" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);">03. 文字化けとツール</a></p></div>
 </section>
 
 </div>
-<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="01-はじめの一歩.html" aria-label="前へ" title="01. はじめの一歩" style="--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="03-文字化けと道具.html" aria-label="次へ" title="03. 文字化けと道具" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
+<footer><!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="01-はじめの一歩.html" aria-label="前へ" title="01. はじめの一歩" style="--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="03-文字化けとツール.html" aria-label="次へ" title="03. 文字化けとツール" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav --></footer>
 </body>
 </html>

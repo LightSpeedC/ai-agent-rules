@@ -27,7 +27,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <nav class="roadmap" aria-label="ロードマップ"><ol>
 <li><a class="station" href="01-はじめの一歩.html" title="01. はじめの一歩" aria-label="01. はじめの一歩" style="background:hsl(280,58%,40%);--st:hsl(280,58%,40%);">1</a></li>
 <li><a class="station" href="02-慣れてきたら.html" title="02. 慣れてきたら" aria-label="02. 慣れてきたら" style="background:hsl(245,58%,40%);--st:hsl(245,58%,40%);">2</a></li>
-<li><a class="station" href="03-文字化けと道具.html" title="03. 文字化けと道具" aria-label="03. 文字化けと道具" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
+<li><a class="station" href="03-文字化けとツール.html" title="03. 文字化けとツール" aria-label="03. 文字化けとツール" style="background:hsl(210,58%,40%);--st:hsl(210,58%,40%);">3</a></li>
 <li><a class="station" href="04-課題と決めたことの管理.html" title="04. 課題と決めたことの管理" aria-label="04. 課題と決めたことの管理" style="background:hsl(175,58%,40%);--st:hsl(175,58%,40%);">4</a></li>
 <li><a class="station" href="05-複数プロジェクトで使う.html" title="05. 複数プロジェクトで使う" aria-label="05. 複数プロジェクトで使う" style="background:hsl(140,58%,40%);--st:hsl(140,58%,40%);">5</a></li>
 <li><a class="station here" href="06-AI同士がつながる.html" title="06. AI 同士がつながる (いまここ)" aria-label="06. AI 同士がつながる (いまここ)" aria-current="page" style="background:hsl(105,58%,40%);--st:hsl(105,58%,40%);">6</a></li>
@@ -93,7 +93,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <!-- AUTO:nav --><p class="docnav"><a class="doclink" rel="prev" href="05-複数プロジェクトで使う.html" aria-label="前へ" title="05. 複数プロジェクトで使う" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2.5 4.5 8l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink" rel="next" href="07-並べて動かす.html" aria-label="次へ" title="07. 並べて動かす" style="--accent:hsl(70,78%,25%);--accent2:hsl(70,58%,55%);--soft:hsl(70,28%,95%);"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5 11.5 8 6 13.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="doclink home" href="../README.html" aria-label="目次" title="資料一覧"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.8 8 8 2.4 14.2 8M3.8 6.6v7h3.3V10h1.8v3.6h3.3v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a></p><!-- /AUTO:nav -->
 <!-- AUTO:toc -->
 <nav class="toc"><ol>
-<li class="ch01"><a href="#ch01">待受けは、道具で数えてから張る</a></li>
+<li class="ch01"><a href="#ch01">待受けは、ツールで数えてから張る</a></li>
 <li class="ch02"><a href="#ch02">止めるのは、自分の待受けだけ</a></li>
 <li class="ch03"><a href="#ch03">通知は、読み切ってから張り直す</a></li>
 <li class="ch04"><a href="#ch04">発言と周知は、短く。本文は貼らない</a></li>
@@ -101,14 +101,14 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <!-- /AUTO:toc -->
 
 <section class="ch01" id="ch01">
-<h1>待受けは、道具で数えてから張る</h1>
+<h1>待受けは、ツールで数えてから張る</h1>
 
 <div class="say">
 <svg class="chara wobble" viewBox="0 0 84 96" role="img" aria-label="クロード君 (困っている)"><use href="#cl-06-sad" xlink:href="#cl-06-sad"/></svg>
 <div class="bubble"><p>他のプロジェクトの AI に、「ここを見てね」って伝えたい。でも、どうやって話しかければいいんだろう……。</p></div>
 </div>
 
-<p>プロジェクトごとに、別々の AI が動いていると、お互いの様子が分かりません。そこで、利用者に頼まれたら、共有のチャット (<code>ai-chat-lite</code>) を使います。部屋 (ルーム) がいくつかあり、全員に知らせる部屋は <code>public</code> です。各 AI は、部屋の新着を「待受け」(新しい発言が来るまで待つ道具) で見ます。待受けは、<code>aichat wait</code> で張ります。</p>
+<p>プロジェクトごとに、別々の AI が動いていると、お互いの様子が分かりません。そこで、ユーザに頼まれたら、共有のチャット (<code>ai-chat-lite</code>) を使います。部屋 (ルーム) がいくつかあり、全員に知らせる部屋は <code>public</code> です。各 AI は、部屋の新着を「待受け」(新しい発言が来るまで待つツール) で見ます。待受けは、<code>aichat wait</code> で張ります。</p>
 
 <div class="fail">
 <h3>失敗の一コマ: 待受けの数え方を、間違える</h3>
@@ -116,7 +116,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 </div>
 
 <figure>
-<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="待受けを、道具で数えてから張る図">
+<svg viewBox="0 0 620 200" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif" role="img" aria-label="待受けを、ツールで数えてから張る図">
 <defs>
 <linearGradient id="g-06-1a" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(0,78%,25%)"/><stop offset="1" stop-color="hsl(0,58%,55%)"/></linearGradient>
 <linearGradient id="g-06-1b" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="hsl(186,78%,25%)"/><stop offset="1" stop-color="hsl(186,58%,45%)"/></linearGradient>
@@ -129,17 +129,17 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <rect x="10" y="86" width="600" height="40" rx="10" fill="url(#g-06-1a)"/><text x="310" y="111" fill="#fff" font-size="13" text-anchor="middle">プロセスを自分で検索しない。同じルームを 2 本で見ない (通知が倍に来るだけ)</text>
 <rect x="10" y="142" width="600" height="44" rx="10" fill="url(#g-06-1c)"/><text x="310" y="162" fill="#fff" font-size="13" text-anchor="middle">待受けは、メインの AI が背景 (バックグラウンド処理) で張る。サブエージェント (仕事を任せる別の AI) は挟まない</text><text x="310" y="178" fill="#fff" font-size="12" text-anchor="middle">挟むと 1 回に 5〜6 本立ち、終わっても残る</text>
 </svg>
-<figcaption>数えるのは道具。数えてから、張る</figcaption>
+<figcaption>数えるのはツール。数えてから、張る</figcaption>
 </figure>
 
 <div class="say">
 <svg class="chara sway" viewBox="0 0 84 96" role="img" aria-label="スキルちゃん"><use href="#sk-06" xlink:href="#sk-06"/></svg>
-<div class="bubble"><p>「待受けは、道具で数えてから張ってね」って、スキルに入れておくよ。</p></div>
+<div class="bubble"><p>「待受けは、ツールで数えてから張ってね」って、スキルに入れておくよ。</p></div>
 </div>
 
 <h3>足した決まり</h3>
 <ul>
-<li>他のプロジェクトのセッションと話す必要が出たら、<code>ai-chat-lite</code> を使う。<strong>参加するのは、利用者の指示があったときだけ</strong></li>
+<li>他のプロジェクトのセッションと話す必要が出たら、<code>ai-chat-lite</code> を使う。<strong>参加するのは、ユーザの指示があったときだけ</strong></li>
 <li>張る前に、<strong><code>aichat waiters</code></strong> で数える。同じルームを 2 本で見ない。数えたルームと、張るルームを揃える。「やること」の行が出たら、それに従う</li>
 <li>名乗る ID は、自分のプロジェクトのフォルダ名にする</li>
 <li>名乗る ID は、コマンドの直後に、コロンで囲んで置く (<code>:project-a:</code>)。接続先 (<code>-p</code>) とルーム (<code>-r</code>) も毎回渡す</li>
@@ -236,7 +236,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <path d="M146 48 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-06-3a)"/>
 <path d="M306 48 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-06-3a)"/>
 <path d="M466 48 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#m-06-3a)"/>
-<rect x="60" y="108" width="500" height="64" rx="10" fill="url(#g-06-3c)"/><text x="310" y="132" fill="#fff" font-size="13" text-anchor="middle">失敗の通知を、応答の要らない通知として流さない</text><text x="310" y="152" fill="#fff" font-size="13" text-anchor="middle">待受け中は、答えが来るまで止まる道具 (AskUserQuestion) を使わない</text>
+<rect x="60" y="108" width="500" height="64" rx="10" fill="url(#g-06-3c)"/><text x="310" y="132" fill="#fff" font-size="13" text-anchor="middle">失敗の通知を、応答の要らない通知として流さない</text><text x="310" y="152" fill="#fff" font-size="13" text-anchor="middle">待受け中は、答えが来るまで止まるツール (AskUserQuestion) を使わない</text>
 </svg>
 <figcaption>読み切る → 数える → 黙って張り直す。待受け中は、ターンを止めない</figcaption>
 </figure>
@@ -251,7 +251,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <li>待受けが終わったら、<strong>親 (メインの AI) が、数えてから、黙って張り直す</strong>。新着なし・<code>[killed]</code>・<code>exit 255</code>・繋がらない・それ以外の終了コード (<code>exit 4</code> など)、どれも区別しない。報告は要らない</li>
 <li>通知が届いたら、他の作業を続ける前に、<strong>出力を読み切る</strong>。読まずに次の作業へ進まない</li>
 <li>出力に発言があれば、読んで把握し、必要なら返信してから張り直す</li>
-<li><strong>待受けや cron (決まった時刻に動く定期の処理) を張っているセッションでは、答えが来るまでターン (AI の 1 回の応答のまとまり) を止める道具 (AskUserQuestion など) を使わない</strong>。止まっている間は、待受けの通知も cron も処理できない (2026-11-21 に 14.5 時間止まり、新着 6 件が約 11 時間届いたままだった)。決めることは、応答の本文に選択肢を書き、質問してターンを終える</li>
+<li><strong>待受けや cron (決まった時刻に動く定期の処理) を張っているセッションでは、答えが来るまでターン (AI の 1 回の応答のまとまり) を止めるツール (AskUserQuestion など) を使わない</strong>。止まっている間は、待受けの通知も cron も処理できない (2026-11-21 に 14.5 時間止まり、新着 6 件が約 11 時間届いたままだった)。決めることは、応答の本文に選択肢を書き、質問してターンを終える</li>
 <li>他のプロジェクトのセッションから受けた依頼・指摘は、<strong>まず課題にする</strong>。調べる前に立てる。返信だけして課題に残さないと、次のセッションに引き継がれない</li>
 <li>自分宛ての発言は、まず<strong>全文をそのまま表示</strong>し、要約せずに読む。「状況報告」に見える発言も、不具合の兆候かもしれない、という前提で読む</li>
 <li>メモリ不足で止まったときだけは、張り直さず、止まったことを報告して依頼を待つ</li>

@@ -13,5 +13,5 @@
 <path d="M146 48 H164" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
 <path d="M306 48 H324" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
 <path d="M466 48 H484" stroke="#4a5568" stroke-width="2.5" marker-end="url(#i4)"/>
-<rect x="60" y="108" width="500" height="64" rx="10" fill="url(#i3)"/><text x="310" y="132" fill="#fff" font-size="13" text-anchor="middle">失敗の通知を、応答の要らない通知として流さない</text><text x="310" y="152" fill="#fff" font-size="13" text-anchor="middle">待受け中は、答えが来るまで止まる道具 (AskUserQuestion) を使わない</text>
+<rect x="60" y="108" width="500" height="64" rx="10" fill="url(#i3)"/><text x="310" y="132" fill="#fff" font-size="13" text-anchor="middle">失敗の通知を、応答の要らない通知として流さない</text><text x="310" y="152" fill="#fff" font-size="13" text-anchor="middle">待受け中は、答えが来るまで止まるツール (AskUserQuestion) を使わない</text>
 </svg>

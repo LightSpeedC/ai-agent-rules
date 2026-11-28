@@ -44,7 +44,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <section class="ch01" id="ch01">
 <h1>対象読者と、読み方</h1>
 
-<p>対象は、<strong>AI エージェント (特に Claude Code) を使って開発する人</strong>です。1 人で使い始めた人から、複数のプロジェクトと複数のセッションで使う人までを、1 本の道筋に並べました。「この資料の利用者」は、AI に頼む人 (あなた) のことです。</p>
+<p>対象は、<strong>AI エージェント (特に Claude Code) を使って開発する人</strong>です。1 人で使い始めた人から、複数のプロジェクトと複数のセッションで使う人までを、1 本の道筋に並べました。「この資料のユーザ」は、AI に頼む人 (あなた) のことです。</p>
 
 <p>01〜07 は、使う規模が大きくなる順 (小 → 大) です。08 と 09 は、規模の軸ではなく、仕組みの話と、画面を持つアプリ向けの話です。まず 01 から順に読みます。自分のいまの規模に近い章から読んでも、構いません。</p>
 
@@ -80,7 +80,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <ul>
 <li><a class="doclink ref" href="01-はじめの一歩.html" style="--accent:hsl(280,78%,25%);--accent2:hsl(280,58%,55%);--soft:hsl(280,28%,95%);">01. はじめの一歩</a>: 1 人で使い始める。ルールが失敗から増えること、日本語で応える、フルパスを出さない、commit は指示を待つ</li>
 <li><a class="doclink ref" href="02-慣れてきたら.html" style="--accent:hsl(245,78%,25%);--accent2:hsl(245,58%,55%);--soft:hsl(245,28%,95%);">02. 慣れてきたら</a>: 実行の合図は決まった言葉だけ、失敗したら直し方を決めずに報告する、確かめてから言い切る、仕様も疑う、短い作業は見張る</li>
-<li><a class="doclink ref" href="03-文字化けと道具.html" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);">03. 文字化けと道具</a>: 文字コードと改行を「組」で扱う道具 (<code>text</code>・<code>convert-encoding</code>・<code>psh</code>)、ブロックを回避しない</li>
+<li><a class="doclink ref" href="03-文字化けとツール.html" style="--accent:hsl(210,78%,25%);--accent2:hsl(210,58%,55%);--soft:hsl(210,28%,95%);">03. 文字化けとツール</a>: 文字コードと改行を「組」で扱うツール (<code>text</code>・<code>convert-encoding</code>・<code>psh</code>)、ブロックを回避しない</li>
 <li><a class="doclink ref" href="04-課題と決めたことの管理.html" style="--accent:hsl(175,78%,25%);--accent2:hsl(175,58%,55%);--soft:hsl(175,28%,95%);">04. 課題と決めたことの管理</a>: 課題は 1 件 1 ファイル、決めることは番号付きの選択肢 (A・B・C)、計画と承認が先、書いた資料はレビューを通す</li>
 <li><a class="doclink ref" href="05-複数プロジェクトで使う.html" style="--accent:hsl(140,78%,25%);--accent2:hsl(140,58%,55%);--soft:hsl(140,28%,95%);">05. 複数プロジェクトで使う</a>: ルールを核とスキルに分ける、他プロジェクトは直さない、公開前に確かめる、画面を使う作業は 1 つずつ</li>
 <li><a class="doclink ref" href="06-AI同士がつながる.html" style="--accent:hsl(105,78%,25%);--accent2:hsl(105,58%,55%);--soft:hsl(105,28%,95%);">06. AI 同士がつながる</a>: チャットの待受けを数える・止める・読み切る、周知は短く</li>
@@ -112,7 +112,7 @@ body{counter-reset:secnum;} section h1{counter-increment:secnum;} section h1::be
 <ul>
 <li><strong>「失敗の一コマ」と「たとえ話」</strong>。実際に起きた出来事 (記録がある) は、「失敗の一コマ」です。記録の無い一般的な事情の説明は、「たとえ話」です。吹き出しも、記録の無い話は、可能性の形で書いてあります</li>
 <li><strong>「セッション (サブエージェント)」と「メインの AI」</strong>。「セッション (サブエージェント)」は、メインの AI が呼んで作業させる別の AI です。「メインの AI」は、それを呼ぶ側です。「別のセッション」は、メインとは別に動く、独立したセッションを指します</li>
-<li><strong>「背景 (バックグラウンド処理)」</strong>。処理の「背景」は、この形で書きます。「利用者」は、AI に頼む人です</li>
+<li><strong>「背景 (バックグラウンド処理)」</strong>。処理の「背景」は、この形で書きます。「ユーザ」は、AI に頼む人です</li>
 <li><strong>「このプロジェクトだけの決め」</strong>は、「ローカルルール」と明記してあります。共通ルールの決まりとは、区別してください</li>
 <li><strong>他のプロジェクトの名前</strong>は文中に書きますが、リンクは貼りません</li>
 </ul>
